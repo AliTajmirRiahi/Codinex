@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Codify.UI.ViewModels
+namespace Codify.ViewModels
 {
     public class ChatMessage
     {

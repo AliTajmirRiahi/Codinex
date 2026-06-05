@@ -45,9 +45,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\CodifyToolWindowCommand.cs" />
     <Compile Include="Core\Abstractions\IAiProvider.cs" />
     <Compile Include="Core\Abstractions\IChatSession.cs" />
-    <Compile Include="Infrastructure\ResourceConfig.cs" />
+    <Compile Include="Core\Abstractions\IResourceServer.cs" />
+    <Compile Include="Core\Abstractions\IThemeService.cs" />
+    <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
+    <Compile Include="Core\Models\ChatMessage.cs" />
+    <Compile Include="Core\Models\ChatRequest.cs" />
+    <Compile Include="Core\Models\ChatResponse.cs" />
+    <Compile Include="Core\UseCases\SendChatMessageUseCase.cs" />
+    <Compile Include="Infrastructure\AiProviders\GapGPTProvider.cs" />
+    <Compile Include="Infrastructure\AiProviders\OpenAiProvider.cs" />
+    <Compile Include="Infrastructure\Theme\VsThemeService.cs" />
+    <Compile Include="Infrastructure\WebView\WebViewResourceServer.cs" />
+    <Compile Include="Infrastructure\WebView\WebViewMessageRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodifyPackage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -60,7 +72,7 @@
     <Compile Include="UI\ToolWindows\CodifyToolWindowControl.xaml.cs">
       <DependentUpon>CodifyToolWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ViewModels\ChatViewModel.cs" />
+    <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -88,15 +100,26 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\ToolWindows\Resources\ChatView.html" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\ChatView.script.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\ChatView.style.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\theme.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.html" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.script.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.style.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\send-horizontal.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="UI\ToolWindows\Resources\CodifyToolWindowCommand.png" />
     <VSCTCompile Include="CodifyPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="UI\ToolWindows\Resources\Settings\" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="UI\ToolWindows\CodifyToolWindowControl.xaml">
       <SubType>Designer</SubType>

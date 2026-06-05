@@ -1,5 +1,9 @@
-﻿using Codify.Infrastructure;
+﻿using Codify.Core.Abstractions;
+using Codify.Infrastructure;
+using Codify.Infrastructure.Theme;
+using Codify.Infrastructure.WebView;
 using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -18,12 +22,36 @@ namespace Codify.UI.ToolWindows
         /// <summary>
         /// Initializes a new instance of the <see cref="CodifyToolWindowControl"/> class.
         /// </summary>
-        public CodifyToolWindowControl()
+        private readonly IWebViewMessageRouter _messageRouter;
+        private readonly IThemeService _themeService;
+        private readonly IResourceServer _resourceServer;
+
+        public CodifyToolWindowControl(
+            IWebViewMessageRouter messageRouter,
+            IThemeService themeService,
+            IResourceServer resourceServer)
         {
-            this.InitializeComponent();
+            _messageRouter = messageRouter;
+            _themeService = themeService;
+            _resourceServer = resourceServer;
+
+            InitializeComponent();
+
+            Unloaded += OnUnloaded;
+
+            SetupThemeIntegration();
+
             _ = InitializeWebViewAsync();
         }
 
+        public CodifyToolWindowControl() : this(
+            new WebViewMessageRouter(),
+            new VsThemeService(),
+            new WebViewResourceServer(
+                typeof(CodifyToolWindowControl).Assembly,
+                "Codify.UI.ToolWindows.Resources"))
+        {
+        }
         private async Task InitializeWebViewAsync()
         {
             try
@@ -39,24 +67,11 @@ namespace Codify.UI.ToolWindows
                 // 3. Initialize WebView2 with the environment.
                 await WebView.EnsureCoreWebView2Async(environment);
 
-                WebView.CoreWebView2.WebMessageReceived += CoreWebView2_WebMessageReceived;
+                _resourceServer.Attach(WebView.CoreWebView2);
 
-                // 4. Load initial HTML content for testing.
-                var html = GetEmbeddedResource(ResourceConfig.ChatHtml);
-                var css = GetEmbeddedResource(ResourceConfig.ChatCss);
-                var js = GetEmbeddedResource(ResourceConfig.ChatJs);
-
-                // 2. Inject CSS & JS into HTML
-
-                var finalHtml = html
-                    .Replace("<!-- CSS_PLACEHOLDER -->", $"<style>{css}</style>")
-                    .Replace("<!-- JS_PLACEHOLDER -->", $"<script>{js}</script>");
-
-                WebView.NavigateToString(!string.IsNullOrEmpty(finalHtml)
-                    ? finalHtml
-                    : "<h1>Error: UI Resources not found!</h1>");
-
-                WebView.NavigationCompleted += (s, e) => UpdateTheme();
+                WebView.CoreWebView2.Navigate(
+                    "http://codify.resources/Chat/chat-view.html"
+                );
             }
             catch (Exception ex)
             {
@@ -66,6 +81,16 @@ namespace Codify.UI.ToolWindows
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void SetupThemeIntegration()
+        {
+            //1.Initial Apply
+            WebView.NavigationCompleted += OnNavigationCompleted;
+
+            // 2. Subscribe to changes
+            _themeService.ThemeChanged += OnThemeChanged;
+        }
+
         private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             var json = e.WebMessageAsJson;
@@ -80,46 +105,31 @@ namespace Codify.UI.ToolWindows
                 });
             });
         }
-        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        private void OnThemeChanged(object sender, EventArgs e)
         {
-            UpdateTheme();
-        }
-
-        private void UpdateTheme()
-        {
-            var bg = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-            var fg = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
-            var border = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBorderColorKey);
-            var button = VSColorTheme.GetThemedColor(EnvironmentColors.SystemHighlightColorKey);
-
-            string ToHex(Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
-
-            string script = $@"
-                document.documentElement.style.setProperty('--vs-background', '{ToHex(bg)}');
-                document.documentElement.style.setProperty('--vs-foreground', '{ToHex(fg)}');
-                document.documentElement.style.setProperty('--vs-border', '{ToHex(border)}');
-                document.documentElement.style.setProperty('--vs-input-bg', '{ToHex(border)}');
-                document.documentElement.style.setProperty('--vs-button-bg', '{ToHex(button)}');
-                document.documentElement.style.setProperty('--vs-button-hover', '{ToHex(button)}');
-            ";
-
-            WebView.CoreWebView2?.ExecuteScriptAsync(script);
-        }
-        private string GetEmbeddedResource(string resourcePath)
-        {
-            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream(resourcePath))
+            // Must be on UI Thread
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                if (stream == null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Resource not found: {resourcePath}");
-                    return string.Empty;
-                }
-                using (var reader = new System.IO.StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+                await ApplyThemeToWebViewAsync();
+            });
+        }
+        private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
+            _ = ApplyThemeToWebViewAsync();
+        }
+
+        private async Task ApplyThemeToWebViewAsync()
+        {
+            if (WebView.CoreWebView2 == null) return;
+
+            var cssVariables = _themeService.GetCurrentThemeAsCssVariables();
+
+            await WebView.CoreWebView2.ExecuteScriptAsync(cssVariables);
+        }
+        private void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            WebView.NavigationCompleted -= OnNavigationCompleted;
+            _themeService.ThemeChanged -= OnThemeChanged;
         }
     }
 }

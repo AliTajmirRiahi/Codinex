@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none';
+               img-src http://codify.resources data:;
+               script-src http://codify.resources 'unsafe-inline';
+               style-src http://codify.resources 'unsafe-inline';
+               connect-src http://codify.resources;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/Shared/theme.css">
+    <link rel="stylesheet" href="/Chat/chat-view.style.css">
+
+    <script src="/Shared/bridge.js"></script>
+    <script src="/Chat/chat-view.script.js"></script>
+</head>
+<body>
+    <div class="chat-wrapper">
+
+        <div class="chat-header">
+            <span class="status-dot"></span>
+            Codify Assistant
+        </div>
+
+        <div id="chat-container" class="messages-container">
+            <div class="message ai">
+                Hello! I'm Codify. How can I help you code today?
+            </div>
+        </div>
+
+        <div class="input-container">
+            <div class="input-box-wrapper">
+                <textarea id="userInput"
+                          placeholder="Ask Codify..."
+                          rows="1"></textarea>
+
+                <div class="input-actions">
+                    <button id="sendBtn" title="Send">
+                        <codify-icon name="send-horizontal"></codify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

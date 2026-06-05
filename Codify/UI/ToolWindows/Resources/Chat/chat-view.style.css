@@ -1,23 +1,4 @@
-﻿:root {
-    --vs-background: #1e1e1e;
-    --vs-foreground: #cccccc;
-    --vs-border: #3c3c3c;
-    --vs-input-bg: #252526;
-    --vs-button-bg: #333333;
-    --vs-button-hover: #454545;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    background-color: var(--vs-background);
-    color: var(--vs-foreground);
-    font-family: "Segoe UI", sans-serif;
-    font-size: 13px;
-}
-
+﻿
 .chat-wrapper {
     display: flex;
     flex-direction: column;
