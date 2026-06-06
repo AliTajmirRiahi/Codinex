@@ -3,9 +3,11 @@ const sendBtn = document.getElementById("sendBtn");
 const chatContainer = document.getElementById("chat-container");
 
 userInput.addEventListener("input", function () {
-    this.style.height = "auto";
-    this.style.height = this.scrollHeight + "px";
-});
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+}, false);
+
+
 
 userInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {

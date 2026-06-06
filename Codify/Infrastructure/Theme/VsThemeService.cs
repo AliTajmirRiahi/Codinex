@@ -28,7 +28,7 @@ namespace Codify.Infrastructure.Theme
             var bg = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
             var fg = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
             var border = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBorderColorKey);
-            var button = VSColorTheme.GetThemedColor(EnvironmentColors.SystemHighlightColorKey);
+            var button = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBorderColorKey);
 
             // Convert to Hex and format as CSS variables
            return $@"

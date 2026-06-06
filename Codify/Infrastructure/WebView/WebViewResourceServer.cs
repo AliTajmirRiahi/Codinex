@@ -1,6 +1,7 @@
-﻿using System;
-using Codify.Core.Abstractions;
+﻿using Codify.Core.Abstractions;
 using Microsoft.Web.WebView2.Core;
+using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Codify.Infrastructure.WebView
@@ -44,6 +45,8 @@ namespace Codify.Infrastructure.WebView
             string resourceName = $"{_resourceRoot}.{relativePath}";
 
             var stream = _assembly.GetManifestResourceStream(resourceName);
+
+            //var names = _assembly.GetManifestResourceNames();
 
             if (stream == null)
                 return;

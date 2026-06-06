@@ -1,7 +1,7 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Security Policy to allow resources from the custom internal scheme -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'none';
                img-src http://codify.resources data:;
@@ -10,40 +10,101 @@
                connect-src http://codify.resources;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- External Stylesheets -->
     <link rel="stylesheet" href="/Shared/theme.css">
     <link rel="stylesheet" href="/Chat/chat-view.style.css">
 
-    <script src="/Shared/bridge.js"></script>
-    <script src="/Chat/chat-view.script.js"></script>
 </head>
 <body>
     <div class="chat-wrapper">
 
-        <div class="chat-header">
-            <span class="status-dot"></span>
-            Codify Assistant
+        <!-- Toolbar for managing chat history and sessions -->
+        <div class="chat-toolbar">
+            <!-- Dropdown to select and switch between previous chat threads -->
+            <select id="chatHistorySelect" class="chat-history-select">
+                <option value="">New Chat</option>
+            </select>
+
+            <!-- Button to create a new chat session -->
+            <button id="newChatBtn" class="toolbar-btn" title="New Chat">
+                <codify-icon name="message-square-plus"></codify-icon>
+            </button>
+
+            <!-- Button to delete the current active chat session -->
+            <button id="deleteChatBtn" class="toolbar-btn danger" title="Delete Chat">
+                <codify-icon name="trash-2"></codify-icon>
+            </button>
         </div>
 
+        <!-- Container for displaying chat messages -->
         <div id="chat-container" class="messages-container">
-            <div class="message ai">
-                Hello! I'm Codify. How can I help you code today?
+            <!-- Initial welcome state when no messages are present -->
+            <div class="chat-welcome-screen">
+                <!-- Main Logo -->
+                <!--<img src="../Icons/codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo">-->
+                <codify-image name="codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo"></codify-image>
+                <!-- App Title -->
+                <h1 class="welcome-title">Codify AI</h1>
+
+                <!-- Welcome Message -->
+                <p class="welcome-subtitle">How can I help you code today?</p>
             </div>
         </div>
 
+        <!-- User input section at the bottom -->
         <div class="input-container">
             <div class="input-box-wrapper">
+
+                <!-- Top row: context / file selector -->
+                <div class="input-context-row">
+                    <button id="addContextBtn" class="context-add-btn" title="Add Context">
+                        <codify-icon name="plus"></codify-icon>
+                    </button>
+
+                    <div class="context-chip" id="activeDocumentChip">
+                        <codify-icon name="scroll-text"></codify-icon>
+                        <span class="context-chip-text">Active Document</span>
+                        <button class="context-chip-remove" title="Remove Context">
+                            <codify-icon name="circle-x"></codify-icon>
+                        </button>
+                    </div>
+                </div>
+
                 <textarea id="userInput"
                           placeholder="Ask Codify..."
                           rows="1"></textarea>
 
-                <div class="input-actions">
-                    <button id="sendBtn" title="Send">
-                        <codify-icon name="send-horizontal"></codify-icon>
-                    </button>
+                <!-- Bottom row: agent / model selector + actions -->
+                <div class="input-footer-row">
+                    <div class="selector-group">
+                        <button id="agentSelectorBtn" class="selector-btn" title="Select Agent">
+                            <codify-icon name="hat-glasses"></codify-icon>
+                            <span>Agent</span>
+                            <codify-icon name="chevron-down"></codify-icon>
+                        </button>
+
+                        <button id="modelSelectorBtn" class="selector-btn" title="Select Model">
+                            <codify-icon name="brain"></codify-icon>
+                            <span>GPT-5 mini</span>
+                            <codify-icon name="chevron-down"></codify-icon>
+                        </button>
+                    </div>
+
+                    <div class="input-actions">
+                        <button id="settingBtn" title="Change Settings">
+                            <codify-icon name="wrench"></codify-icon>
+                        </button>
+                        <button id="sendBtn" title="Send">
+                            <codify-icon name="send-horizontal"></codify-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
+
+<!-- JavaScript Bridges and logic -->
+<script src="/Shared/bridge.js"></script>
+<script src="/Chat/chat-view.script.js"></script>
 </body>
 </html>

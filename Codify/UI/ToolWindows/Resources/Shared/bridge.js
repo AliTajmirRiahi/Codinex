@@ -63,3 +63,33 @@ class CodifyIcon extends HTMLElement {
 
 customElements.define("codify-icon", CodifyIcon);
 
+// Codify Image web component
+// Loads Images dynamically from embedded resources
+
+class CodifyImage extends HTMLElement {
+
+    async connectedCallback() {
+
+        const name = this.getAttribute("name");
+
+        if (!name)
+            return;
+
+        const url = `http://codify.resources/Icons/${name}`;
+
+        try {
+
+            const response = await fetch(url);
+            const img = await response.text();
+
+            this.innerHTML = img;
+
+        } catch (err) {
+
+            console.error("Image load failed:", name, err);
+        }
+    }
+}
+
+customElements.define("codify-image", CodifyImage);
+

@@ -100,6 +100,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\brain.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\chevron-down.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\circle-x.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\hat-glasses.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\plus.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\scroll-text.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\wrench.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\codify-AI-logo-black.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\trash-2.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-plus.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-x.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

@@ -11,6 +11,74 @@
     border-bottom: 1px solid var(--vs-border);
     opacity: 0.8;
 }
+/* Chat toolbar container */
+.chat-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background-color: var(--vs-background);
+    border-bottom: 1px solid var(--vs-border);
+}
+
+/* Chat history dropdown */
+.chat-history-select {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    background-color: var(--vs-input-bg);
+    color: var(--vs-foreground);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+}
+
+    /* Focus state for dropdown */
+    .chat-history-select:focus {
+        border-color: var(--vs-button-bg);
+    }
+
+/* Base style for toolbar buttons */
+.toolbar-btn {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0px solid var(--vs-border);
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    background-color: transparent;
+}
+
+    /* Toolbar button hover state */
+    .toolbar-btn:hover {
+        background-color: var(--vs-button-hover);
+        color: var(--vs-foreground);
+    }
+
+    /* Toolbar button active state */
+    .toolbar-btn:active {
+        transform: translateY(1px);
+    }
+
+    /* Delete button hover tone */
+    .toolbar-btn.danger:hover {
+        background-color: var(--vs-button-hover);
+        color: #f15d45;
+    }
+
+    /* Optional icon sizing */
+    .toolbar-btn codify-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+    }
 
 .messages-container {
     flex: 1;
@@ -41,20 +109,64 @@
         border: 1px solid var(--vs-border);
     }
 
-.input-container {
+/* Styling for the empty state / welcome screen */
+.chat-welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    color: var(--vs-foreground);
+    opacity: 0.8; /* Slightly dimmed to match the reference image */
+}
+
+/* Welcome logo sizing */
+.welcome-logo {
+    width: 74px;
+    height: 64px;
+    margin-bottom: 16px;
+    /* If using a black/dark logo on dark bg, you might need a filter or use the SVG */
+    filter: brightness(0.7);
+    color: var(--vs-foreground);
+}
+
+/* Main title styling */
+.welcome-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+/* Subtitle/Hint styling */
+.welcome-subtitle {
+    font-size: 13px;
+    margin: 0;
+    color: var(--vs-foreground);
+    opacity: 0.7;
+}
+
+/* Hide welcome screen when messages are added via JS */
+.messages-container:has(.message) .chat-welcome-screen {
+    display: none;
+}
+
+
+/*.input-container {
     padding: 12px;
     border-top: 1px solid var(--vs-border);
 }
 
 .input-box-wrapper {
     background-color: var(--vs-input-bg);
-    border: 1px solid var(--vs-border);
     border-radius: 6px;
     padding: 8px;
     display: flex;
     flex-direction: column;
 }
-
+    .input-box-wrapper:focus {
+        border: 1px solid var(--vs-foreground);
+    }
 textarea {
     background: transparent;
     border: none;
@@ -73,7 +185,7 @@ textarea {
     margin-top: 5px;
 }
 
-#sendBtn {
+.input-actions button {
     background: var(--vs-button-bg);
     color: white;
     border: none;
@@ -83,6 +195,174 @@ textarea {
     font-size: 12px;
 }
 
-    #sendBtn:hover {
+    input-actions button:hover {
         background: var(--vs-button-hover);
+    }*/
+/* Main input container */
+.input-container {
+    padding: 10px;
+    background: var(--vs-background);
+}
+
+.input-box-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--vs-input-bg);
+    border: 1px solid var(--vs-border);
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Top row: add context + active document chip */
+.input-context-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.context-add-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--vs-foreground);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .context-add-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.18);
     }
+
+.context-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--vs-foreground);
+    min-height: 36px;
+    box-sizing: border-box;
+}
+
+.context-chip-text {
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.context-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    margin-left: 2px;
+}
+
+    .context-chip-remove:hover {
+        opacity: 1;
+    }
+
+/* Textarea */
+#userInput {
+    width: 100%;
+    min-height: 56px;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    font: inherit;
+    line-height: 1.5;
+    padding: 4px 0;
+    box-sizing: border-box;
+}
+
+    #userInput::placeholder {
+        color: rgba(204, 204, 204, 0.6);
+    }
+
+/* Bottom row: selectors + actions */
+.input-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.selector-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.selector-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    font: inherit;
+    opacity: 0.92;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .selector-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
+
+    .selector-btn span {
+        white-space: nowrap;
+    }
+
+/* Action buttons */
+.input-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .input-actions button {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--vs-foreground);
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+        .input-actions button:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            opacity: 1;
+        }
+
