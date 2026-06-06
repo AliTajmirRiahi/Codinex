@@ -1,16 +1,16 @@
 ﻿using Codify.Core.Abstractions;
+using Codify.Core.UseCases;
 using Codify.Infrastructure;
+using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.Theme;
 using Codify.Infrastructure.WebView;
-using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Codify.Infrastructure.Serialization;
 
 namespace Codify.UI.ToolWindows
 {
@@ -22,52 +22,60 @@ namespace Codify.UI.ToolWindows
         /// <summary>
         /// Initializes a new instance of the <see cref="CodifyToolWindowControl"/> class.
         /// </summary>
-        private readonly IWebViewMessageRouter _messageRouter;
         private readonly IThemeService _themeService;
         private readonly IResourceServer _resourceServer;
+        private readonly IJsonSerializer _serializer;
 
-        public CodifyToolWindowControl(
-            IWebViewMessageRouter messageRouter,
-            IThemeService themeService,
-            IResourceServer resourceServer)
+
+        // These will be initialized once WebView is ready
+        private IWebViewMessageRouter _messageRouter;
+        private IWebViewClient _webViewClient;
+
+        public CodifyToolWindowControl()
         {
-            _messageRouter = messageRouter;
-            _themeService = themeService;
-            _resourceServer = resourceServer;
+            // Initialize services that don't depend on WebView
+            _themeService = new VsThemeService();
+            _resourceServer = new WebViewResourceServer(
+                typeof(CodifyToolWindowControl).Assembly,
+                "Codify.UI.ToolWindows.Resources");
+            _serializer = new JsonSerializationService();
 
             InitializeComponent();
 
             Unloaded += OnUnloaded;
-
             SetupThemeIntegration();
 
             _ = InitializeWebViewAsync();
         }
 
-        public CodifyToolWindowControl() : this(
-            new WebViewMessageRouter(),
-            new VsThemeService(),
-            new WebViewResourceServer(
-                typeof(CodifyToolWindowControl).Assembly,
-                "Codify.UI.ToolWindows.Resources"))
-        {
-        }
         private async Task InitializeWebViewAsync()
         {
             try
             {
-                // 1. Define the user data folder path to avoid permission issues.
+                // Define the user data folder path to avoid permission issues.
                 var userDataFolder = System.IO.Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "CodifyExtension");
 
-                // 2. Create the WebView2 environment using the custom folder.
+                // Create the WebView2 environment using the custom folder.
                 var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
 
-                // 3. Initialize WebView2 with the environment.
+                // Initialize WebView2 with the environment.
                 await WebView.EnsureCoreWebView2Async(environment);
 
+                // Now that WebView is ready, initialize the messaging bridge
+                // Note: Replace 'new GapGPTProvider()' with your actual provider logic
+                _webViewClient = new WebViewClient(WebView, _serializer);
+
+                var sendChatUseCase = new SendChatMessageUseCase(new GapGptProvider());
+
+                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer);
+
+                // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);
+
+                // 5. Subscribe to incoming messages from JS
+                WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
 
                 WebView.CoreWebView2.Navigate(
                     "http://codify.resources/Chat/chat-view.html"
@@ -91,19 +99,20 @@ namespace Codify.UI.ToolWindows
             _themeService.ThemeChanged += OnThemeChanged;
         }
 
-        private void CoreWebView2_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        private async void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
-            var json = e.WebMessageAsJson;
-
-            Task.Delay(800).ContinueWith(_ =>
+            try
             {
-                var response ="{\"type\":\"AI_RESPONSE\",\"payload\":\"Message received ✅\"}";
-
-                WebView.Dispatcher.Invoke(() =>
-                {
-                    WebView.CoreWebView2.PostWebMessageAsJson(response);
-                });
-            });
+                // Forward the raw JSON from JS to our Clean Architecture Router
+                await _messageRouter.HandleMessageAsync(e.WebMessageAsJson);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging.
+                System.Diagnostics.Debug.WriteLine($"WebView2 Error: {ex.Message}");
+                MessageBox.Show($"WebView2 Init Failed:\n{ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         private void OnThemeChanged(object sender, EventArgs e)
         {
@@ -128,7 +137,12 @@ namespace Codify.UI.ToolWindows
         }
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            WebView.NavigationCompleted -= OnNavigationCompleted;
+            if (WebView.CoreWebView2 != null)
+            {
+                WebView.CoreWebView2.WebMessageReceived -= OnWebMessageReceived;
+                WebView.NavigationCompleted -= OnNavigationCompleted;
+            }
+            WebView.Dispose();
             _themeService.ThemeChanged -= OnThemeChanged;
         }
     }

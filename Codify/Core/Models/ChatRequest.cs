@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Codify.Core.Models;
 
-namespace Codify.Core.Models
+/// <summary>
+/// Represents a chat request coming from the WebView UI.
+/// </summary>
+public sealed class ChatRequest
 {
-    internal class ChatRequest
+    public string Type { get; set; } = string.Empty;
+    public string Payload { get; set; }
+
+    public ChatRequest() { }
+
+    public ChatRequest(string type, string payload)
     {
+        Type = type;
+        Payload = payload;
     }
 }

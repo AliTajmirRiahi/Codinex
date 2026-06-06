@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Codify.Core.Models;
 
-namespace Codify.Core.Models
+/// <summary>
+/// Represents a chat response sent back to the WebView UI.
+/// </summary>
+public sealed class ChatResponse
 {
-    internal class ChatResponse
+    public string Type { get; set; } = string.Empty;
+    public string Payload { get; set; } = string.Empty;
+
+    public ChatResponse() { }
+
+    public ChatResponse(string type, string payload)
     {
+        Type = type;
+        Payload = payload;
     }
 }

@@ -4,6 +4,18 @@
     <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|arm64'">
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|arm64'">
+    <LangVersion>10</LangVersion>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +47,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,21 +56,29 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\CodifyToolWindowCommand.cs" />
     <Compile Include="Core\Abstractions\IAiProvider.cs" />
     <Compile Include="Core\Abstractions\IChatSession.cs" />
+    <Compile Include="Core\Abstractions\IJsonSerializer.cs" />
     <Compile Include="Core\Abstractions\IResourceServer.cs" />
     <Compile Include="Core\Abstractions\IThemeService.cs" />
+    <Compile Include="Core\Abstractions\IWebViewClient.cs" />
     <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
+    <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
     <Compile Include="Core\Models\ChatRequest.cs" />
     <Compile Include="Core\Models\ChatResponse.cs" />
+    <Compile Include="Core\Models\WebViewMessageType.cs" />
+    <Compile Include="Core\UseCases\ISendChatMessageUseCase.cs" />
     <Compile Include="Core\UseCases\SendChatMessageUseCase.cs" />
-    <Compile Include="Infrastructure\AiProviders\GapGPTProvider.cs" />
+    <Compile Include="Infrastructure\AiProviders\GapGptProvider.cs" />
     <Compile Include="Infrastructure\AiProviders\OpenAiProvider.cs" />
+    <Compile Include="Infrastructure\Serialization\JsonSerializationService.cs" />
     <Compile Include="Infrastructure\Theme\VsThemeService.cs" />
+    <Compile Include="Infrastructure\WebView\WebViewClient.cs" />
     <Compile Include="Infrastructure\WebView\WebViewResourceServer.cs" />
     <Compile Include="Infrastructure\WebView\WebViewMessageRouter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,6 +118,9 @@
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2120" NoWarn="NU1604" />
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.3967.48</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>10.0.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

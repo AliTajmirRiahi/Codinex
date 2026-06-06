@@ -105,7 +105,7 @@
 
     .message.ai {
         align-self: flex-start;
-        background-color: var(--vs-input-bg);
+        background-color: var(--vs-file-tab-document-border-background-color);
         border: 1px solid var(--vs-border);
     }
 

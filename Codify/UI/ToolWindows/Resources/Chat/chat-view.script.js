@@ -8,7 +8,6 @@ userInput.addEventListener("input", function () {
 }, false);
 
 
-
 userInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
