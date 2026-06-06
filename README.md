@@ -1,6 +1,6 @@
 ## THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED.
 
-# ![Codify AI Logo](assets/Codify_AI_logo_24x24.png) Codify AI
+# ![Codify AI Logo](assets/Codify_AI_logo_40x40.png) Codify AI
 
 A next‑generation AI coding assistant for Visual Studio — fully agent‑configurable, provider‑agnostic, and built with local‑first support in mind.
 
