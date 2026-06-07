@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using Codify.Storage;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -34,6 +35,11 @@ namespace Codify
         /// </summary>
         public const string PackageGuidString = "eb873b7a-8287-48ac-8a6b-646d4166809b";
 
+        // Global access to settings and storage
+        public static SettingsManager Settings { get; private set; }
+        public static ProviderManager Providers { get; private set; }
+        public static IStorageService Storage { get; private set; }
+
         #region Package Members
 
         /// <summary>
@@ -45,10 +51,28 @@ namespace Codify
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            // When initialized asynchronously, the current thread may be a background thread at this point.
-            // Do any initialization that requires the UI thread after switching to the UI thread.
+            // 1. Switch to background thread for IO operations
+            await Task.Yield();
+
+            StoragePaths.EnsureCreated();
+
+            // 3. Initialize Services
+            Storage = new FileStorageService();
+
+            Settings = new SettingsManager(Storage);
+            await Settings.InitializeAsync();
+
+            Providers = new ProviderManager(Storage);
+            await Providers.InitializeAsync();
+
+            // 4. Important: Only switch to Main Thread when UI/Commands are needed
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+            // Initialize UI Commands
             await Codify.UI.ToolWindows.CodifyToolWindowCommand.InitializeAsync(this);
+
+            System.Diagnostics.Debug.WriteLine("[Codify] Initialization Completed Successfully.");
+
         }
 
         #endregion

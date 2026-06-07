@@ -88,6 +88,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Storage\FileStorageService.cs" />
+    <Compile Include="Storage\IStorageService.cs" />
+    <Compile Include="Storage\Models\AiModel.cs" />
+    <Compile Include="Storage\Models\AiProvider.cs" />
+    <Compile Include="Storage\Models\CodifySettings.cs" />
+    <Compile Include="Storage\ProviderManager.cs" />
+    <Compile Include="Storage\SettingsManager.cs" />
+    <Compile Include="Storage\StoragePaths.cs" />
     <Compile Include="UI\ToolWindows\CodifyToolWindow.cs" />
     <Compile Include="UI\ToolWindows\CodifyToolWindowCommand.cs" />
     <Compile Include="UI\ToolWindows\CodifyToolWindowControl.xaml.cs">
@@ -99,6 +107,21 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Storage\Resources\gapgpt_models.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
+    </Content>
+    <Content Include="Storage\Resources\providers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
+    </Content>
+    <Content Include="Storage\Resources\openAI_models.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <VSIXSubPath>Resources</VSIXSubPath>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

@@ -46,8 +46,6 @@ namespace Codify.Infrastructure.WebView
 
             var stream = _assembly.GetManifestResourceStream(resourceName);
 
-            //var names = _assembly.GetManifestResourceNames();
-
             if (stream == null)
                 return;
 
