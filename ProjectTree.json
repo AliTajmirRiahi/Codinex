@@ -1,0 +1,551 @@
+﻿[
+    {
+        "path":  "Codify/.github",
+        "name":  ".github",
+        "type":  "folder",
+        "children":  {
+                         "path":  "Codify/.github/workflows",
+                         "name":  "workflows",
+                         "type":  "folder",
+                         "children":  {
+
+                                      }
+                     }
+    },
+    {
+        "path":  "Codify/assets",
+        "name":  "assets",
+        "type":  "folder",
+        "children":  [
+                         {
+                             "path":  "Codify/assets/Codify_AI_logo_24x24.png",
+                             "name":  "Codify_AI_logo_24x24.png",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/assets/Codify_AI_logo_40x40.png",
+                             "name":  "Codify_AI_logo_40x40.png",
+                             "type":  "file"
+                         }
+                     ]
+    },
+    {
+        "path":  "Codify/Codify",
+        "name":  "Codify",
+        "type":  "folder",
+        "children":  [
+                         {
+                             "path":  "Codify/Codify/Commands",
+                             "name":  "Commands",
+                             "type":  "folder",
+                             "children":  {
+                                              "path":  "Codify/Codify/Commands/CodifyToolWindowCommand.cs",
+                                              "name":  "CodifyToolWindowCommand.cs",
+                                              "type":  "file"
+                                          }
+                         },
+                         {
+                             "path":  "Codify/Codify/Core",
+                             "name":  "Core",
+                             "type":  "folder",
+                             "children":  [
+                                              {
+                                                  "path":  "Codify/Codify/Core/Abstractions",
+                                                  "name":  "Abstractions",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IAiProvider.cs",
+                                                                       "name":  "IAiProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IChatSession.cs",
+                                                                       "name":  "IChatSession.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IJsonSerializer.cs",
+                                                                       "name":  "IJsonSerializer.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IResourceServer.cs",
+                                                                       "name":  "IResourceServer.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IThemeService.cs",
+                                                                       "name":  "IThemeService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IWebViewClient.cs",
+                                                                       "name":  "IWebViewClient.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Abstractions/IWebViewMessageRouter.cs",
+                                                                       "name":  "IWebViewMessageRouter.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Core/Models",
+                                                  "name":  "Models",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Models/Attachment.cs",
+                                                                       "name":  "Attachment.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Models/ChatMessage.cs",
+                                                                       "name":  "ChatMessage.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Models/ChatRequest.cs",
+                                                                       "name":  "ChatRequest.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Models/ChatResponse.cs",
+                                                                       "name":  "ChatResponse.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/Models/WebViewMessageType.cs",
+                                                                       "name":  "WebViewMessageType.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Core/UseCases",
+                                                  "name":  "UseCases",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/UseCases/ISendChatMessageUseCase.cs",
+                                                                       "name":  "ISendChatMessageUseCase.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Core/UseCases/SendChatMessageUseCase.cs",
+                                                                       "name":  "SendChatMessageUseCase.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              }
+                                          ]
+                         },
+                         {
+                             "path":  "Codify/Codify/Infrastructure",
+                             "name":  "Infrastructure",
+                             "type":  "folder",
+                             "children":  [
+                                              {
+                                                  "path":  "Codify/Codify/Infrastructure/AiProviders",
+                                                  "name":  "AiProviders",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Infrastructure/AiProviders/GapGptProvider.cs",
+                                                                       "name":  "GapGptProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Infrastructure/AiProviders/OpenAiProvider.cs",
+                                                                       "name":  "OpenAiProvider.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Infrastructure/Serialization",
+                                                  "name":  "Serialization",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Codify/Infrastructure/Serialization/JsonSerializationService.cs",
+                                                                   "name":  "JsonSerializationService.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Infrastructure/Theme",
+                                                  "name":  "Theme",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Codify/Infrastructure/Theme/VsThemeService.cs",
+                                                                   "name":  "VsThemeService.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Infrastructure/WebView",
+                                                  "name":  "WebView",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Infrastructure/WebView/WebViewClient.cs",
+                                                                       "name":  "WebViewClient.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Infrastructure/WebView/WebViewMessageRouter.cs",
+                                                                       "name":  "WebViewMessageRouter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Infrastructure/WebView/WebViewResourceServer.cs",
+                                                                       "name":  "WebViewResourceServer.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              }
+                                          ]
+                         },
+                         {
+                             "path":  "Codify/Codify/Properties",
+                             "name":  "Properties",
+                             "type":  "folder",
+                             "children":  [
+                                              {
+                                                  "path":  "Codify/Codify/Properties/AssemblyInfo.cs",
+                                                  "name":  "AssemblyInfo.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Properties/Resources.Designer.cs",
+                                                  "name":  "Resources.Designer.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Properties/Resources.resx",
+                                                  "name":  "Resources.resx",
+                                                  "type":  "file"
+                                              }
+                                          ]
+                         },
+                         {
+                             "path":  "Codify/Codify/Storage",
+                             "name":  "Storage",
+                             "type":  "folder",
+                             "children":  [
+                                              {
+                                                  "path":  "Codify/Codify/Storage/Models",
+                                                  "name":  "Models",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Models/AiModel.cs",
+                                                                       "name":  "AiModel.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Models/AiProvider.cs",
+                                                                       "name":  "AiProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Models/CodifySettings.cs",
+                                                                       "name":  "CodifySettings.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/Resources",
+                                                  "name":  "Resources",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Resources/gapgpt_models.json",
+                                                                       "name":  "gapgpt_models.json",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Resources/openAI_models.json",
+                                                                       "name":  "openAI_models.json",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Codify/Storage/Resources/providers.json",
+                                                                       "name":  "providers.json",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/FileStorageService.cs",
+                                                  "name":  "FileStorageService.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/IStorageService.cs",
+                                                  "name":  "IStorageService.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/ProviderManager.cs",
+                                                  "name":  "ProviderManager.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/SettingsManager.cs",
+                                                  "name":  "SettingsManager.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Codify/Storage/StoragePaths.cs",
+                                                  "name":  "StoragePaths.cs",
+                                                  "type":  "file"
+                                              }
+                                          ]
+                         },
+                         {
+                             "path":  "Codify/Codify/UI",
+                             "name":  "UI",
+                             "type":  "folder",
+                             "children":  {
+                                              "path":  "Codify/Codify/UI/ToolWindows",
+                                              "name":  "ToolWindows",
+                                              "type":  "folder",
+                                              "children":  [
+                                                               {
+                                                                   "path":  "Codify/Codify/UI/ToolWindows/Resources",
+                                                                   "name":  "Resources",
+                                                                   "type":  "folder",
+                                                                   "children":  [
+                                                                                    {
+                                                                                        "path":  "Codify/Codify/UI/ToolWindows/Resources/Chat",
+                                                                                        "name":  "Chat",
+                                                                                        "type":  "folder",
+                                                                                        "children":  [
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Chat/chat-view.html",
+                                                                                                             "name":  "chat-view.html",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Chat/chat-view.script.js",
+                                                                                                             "name":  "chat-view.script.js",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Chat/chat-view.style.css",
+                                                                                                             "name":  "chat-view.style.css",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                                     ]
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons",
+                                                                                        "name":  "Icons",
+                                                                                        "type":  "folder",
+                                                                                        "children":  [
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/brain.svg",
+                                                                                                             "name":  "brain.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/chevron-down.svg",
+                                                                                                             "name":  "chevron-down.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/circle-x.svg",
+                                                                                                             "name":  "circle-x.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/codify-AI-logo-black.svg",
+                                                                                                             "name":  "codify-AI-logo-black.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/hat-glasses.svg",
+                                                                                                             "name":  "hat-glasses.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/message-square-plus.svg",
+                                                                                                             "name":  "message-square-plus.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/message-square-x.svg",
+                                                                                                             "name":  "message-square-x.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/plus.svg",
+                                                                                                             "name":  "plus.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/scroll-text.svg",
+                                                                                                             "name":  "scroll-text.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/send-horizontal.svg",
+                                                                                                             "name":  "send-horizontal.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/trash-2.svg",
+                                                                                                             "name":  "trash-2.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Icons/wrench.svg",
+                                                                                                             "name":  "wrench.svg",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                                     ]
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/Codify/UI/ToolWindows/Resources/Settings",
+                                                                                        "name":  "Settings",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+
+                                                                                                     }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/Codify/UI/ToolWindows/Resources/Shared",
+                                                                                        "name":  "Shared",
+                                                                                        "type":  "folder",
+                                                                                        "children":  [
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Shared/bridge.js",
+                                                                                                             "name":  "bridge.js",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/Codify/UI/ToolWindows/Resources/Shared/theme.css",
+                                                                                                             "name":  "theme.css",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                                     ]
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/Codify/UI/ToolWindows/Resources/CodifyToolWindowCommand.png",
+                                                                                        "name":  "CodifyToolWindowCommand.png",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                                ]
+                                                               },
+                                                               {
+                                                                   "path":  "Codify/Codify/UI/ToolWindows/CodifyToolWindow.cs",
+                                                                   "name":  "CodifyToolWindow.cs",
+                                                                   "type":  "file"
+                                                               },
+                                                               {
+                                                                   "path":  "Codify/Codify/UI/ToolWindows/CodifyToolWindowCommand.cs",
+                                                                   "name":  "CodifyToolWindowCommand.cs",
+                                                                   "type":  "file"
+                                                               },
+                                                               {
+                                                                   "path":  "Codify/Codify/UI/ToolWindows/CodifyToolWindowControl.xaml",
+                                                                   "name":  "CodifyToolWindowControl.xaml",
+                                                                   "type":  "file"
+                                                               },
+                                                               {
+                                                                   "path":  "Codify/Codify/UI/ToolWindows/CodifyToolWindowControl.xaml.cs",
+                                                                   "name":  "CodifyToolWindowControl.xaml.cs",
+                                                                   "type":  "file"
+                                                               }
+                                                           ]
+                                          }
+                         },
+                         {
+                             "path":  "Codify/Codify/ViewModels",
+                             "name":  "ViewModels",
+                             "type":  "folder",
+                             "children":  {
+                                              "path":  "Codify/Codify/ViewModels/ChatViewModel.cs",
+                                              "name":  "ChatViewModel.cs",
+                                              "type":  "file"
+                                          }
+                         },
+                         {
+                             "path":  "Codify/Codify/Codify.csproj",
+                             "name":  "Codify.csproj",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/Codify/Codify.csproj.user",
+                             "name":  "Codify.csproj.user",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/Codify/CodifyPackage.cs",
+                             "name":  "CodifyPackage.cs",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/Codify/CodifyPackage.vsct",
+                             "name":  "CodifyPackage.vsct",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/Codify/source.extension.vsixmanifest",
+                             "name":  "source.extension.vsixmanifest",
+                             "type":  "file"
+                         }
+                     ]
+    },
+    {
+        "path":  "Codify/Codify.Tests",
+        "name":  "Codify.Tests",
+        "type":  "folder",
+        "children":  [
+                         {
+                             "path":  "Codify/Codify.Tests/Codify.Tests.csproj",
+                             "name":  "Codify.Tests.csproj",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  "Codify/Codify.Tests/UnitTest1.cs",
+                             "name":  "UnitTest1.cs",
+                             "type":  "file"
+                         }
+                     ]
+    },
+    {
+        "path":  "Codify/.gitattributes",
+        "name":  ".gitattributes",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify/.gitignore",
+        "name":  ".gitignore",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify/Codify.sln.DotSettings.user",
+        "name":  "Codify.sln.DotSettings.user",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify/Codify.slnx",
+        "name":  "Codify.slnx",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify/ProjectTree.json",
+        "name":  "ProjectTree.json",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify/README.md",
+        "name":  "README.md",
+        "type":  "file"
+    }
+]
