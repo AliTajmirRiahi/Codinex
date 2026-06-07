@@ -1,16 +1,14 @@
 # generate-project-tree.ps1
-# Generates a JSON project tree with paths starting from the Root folder name
+# Generates a JSON project tree with paths relative to the execution root
 
 param (
     [string]$TargetPath = "."
 )
 
-# 1. Clean up trailing quotes and get the absolute path
+# 1. Clean up and get the absolute path of the solution root
 $TargetPath = (Resolve-Path ($TargetPath.Trim('"').Trim("'"))).Path
-# 2. Get the name of the root directory (e.g., "Codify")
-$RootFolderName = Split-Path $TargetPath -Leaf
 
-function Get-ProjectTree($path, $rootPath, $rootName) {
+function Get-ProjectTree($path, $rootPath) {
     if (-not (Test-Path $path)) { return $null }
 
     # Folders to ignore
@@ -19,16 +17,16 @@ function Get-ProjectTree($path, $rootPath, $rootName) {
     $items = Get-ChildItem -Path $path -Force | Where-Object { $_.Name -notin $excludeList }
     
     $result = foreach ($item in $items) {
-        # Calculate the relative path from the TargetPath
-        # Example: "C:\Projects\Codify\Sub\File.cs" -> "\Sub\File.cs"
-        $relativeFromRoot = $item.FullName.Substring($rootPath.Length)
+        # Calculate the relative path from the Root
+        # .Substring($rootPath.Length) gives us things like "\Codify\File.cs"
+        $relative = $item.FullName.Substring($rootPath.Length)
         
-        # Build the final path: RootName + RelativePath and replace \ with /
-        # Example: "Codify" + "/Sub/File.cs" -> "Codify/Sub/File.cs"
-        $finalPath = ($rootName + $relativeFromRoot).Replace("\", "/")
+        # Trim leading slashes and convert to forward slashes
+        # Result: "Codify/Infrastructure/WebView/WebViewClient.cs"
+        $finalPath = $relative.TrimStart("\").TrimStart("/").Replace("\", "/")
 
         if ($item.PSIsContainer) {
-            $children = Get-ProjectTree $item.FullName $rootPath $rootName
+            $children = Get-ProjectTree $item.FullName $rootPath
             @{
                 name     = $item.Name
                 type     = "folder"
@@ -46,10 +44,10 @@ function Get-ProjectTree($path, $rootPath, $rootName) {
     return $result
 }
 
-# Execute the tree generation
-$tree = Get-ProjectTree $TargetPath $TargetPath $RootFolderName
+# Execute
+$tree = Get-ProjectTree $TargetPath $TargetPath
 
 # Convert to JSON and save
 $tree | ConvertTo-Json -Depth 20 | Set-Content "$TargetPath\ProjectTree.json" -Encoding UTF8
 
-Write-Host "ProjectTree.json updated with paths starting from '$RootFolderName/'" -ForegroundColor Green
+Write-Host "✅ ProjectTree.json updated successfully." -ForegroundColor Green

@@ -200,8 +200,8 @@
   </Target>
   -->
   <!-- Automatically update ProjectTree.json on every build -->
-	<Target Name="UpdateProjectTree" AfterTargets="Build">
-	  <!-- We use TrimEnd to ensure no trailing backslash causes issues with quotes -->
-	  <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\generate-project-tree.ps1&quot; -TargetPath &quot;$(SolutionDir.TrimEnd('\'))&quot;" />
-	</Target>
+  <Target Name="UpdateProjectTree" AfterTargets="Build">
+    <!-- We use TrimEnd to ensure no trailing backslash causes issues with quotes -->
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\generate-project-tree.ps1&quot; -TargetPath &quot;$(SolutionDir.TrimEnd('\'))&quot;" />
+  </Target>
 </Project>
