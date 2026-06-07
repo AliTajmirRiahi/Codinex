@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
-using Codify.Core.Abstractions;
+﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
 using Codify.Core.UseCases;
+using Codify.Storage;
+using System;
+using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -13,15 +15,18 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly ISendChatMessageUseCase _sendChatMessageUseCase;
     private readonly IWebViewClient _webViewClient;
     private readonly IJsonSerializer _serializer;
+    private readonly ProviderManager _providerManager;
 
     public WebViewMessageRouter(
         ISendChatMessageUseCase sendChatMessageUseCase,
         IWebViewClient webViewClient,
-        IJsonSerializer serializer)
+        IJsonSerializer serializer,
+        ProviderManager providerManager)
     {
         _sendChatMessageUseCase = sendChatMessageUseCase;
         _webViewClient = webViewClient;
         _serializer = serializer;
+        _providerManager = providerManager;
     }
 
     public async Task HandleMessageAsync(string messageJson)
@@ -57,5 +62,23 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var response = await _sendChatMessageUseCase.ExecuteAsync(request, false);
         await _webViewClient.PostMessageAsync(response);
+    }
+
+    public async Task SendInitialDataAsync()
+    {
+        // Get all configured providers and their models from ProviderManager
+        var providers = _providerManager.AllProviders;
+
+        var message = new
+        {
+            Type = WebViewMessageType.InitData,
+            Payload = new
+            {
+                Providers = providers,
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
     }
 }

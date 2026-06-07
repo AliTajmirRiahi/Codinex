@@ -5,7 +5,7 @@
     "TokenLimit": 128000,
     "SupportsImages": true,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   },
   {
     "Id": "gpt-5.2",
@@ -85,6 +85,6 @@
     "TokenLimit": 200000,
     "SupportsImages": false,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   }
 ]

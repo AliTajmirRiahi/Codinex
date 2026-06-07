@@ -41,3 +41,7 @@ codify-image {
         height: 100%;
         display: block;
     }
+
+button.disable {
+    background: var(--vs-button-bg) !important;
+}

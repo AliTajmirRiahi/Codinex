@@ -5,7 +5,7 @@
     "TokenLimit": 128000,
     "SupportsImages": true,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   },
   {
     "Id": "gpt-5.4",
@@ -109,7 +109,7 @@
     "TokenLimit": 128000,
     "SupportsImages": true,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   },
   {
     "Id": "gpt-5-chat-latest",
@@ -157,7 +157,7 @@
     "TokenLimit": 200000,
     "SupportsImages": false,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   },
   {
     "Id": "o3-mini",
@@ -181,7 +181,7 @@
     "TokenLimit": 128000,
     "SupportsImages": true,
     "SupportsTools": true,
-    "IsSelected": true
+    "IsSelected": false
   },
   {
     "Id": "gpt-4o-mini",

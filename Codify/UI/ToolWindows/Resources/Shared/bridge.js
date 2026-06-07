@@ -32,6 +32,34 @@
 
 })();
 
+//Global Listener for catch massages
+if (window.chrome && window.chrome.webview) {
+    window.chrome.webview.addEventListener("message", event => {
+        const message = event.data;
+        debugger;
+        // Use the literal string we defined in C# for initialization
+        if (message.type === "INIT_DATA") {
+            const providers = message.payload.providers;
+            populateProviderSelector(providers);
+        }
+        // Add handlers for other message types like AiResponse, Error, etc.
+        else if (message.type === "AI_RESPONSE") {
+            // Handle AI response display
+            appendMessageToChat(message.payload.Content, "ai");
+        } else if (message.type === "ERROR") {
+            // Display error to user
+            showError(message.Ppayload.Message);
+        }
+    });
+}
+
+// Example placeholder for showing errors
+function showError(message) {
+    console.error(`Error from backend: ${message}`);
+    // Your actual error display logic here
+}
+
+
 // Codify icon web component
 // Loads SVG icons dynamically from embedded resources
 

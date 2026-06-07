@@ -69,7 +69,7 @@ namespace Codify.UI.ToolWindows
 
                 var sendChatUseCase = new SendChatMessageUseCase(new GapGptProvider());
 
-                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer);
+                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer, CodifyPackage.Providers);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);
@@ -125,6 +125,8 @@ namespace Codify.UI.ToolWindows
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             _ = ApplyThemeToWebViewAsync();
+
+            _ = _messageRouter.SendInitialDataAsync();
         }
 
         private async Task ApplyThemeToWebViewAsync()

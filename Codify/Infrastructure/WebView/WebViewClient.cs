@@ -2,7 +2,6 @@
 using Microsoft.Web.WebView2.Core;
 using Codify.Core.Abstractions;
 using Microsoft.Web.WebView2.Wpf;
-using Newtonsoft.Json;
 
 namespace Codify.Infrastructure.WebView;
 

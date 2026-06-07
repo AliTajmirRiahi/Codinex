@@ -79,27 +79,6 @@ namespace Codify.Storage
             return new List<T>();
         }
 
-        //private List<AiModel> LoadModelsFromResources()
-        //{
-        //    try
-        //    {
-        //        var assembly = typeof(ProviderManager).Assembly;
-
-        //        string resourceName = $"Codify.Storage.Resources.gapgpt_models.json";
-
-        //        var stream = assembly.GetManifestResourceStream(resourceName);
-
-        //        if (stream == null)
-        //            return new List<AiModel>();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine($"[Codify] Resource Load Error: {ex.Message}");
-        //    }
-
-        //    return new List<AiModel>(); // Return empty list if failed
-        //}
-
         public async Task SaveAsync()
         {
             await _storage.SaveAsync(StoragePaths.Providers, _providers);
