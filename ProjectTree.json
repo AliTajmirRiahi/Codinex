@@ -70,6 +70,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Core/Abstractions/IPayloadBinder.cs",
+                                                                       "name":  "IPayloadBinder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Abstractions/IResourceServer.cs",
                                                                        "name":  "IResourceServer.cs",
                                                                        "type":  "file"
@@ -107,13 +112,13 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "Codify/Core/Models/ChatRequest.cs",
-                                                                       "name":  "ChatRequest.cs",
+                                                                       "path":  "Codify/Core/Models/ChatResponse.cs",
+                                                                       "name":  "ChatResponse.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "Codify/Core/Models/ChatResponse.cs",
-                                                                       "name":  "ChatResponse.cs",
+                                                                       "path":  "Codify/Core/Models/WebViewMessage.cs",
+                                                                       "name":  "WebViewMessage.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -168,11 +173,18 @@
                                                   "path":  "Codify/Infrastructure/Serialization",
                                                   "name":  "Serialization",
                                                   "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "Codify/Infrastructure/Serialization/JsonSerializationService.cs",
-                                                                   "name":  "JsonSerializationService.cs",
-                                                                   "type":  "file"
-                                                               }
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Serialization/JsonSerializationService.cs",
+                                                                       "name":  "JsonSerializationService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Serialization/NewtonsoftPayloadBinder.cs",
+                                                                       "name":  "NewtonsoftPayloadBinder.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "Codify/Infrastructure/Theme",
@@ -326,9 +338,144 @@
                                                                                         "type":  "folder",
                                                                                         "children":  [
                                                                                                          {
-                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/chat-view.html",
-                                                                                                             "name":  "chat-view.html",
-                                                                                                             "type":  "file"
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/js",
+                                                                                                             "name":  "js",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants",
+                                                                                                                                  "name":  "constants",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  {
+                                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants/events.js",
+                                                                                                                                                   "name":  "events.js",
+                                                                                                                                                   "type":  "file"
+                                                                                                                                               }
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers",
+                                                                                                                                  "name":  "controllers",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/chatController.js",
+                                                                                                                                                       "name":  "chatController.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/providerController.js",
+                                                                                                                                                       "name":  "providerController.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/settingsController.js",
+                                                                                                                                                       "name":  "settingsController.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/services",
+                                                                                                                                  "name":  "services",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/services/aiService.js",
+                                                                                                                                                       "name":  "aiService.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/services/paginationService.js",
+                                                                                                                                                       "name":  "paginationService.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/services/validationService.js",
+                                                                                                                                                       "name":  "validationService.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/state",
+                                                                                                                                  "name":  "state",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  {
+                                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/js/state/appState.js",
+                                                                                                                                                   "name":  "appState.js",
+                                                                                                                                                   "type":  "file"
+                                                                                                                                               }
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/utils",
+                                                                                                                                  "name":  "utils",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/utils/debounce.js",
+                                                                                                                                                       "name":  "debounce.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/utils/dom.js",
+                                                                                                                                                       "name":  "dom.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views",
+                                                                                                                                  "name":  "views",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/chatView.js",
+                                                                                                                                                       "name":  "chatView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/messageView.js",
+                                                                                                                                                       "name":  "messageView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/settingsView.js",
+                                                                                                                                                       "name":  "settingsView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/js/main.js",
+                                                                                                                                  "name":  "main.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/tests",
+                                                                                                             "name":  "tests",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  {
+                                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils-tests",
+                                                                                                                              "name":  "utils-tests",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils-tests/debounce.test.js",
+                                                                                                                                               "name":  "debounce.test.js",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          }
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/view",
+                                                                                                             "name":  "view",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  {
+                                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/view/chat-view.html",
+                                                                                                                              "name":  "chat-view.html",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
                                                                                                          },
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/chat-view.script.js",
@@ -410,22 +557,48 @@
                                                                                                      ]
                                                                                     },
                                                                                     {
-                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Settings",
-                                                                                        "name":  "Settings",
-                                                                                        "type":  "folder",
-                                                                                        "children":  {
-
-                                                                                                     }
-                                                                                    },
-                                                                                    {
                                                                                         "path":  "Codify/UI/ToolWindows/Resources/Shared",
                                                                                         "name":  "Shared",
                                                                                         "type":  "folder",
                                                                                         "children":  [
                                                                                                          {
-                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge.js",
-                                                                                                             "name":  "bridge.js",
-                                                                                                             "type":  "file"
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge",
+                                                                                                             "name":  "bridge",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge/bridge.js",
+                                                                                                                                  "name":  "bridge.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge/messageDispatcher.js",
+                                                                                                                                  "name":  "messageDispatcher.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge/webViewTransport.js",
+                                                                                                                                  "name":  "webViewTransport.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Shared/components",
+                                                                                                             "name":  "components",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/CodifyIcon.js",
+                                                                                                                                  "name":  "CodifyIcon.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/CodifyImage.js",
+                                                                                                                                  "name":  "CodifyImage.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
                                                                                                          },
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Shared/theme.css",
@@ -435,8 +608,33 @@
                                                                                                      ]
                                                                                     },
                                                                                     {
+                                                                                        "path":  "Codify/UI/ToolWindows/Resources/babel.config.js",
+                                                                                        "name":  "babel.config.js",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
                                                                                         "path":  "Codify/UI/ToolWindows/Resources/CodifyToolWindowCommand.png",
                                                                                         "name":  "CodifyToolWindowCommand.png",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/UI/ToolWindows/Resources/favicon.ico",
+                                                                                        "name":  "favicon.ico",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/UI/ToolWindows/Resources/jest.config.js",
+                                                                                        "name":  "jest.config.js",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/UI/ToolWindows/Resources/package-lock.json",
+                                                                                        "name":  "package-lock.json",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "Codify/UI/ToolWindows/Resources/package.json",
+                                                                                        "name":  "package.json",
                                                                                         "type":  "file"
                                                                                     }
                                                                                 ]
@@ -526,6 +724,11 @@
     {
         "path":  ".gitignore",
         "name":  ".gitignore",
+        "type":  "file"
+    },
+    {
+        "path":  ".runsettings",
+        "name":  ".runsettings",
         "type":  "file"
     },
     {

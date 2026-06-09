@@ -428,6 +428,7 @@ textarea {
     display: flex;
     flex-direction: column;
     margin-bottom: 12px;
+    margin-top:2px;
 }
 
     .form-group.inline {
@@ -588,7 +589,7 @@ hr {
     }
 
         .modal-footer button:hover {
-            background: var(--vs-button-hover);
+            background: var(--vs-main-window-active-default-border-color);
         }
 /*#save-settings-btn {
     background-color: var(--vscode-button-background);

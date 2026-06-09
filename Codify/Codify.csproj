@@ -63,13 +63,14 @@
     <Compile Include="Core\Abstractions\IAiProvider.cs" />
     <Compile Include="Core\Abstractions\IChatSession.cs" />
     <Compile Include="Core\Abstractions\IJsonSerializer.cs" />
+    <Compile Include="Core\Abstractions\IPayloadBinder.cs" />
     <Compile Include="Core\Abstractions\IResourceServer.cs" />
     <Compile Include="Core\Abstractions\IThemeService.cs" />
     <Compile Include="Core\Abstractions\IWebViewClient.cs" />
     <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
-    <Compile Include="Core\Models\ChatRequest.cs" />
+    <Compile Include="Core\Models\WebViewMessage.cs" />
     <Compile Include="Core\Models\ChatResponse.cs" />
     <Compile Include="Core\Models\WebViewMessageType.cs" />
     <Compile Include="Core\UseCases\ISendChatMessageUseCase.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Infrastructure\AiProviders\GapGptProvider.cs" />
     <Compile Include="Infrastructure\AiProviders\OpenAiProvider.cs" />
     <Compile Include="Infrastructure\Serialization\JsonSerializationService.cs" />
+    <Compile Include="Infrastructure\Serialization\NewtonsoftPayloadBinder.cs" />
     <Compile Include="Infrastructure\Theme\VsThemeService.cs" />
     <Compile Include="Infrastructure\WebView\WebViewClient.cs" />
     <Compile Include="Infrastructure\WebView\WebViewResourceServer.cs" />
@@ -104,6 +106,42 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\bridge.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\messageDispatcher.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\webViewTransport.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\CodifyIcon.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\CodifyImage.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\theme.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.style.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\events.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\chatController.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\providerController.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\settingsController.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\main.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\services\aiService.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\services\paginationService.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\services\validationService.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\state\appState.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\utils\debounce.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\utils\dom.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\chatView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\messageView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\settingsView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\view\chat-view.html" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\CodifyToolWindowCommand.png" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\favicon.ico" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\brain.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\chevron-down.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\circle-x.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\codify-AI-logo-black.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\hat-glasses.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-plus.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-x.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\plus.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\scroll-text.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\send-horizontal.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\trash-2.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\wrench.svg" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -122,6 +160,16 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <VSIXSubPath>Resources</VSIXSubPath>
     </Content>
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\settingsController.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\services\aiService.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\state\appState.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\dom.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
+    <Content Include="UI\ToolWindows\Resources\jest.config.js" />
+    <Content Include="UI\ToolWindows\Resources\babel.config.js" />
+    <None Include="UI\ToolWindows\Resources\package.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -147,38 +195,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\brain.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\chevron-down.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\circle-x.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\hat-glasses.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\plus.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\scroll-text.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\wrench.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\codify-AI-logo-black.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\trash-2.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-plus.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-square-x.svg" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\theme.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.html" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.script.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.style.css" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\send-horizontal.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <Content Include="UI\ToolWindows\Resources\CodifyToolWindowCommand.png" />
-    <VSCTCompile Include="CodifyPackage.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\ToolWindows\Resources\Settings\" />
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="UI\ToolWindows\CodifyToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,6 +206,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -25,6 +25,7 @@ namespace Codify.UI.ToolWindows
         private readonly IThemeService _themeService;
         private readonly IResourceServer _resourceServer;
         private readonly IJsonSerializer _serializer;
+        private readonly IPayloadBinder _payloadBinder;
 
 
         // These will be initialized once WebView is ready
@@ -39,6 +40,7 @@ namespace Codify.UI.ToolWindows
                 typeof(CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources");
             _serializer = new JsonSerializationService();
+            _payloadBinder = new NewtonsoftPayloadBinder(new Newtonsoft.Json.JsonSerializer());
 
             InitializeComponent();
 
@@ -63,13 +65,15 @@ namespace Codify.UI.ToolWindows
                 // Initialize WebView2 with the environment.
                 await WebView.EnsureCoreWebView2Async(environment);
 
+                //WebView.CoreWebView2.OpenDevToolsWindow();
+
                 // Now that WebView is ready, initialize the messaging bridge
                 // Note: Replace 'new GapGPTProvider()' with your actual provider logic
                 _webViewClient = new WebViewClient(WebView, _serializer);
 
                 var sendChatUseCase = new SendChatMessageUseCase(new GapGptProvider());
 
-                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer, CodifyPackage.Providers);
+                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer, CodifyPackage.Providers, _payloadBinder);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);
@@ -78,7 +82,7 @@ namespace Codify.UI.ToolWindows
                 WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
 
                 WebView.CoreWebView2.Navigate(
-                    "http://codify.resources/Chat/chat-view.html"
+                    "http://codify.resources/Chat/view/chat-view.html"
                 );
             }
             catch (Exception ex)
@@ -125,8 +129,6 @@ namespace Codify.UI.ToolWindows
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
             _ = ApplyThemeToWebViewAsync();
-
-            _ = _messageRouter.SendInitialDataAsync();
         }
 
         private async Task ApplyThemeToWebViewAsync()

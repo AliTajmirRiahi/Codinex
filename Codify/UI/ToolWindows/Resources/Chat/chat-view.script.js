@@ -57,6 +57,8 @@ function closeSettingsModal() {
 document.getElementById("close-settings")
     .addEventListener("click", closeSettingsModal);
 
+document.getElementById("model-api-key").addEventListener("input", toggleSaveButton);
+
 
 // --- Global Variables ---
 let allProvidersData = []; // To store all provider data fetched from C#
@@ -186,7 +188,8 @@ function renderModelPage() {
     updatePaginationUI();
 }
 function toggleSaveButton() {
-    if (selectedModels.size > 0)
+    const apiKeyInput = document.getElementById('model-api-key');
+    if (selectedModels.size > 0 && apiKeyInput.value)
         document.getElementById('save-settings-btn').classList.remove('disable');
     else
         document.getElementById('save-settings-btn').classList.add('disable');
