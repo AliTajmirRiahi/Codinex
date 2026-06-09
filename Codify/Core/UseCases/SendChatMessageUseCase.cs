@@ -22,9 +22,9 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
         _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
     }
 
-    public async Task<ChatResponse> ExecuteAsync(ChatRequest request, bool includeSelectedCode)
+    public async Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode)
     {
-        if (string.IsNullOrWhiteSpace(request.Payload))
+        if (message == null)
         {
             return new ChatResponse("ERROR", "Message cannot be empty.");
         }
@@ -44,7 +44,7 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
             //}
 
             // Call the provider (this could be GapGPT, Ollama, etc.)
-            var aiResult = await _aiProvider.SendAsync(request.Payload);
+            var aiResult = await _aiProvider.SendAsync(message);
 
             return new ChatResponse("AI_RESPONSE", aiResult);
         }

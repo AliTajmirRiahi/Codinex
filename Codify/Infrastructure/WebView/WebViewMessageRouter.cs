@@ -16,17 +16,20 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IWebViewClient _webViewClient;
     private readonly IJsonSerializer _serializer;
     private readonly ProviderManager _providerManager;
+    private readonly IPayloadBinder _payloadBinder;
 
     public WebViewMessageRouter(
         ISendChatMessageUseCase sendChatMessageUseCase,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
-        ProviderManager providerManager)
+        ProviderManager providerManager,
+        IPayloadBinder payloadBinder)
     {
         _sendChatMessageUseCase = sendChatMessageUseCase;
         _webViewClient = webViewClient;
         _serializer = serializer;
         _providerManager = providerManager;
+        _payloadBinder = payloadBinder;
     }
 
     public async Task HandleMessageAsync(string messageJson)
@@ -39,10 +42,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             return;
         }
 
-        ChatRequest? request;
+        WebViewMessage request;
+
         try
         {
-            request = _serializer.Deserialize<ChatRequest>(messageJson);
+            request = _serializer.Deserialize<WebViewMessage>(messageJson);
         }
         catch
         {
@@ -60,8 +64,60 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             return;
         }
 
-        var response = await _sendChatMessageUseCase.ExecuteAsync(request, false);
-        await _webViewClient.PostMessageAsync(response);
+        switch (request.Type)
+        {
+            case WebViewMessageType.Ready:
+                {
+                    // UI initialized and ready
+                    await SendInitialDataAsync();
+                    return;
+                }
+
+            case WebViewMessageType.InitState:
+                {
+                    // UI asks for current state
+                    await SendInitialDataAsync();
+                    return;
+                }
+
+            case WebViewMessageType.SendMessage:
+                {
+                    var payload = _payloadBinder.Bind<ChatMessage>(request.Payload);
+
+                    var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
+
+                    await _webViewClient.PostMessageAsync(response);
+                    return;
+                }
+
+            case WebViewMessageType.SelectProvider:
+                {
+                    //var payload = _payloadBinder.Bind<SelectProviderPayload>(request.Payload);
+
+                    //_providerManager.SetActiveProvider(payload.ProviderId);
+
+                    //await SendInitialDataAsync();
+                    return;
+                }
+
+            case WebViewMessageType.CancelGeneration:
+                {
+                    // Future: cancel streaming AI response
+                    // Example: _generationCancellation.Cancel();
+
+                    return;
+                }
+
+            default:
+                {
+                    await _webViewClient.PostMessageAsync(new ChatResponse(
+                        WebViewMessageType.Error,
+                        $"Unknown message type: {request.Type}"));
+                    return;
+                }
+
+
+        }
     }
 
     public async Task SendInitialDataAsync()

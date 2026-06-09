@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Codify.Core.Models;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
 
 namespace Codify.Core.Abstractions;
 
@@ -11,8 +12,8 @@ public interface IAiProvider
     /// Sends a prompt along with multiple attachments (code, files, images) to the AI.
     /// </summary>
     Task<string> SendAsync(
-        string prompt,
-        IEnumerable<Attachment>? attachments = null,
+        ChatMessage prompt,
+        IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
 
     /// <summary>

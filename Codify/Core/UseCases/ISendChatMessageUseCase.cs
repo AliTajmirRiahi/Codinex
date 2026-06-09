@@ -11,5 +11,5 @@ public interface ISendChatMessageUseCase
     /// <summary>
     /// Executes the chat flow for a single user message.
     /// </summary>
-    Task<ChatResponse> ExecuteAsync(ChatRequest request, bool includeSelectedCode);
+    Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode);
 }

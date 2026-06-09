@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Codify.Core.Models
 {
-    internal class ChatMessage
+    public class ChatMessage
     {
+        public string Message { get; set; }
     }
 }

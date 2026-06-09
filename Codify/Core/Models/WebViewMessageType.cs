@@ -5,8 +5,17 @@
 /// </summary>
 public static class WebViewMessageType
 {
+    // From JS
+    public const string Ready = "READY";
+    public const string SendMessage = "SEND_MESSAGE";
+    public const string InitState = "INIT_STATE";
+    public const string SelectProvider = "SELECT_PROVIDER";
+    public const string CancelGeneration = "CANCEL_GENERATION";
+
+    // To JS
     public const string InitData = "INIT_DATA";
-    public const string UserInput = "USER_INPUT";
     public const string AiResponse = "AI_RESPONSE";
+    public const string StreamChunk = "STREAM_CHUNK";
     public const string Error = "ERROR";
+    public const string SetLoading = "SET_LOADING";
 }
