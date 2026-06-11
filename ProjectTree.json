@@ -456,16 +456,96 @@
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/tests",
                                                                                                              "name":  "tests",
                                                                                                              "type":  "folder",
-                                                                                                             "children":  {
-                                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils-tests",
-                                                                                                                              "name":  "utils-tests",
-                                                                                                                              "type":  "folder",
-                                                                                                                              "children":  {
-                                                                                                                                               "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils-tests/debounce.test.js",
-                                                                                                                                               "name":  "debounce.test.js",
-                                                                                                                                               "type":  "file"
-                                                                                                                                           }
-                                                                                                                          }
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers",
+                                                                                                                                  "name":  "controllers",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/chatController.test.js",
+                                                                                                                                                       "name":  "chatController.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/providerController.test.js",
+                                                                                                                                                       "name":  "providerController.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/settingsController.test.js",
+                                                                                                                                                       "name":  "settingsController.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/services",
+                                                                                                                                  "name":  "services",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/services/aiService.test.js",
+                                                                                                                                                       "name":  "aiService.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/services/paginationService.test.js",
+                                                                                                                                                       "name":  "paginationService.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/services/validationService.test.js",
+                                                                                                                                                       "name":  "validationService.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/state",
+                                                                                                                                  "name":  "state",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  {
+                                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/state/appState.test.js",
+                                                                                                                                                   "name":  "appState.test.js",
+                                                                                                                                                   "type":  "file"
+                                                                                                                                               }
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils",
+                                                                                                                                  "name":  "utils",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils/debounce.test.js",
+                                                                                                                                                       "name":  "debounce.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/utils/dom.test.js",
+                                                                                                                                                       "name":  "dom.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views",
+                                                                                                                                  "name":  "views",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/messageView.test.js",
+                                                                                                                                                       "name":  "messageView.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/settingsView.test.js",
+                                                                                                                                                       "name":  "settingsView.test.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              }
+                                                                                                                          ]
                                                                                                          },
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/view",
@@ -739,6 +819,11 @@
     {
         "path":  "Codify.slnx",
         "name":  "Codify.slnx",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify.zip",
+        "name":  "Codify.zip",
         "type":  "file"
     },
     {

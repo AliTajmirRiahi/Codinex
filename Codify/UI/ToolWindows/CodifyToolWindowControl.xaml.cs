@@ -65,7 +65,7 @@ namespace Codify.UI.ToolWindows
                 // Initialize WebView2 with the environment.
                 await WebView.EnsureCoreWebView2Async(environment);
 
-                //WebView.CoreWebView2.OpenDevToolsWindow();
+                WebView.CoreWebView2.OpenDevToolsWindow();
 
                 // Now that WebView is ready, initialize the messaging bridge
                 // Note: Replace 'new GapGPTProvider()' with your actual provider logic

@@ -11,6 +11,7 @@ export const validationService = {
         }
     },
     isNotEmpty(value) {
-        return value && value.trim().length > 0;
+        // Using !! or Boolean() to ensure a true/false result
+        return !!(value && value.trim().length > 0);
     }
 };

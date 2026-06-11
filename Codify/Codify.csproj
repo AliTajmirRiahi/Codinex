@@ -164,9 +164,13 @@
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\settingsController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\services\aiService.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\services\paginationService.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\services\validationService.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\state\appState.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\debounce.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\dom.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\views\settingsView.test.js" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />
@@ -221,4 +225,8 @@
     <!-- We use TrimEnd to ensure no trailing backslash causes issues with quotes -->
     <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\generate-project-tree.ps1&quot; -TargetPath &quot;$(SolutionDir.TrimEnd('\'))&quot;" />
   </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\build-zip.ps1&quot; -SolutionDir &quot;$(SolutionDir)&quot;" />
+</Target>
+
 </Project>

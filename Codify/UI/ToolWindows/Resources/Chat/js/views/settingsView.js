@@ -12,6 +12,26 @@ export const settingsView = {
     },
 
     toggleSettingsPanel(visible) {
-        $('#settings-panel').classList.toggle('hidden', !visible);
-    }
+        $('#settings-modal').classList.toggle('hidden', !visible);
+    },
+
+    /**
+     * Shows the settings modal
+     */
+    show() {
+        const modal = document.getElementById('settings-modal');
+        if (modal) {
+            this.toggleSettingsPanel(true);
+        }
+    },
+
+    /**
+     * Hides the settings modal
+     */
+    hide() {
+        const modal = document.getElementById('settings-modal');
+        if (modal) {
+            this.toggleSettingsPanel(false);
+        }
+    },
 };

@@ -10,9 +10,21 @@ export const initSettingsController = (transport) => {
         transport.send('UPDATE_SETTINGS', { provider: providerId });
     });
 
+    // Open Modal logic
+    document.getElementById('settings-btn')?.addEventListener('click', () => {
+        settingsView.show();
+    });
+
+    // Close Modal logic (assuming you have a close button or overlay)
+    document.getElementById('close-settings')?.addEventListener('click', () => {
+        settingsView.hide();
+    });
+
     return {
         updateUI(settings) {
             settingsView.renderProviders(settings.availableProviders, settings.current);
-        }
+        },
+        // We can expose show/hide if other controllers need to trigger it
+        showSettings: () => settingsView.show()
     };
 };

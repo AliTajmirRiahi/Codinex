@@ -7,6 +7,7 @@
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
+import { initSettingsController } from './controllers/settingsController.js';
 
 // Register Custom Elements
 import '../../Shared/components/CodifyIcon.js';
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * Initialize Controllers
      */
     const chatController = initChatController(webViewTransport);
+
+    const settingsController = initSettingsController(webViewTransport);
 
     /**
      * Setup message dispatcher
