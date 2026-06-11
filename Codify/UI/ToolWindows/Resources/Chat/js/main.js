@@ -29,8 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
-            console.log("Init data received:", data);
-            // chatController.loadProviders(data.providers);
+            settingsController.updateUI(data.providers);
         },
 
         onAIResponse: (payload) => {

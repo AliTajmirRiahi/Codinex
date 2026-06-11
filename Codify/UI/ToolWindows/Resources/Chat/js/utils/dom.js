@@ -10,3 +10,13 @@ export const createElement = (tag, className, innerHTML) => {
     if (innerHTML) el.innerHTML = innerHTML;
     return el;
 };
+
+export const addDefaultOption = (select, text = 'Select an option') => {
+    // Add a default/placeholder option
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = text;
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    select.appendChild(defaultOption);
+}

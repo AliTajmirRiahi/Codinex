@@ -22,6 +22,8 @@ namespace Codify.Storage
 
         public List<AiProvider> AllProviders => _providers;
 
+        public AiProvider ActiveProvider => _providers.FirstOrDefault(p => p.IsEnabled);
+
         public async Task InitializeAsync()
         {
             if (await _storage.ExistsAsync(StoragePaths.Providers))

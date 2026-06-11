@@ -4,6 +4,7 @@ import { settingsView } from '../views/settingsView.js';
  * Orchestrates settings changes.
  */
 export const initSettingsController = (transport) => {
+
     // Listen for changes in the UI
     document.getElementById('provider-select')?.addEventListener('change', (e) => {
         const providerId = e.target.value;
@@ -22,7 +23,8 @@ export const initSettingsController = (transport) => {
 
     return {
         updateUI(settings) {
-            settingsView.renderProviders(settings.availableProviders, settings.current);
+            settingsView.initEventHandlers(); // Ensure event handlers are set up
+            settingsView.renderProviders(settings.availableProviders, (settings.current != null ? settings.current.id : -1));
         },
         // We can expose show/hide if other controllers need to trigger it
         showSettings: () => settingsView.show()

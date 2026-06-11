@@ -130,7 +130,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Type = WebViewMessageType.InitData,
             Payload = new
             {
-                Providers = providers,
+                Providers = new
+                {
+                    availableProviders = providers,
+                    current = _providerManager.ActiveProvider
+                },
                 Timestamp = DateTime.Now
             }
         };
