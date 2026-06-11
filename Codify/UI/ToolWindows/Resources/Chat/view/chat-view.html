@@ -12,8 +12,8 @@
 
     <!-- External Stylesheets -->
     <link rel="stylesheet" href="/Shared/theme.css">
+    <link rel="stylesheet" href="/Shared/components/toastify.css">
     <link rel="stylesheet" href="/Chat/chat-view.style.css">
-
 </head>
 <body>
     <div class="chat-wrapper">
@@ -142,7 +142,7 @@
                     <button id="btn-show-add-custom" class="link-button">+ Add Custom Model</button>
                 </div>
 
-               
+
 
                 <!-- Step 3: Custom Model Form (Hidden by default) -->
                 <div id="custom-model-form" class="hidden-form hidden">
@@ -164,13 +164,14 @@
 
             <!-- Footer will stay at the very bottom -->
             <div class="modal-footer">
-                <button id="save-settings-btn" class="primary-button disable">Save Changes</button>
+                <button id="save-settings-btn" class="primary-button">Save Changes</button>
             </div>
         </div>
     </div>
 
 
     <!-- JavaScript Bridges and logic -->
+    <script type="module" src="../../../Shared/components/toastify.js"></script>
     <script type="module" src="../js/main.js"></script>
 </body>
 </html>

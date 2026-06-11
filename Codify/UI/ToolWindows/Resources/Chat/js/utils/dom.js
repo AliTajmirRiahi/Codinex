@@ -20,3 +20,16 @@ export const addDefaultOption = (select, text = 'Select an option') => {
     defaultOption.selected = true;
     select.appendChild(defaultOption);
 }
+
+export const togglePanelHidden = (element, visible) => {
+    const modal = $(element);
+    if (modal) {
+        modal.classList.toggle('hidden', !visible);
+    }
+}
+export const togglePanelDisable = (element, visible) => {
+    const modal = $(element);
+    if (modal) {
+        modal.classList.toggle('disable', !visible);
+    }
+}

@@ -16,5 +16,8 @@
     "babel-jest": "^30.4.1",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1"
+  },
+  "dependencies": {
+    "toastify-js": "^1.12.0"
   }
 }

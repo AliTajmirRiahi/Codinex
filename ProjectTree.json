@@ -677,6 +677,16 @@
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Shared/components/CodifyImage.js",
                                                                                                                                   "name":  "CodifyImage.js",
                                                                                                                                   "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/toastify.css",
+                                                                                                                                  "name":  "toastify.css",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/toastify.js",
+                                                                                                                                  "name":  "toastify.js",
+                                                                                                                                  "type":  "file"
                                                                                                                               }
                                                                                                                           ]
                                                                                                          },

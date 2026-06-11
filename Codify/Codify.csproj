@@ -106,6 +106,8 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\toastify.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\bridge.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\messageDispatcher.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\webViewTransport.js" />
@@ -226,7 +228,6 @@
     <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\generate-project-tree.ps1&quot; -TargetPath &quot;$(SolutionDir.TrimEnd('\'))&quot;" />
   </Target>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	<Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\build-zip.ps1&quot; -SolutionDir &quot;$(SolutionDir)&quot;" />
-</Target>
-
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\build-zip.ps1&quot; -SolutionDir &quot;$(SolutionDir)&quot;" />
+  </Target>
 </Project>

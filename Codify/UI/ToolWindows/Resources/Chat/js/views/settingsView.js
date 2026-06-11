@@ -2,8 +2,9 @@
  * path: Codify\UI\ToolWindows\Resources\Chat\js\views\settingsView.js
  */
 
-import { $, addDefaultOption } from '../utils/dom.js';
+import { $, addDefaultOption, togglePanelHidden, togglePanelDisable } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
+import { validationService } from '../services/validationService.js';
 
 /**
  * Manages the settings panel UI, including provider selection, 
@@ -32,6 +33,28 @@ export const settingsView = {
                 this.pagination.nextPage();
                 this.renderModelPage();
             }
+        };
+
+        $('#save-settings-btn').onclick = () => {
+            const data = {
+                provider: $('#provider-select').value,
+                selectedModels: Array.from(this.state.selectedModels.values()),
+                apiKey: $('#model-api-key').value,
+            };
+            const validation = validationService.validate(data, {
+                rules: [
+                    { field: 'provider', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'toast', target: '#provider-select' },
+                    { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'toast', target: '#models-checkbox-list' },
+                    { field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'toast', target: '#model-api-key' }
+                ],
+            });
+
+            if (!validation.valid) {
+                validationService.showErrors(validation.errors);
+                return;
+            }
+
+            // Proceed with saving settings
         };
     },
     /**
@@ -73,9 +96,9 @@ export const settingsView = {
             this.renderModelPage();
 
             if (provider && provider.models) {
-                this.togglePanelHidden('#model-pagination', true);
+                togglePanelHidden('#model-pagination', true);
             } else {
-                this.togglePanelHidden('#model-pagination', false);
+                togglePanelHidden('#model-pagination', false);
             }
         });
     },
@@ -117,18 +140,18 @@ export const settingsView = {
                 if (!model) return;
 
                 if (selectedModels.has(model.id)) {
-                    selectedModels.delete(model.id);
                     checkbox.checked = false;
                 } else {
-                    selectedModels.set(model.id, model);
                     checkbox.checked = true;
                 }
+
+                this._handleCheckboxChange(checkbox.checked, model);
             });
 
             // Direct checkbox change listener
             const checkbox = item.querySelector('input[type="checkbox"]');
             checkbox.addEventListener('change', (e) => {
-                this._handleCheckboxChange(e.target, model);
+                this._handleCheckboxChange(e.target.checked, model);
             });
 
             listContainer.appendChild(item);
@@ -137,7 +160,6 @@ export const settingsView = {
         this._updatePaginationUI();
     },
     /**
-     * Helper to synchronize state with checkbox status.
      * @private
      */
     _updatePaginationUI() {
@@ -152,34 +174,26 @@ export const settingsView = {
      * Helper to synchronize state with checkbox status.
      * @private
      */
-    _handleCheckboxChange(checkbox, model) {
-        if (checkbox.checked) {
+    _handleCheckboxChange(checked, model) {
+        if (checked) {
             this.state.selectedModels.set(model.id, model);
         } else {
             this.state.selectedModels.delete(model.id);
         }
 
-        // TODO: Call toggleSaveButton() if implemented
-    },
-
-    togglePanelHidden(element, visible) {
-        const modal = $(element);
-        if (modal) {
-            modal.classList.toggle('hidden', !visible);
-        }
     },
 
     /**
      * Shows the settings modal
      */
     show() {
-        this.togglePanelHidden('#settings-modal', true);
+        togglePanelHidden('#settings-modal', true);
     },
 
     /**
      * Hides the settings modal
      */
     hide() {
-        this.togglePanelHidden('#settings-modal', false);
+        togglePanelHidden('#settings-modal', false);
     },
 };
