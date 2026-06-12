@@ -2,7 +2,9 @@
 using Codify.Core.Models;
 using Codify.Core.UseCases;
 using Codify.Storage;
+using Codify.Storage.Models.Dtos;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.WebView;
@@ -108,7 +110,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
-
+            case WebViewMessageType.UpdateSettings:
+                {
+                    // Future: update provider settings
+                    var aiProviderDto = _payloadBinder.Bind<AiProviderDto>(request.Payload);
+                    await _providerManager.UpdateSettingsAsync(aiProviderDto);
+                    await SendSelectedProviderDataAsync();
+                    return;
+                }
             default:
                 {
                     await _webViewClient.PostMessageAsync(new ChatResponse(
@@ -136,6 +145,24 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     availableProviders = providers,
                     current = _providerManager.ActiveProvider
                 },
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendSelectedProviderDataAsync()
+    {
+        // Get all configured providers and their models from ProviderManager
+        var provider = _providerManager.AllProviders.FirstOrDefault(p=> p.IsEnabled);
+
+        var message = new
+        {
+            Type = WebViewMessageType.SelectProvider,
+            Payload = new
+            {
+                provider = provider,
                 Timestamp = DateTime.Now
             }
         };

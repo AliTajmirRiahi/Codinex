@@ -6,7 +6,7 @@
 
 import { appendMessage, createStreamingMessage } from '../views/chatView.js';
 import { aiService } from '../services/aiService.js';
-import { getState, setState } from '../state/appState.js';
+import { getState, setLoading } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 
 
@@ -63,7 +63,7 @@ export function initChatController(bridge) {
         appendMessage(text, 'user');
 
         // Set loading state
-        setState({ isLoading: true });
+        setLoading({ isLoading: true });
 
         try {
 
@@ -84,8 +84,7 @@ export function initChatController(bridge) {
 
         } finally {
 
-            setState({ isLoading: false });
-
+            setLoading({ isLoading: false });
         }
 
     }

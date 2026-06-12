@@ -2,7 +2,7 @@
  * messageDispatcher.js
  * Routes incoming messages from the bridge to specific application logic.
  */
-
+import { EVENTS } from '../../Chat/js/constants/events.js'
 export function createMessageDispatcher(handlers) {
     /**
      * The dispatcher function.
@@ -17,15 +17,19 @@ export function createMessageDispatcher(handlers) {
         const { type, payload } = message;
 
         switch (type) {
-            case 'INIT_DATA':
+            case EVENTS.INIT_DATA:
                 if (handlers.onInitData) handlers.onInitData(payload);
                 break;
 
-            case 'AI_RESPONSE':
+            case EVENTS.SELECT_PROVIDER:
+                if (handlers.onSelectProvider) handlers.onSelectProvider(payload);
+                break;
+
+            case EVENTS.AI_RESPONSE:
                 if (handlers.onAIResponse) handlers.onAIResponse(payload);
                 break;
 
-            case 'ERROR':
+            case EVENTS.ERROR:
                 // Fixed the typo from the original bridge.js (Ppayload -> payload)
                 if (handlers.onError) handlers.onError(payload.Message || payload);
                 break;

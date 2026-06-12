@@ -1,8 +1,7 @@
 /* 
  * path: Codify\UI\ToolWindows\Resources\Chat\js\views\settingsView.js
  */
-
-import { $, addDefaultOption, togglePanelHidden, togglePanelDisable } from '../utils/dom.js';
+import { $, addDefaultOption, togglePanelHidden, trigger } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
 import { validationService } from '../services/validationService.js';
 
@@ -18,7 +17,7 @@ export const settingsView = {
     // We now store a pagination instance instead of raw pagination values
     pagination: new PaginationService([], 5),
 
-    initEventHandlers() {
+    initEventHandlers(saveCallBack) {
         // Event Listeners for Pager Buttons
         $('#prev-page').onclick = () => {
             if (this.pagination.currentPage > 1) {
@@ -37,15 +36,15 @@ export const settingsView = {
 
         $('#save-settings-btn').onclick = () => {
             const data = {
-                provider: $('#provider-select').value,
+                providerId: $('#provider-select').value,
                 selectedModels: Array.from(this.state.selectedModels.values()),
                 apiKey: $('#model-api-key').value,
             };
             const validation = validationService.validate(data, {
                 rules: [
-                    { field: 'provider', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'toast', target: '#provider-select' },
-                    { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'toast', target: '#models-checkbox-list' },
-                    { field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'toast', target: '#model-api-key' }
+                    { field: 'providerId', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'inline', target: '#provider-select' },
+                    { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'inline', target: '#models-checkbox-list' },
+                    { field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'inline', target: '#model-api-key' }
                 ],
             });
 
@@ -54,7 +53,8 @@ export const settingsView = {
                 return;
             }
 
-            // Proceed with saving settings
+            if (saveCallBack)
+                saveCallBack(data);
         };
     },
     /**
@@ -64,25 +64,6 @@ export const settingsView = {
         const select = $('#provider-select');
         if (!select) return;
 
-        select.innerHTML = '';
-        addDefaultOption(select, 'Select an AI Provider');
-
-        providers.forEach(p => {
-            const option = document.createElement('option');
-            option.value = p.id;
-            option.textContent = p.name;
-
-            if (p.id === currentProviderId) {
-                option.selected = true;
-            }
-
-            select.appendChild(option);
-        });
-
-        if (!currentProviderId) {
-            select.selectedIndex = 0;
-        }
-
         // Handle provider change to load respective models
         select.addEventListener('change', (e) => {
             const selectedId = e.target.value;
@@ -91,7 +72,12 @@ export const settingsView = {
             // Reset state for the new provider
             this.pagination.goToPage(1);
             this.pagination.setItems((provider && provider.models) ? provider.models : []);
-            this.state.selectedModels.clear();
+            $('#model-api-key').value = provider.apiKey;
+
+            this.state.selectedModels = new Map(
+                _.filter(provider.models, { isSelected: true })
+                    .map(model => [model.id, model])
+            );
 
             this.renderModelPage();
 
@@ -101,6 +87,28 @@ export const settingsView = {
                 togglePanelHidden('#model-pagination', false);
             }
         });
+
+        select.innerHTML = '';
+        addDefaultOption(select, 'Select an AI Provider');
+
+        providers.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.id;
+            option.textContent = p.name;
+
+            select.appendChild(option);
+
+            if (p.id === currentProviderId) {
+                option.selected = true;
+                trigger(select, 'change');
+            }
+
+        });
+
+        if (!currentProviderId) {
+            select.selectedIndex = 0;
+        }
+
     },
 
     /**

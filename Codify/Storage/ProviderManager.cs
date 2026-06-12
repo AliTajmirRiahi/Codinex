@@ -1,4 +1,5 @@
 ﻿using Codify.Storage.Models;
+using Codify.Storage.Models.Dtos;
 using Codify.UI.ToolWindows;
 using Newtonsoft.Json;
 using System;
@@ -43,7 +44,7 @@ namespace Codify.Storage
 
             foreach (var provider in providers)
             {
-                provider.Models = LoadModelsFromResources<AiModel>($"{provider.Id}_models.json");
+                provider.SetModels(LoadModelsFromResources<AiModel>($"{provider.Id}_models.json"));
             }
 
             return providers;
@@ -86,14 +87,45 @@ namespace Codify.Storage
             await _storage.SaveAsync(StoragePaths.Providers, _providers);
         }
 
-        public async Task AddModelToProvider(string providerId, AiModel newModel)
+        public async Task AddModelToProviderAsync(string providerId, AiModel newModel)
         {
             var provider = _providers.FirstOrDefault(p => p.Id == providerId);
             if (provider != null)
             {
-                provider.Models.Add(newModel);
+                provider.AddModel(newModel);
                 await SaveAsync();
             }
+        }
+
+        public async Task UpdateSettingsAsync(AiProviderDto selectedProvider)
+        {
+            if (selectedProvider == null)
+                throw new ArgumentNullException(nameof(selectedProvider));
+
+            if (string.IsNullOrWhiteSpace(selectedProvider.ProviderId))
+                throw new ArgumentException("ProviderId is required.", nameof(selectedProvider));
+
+            var provider = _providers.FirstOrDefault(p =>
+                string.Equals(p.Id, selectedProvider.ProviderId, StringComparison.OrdinalIgnoreCase));
+
+            if (provider == null)
+                throw new InvalidOperationException($"Provider '{selectedProvider.ProviderId}' was not found.");
+
+            foreach (var prov in _providers)
+                prov.Disable();
+
+            provider.SetApiKey(selectedProvider.ApiKey);
+            provider.Enable();
+
+            foreach (var model in provider.Models)
+                model.DeSelected();
+
+            var selectedModel = provider.Models.Where(m => selectedProvider.selectedModels.Any(sm => string.Equals(m.Id, sm.Id, StringComparison.OrdinalIgnoreCase)));
+
+            foreach (var model in selectedModel)
+                model.Selected();
+
+            await SaveAsync();
         }
     }
 }

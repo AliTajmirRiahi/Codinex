@@ -253,6 +253,16 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "Codify/Storage/Models/Dtos",
+                                                                       "name":  "Dtos",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "Codify/Storage/Models/Dtos/AiProviderDto.cs",
+                                                                                        "name":  "AiProviderDto.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Storage/Models/AiModel.cs",
                                                                        "name":  "AiModel.cs",
                                                                        "type":  "file"
@@ -686,11 +696,6 @@
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/chat-view.script.js",
                                                                                                              "name":  "chat-view.script.js",
                                                                                                              "type":  "file"
-                                                                                                         },
-                                                                                                         {
-                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/chat-view.style.css",
-                                                                                                             "name":  "chat-view.style.css",
-                                                                                                             "type":  "file"
                                                                                                          }
                                                                                                      ]
                                                                                     },
@@ -809,6 +814,11 @@
                                                                                                                                   "type":  "file"
                                                                                                                               },
                                                                                                                               {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/lodash.min.js",
+                                                                                                                                  "name":  "lodash.min.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Shared/components/toastify.css",
                                                                                                                                   "name":  "toastify.css",
                                                                                                                                   "type":  "file"
@@ -819,11 +829,6 @@
                                                                                                                                   "type":  "file"
                                                                                                                               }
                                                                                                                           ]
-                                                                                                         },
-                                                                                                         {
-                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Shared/theme.css",
-                                                                                                             "name":  "theme.css",
-                                                                                                             "type":  "file"
                                                                                                          }
                                                                                                      ]
                                                                                     },

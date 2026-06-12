@@ -11,6 +11,7 @@ public static class WebViewMessageType
     public const string InitState = "INIT_STATE";
     public const string SelectProvider = "SELECT_PROVIDER";
     public const string CancelGeneration = "CANCEL_GENERATION";
+    public const string UpdateSettings = "UPDATE_SETTINGS";
 
     // To JS
     public const string InitData = "INIT_DATA";

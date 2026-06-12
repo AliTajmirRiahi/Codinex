@@ -33,3 +33,7 @@ export const togglePanelDisable = (element, visible) => {
         modal.classList.toggle('disable', !visible);
     }
 }
+
+export const trigger = (element ,event) => {
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+}

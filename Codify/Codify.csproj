@@ -70,6 +70,7 @@
     <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
+    <Compile Include="Storage\Models\Dtos\AiProviderDto.cs" />
     <Compile Include="Core\Models\WebViewMessage.cs" />
     <Compile Include="Core\Models\ChatResponse.cs" />
     <Compile Include="Core\Models\WebViewMessageType.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\lodash.min.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\toastify.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\bridge.js" />

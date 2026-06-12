@@ -1,48 +1,94 @@
 /**
- * Global application state.
- * This acts as a lightweight state manager for the chat UI.
+ * Lightweight global state manager for Chat UI.
+ * Implements controlled mutations and subscriptions.
  */
 
-const state = {
-
-    // Current AI provider (openai, ollama, etc.)
+const _state = {
     provider: null,
-
-    // Current model
     model: null,
-
-    // Chat messages history
     messages: [],
-
-    // Indicates if AI is generating a response
     isLoading: false
 };
 
+const listeners = [];
 
 /**
- * Returns current state (read-only usage recommended).
+ * Returns a frozen copy of state (read-only).
  */
 export function getState() {
-    return state;
+    return Object.freeze({ ..._state });
 }
 
-
 /**
- * Update part of the state.
- * This keeps updates predictable and centralized.
+ * Subscribe to state changes.
  */
-export function setState(partialState) {
+export function subscribe(listener) {
+    if (typeof listener !== 'function') return;
 
-    Object.assign(state, partialState);
+    listeners.push(listener);
 
+    return () => {
+        const index = listeners.indexOf(listener);
+        if (index > -1) listeners.splice(index, 1);
+    };
 }
 
+/**
+ * Internal state update
+ */
+function updateState(partialState) {
+    Object.assign(_state, partialState);
+
+    listeners.forEach(listener => listener(getState()));
+}
 
 /**
- * Add message to chat history
+ * Set active provider.
+ * Automatically resets model when provider changes.
+ */
+export function setProvider(providerId) {
+    if (!providerId) {
+        throw new Error('Provider cannot be null or empty.');
+    }
+
+    updateState({
+        provider: providerId,
+        model: null // reset model when provider changes
+    });
+}
+
+/**
+ * Set active model.
+ */
+export function setModel(modelId) {
+    if (!_state.provider) {
+        throw new Error('Cannot set model without selecting provider first.');
+    }
+
+    updateState({ model: modelId });
+}
+
+/**
+ * Set loading state.
+ */
+export function setLoading(isLoading) {
+    updateState({ isLoading: !!isLoading });
+}
+
+/**
+ * Add message to history.
  */
 export function addMessage(message) {
+    if (!message) return;
 
-    state.messages.push(message);
+    updateState({
+        messages: [..._state.messages, message]
+    });
+}
 
+/**
+ * Clear chat history.
+ */
+export function clearMessages() {
+    updateState({ messages: [] });
 }

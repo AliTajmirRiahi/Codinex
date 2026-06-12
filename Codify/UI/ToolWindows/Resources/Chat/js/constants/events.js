@@ -4,13 +4,15 @@
  */
 
 export const EVENTS = {
-    // Outgoing (To C#)
+    // Outgoing
+    READY: "READY",
     SEND_MESSAGE: 'SEND_MESSAGE',
     INIT_STATE: 'INIT_STATE',
     SELECT_PROVIDER: 'SELECT_PROVIDER',
     CANCEL_GENERATION: 'CANCEL_GENERATION',
+    UPDATE_SETTINGS: "UPDATE_SETTINGS",
 
-    // Incoming (From C#)
+    // Incoming
     INIT_DATA: 'INIT_DATA',
     AI_RESPONSE: 'AI_RESPONSE',
     STREAM_CHUNK: 'STREAM_CHUNK',
