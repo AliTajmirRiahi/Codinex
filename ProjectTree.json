@@ -574,6 +574,11 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/modelDropDownView.js",
+                                                                                                                                                       "name":  "modelDropDownView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/settingsView.js",
                                                                                                                                                        "name":  "settingsView.js",
                                                                                                                                                        "type":  "file"
@@ -727,6 +732,11 @@
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/hat-glasses.svg",
                                                                                                              "name":  "hat-glasses.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/lightning.svg",
+                                                                                                             "name":  "lightning.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {

@@ -5,9 +5,10 @@
 
 const _state = {
     provider: null,
-    model: null,
+    selectedModels: null,
     messages: [],
-    isLoading: false
+    isLoading: false,
+
 };
 
 const listeners = [];
@@ -46,14 +47,14 @@ function updateState(partialState) {
  * Set active provider.
  * Automatically resets model when provider changes.
  */
-export function setProvider(providerId) {
-    if (!providerId) {
+export function setProvider(provider) {
+    if (!provider) {
         throw new Error('Provider cannot be null or empty.');
     }
 
     updateState({
-        provider: providerId,
-        model: null // reset model when provider changes
+        provider: provider,
+        selectedModels: _.filter(provider.models, { isSelected: true })
     });
 }
 

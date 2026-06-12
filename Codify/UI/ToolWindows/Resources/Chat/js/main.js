@@ -31,8 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
-            if (data.providers.current)
-                setProvider({ provider: data.providers.current });
+            if (data.providers.current) {
+                setProvider(data.providers.current);
+                chatController.renderCurrentProvider();
+            }
 
             settingsController.updateUI(data.providers);
 

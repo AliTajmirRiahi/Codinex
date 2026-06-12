@@ -89,11 +89,27 @@
                             <codify-icon name="chevron-down"></codify-icon>
                         </button>
 
-                        <button id="modelSelectorBtn" class="selector-btn" title="Select Model">
-                            <codify-icon name="brain"></codify-icon>
-                            <span>GPT-5 mini</span>
-                            <codify-icon name="chevron-down"></codify-icon>
-                        </button>
+                        <div class="model-selector-wrapper">
+                            <button id="model-selector-btn" class="selector-btn" title="Select Model">
+                                <codify-icon name="brain"></codify-icon>
+                                <span id="active-model-name">GPT-5 mini</span>
+                                <codify-icon name="chevron-down"></codify-icon>
+                            </button>
+
+                            <div id="model-dropdown-menu" class="model-dropdown">
+                                <div class="menu-label">Activated Models</div>
+
+                                <div id="model-dropdown-menu-placeholder"></div>
+
+                                <div class="menu-divider"></div>
+
+                                <div id="manage-models-action" class="menu-action">
+                                    <codify-icon name="wrench"></codify-icon>
+                                    <span>Manage Models</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="input-actions">
@@ -174,6 +190,10 @@
             </div>
         </div>
     </div>
+
+
+    
+
 
 
     <!-- JavaScript Bridges and logic -->

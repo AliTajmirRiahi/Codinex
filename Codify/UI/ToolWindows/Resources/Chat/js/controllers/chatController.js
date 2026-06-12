@@ -5,6 +5,7 @@
  */
 
 import { appendMessage, createStreamingMessage } from '../views/chatView.js';
+import { modelDropDownView } from '../views/modelDropDownView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
@@ -15,6 +16,8 @@ import { EVENTS } from '../constants/events.js';
  * @param {Object} bridge - Communication bridge with VSCode extension host
  */
 export function initChatController(bridge) {
+
+    modelDropDownView.initEventHandlers();
 
     const input = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -88,5 +91,35 @@ export function initChatController(bridge) {
         }
 
     }
+    /**
+     * Returns public methods to allow external interaction with the controller
+     */
+    return {
+        /**
+         * Allows external components to programmatically trigger a message
+         */
+        sendMessage: (text) => {
+            input.value = text;
+            handleSend();
+        },
 
+        /**
+         * Updates the active model from outside (e.g., when loading saved settings)
+         */
+        setActiveModel: (modelId) => {
+        },
+
+        /**
+         * Clears the chat UI if needed
+         */
+        clearChat: () => {
+            const container = document.getElementById('chatContainer');
+            if (container) container.innerHTML = '';
+        },
+
+        renderCurrentProvider: () => {
+            var appState = getState();
+            modelDropDownView.renderProvider(appState.provider, appState.selectedModels);
+        },
+    };
 }

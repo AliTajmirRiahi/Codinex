@@ -9,3 +9,13 @@
     border-bottom: 1px solid var(--vs-border);
 }
 
+.model-selector-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.selector-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
