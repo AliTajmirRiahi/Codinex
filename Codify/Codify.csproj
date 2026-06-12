@@ -113,8 +113,6 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\webViewTransport.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\codify-icon.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\codify-image.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\theme.css" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.style.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\events.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\chatController.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\providerController.js" />
@@ -162,6 +160,24 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <VSIXSubPath>Resources</VSIXSubPath>
     </Content>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\base\_reset.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\base\_variables.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_buttons.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_dropdown.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_inputs.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_modal.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_loading.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\layout\_header.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\layout\_wrapper.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\main.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_chat.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_inputArea.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_settings.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_toolbar.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\base\_shared.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_form.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_list.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_pagination.css" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\settingsController.test.js" />

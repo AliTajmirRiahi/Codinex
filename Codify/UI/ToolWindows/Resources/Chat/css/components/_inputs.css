@@ -1,0 +1,61 @@
+/* Textarea */
+#userInput {
+    width: 100%;
+    min-height: 56px;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    font: inherit;
+    line-height: 1.5;
+    padding: 4px 0;
+    box-sizing: border-box;
+}
+
+    #userInput::placeholder {
+        color: rgba(204, 204, 204, 0.6);
+    }
+
+/* Bottom row: selectors + actions */
+.input-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Action buttons */
+.input-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .input-actions button {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--vs-foreground);
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+        .input-actions button:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+            opacity: 1;
+        }
+
+.selector-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}

@@ -338,6 +338,131 @@
                                                                                         "type":  "folder",
                                                                                         "children":  [
                                                                                                          {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Chat/css",
+                                                                                                             "name":  "css",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/base",
+                                                                                                                                  "name":  "base",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/base/_reset.css",
+                                                                                                                                                       "name":  "_reset.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/base/_shared.css",
+                                                                                                                                                       "name":  "_shared.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/base/_variables.css",
+                                                                                                                                                       "name":  "_variables.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components",
+                                                                                                                                  "name":  "components",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_buttons.css",
+                                                                                                                                                       "name":  "_buttons.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_dropdown.css",
+                                                                                                                                                       "name":  "_dropdown.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_form.css",
+                                                                                                                                                       "name":  "_form.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_inputs.css",
+                                                                                                                                                       "name":  "_inputs.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_list.css",
+                                                                                                                                                       "name":  "_list.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_loading.css",
+                                                                                                                                                       "name":  "_loading.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_modal.css",
+                                                                                                                                                       "name":  "_modal.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_pagination.css",
+                                                                                                                                                       "name":  "_pagination.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/layout",
+                                                                                                                                  "name":  "layout",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/layout/_header.css",
+                                                                                                                                                       "name":  "_header.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/layout/_wrapper.css",
+                                                                                                                                                       "name":  "_wrapper.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views",
+                                                                                                                                  "name":  "views",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_chat.css",
+                                                                                                                                                       "name":  "_chat.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_inputArea.css",
+                                                                                                                                                       "name":  "_inputArea.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_settings.css",
+                                                                                                                                                       "name":  "_settings.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_toolbar.css",
+                                                                                                                                                       "name":  "_toolbar.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/main.css",
+                                                                                                                                  "name":  "main.css",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         },
+                                                                                                         {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Chat/js",
                                                                                                              "name":  "js",
                                                                                                              "type":  "folder",

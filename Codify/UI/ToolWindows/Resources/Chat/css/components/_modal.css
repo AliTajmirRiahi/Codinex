@@ -1,0 +1,76 @@
+/* Modal overlay */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+    .modal.hidden {
+        display: none;
+    }
+
+/* Modal container */
+.modal-content {
+    width: 80%;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: var(--vs-background);
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    overflow: hidden; /* Prevent modal itself from scrolling */
+}
+
+.modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto; /* Scrollable if content is too long */
+    gap: 15px;
+}
+/* Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--vs-border);
+}
+
+    .modal-header h2 {
+        font-size: 14px;
+        color: var(--vs-foreground);
+    }
+
+    .modal-header button {
+        background: none;
+        border: none;
+        color: var(--vs-foreground);
+        cursor: pointer;
+    }
+
+.modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--vs-border);
+    display: flex;
+    justify-content: flex-end;
+}
+    /* Button */
+    .modal-footer button {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 4px;
+        background: var(--vs-command-bar-mouse-down-border-color);
+        color: #000;
+        cursor: pointer;
+    }
+
+        .modal-footer button:hover {
+            background: var(--vs-main-window-active-default-border-color);
+        }

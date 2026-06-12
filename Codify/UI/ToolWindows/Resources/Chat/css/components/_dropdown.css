@@ -1,0 +1,19 @@
+/* Chat history dropdown */
+.chat-history-select {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    background-color: var(--vs-input-bg);
+    color: var(--vs-foreground);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+}
+
+    /* Focus state for dropdown */
+    .chat-history-select:focus {
+        border-color: var(--vs-button-bg);
+    }

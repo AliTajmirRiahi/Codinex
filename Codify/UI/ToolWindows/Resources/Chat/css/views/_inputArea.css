@@ -1,0 +1,50 @@
+/* Main input container */
+.input-container {
+    padding: 10px;
+    background: var(--vs-background);
+}
+
+/* Top row: add context + active document chip */
+.input-context-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.context-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--vs-foreground);
+    min-height: 36px;
+    box-sizing: border-box;
+}
+
+.context-chip-text {
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.context-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    margin-left: 2px;
+}
+
+    .context-chip-remove:hover {
+        opacity: 1;
+    }
+

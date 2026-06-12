@@ -1,0 +1,107 @@
+/* Base style for toolbar buttons */
+.toolbar-btn {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0px solid var(--vs-border);
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    background-color: transparent;
+}
+
+    /* Toolbar button hover state */
+    .toolbar-btn:hover {
+        background-color: var(--vs-button-hover);
+        color: var(--vs-foreground);
+    }
+
+    /* Toolbar button active state */
+    .toolbar-btn:active {
+        transform: translateY(1px);
+    }
+
+    /* Delete button hover tone */
+    .toolbar-btn.danger:hover {
+        background-color: var(--vs-button-hover);
+        color: #f15d45;
+    }
+
+    /* Optional icon sizing */
+    .toolbar-btn codify-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+    }
+
+.context-add-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--vs-foreground);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .context-add-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+
+.selector-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    font: inherit;
+    opacity: 0.92;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .selector-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
+
+    .selector-btn span {
+        white-space: nowrap;
+    }
+
+.pager-btn {
+    background: var(--vs-background);
+    color: var(--vs-foreground);
+    border: none;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .pager-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+.link-button {
+    background: none;
+    border: none;
+    color: var(--vs-class-designer-class-compartment-color);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 8px 0;
+    text-decoration: underline;
+}
