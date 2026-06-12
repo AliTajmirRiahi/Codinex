@@ -111,8 +111,8 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\bridge.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\messageDispatcher.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\webViewTransport.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\CodifyIcon.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\CodifyImage.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\codify-icon.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\codify-image.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\theme.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\chat-view.style.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\events.js" />
@@ -173,6 +173,7 @@
     <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\dom.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\settingsView.test.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\loading.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />

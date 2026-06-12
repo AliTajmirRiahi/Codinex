@@ -68,6 +68,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             case WebViewMessageType.Ready:
                 {
+                    await Task.Delay(2000);
                     // UI initialized and ready
                     await SendInitialDataAsync();
                     return;

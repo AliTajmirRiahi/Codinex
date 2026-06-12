@@ -600,6 +600,11 @@
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/loading.svg",
+                                                                                                             "name":  "loading.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/message-square-plus.svg",
                                                                                                              "name":  "message-square-plus.svg",
                                                                                                              "type":  "file"
@@ -669,13 +674,13 @@
                                                                                                              "type":  "folder",
                                                                                                              "children":  [
                                                                                                                               {
-                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/CodifyIcon.js",
-                                                                                                                                  "name":  "CodifyIcon.js",
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/codify-icon.js",
+                                                                                                                                  "name":  "codify-icon.js",
                                                                                                                                   "type":  "file"
                                                                                                                               },
                                                                                                                               {
-                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/CodifyImage.js",
-                                                                                                                                  "name":  "CodifyImage.js",
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/codify-image.js",
+                                                                                                                                  "name":  "codify-image.js",
                                                                                                                                   "type":  "file"
                                                                                                                               },
                                                                                                                               {

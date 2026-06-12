@@ -3,17 +3,19 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
+import { $, togglePanelHidden} from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
 import { initSettingsController } from './controllers/settingsController.js';
 
 // Register Custom Elements
-import '../../Shared/components/CodifyIcon.js';
-import '../../Shared/components/CodifyImage.js';
+import '../../Shared/components/codify-icon.js';
+import '../../Shared/components/codify-image.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Codify UI bootstrapping...");
+
+
 
     /**
      * Initialize Controllers
@@ -29,6 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
             settingsController.updateUI(data.providers);
+
+            // Get references to the loading screen and the main chat UI
+            const loadingScreen = $('#loading-screen');
+            const mainChatWrapper = $('#main-chat-wrapper');
+
+            // Hide the loading screen and show the main chat UI once data is loaded
+            if (loadingScreen && mainChatWrapper) {
+                togglePanelHidden('#loading-screen', false);
+                togglePanelHidden('#main-chat-wrapper', true);
+            }
         },
 
         onAIResponse: (payload) => {

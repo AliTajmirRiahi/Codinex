@@ -16,7 +16,13 @@
     <link rel="stylesheet" href="/Chat/chat-view.style.css">
 </head>
 <body>
-    <div class="chat-wrapper">
+    <!-- Loading Screen Container -->
+    <!-- This will be visible by default until onInitData is triggered -->
+    <div id="loading-screen" class="loading-screen">
+        <codify-image name="loading.svg" class="spinner"></codify-image>
+        <h2>Loading Codify AI...</h2>
+    </div>
+    <div id="main-chat-wrapper" class="chat-wrapper hidden">
 
         <!-- Toolbar for managing chat history and sessions -->
         <div class="chat-toolbar">

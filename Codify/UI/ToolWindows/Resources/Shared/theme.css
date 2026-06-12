@@ -17,7 +17,14 @@ html, body {
     font-family: "Segoe UI", sans-serif;
     font-size: 13px;
 }
+.hidden {
+    display: none !important;
+}
 
+.hidden-form {
+    margin-top: 15px;
+    padding-top: 10px;
+}
 codify-icon {
     display: flex; 
     width: 16px; 
