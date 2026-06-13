@@ -8,6 +8,21 @@ html, body {
     color: var(--vs-foreground);
     font-family: "Segoe UI", sans-serif;
     font-size: 13px;
+    /* Prevent text selection across the entire WebView */
+    -webkit-user-select: none; /* Safari/Chrome */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard syntax */
+    /* Optional: Disable the default touch highlighting on mobile/touch devices */
+    -webkit-tap-highlight-color: transparent;
+}
+/* Allow selection specifically for code blocks or input fields if needed */
+/* Usually, we want users to be able to copy code */
+pre, code, input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 .hidden {
