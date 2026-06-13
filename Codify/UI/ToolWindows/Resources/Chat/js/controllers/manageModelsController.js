@@ -13,6 +13,9 @@ export const initManageModelsController = (transport) => {
 
     // Open Modal logic
     document.getElementById('manage-models-action')?.addEventListener('click', () => {
+        //Ask for close other dropdowns
+        window.dispatchEvent(new CustomEvent('ui:close-all-dropdowns'));
+
         manageModelsView.show();
     });
 

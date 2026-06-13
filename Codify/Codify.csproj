@@ -180,7 +180,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_form.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_list.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_pagination.css" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\modelDropDownView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\dropDownView.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />

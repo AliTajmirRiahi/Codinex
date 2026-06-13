@@ -5,7 +5,7 @@
  */
 
 import { appendMessage, createStreamingMessage } from '../views/chatView.js';
-import { modelDropDownView } from '../views/modelDropDownView.js';
+import { DropDownView } from '../views/dropDownView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
@@ -17,7 +17,29 @@ import { EVENTS } from '../constants/events.js';
  */
 export function initChatController(bridge) {
 
-    modelDropDownView.initEventHandlers();
+    // Initialize
+    const modelDropDown = new DropDownView({
+        containerId: 'model-dropdown-menu-container',
+        menuId: 'model-dropdown-menu',
+        menuButtonId: 'model-selector-btn',
+        itemTemplate: (item, isActive) => {
+            const option = document.createElement('div');
+            option.className = `model-option ${isActive ? 'active' : ''}`;
+            option.dataset.value = item.id;
+
+            option.innerHTML = `
+                    <div class="model-info">
+                        <codify-icon name="lightning" class="low-vis"></codify-icon>
+                        <span>${item.name}</span>
+                    </div>
+                    <span class="multiplier">${item.multiplier || '1x'}</span>`;
+            return option;
+        },
+        onItemSelect: (model) => {
+            console.log('Selected model:', model.name);
+            // Update app state or trigger API change
+        }
+    });
 
     const input = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -119,7 +141,7 @@ export function initChatController(bridge) {
 
         renderCurrentProvider: () => {
             var appState = getState();
-            modelDropDownView.renderProvider(appState.provider, appState.selectedModels);
+            modelDropDown.render(appState.selectedModels, '');
         },
     };
 }

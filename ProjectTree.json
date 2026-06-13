@@ -569,6 +569,11 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/dropDownView.js",
+                                                                                                                                                       "name":  "dropDownView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/manageModelsView.js",
                                                                                                                                                        "name":  "manageModelsView.js",
                                                                                                                                                        "type":  "file"
@@ -576,11 +581,6 @@
                                                                                                                                                    {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/messageView.js",
                                                                                                                                                        "name":  "messageView.js",
-                                                                                                                                                       "type":  "file"
-                                                                                                                                                   },
-                                                                                                                                                   {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/modelDropDownView.js",
-                                                                                                                                                       "name":  "modelDropDownView.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]
