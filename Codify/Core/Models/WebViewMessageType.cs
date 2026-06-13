@@ -10,6 +10,7 @@ public static class WebViewMessageType
     public const string SendMessage = "SEND_MESSAGE";
     public const string InitState = "INIT_STATE";
     public const string SelectProvider = "SELECT_PROVIDER";
+    public const string SelectModel = "SELECT_MODEL";
     public const string CancelGeneration = "CANCEL_GENERATION";
     public const string UpdateSettings = "UPDATE_SETTINGS";
 
