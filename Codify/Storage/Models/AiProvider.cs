@@ -48,13 +48,13 @@ namespace Codify.Storage.Models
             List<AiModel> models)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("Provider id cannot be empty.", nameof(id));
+                throw new ArgumentException(@"Provider id cannot be empty.", nameof(id));
 
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Provider name cannot be empty.", nameof(name));
+                throw new ArgumentException(@"Provider name cannot be empty.", nameof(name));
 
             if (string.IsNullOrWhiteSpace(baseUrl))
-                throw new ArgumentException("BaseUrl cannot be empty.", nameof(baseUrl));
+                throw new ArgumentException(@"BaseUrl cannot be empty.", nameof(baseUrl));
 
             Id = id;
             Name = name;
@@ -131,7 +131,7 @@ namespace Codify.Storage.Models
         public void Rename(string newName)
         {
             if (string.IsNullOrWhiteSpace(newName))
-                throw new ArgumentException("Name cannot be empty.", nameof(newName));
+                throw new ArgumentException(@"Name cannot be empty.", nameof(newName));
 
             Name = newName;
         }
@@ -142,7 +142,7 @@ namespace Codify.Storage.Models
         public void SetBaseUrl(string baseUrl)
         {
             if (string.IsNullOrWhiteSpace(baseUrl))
-                throw new ArgumentException("BaseUrl cannot be empty.", nameof(baseUrl));
+                throw new ArgumentException(@"BaseUrl cannot be empty.", nameof(baseUrl));
 
             BaseUrl = baseUrl;
         }

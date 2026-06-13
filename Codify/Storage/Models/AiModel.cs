@@ -22,6 +22,8 @@ namespace Codify.Storage.Models
         // Indicates if the model is selected
         public bool IsSelected { get; private set; } = false;
 
+        public bool IsCurrent { get; private set; } = false;
+
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
@@ -31,16 +33,17 @@ namespace Codify.Storage.Models
             int tokenLimit,
             bool supportsImages,
             bool supportsTools,
-            bool isSelected)
+            bool isSelected,
+            bool isCurrent)
         {
             if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("Model id cannot be empty.", nameof(id));
+                throw new ArgumentException(@"Model id cannot be empty.", nameof(id));
 
             if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Model name cannot be empty.", nameof(name));
+                throw new ArgumentException(@"Model name cannot be empty.", nameof(name));
 
             if (tokenLimit <= 0)
-                throw new ArgumentException("Token limit must be greater than zero.", nameof(tokenLimit));
+                throw new ArgumentException(@"Token limit must be greater than zero.", nameof(tokenLimit));
 
             Id = id;
             Name = name;
@@ -48,6 +51,7 @@ namespace Codify.Storage.Models
             SupportsImages = supportsImages;
             SupportsTools = supportsTools;
             IsSelected = isSelected;
+            IsCurrent = isCurrent;
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace Codify.Storage.Models
         public void Rename(string newName)
         {
             if (string.IsNullOrWhiteSpace(newName))
-                throw new ArgumentException("Model name cannot be empty.", nameof(newName));
+                throw new ArgumentException(@"Model name cannot be empty.", nameof(newName));
 
             Name = newName;
         }
@@ -67,7 +71,7 @@ namespace Codify.Storage.Models
         public void UpdateTokenLimit(int newLimit)
         {
             if (newLimit <= 0)
-                throw new ArgumentException("Token limit must be greater than zero.", nameof(newLimit));
+                throw new ArgumentException(@"Token limit must be greater than zero.", nameof(newLimit));
 
             TokenLimit = newLimit;
         }
@@ -89,18 +93,33 @@ namespace Codify.Storage.Models
         }
 
         /// <summary>
-        /// 
+        /// Selects the model, making it active.
         /// </summary>
-        public void Selected()
+        public void Select()
         {
             IsSelected = true;
         }
         /// <summary>
-        /// 
+        /// Deselects the model, making it inactive.
         /// </summary>
-        public void DeSelected()
+        public void DeSelect()
         {
             IsSelected = false;
+        }
+
+        /// <summary>
+        /// Make current model. This is the model that will be used for generating responses in the chat. Only one model can be current at a time per provider.
+        /// </summary>
+        public void MarkAsCurrent() 
+        {
+            IsCurrent = true;
+        }
+        /// <summary>
+        /// Sets the current state to inactive, indicating that the current item is no longer selected or active.
+        /// </summary>
+        public void ClearCurrent() 
+        {
+            IsCurrent = false; 
         }
     }
 
