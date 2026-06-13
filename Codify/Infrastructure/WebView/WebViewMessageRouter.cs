@@ -102,6 +102,15 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     //await SendInitialDataAsync();
                     return;
                 }
+            case WebViewMessageType.SelectModel:
+                {
+                    var payload = _payloadBinder.Bind<AiModelSelectedDto>(request.Payload);
+
+                    await _providerManager.SetCurrentModelAsync(payload);
+
+                    //await SendInitialDataAsync();
+                    return;
+                }
 
             case WebViewMessageType.CancelGeneration:
                 {
@@ -155,7 +164,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     public async Task SendSelectedProviderDataAsync()
     {
         // Get all configured providers and their models from ProviderManager
-        var provider = _providerManager.AllProviders.FirstOrDefault(p=> p.IsEnabled);
+        var provider = _providerManager.AllProviders.FirstOrDefault(p => p.IsEnabled);
 
         var message = new
         {
