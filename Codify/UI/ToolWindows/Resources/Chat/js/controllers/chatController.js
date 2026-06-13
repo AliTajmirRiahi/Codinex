@@ -3,19 +3,19 @@
  * Handles user interaction and coordinates between
  * the view layer and the service layer.
  */
-
+import { $ } from '../utils/dom.js';
 import { appendMessage, createStreamingMessage } from '../views/chatView.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { aiService } from '../services/aiService.js';
-import { getState, setLoading } from '../state/appState.js';
+import { getState, setLoading, setCurrentModel } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 
 
 /**
  * Initialize chat controller
- * @param {Object} bridge - Communication bridge with VSCode extension host
+ * @param {Object} transport - Communication transport with VS extension host
  */
-export function initChatController(bridge) {
+export function initChatController(transport) {
 
     // Initialize
     const modelDropDown = new DropDownView({
@@ -36,8 +36,15 @@ export function initChatController(bridge) {
             return option;
         },
         onItemSelect: (model) => {
-            console.log('Selected model:', model.name);
-            // Update app state or trigger API change
+            var appState = getState();
+            const data = {
+                providerId: appState.provider.id,
+                modelId: model.id
+            };
+            transport.send(EVENTS.SELECT_MODEL, data);
+            setCurrentModel(model);
+            setCurrentModelName();
+            return true;
         }
     });
 
@@ -66,7 +73,11 @@ export function initChatController(bridge) {
 
     });
 
-
+    // updates current model name
+    function setCurrentModelName() {
+        var appState = getState();
+        $('#current-model-name').innerHTML = appState.currentModel.name;
+    }
     /**
      * Main send handler
      */
@@ -96,7 +107,7 @@ export function initChatController(bridge) {
             const streamingEl = createStreamingMessage();
 
             // Send message to AI
-            const response = await aiService.sendMessage(text, bridge);
+            const response = await aiService.sendMessage(text, transport);
 
             // Update UI
             streamingEl.innerText = response;
@@ -141,7 +152,8 @@ export function initChatController(bridge) {
 
         renderCurrentProvider: () => {
             var appState = getState();
-            modelDropDown.render(appState.selectedModels, '');
+            modelDropDown.render(appState.selectedModels, appState.currentModel.id);
+            setCurrentModelName();
         },
     };
 }

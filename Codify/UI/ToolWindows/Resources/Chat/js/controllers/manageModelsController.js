@@ -1,5 +1,5 @@
 import { manageModelsView } from '../views/manageModelsView.js';
-import { EVENTS } from '../constants/events.js';
+import { EVENTS, CUSTOME_EVENTS } from '../constants/events.js';
 /**
  * Orchestrates settings changes.
  */
@@ -14,7 +14,7 @@ export const initManageModelsController = (transport) => {
     // Open Modal logic
     document.getElementById('manage-models-action')?.addEventListener('click', () => {
         //Ask for close other dropdowns
-        window.dispatchEvent(new CustomEvent('ui:close-all-dropdowns'));
+        window.dispatchEvent(new CustomEvent(CUSTOME_EVENTS.CLOSE_ALL_DROPDOWNS));
 
         manageModelsView.show();
     });
