@@ -256,11 +256,18 @@
                                                                        "path":  "Codify/Storage/Models/Dtos",
                                                                        "name":  "Dtos",
                                                                        "type":  "folder",
-                                                                       "children":  {
-                                                                                        "path":  "Codify/Storage/Models/Dtos/AiProviderDto.cs",
-                                                                                        "name":  "AiProviderDto.cs",
-                                                                                        "type":  "file"
-                                                                                    }
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "Codify/Storage/Models/Dtos/AiModelSelectedDto.cs",
+                                                                                            "name":  "AiModelSelectedDto.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Storage/Models/Dtos/AiProviderDto.cs",
+                                                                                            "name":  "AiProviderDto.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
                                                                    },
                                                                    {
                                                                        "path":  "Codify/Storage/Models/AiModel.cs",

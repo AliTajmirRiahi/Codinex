@@ -83,7 +83,7 @@
                 <!-- Bottom row: agent / model selector + actions -->
                 <div class="input-footer-row">
                     <div class="selector-group">
-                        <button id="agent-selector-btn" class="selector-btn" title="Select Agent">
+                        <button id="agent-selector-btn" class="selector-btn hidden" title="Select Agent">
                             <codify-icon name="hat-glasses"></codify-icon>
                             <span>Agent</span>
                             <codify-icon name="chevron-down"></codify-icon>
@@ -92,7 +92,7 @@
                         <div class="model-selector-wrapper">
                             <button id="model-selector-btn" class="selector-btn" title="Select Model">
                                 <codify-icon name="brain"></codify-icon>
-                                <span id="active-model-name">GPT-5 mini</span>
+                                <span id="current-model-name"></span>
                                 <codify-icon name="chevron-down"></codify-icon>
                             </button>
 
@@ -116,7 +116,7 @@
                         <button id="settings-btn" title="Change Settings">
                             <codify-icon name="wrench"></codify-icon>
                         </button>
-                        <button id="sendBtn" title="Send">
+                        <button id="sendBtn" class="disable" title="Send">
                             <codify-icon name="send-horizontal"></codify-icon>
                         </button>
                     </div>

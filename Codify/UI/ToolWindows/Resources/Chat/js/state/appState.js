@@ -6,6 +6,7 @@
 const _state = {
     provider: null,
     selectedModels: null,
+    currentModel: null,
     messages: [],
     isLoading: false,
 
@@ -54,19 +55,22 @@ export function setProvider(provider) {
 
     updateState({
         provider: provider,
-        selectedModels: _.filter(provider.models, { isSelected: true })
+        selectedModels: _.filter(provider.models, { isSelected: true }),
+        currentModel: _.filter(provider.models, { isCurrent: true })[0] || null
     });
 }
-
 /**
  * Set active model.
+ * Automatically resets model when provider changes.
  */
-export function setModel(modelId) {
-    if (!_state.provider) {
-        throw new Error('Cannot set model without selecting provider first.');
+export function setCurrentModel(model) {
+    if (!model) {
+        throw new Error('Model cannot be null or empty.');
     }
 
-    updateState({ model: modelId });
+    updateState({
+        currentModel: model
+    });
 }
 
 /**
