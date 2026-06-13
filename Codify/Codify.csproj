@@ -118,7 +118,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\events.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\chatController.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\providerController.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\settingsController.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\manageModelsController.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\main.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\services\aiService.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\services\paginationService.js" />
@@ -128,7 +128,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\utils\dom.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\chatView.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\messageView.js" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\settingsView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\manageModelsView.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\view\chat-view.html" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\CodifyToolWindowCommand.png" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\favicon.ico" />
@@ -174,7 +174,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\main.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_chat.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_inputArea.css" />
-    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_settings.css" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_manageModels.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\views\_toolbar.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\base\_shared.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_form.css" />
@@ -183,7 +183,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\modelDropDownView.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
-    <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\settingsController.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\services\aiService.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\services\paginationService.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\services\validationService.test.js" />
@@ -191,7 +191,7 @@
     <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\debounce.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\utils\dom.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
-    <Content Include="UI\ToolWindows\Resources\Chat\tests\views\settingsView.test.js" />
+    <Content Include="UI\ToolWindows\Resources\Chat\tests\views\manageModelsView.test.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\loading.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\lightning.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />

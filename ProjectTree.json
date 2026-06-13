@@ -454,8 +454,8 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_settings.css",
-                                                                                                                                                       "name":  "_settings.css",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/views/_manageModels.css",
+                                                                                                                                                       "name":  "_manageModels.css",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
@@ -498,13 +498,13 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/providerController.js",
-                                                                                                                                                       "name":  "providerController.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/manageModelsController.js",
+                                                                                                                                                       "name":  "manageModelsController.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/settingsController.js",
-                                                                                                                                                       "name":  "settingsController.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/providerController.js",
+                                                                                                                                                       "name":  "providerController.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]
@@ -569,6 +569,11 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/manageModelsView.js",
+                                                                                                                                                       "name":  "manageModelsView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/messageView.js",
                                                                                                                                                        "name":  "messageView.js",
                                                                                                                                                        "type":  "file"
@@ -576,11 +581,6 @@
                                                                                                                                                    {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/modelDropDownView.js",
                                                                                                                                                        "name":  "modelDropDownView.js",
-                                                                                                                                                       "type":  "file"
-                                                                                                                                                   },
-                                                                                                                                                   {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/settingsView.js",
-                                                                                                                                                       "name":  "settingsView.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]
@@ -608,13 +608,13 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/providerController.test.js",
-                                                                                                                                                       "name":  "providerController.test.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/manageModelsController.test.js",
+                                                                                                                                                       "name":  "manageModelsController.test.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/settingsController.test.js",
-                                                                                                                                                       "name":  "settingsController.test.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/controllers/providerController.test.js",
+                                                                                                                                                       "name":  "providerController.test.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]
@@ -674,13 +674,13 @@
                                                                                                                                   "type":  "folder",
                                                                                                                                   "children":  [
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/messageView.test.js",
-                                                                                                                                                       "name":  "messageView.test.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/manageModelsView.test.js",
+                                                                                                                                                       "name":  "manageModelsView.test.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
-                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/settingsView.test.js",
-                                                                                                                                                       "name":  "settingsView.test.js",
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/tests/views/messageView.test.js",
+                                                                                                                                                       "name":  "messageView.test.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]

@@ -1,9 +1,9 @@
-import { settingsView } from '../views/settingsView.js';
-import { EVENTS } from '../../js/constants/events.js';
+import { manageModelsView } from '../views/manageModelsView.js';
+import { EVENTS } from '../constants/events.js';
 /**
  * Orchestrates settings changes.
  */
-export const initSettingsController = (transport) => {
+export const initManageModelsController = (transport) => {
 
     //// Listen for changes in the UI
     //document.getElementById('provider-select')?.addEventListener('change', (e) => {
@@ -12,29 +12,29 @@ export const initSettingsController = (transport) => {
     //});
 
     // Open Modal logic
-    document.getElementById('settings-btn')?.addEventListener('click', () => {
-        settingsView.show();
+    document.getElementById('manage-models-action')?.addEventListener('click', () => {
+        manageModelsView.show();
     });
 
     // Close Modal logic (assuming you have a close button or overlay)
     document.getElementById('close-settings')?.addEventListener('click', () => {
-        settingsView.hide();
+        manageModelsView.hide();
     });
 
     return {
         updateUI(settings) {
-            settingsView.initEventHandlers((updatedSettings) => {
+            manageModelsView.initEventHandlers((updatedSettings) => {
                 this.sendUpdatedSettings(updatedSettings);
             }); // Ensure event handlers are set up
-            settingsView.renderProviders(settings.availableProviders, (settings.current != null ? settings.current.id : -1));
+            manageModelsView.renderProviders(settings.availableProviders, (settings.current != null ? settings.current.id : -1));
         },
         sendUpdatedSettings(updatedSettings) {
             transport.send(EVENTS.UPDATE_SETTINGS, updatedSettings);
         },
         closeProviderSettings() {
-            settingsView.hide();
+            manageModelsView.hide();
         },
         // We can expose show/hide if other controllers need to trigger it
-        showSettings: () => settingsView.show()
+        showSettings: () => manageModelsView.show()
     };
 };

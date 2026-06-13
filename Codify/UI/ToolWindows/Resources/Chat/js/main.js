@@ -8,7 +8,7 @@ import { $, togglePanelHidden} from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
-import { initSettingsController } from './controllers/settingsController.js';
+import { initManageModelsController } from './controllers/manageModelsController.js';
 import { EVENTS } from '../js/constants/events.js'
 
 // Register Custom Elements
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const chatController = initChatController(webViewTransport);
 
-    const settingsController = initSettingsController(webViewTransport);
+    const manageModelsController = initManageModelsController(webViewTransport);
 
     /**
      * Setup message dispatcher
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatController.renderCurrentProvider();
             }
 
-            settingsController.updateUI(data.providers);
+            manageModelsController.updateUI(data.providers);
 
             // Get references to the loading screen and the main chat UI
             const loadingScreen = $('#loading-screen');
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (payload.provider)
                 setProvider({ provider: payload.provider });
 
-            settingsController.closeProviderSettings();
+            manageModelsController.closeProviderSettings();
         },
 
         onAIResponse: (payload) => {

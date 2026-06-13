@@ -1,5 +1,5 @@
 /* 
- * path: Codify\UI\ToolWindows\Resources\Chat\js\views\settingsView.js
+ * path: Codify\UI\ToolWindows\Resources\Chat\js\views\manageModelsView.js
  */
 import { $, addDefaultOption, togglePanelHidden, trigger } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
@@ -9,7 +9,7 @@ import { validationService } from '../services/validationService.js';
  * Manages the settings panel UI, including provider selection, 
  * model pagination, and state persistence for selections.
  */
-export const settingsView = {
+export const manageModelsView = {
     // Internal state to manage models across pages
     state: {
         selectedModels: new Map(), // Stores full model objects to maintain 
