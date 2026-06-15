@@ -1,7 +1,19 @@
-﻿using System;
+﻿using Newtonsoft.Json.Converters;
+using System;
+using Newtonsoft.Json;
 
 namespace Codify.Storage.Models
 {
+
+    public enum AiProviderFamily
+    {
+        GapGpt = 0,
+        OpenAi = 1,
+        Anthropic = 2,
+        GoogleGemini = 3,
+        Custom = 4,
+        NaN = -1
+    }
     public class AiModel
     {
         // Unique model identifier (e.g. "gpt-4o")
@@ -23,6 +35,9 @@ namespace Codify.Storage.Models
         public bool IsSelected { get; private set; } = false;
 
         public bool IsCurrent { get; private set; } = false;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public AiProviderFamily Family { get; set; }
 
         /// <summary>
         /// Constructor enforces required invariants.

@@ -4,13 +4,15 @@
     "Name": "GapGPT",
     "ApiKey": "",
     "BaseUrl": "https://api.gapgpt.ai/v1",
-    "IsEnabled": false
+    "IsEnabled": false,
+    "IsRouter" :  true
   },
   {
     "Id": "openAI",
     "Name": "Chat GPT",
     "ApiKey": "",
     "BaseUrl": "http://localhost:1234/v1",
-    "IsEnabled": false
+    "IsEnabled": false,
+    "IsRouter": false
   }
 ]

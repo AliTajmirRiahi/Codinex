@@ -8,22 +8,31 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Codify.Core.Abstractions;
+using Codify.Core.UseCases;
+using Codify.Infrastructure.AiProviders;
+using Codify.Infrastructure.Serialization;
 
 namespace Codify.Storage
 {
     public class ProviderManager
     {
         private readonly IStorageService _storage;
+        private readonly IJsonSerializer _jsonSerializer;
         private List<AiProvider> _providers = new List<AiProvider>();
+        private List<AiProviderInfo> _iaProviders = new List<AiProviderInfo>();
 
-        public ProviderManager(IStorageService storage)
+        public ProviderManager(IStorageService storage, IJsonSerializer jsonSerializer)
         {
             _storage = storage;
+            _jsonSerializer = jsonSerializer;
         }
 
         public List<AiProvider> AllProviders => _providers;
 
         public AiProvider ActiveProvider => _providers.FirstOrDefault(p => p.IsEnabled);
+
+        public AiModel ActiveModel => ActiveProvider.Models.FirstOrDefault(p => p.IsCurrent);
 
         public async Task InitializeAsync()
         {
@@ -37,6 +46,12 @@ namespace Codify.Storage
                 _providers = GetDefaultProviders();
                 await SaveAsync();
             }
+
+            _iaProviders = new List<AiProviderInfo>()
+            {
+                new(AiProviderFamily.GapGpt, new GapGptProvider(_jsonSerializer)),
+                new(AiProviderFamily.OpenAi, new OpenAiProvider())
+            };
         }
         private List<AiProvider> GetDefaultProviders()
         {
@@ -136,6 +151,8 @@ namespace Codify.Storage
             }
 
             await SaveAsync();
+
+            await InitializeAsync();
         }
 
         public async Task SetCurrentModelAsync(AiModelSelectedDto payload)
@@ -163,6 +180,24 @@ namespace Codify.Storage
             model.MarkAsCurrent();
 
             await SaveAsync();
+
+            await InitializeAsync();
+        }
+
+        public ISendChatMessageUseCase InitializeChatMessageUseCase()
+        {
+            if (ActiveProvider == null)
+                throw new InvalidOperationException($"Active Provider was not found.");
+
+            if (ActiveModel == null)
+                throw new InvalidOperationException("Current Model was not found for the active provider.");
+
+            return ActiveProvider.Id switch
+            {
+                "gapgpt" => new SendChatMessageUseCase(new GapGptProvider(_jsonSerializer)),
+                "chatgpt" => new SendChatMessageUseCase(new OpenAiProvider()),
+                _ => throw new NotSupportedException($"Provider '{ActiveProvider.Name}' is not supported.")
+            };
         }
     }
 }

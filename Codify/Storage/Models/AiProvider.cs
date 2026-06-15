@@ -19,13 +19,16 @@ namespace Codify.Storage.Models
         // Base URL endpoint for API requests
         public string BaseUrl { get; private set; }
 
-        // Available models for this provider
-        public IReadOnlyCollection<AiModel> Models => _models.AsReadOnly();
+        // Indicates whether this provider is a router that delegates to other providers
+        public bool IsRouter { get; set; }
 
         // Indicates whether the provider is active
         public bool IsEnabled { get; private set; }
 
-        private readonly List<AiModel> _models = new();
+        // Available models for this provider
+        public IReadOnlyCollection<AiModel> Models => _models.AsReadOnly();
+
+        private readonly List<AiModel> _models;
 
         /// <summary>
         /// Constructor enforces required invariants.
