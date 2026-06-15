@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Codify.Core.Abstractions;
+using Newtonsoft.Json.Linq;
 
 namespace Codify.Infrastructure.Serialization;
 
@@ -37,5 +38,10 @@ public sealed class JsonSerializationService : IJsonSerializer
     public object Deserialize(string json, Type type)
     {
         return JsonConvert.DeserializeObject(json, type, Settings);
+    }
+
+    public JObject Parse(string json)
+    {
+        return JObject.Parse(json);
     }
 }
