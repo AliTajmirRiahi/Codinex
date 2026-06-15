@@ -15,7 +15,7 @@ namespace Codify.Storage
             );
 
         public static readonly string Chats =
-            Path.Combine(Root, "chats");
+            Path.Combine(Root, $"chats/{CodifyPackage.ProjectName}");
 
         public static readonly string Cache =
             Path.Combine(Root, "cache");
