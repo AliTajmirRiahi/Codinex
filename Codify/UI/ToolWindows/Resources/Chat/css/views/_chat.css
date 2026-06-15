@@ -68,3 +68,168 @@
     display: none;
 }
 
+/* Container for all messages */
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+
+/* Base message style */
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    position: relative;
+}
+
+    /* User Message - Aligned to right */
+    .chat-message.user {
+        align-self: flex-end;
+        background-color: var(--vs-button-bg); /* Use VS Code button blue/color */
+        color: var(--vs-button-fg);
+        border-bottom-right-radius: 2px; /* Small "tail" effect */
+    }
+
+    /* Assistant Message - Aligned to left */
+    .chat-message.assistant {
+        align-self: flex-start;
+        background-color: var(--vs-sidebar-bg); /* Darker gray like VS sidebar */
+        color: var(--vs-foreground);
+        border-bottom-left-radius: 2px;
+        border: 1px solid var(--vs-border); /* Subtle border for assistant */
+    }
+
+/* Content spacing */
+.message-content {
+    white-space: pre-wrap;
+    direction: auto;
+    text-align: start;
+    unicode-bidi: plaintext;
+}
+/* Styling for the text container inside messages */
+/*.message-text {
+    line-height: 1.6;
+    font-size: 13.5px;
+    word-wrap: break-word;
+    white-space: normal;*/ /* Allows text to wrap normally */
+/*}*/
+
+    /* Remove margin from the first element if it's a code block */
+    /*.message-text .code-wrapper:first-child {
+        margin-top: 4px;
+    }*/
+
+    /* Ensure no double-spacing from BR tags */
+    /*.message-text br {
+        content: "";
+        display: block;
+        margin-bottom: 4px;*/ /* Minimal space between lines */
+    /*}*/
+
+/* Handle the container of the AI response */
+/*.ai-message {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;*/ /* Controlled gap between text and code blocks */
+/*}*/
+
+
+/* Optional: Add a small label for 'AI' or 'You' */
+.chat-message::before {
+    content: attr(data-sender);
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    opacity: 0.6;
+    text-transform: uppercase;
+}
+/* --- Code Block Styling --- */
+
+.code-wrapper {
+    border: 1px solid var(--vscode-widget-border, #333); /* Use VS Code border color if available */
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+    background-color: #1e1e1e; /* Standard VS Code dark background */
+    direction: ltr; /* Always LTR for code */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header containing language name and copy button */
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #2d2d2d; /* Slightly lighter than code body */
+    border-bottom: 1px solid #333;
+    user-select: none;
+}
+
+/* Language label (e.g., 'js', 'csharp') */
+.code-lang {
+    font-size: 11px;
+    font-family: var(--vscode-font-family, 'Segoe UI', sans-serif);
+    color: #9cdcfe; /* Light blue often seen in VS Code */
+    text-transform: lowercase;
+    font-weight: 600;
+}
+
+/* Copy button styling */
+.copy-btn {
+    border: 1px solid transparent;
+    background: transparent;
+    color: #cccccc;
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+    .copy-btn:hover {
+        background-color: #3e3e42;
+        color: #ffffff;
+    }
+
+    .copy-btn:active {
+        background-color: #2d2d30;
+    }
+
+/* Code container */
+.code-wrapper pre {
+    margin: 0 !important; /* Force remove default margins */
+    padding: 14px;
+    overflow-x: auto;
+    background: transparent;
+}
+
+/* Actual code text */
+.code-wrapper code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #d4d4d4; /* Default VS Code text color */
+    white-space: pre;
+    tab-size: 4;
+}
+
+/* Handle RTL text outside code blocks */
+.ai-message {
+    unicode-bidi: plaintext; /* Automatically detects RTL/LTR for the message container */
+    line-height: 1.6;
+}

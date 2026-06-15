@@ -60,6 +60,8 @@ codify-image {
 
 button.disable {
     background: var(--vs-button-bg) !important;
+    opacity: 0.2;
+    pointer-events: none;
 }
 
 hr {
@@ -67,3 +69,19 @@ hr {
     border-top: 1px solid var(--vs-border);
     margin: 10px 0;
 }
+/* Custom Scrollbar for Code Blocks (Modern look) */
+::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+    background-color: var(--vs-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--vs-auto-hide-resize-grip-disabled-color);
+    border-radius: 5px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--vs-access-tool-tip-color);
+        cursor:pointer;
+    }
