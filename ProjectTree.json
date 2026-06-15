@@ -60,6 +60,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Core/Abstractions/IAiRouterProvider.cs",
+                                                                       "name":  "IAiRouterProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Abstractions/IChatSession.cs",
                                                                        "name":  "IChatSession.cs",
                                                                        "type":  "file"
@@ -157,6 +162,11 @@
                                                   "name":  "AiProviders",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/AiProviders/AiProviderRouter.cs",
+                                                                       "name":  "AiProviderRouter.cs",
+                                                                       "type":  "file"
+                                                                   },
                                                                    {
                                                                        "path":  "Codify/Infrastructure/AiProviders/GapGptProvider.cs",
                                                                        "name":  "GapGptProvider.cs",
@@ -820,6 +830,11 @@
                                                                                                              "name":  "components",
                                                                                                              "type":  "folder",
                                                                                                              "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/components/code-renderer.js",
+                                                                                                                                  "name":  "code-renderer.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
                                                                                                                               {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Shared/components/codify-icon.js",
                                                                                                                                   "name":  "codify-icon.js",

@@ -70,10 +70,8 @@ namespace Codify.UI.ToolWindows
                 // Now that WebView is ready, initialize the messaging bridge
                 // Note: Replace 'new GapGPTProvider()' with your actual provider logic
                 _webViewClient = new WebViewClient(WebView, _serializer);
-
-                var sendChatUseCase = new SendChatMessageUseCase(new GapGptProvider());
-
-                _messageRouter = new WebViewMessageRouter(sendChatUseCase, _webViewClient, _serializer, CodifyPackage.Providers, _payloadBinder);
+                
+                _messageRouter = new WebViewMessageRouter(CodifyPackage.Providers, _webViewClient, _serializer , _payloadBinder);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);

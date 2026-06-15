@@ -42,19 +42,21 @@
             </button>
         </div>
 
+        <!-- Initial welcome state when no messages are present -->
+        <div id="chat-welcome" class="chat-welcome-screen">
+            <!-- Main Logo -->
+            <!--<img src="../Icons/codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo">-->
+            <codify-image name="codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo"></codify-image>
+            <!-- App Title -->
+            <h1 class="welcome-title">Codify AI</h1>
+
+            <!-- Welcome Message -->
+            <p class="welcome-subtitle">How can I help you code today?</p>
+        </div>
+
         <!-- Container for displaying chat messages -->
         <div id="chat-container" class="messages-container">
-            <!-- Initial welcome state when no messages are present -->
-            <div class="chat-welcome-screen">
-                <!-- Main Logo -->
-                <!--<img src="../Icons/codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo">-->
-                <codify-image name="codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo"></codify-image>
-                <!-- App Title -->
-                <h1 class="welcome-title">Codify AI</h1>
 
-                <!-- Welcome Message -->
-                <p class="welcome-subtitle">How can I help you code today?</p>
-            </div>
         </div>
 
         <!-- User input section at the bottom -->
@@ -116,7 +118,7 @@
                         <button id="settings-btn" title="Change Settings">
                             <codify-icon name="wrench"></codify-icon>
                         </button>
-                        <button id="sendBtn" class="disable" title="Send">
+                        <button id="send-btn" class="disable" title="Send">
                             <codify-icon name="send-horizontal"></codify-icon>
                         </button>
                     </div>

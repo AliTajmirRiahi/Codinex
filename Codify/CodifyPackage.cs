@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Codify.Infrastructure.Serialization;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify
@@ -62,7 +63,7 @@ namespace Codify
             Settings = new SettingsManager(Storage);
             await Settings.InitializeAsync();
 
-            Providers = new ProviderManager(Storage);
+            Providers = new ProviderManager(Storage,new JsonSerializationService());
             await Providers.InitializeAsync();
 
             // 4. Important: Only switch to Main Thread when UI/Commands are needed
