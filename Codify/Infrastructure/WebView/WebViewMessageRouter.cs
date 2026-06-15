@@ -1,11 +1,14 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
 using Codify.Core.UseCases;
+using Codify.Infrastructure.AiProviders;
+using Codify.Infrastructure.ChatSessions;
 using Codify.Storage;
 using Codify.Storage.Models.Dtos;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Infrastructure.Factory;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -18,6 +21,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IJsonSerializer _serializer;
     private readonly ProviderManager _providerManager;
     private readonly IPayloadBinder _payloadBinder;
+    private readonly ChatUseCaseFactory _chatUseCaseFactory;
+    private readonly ChatSessionService _sessionService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
@@ -25,12 +30,16 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ProviderManager providerManager,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
-        IPayloadBinder payloadBinder)
+        IPayloadBinder payloadBinder,
+        ChatUseCaseFactory chatUseCaseFactory,
+        ChatSessionService sessionService)
     {
         _providerManager = providerManager;
         _webViewClient = webViewClient;
         _serializer = serializer;
         _payloadBinder = payloadBinder;
+        _chatUseCaseFactory = chatUseCaseFactory;
+        _sessionService = sessionService;
     }
 
     public async Task HandleMessageAsync(string messageJson)
@@ -70,9 +79,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             case WebViewMessageType.Ready:
                 {
-                    await Task.Delay(2000);
+                    await _sessionService.InitializeAsync();
+
                     // UI initialized and ready
                     await SendInitialDataAsync();
+
                     return;
                 }
 
@@ -85,13 +96,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             case WebViewMessageType.SendMessage:
                 {
-                    _sendChatMessageUseCase = _providerManager.InitializeChatMessageUseCase();
+                    _sendChatMessageUseCase = _chatUseCaseFactory.Create();
 
                     var payload = _payloadBinder.Bind<ChatMessage>(request.Payload);
-
-                    payload.Provider = _providerManager.ActiveProvider;
-                    payload.Model = _providerManager.ActiveModel;
-                    payload.Family = _providerManager.ActiveModel.Family;
 
                     var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
 
@@ -158,8 +165,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             {
                 Providers = new
                 {
-                    availableProviders = providers,
-                    current = _providerManager.ActiveProvider
+                    AvailableProviders = providers,
+                    Current = _providerManager.ActiveProvider
                 },
                 Timestamp = DateTime.Now
             }
@@ -185,4 +192,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await _webViewClient.PostMessageAsync(message);
     }
+
+
 }

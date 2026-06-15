@@ -1,5 +1,6 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
+using Codify.Infrastructure.ChatSessions;
 using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,14 @@ namespace Codify.Core.UseCases;
 public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
 {
     private readonly IAiProvider _aiProvider;
+    private readonly IChatSession _chatSession;
 
     // We depend on the Interface (Abstraction), not the concrete implementation.
     // This makes it easy to swap GapGPT with Local AI or OpenAI.
-    public SendChatMessageUseCase(IAiProvider aiProvider)
+    public SendChatMessageUseCase(IAiProvider aiProvider, IChatSession chatSession)
     {
         _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
+        _chatSession = chatSession;
     }
 
     public async Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode)
@@ -31,20 +34,20 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
 
         try
         {
-            //var attachments = new List<Attachment>();
+            // Add user message to session
+            _chatSession.AddUserMessage(message.Content);
 
-            //if (includeSelectedCode)
-            //{
-            //    string code = await _visualStudioService.GetSelectedCodeAsync();
-            //    attachments.Add(new Attachment
-            //    {
-            //        Type = AttachmentType.CodeSnippet,
-            //        Content = code
-            //    });
-            //}
+            // Get last 10 messages for context
+            var context = _chatSession.GetRecentMessages(10);
 
-            // Call the provider (this could be GapGPT, Ollama, etc.)
-            var aiResult = await _aiProvider.SendAsync(message);
+            // Send to provider
+            var aiResult = await _aiProvider.SendAsync(context);
+
+            // Save assistant message
+            _chatSession.AddAssistantMessage(aiResult);
+
+            // Save session
+            await _chatSession.SaveAsync();
 
             return new ChatResponse("AI_RESPONSE", aiResult);
         }
