@@ -8,8 +8,7 @@ import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
 import { addMessage } from '../state/appState.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { getState, setCurrentModel } from '../state/appState.js';
-import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
-
+import { messageView } from '../views/messageView.js';
 
 export const chatView = {
 
@@ -111,15 +110,8 @@ export const chatView = {
      */
     appendMessage(text, sender) {
         const container = document.getElementById('chat-container');
-        const messageDiv = document.createElement('div');
 
-        // Add base and sender-specific classes
-        messageDiv.className = `chat-message ${sender}`;
-
-        // Optional: add data-sender for the CSS label
-        messageDiv.setAttribute('data-sender', sender === 'user' ? 'You' : 'Codify AI');
-
-        messageDiv.innerHTML = `<div class="message-content">${CodeRenderer.render(text)}</div>`;
+        var messageDiv = messageView.createMessageElement(text, sender);
 
         container.appendChild(messageDiv);
 
