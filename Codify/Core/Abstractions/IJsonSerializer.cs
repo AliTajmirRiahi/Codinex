@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace Codify.Core.Abstractions;
 
@@ -9,4 +10,6 @@ public interface IJsonSerializer
     T Deserialize<T>(string json);
 
     object Deserialize(string json, Type type);
+
+    JObject Parse(string json);
 }

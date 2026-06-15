@@ -1,4 +1,5 @@
 ﻿using Codify.Core.Models;
+using Codify.Storage.Models;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,14 +16,4 @@ public interface IAiProvider
         ChatMessage prompt,
         IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
-
-    /// <summary>
-    /// Metadata about the provider (e.g., "Ollama - Llama 3", "OpenAI GPT-4o")
-    /// </summary>
-    string Name { get; }
-
-    /// <summary>
-    /// Supported capabilities (can it see images? can it handle large code?)
-    /// </summary>
-    bool SupportsImages { get; }
 }
