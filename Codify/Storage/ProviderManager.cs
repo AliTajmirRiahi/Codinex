@@ -47,11 +47,11 @@ namespace Codify.Storage
                 await SaveAsync();
             }
 
-            _iaProviders = new List<AiProviderInfo>()
-            {
-                new(AiProviderFamily.GapGpt, new GapGptProvider(_jsonSerializer)),
-                new(AiProviderFamily.OpenAi, new OpenAiProvider())
-            };
+            //_iaProviders = new List<AiProviderInfo>()
+            //{
+            //    new(AiProviderFamily.GapGpt, new GapGptProvider(_jsonSerializer)),
+            //    new(AiProviderFamily.OpenAi, new OpenAiProvider())
+            //};
         }
         private List<AiProvider> GetDefaultProviders()
         {
@@ -182,22 +182,6 @@ namespace Codify.Storage
             await SaveAsync();
 
             await InitializeAsync();
-        }
-
-        public ISendChatMessageUseCase InitializeChatMessageUseCase()
-        {
-            if (ActiveProvider == null)
-                throw new InvalidOperationException($"Active Provider was not found.");
-
-            if (ActiveModel == null)
-                throw new InvalidOperationException("Current Model was not found for the active provider.");
-
-            return ActiveProvider.Id switch
-            {
-                "gapgpt" => new SendChatMessageUseCase(new GapGptProvider(_jsonSerializer)),
-                "chatgpt" => new SendChatMessageUseCase(new OpenAiProvider()),
-                _ => throw new NotSupportedException($"Provider '{ActiveProvider.Name}' is not supported.")
-            };
         }
     }
 }

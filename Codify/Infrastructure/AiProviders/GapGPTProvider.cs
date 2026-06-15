@@ -5,11 +5,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Storage;
 
 namespace Codify.Infrastructure.AiProviders
 {
@@ -18,32 +20,37 @@ namespace Codify.Infrastructure.AiProviders
     public class GapGptProvider : IAiProvider
     {
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly ProviderManager _providerManager;
 
         // Using a static HttpClient is a best practice to prevent socket exhaustion.
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        public GapGptProvider(IJsonSerializer jsonSerializer)
+        public GapGptProvider(IJsonSerializer jsonSerializer, ProviderManager providerManager)
         {
             _jsonSerializer = jsonSerializer;
+            _providerManager = providerManager;
         }
 
-        public async Task<string> SendAsync(ChatMessage prompt, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
+        public async Task<string> SendAsync(IReadOnlyList<ChatMessage> prompts, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
         {
-            if (prompt?.Provider == null || prompt.Model == null)
+            var model = _providerManager.ActiveModel;
+            var provider = _providerManager.ActiveProvider;
+
+            if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
             // 1. Prepare the Endpoint URL
-            var baseUrl = string.IsNullOrWhiteSpace(prompt.Provider.BaseUrl)
+            var baseUrl = string.IsNullOrWhiteSpace(provider.BaseUrl)
                 ? "https://api.openai.com/v1"
-                : prompt.Provider.BaseUrl.TrimEnd('/');
+                : provider.BaseUrl.TrimEnd('/');
 
             var requestUri = $"{baseUrl}/chat/completions";
 
             // 2. Prepare the Payload (Exact format you requested)
             var payload = new
             {
-                model = prompt.Model.Id, // e.g., "gpt-5.3-chat-latest"
-                messages = BuildMessages(prompt, attachments),
+                model = model.Id, // e.g., "gpt-5.3-chat-latest"
+                messages = BuildMessages(prompts, attachments),
                 stream = false
             };
 
@@ -55,9 +62,9 @@ namespace Codify.Infrastructure.AiProviders
             request.Content = content;
 
             // Add Bearer Token if ApiKey exists
-            if (!string.IsNullOrWhiteSpace(prompt.Provider.ApiKey))
+            if (!string.IsNullOrWhiteSpace(provider.ApiKey))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", prompt.Provider.ApiKey);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", provider.ApiKey);
             }
 
             try
@@ -83,7 +90,7 @@ namespace Codify.Infrastructure.AiProviders
             }
         }
 
-        private List<object> BuildMessages(ChatMessage prompt, IEnumerable<Attachment> attachments)
+        private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts, IEnumerable<Attachment> attachments)
         {
             var messages = new List<object>();
 
@@ -91,7 +98,8 @@ namespace Codify.Infrastructure.AiProviders
             var contentList = new List<object>();
 
             // Add the main user text
-            contentList.Add(new { type = "text", text = prompt.Message });
+            foreach (var prompt in prompts)
+                contentList.Add(new { type = "text", role = prompt.Role, text = prompt.Content });
 
             // Add attachments if any
             if (attachments != null)

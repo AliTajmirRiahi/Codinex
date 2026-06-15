@@ -18,7 +18,7 @@ namespace Codify.Infrastructure.AiProviders
     /// </summary>
     public class OpenAiProvider : IAiProvider
     {
-        public Task<string> SendAsync(ChatMessage prompt, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
+        public Task<string> SendAsync(IReadOnlyList<ChatMessage> prompt, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Storage;
 
 namespace Codify.Infrastructure.AiProviders
 {
@@ -14,26 +15,28 @@ namespace Codify.Infrastructure.AiProviders
     /// </summary>
     public class AiProviderRouter : IAiRouterProvider
     {
+        private readonly ProviderManager _providerManager;
         public IEnumerable<AiProviderInfo> Providers { get; }
 
-        public AiProviderRouter(IEnumerable<AiProviderInfo> providers)
+        public AiProviderRouter(IEnumerable<AiProviderInfo> providers,ProviderManager providerManager)
         {
+            _providerManager = providerManager;
             Providers = providers;
         }
 
-        public AiProvider Provider => new AiProvider("router","router","");
+        public AiProvider Provider => new AiProvider("router", "router", "");
         public AiModel Model => throw new NotSupportedException("Router does not have a specific model.");
 
 
-        public async Task<string> SendAsync(
-            ChatMessage prompt,
+        public async Task<string> SendAsync(IReadOnlyList<ChatMessage> prompt,
             IEnumerable<Attachment> attachments = null,
             CancellationToken ct = default)
         {
-            if (prompt == null && prompt?.Family == AiProviderFamily.NaN)
+            var family = _providerManager.ActiveModel?.Family;
+
+            if (prompt == null && family == AiProviderFamily.NaN)
                 throw new ArgumentException(@"Prompt must specify a valid model family.", nameof(prompt));
 
-            var family = prompt?.Family;
 
             var provider = Providers
                 .FirstOrDefault(p => p.Family == family);

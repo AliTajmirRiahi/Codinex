@@ -13,7 +13,7 @@ public interface IAiProvider
     /// Sends a prompt along with multiple attachments (code, files, images) to the AI.
     /// </summary>
     Task<string> SendAsync(
-        ChatMessage prompt,
+        IReadOnlyList<ChatMessage> prompt,
         IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
 }
