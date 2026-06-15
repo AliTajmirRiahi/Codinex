@@ -14,23 +14,22 @@ namespace Codify.Infrastructure.WebView;
 /// </summary>
 public sealed class WebViewMessageRouter : IWebViewMessageRouter
 {
-    private readonly ISendChatMessageUseCase _sendChatMessageUseCase;
     private readonly IWebViewClient _webViewClient;
     private readonly IJsonSerializer _serializer;
     private readonly ProviderManager _providerManager;
     private readonly IPayloadBinder _payloadBinder;
 
+    private ISendChatMessageUseCase _sendChatMessageUseCase;
+
     public WebViewMessageRouter(
-        ISendChatMessageUseCase sendChatMessageUseCase,
+        ProviderManager providerManager,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
-        ProviderManager providerManager,
         IPayloadBinder payloadBinder)
     {
-        _sendChatMessageUseCase = sendChatMessageUseCase;
+        _providerManager = providerManager;
         _webViewClient = webViewClient;
         _serializer = serializer;
-        _providerManager = providerManager;
         _payloadBinder = payloadBinder;
     }
 
@@ -66,6 +65,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             return;
         }
 
+
         switch (request.Type)
         {
             case WebViewMessageType.Ready:
@@ -85,11 +85,18 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             case WebViewMessageType.SendMessage:
                 {
+                    _sendChatMessageUseCase = _providerManager.InitializeChatMessageUseCase();
+
                     var payload = _payloadBinder.Bind<ChatMessage>(request.Payload);
+
+                    payload.Provider = _providerManager.ActiveProvider;
+                    payload.Model = _providerManager.ActiveModel;
+                    payload.Family = _providerManager.ActiveModel.Family;
 
                     var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
 
                     await _webViewClient.PostMessageAsync(response);
+
                     return;
                 }
 

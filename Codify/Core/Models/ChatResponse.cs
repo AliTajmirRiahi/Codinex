@@ -16,3 +16,4 @@ public sealed class ChatResponse
         Payload = payload;
     }
 }
+
