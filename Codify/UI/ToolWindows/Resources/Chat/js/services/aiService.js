@@ -13,7 +13,7 @@ export const aiService = {
      */
     sendMessage(prompt, transport) {
         transport.send(EVENTS.SEND_MESSAGE, {
-            content: prompt,
+            message: prompt,
             timestamp: new Date().toISOString()
         });
     },

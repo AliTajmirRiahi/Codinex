@@ -4,8 +4,7 @@
  * the view layer and the service layer.
  */
 import { $ } from '../utils/dom.js';
-import { appendMessage, createStreamingMessage } from '../views/chatView.js';
-import { DropDownView } from '../views/dropDownView.js';
+import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading, setCurrentModel } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
@@ -17,74 +16,21 @@ import { EVENTS } from '../constants/events.js';
  */
 export function initChatController(transport) {
 
-    // Initialize
-    const modelDropDown = new DropDownView({
-        containerId: 'model-dropdown-menu-container',
-        menuId: 'model-dropdown-menu',
-        menuButtonId: 'model-selector-btn',
-        itemTemplate: (item, isActive) => {
-            const option = document.createElement('div');
-            option.className = `model-option ${isActive ? 'active' : ''}`;
-            option.dataset.value = item.id;
+    chatView.initialize(handleSend, onModelSelected);
 
-            option.innerHTML = `
-                    <div class="model-info">
-                        <codify-icon name="lightning" class="low-vis"></codify-icon>
-                        <span>${item.name}</span>
-                    </div>
-                    <span class="multiplier">${item.multiplier || '1x'}</span>`;
-            return option;
-        },
-        onItemSelect: (model) => {
-            var appState = getState();
-            const data = {
-                providerId: appState.provider.id,
-                modelId: model.id
-            };
-            transport.send(EVENTS.SELECT_MODEL, data);
-            setCurrentModel(model);
-            setCurrentModelName();
-            return true;
-        }
-    });
-
-    const input = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    if (!input || !sendBtn) {
-        console.warn('Chat input or send button not found');
-        return;
-    }
-
-    /**
-     * Send button click
-     */
-    sendBtn.addEventListener('click', handleSend);
-
-    /**
-     * Enter key send
-     */
-    input.addEventListener('keydown', (event) => {
-
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            handleSend();
-        }
-
-    });
-
-    // updates current model name
-    function setCurrentModelName() {
+    function onModelSelected(model) {
         var appState = getState();
-        $('#current-model-name').innerHTML = appState.currentModel.name;
+        const data = {
+            providerId: appState.provider.id,
+            modelId: model.id
+        };
+        transport.send(EVENTS.SELECT_MODEL, data);
     }
+    
     /**
      * Main send handler
      */
-    async function handleSend() {
-
-        const text = input.value.trim();
-
+    async function handleSend(text) {
         if (!text) return;
 
         const state = getState();
@@ -92,35 +38,35 @@ export function initChatController(transport) {
         // Prevent sending while AI is generating
         if (state.isLoading) return;
 
-        // Clear input
-        input.value = '';
-
         // Show user message immediately
-        appendMessage(text, 'user');
+        chatView.appendMessage(text, 'user');
 
         // Set loading state
-        setLoading({ isLoading: true });
+        setLoading(true);
 
         try {
 
-            // Create streaming UI container
-            const streamingEl = createStreamingMessage();
+            //// Create streaming UI container
+            //const streamingEl = createStreamingMessage();
 
             // Send message to AI
             const response = await aiService.sendMessage(text, transport);
 
+            // Show AI message
+            //chatView.appendMessage(text, 'assistant');
+
             // Update UI
-            streamingEl.innerText = response;
+            //streamingEl.innerText = response;
 
         } catch (error) {
 
             console.error('AI request failed:', error);
 
-            appendMessage('⚠️ Error generating response.', 'assistant');
+            chatView.appendMessage('⚠️ Error generating response.', 'assistant');
 
         } finally {
 
-            setLoading({ isLoading: false });
+            setLoading(false);
         }
 
     }
@@ -152,8 +98,12 @@ export function initChatController(transport) {
 
         renderCurrentProvider: () => {
             var appState = getState();
-            modelDropDown.render(appState.selectedModels, appState.currentModel.id);
-            setCurrentModelName();
+            chatView.renderModelMenu(appState.selectedModels, appState.currentModel.id);
         },
+
+        handleAIResponse: (payload) => {
+            // Show AI message
+            chatView.appendMessage(payload, 'assistant');
+        }
     };
 }

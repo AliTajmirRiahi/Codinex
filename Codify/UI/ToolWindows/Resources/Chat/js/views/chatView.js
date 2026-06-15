@@ -4,41 +4,136 @@
  * No business logic or AI communication should exist here.
  */
 
+import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
 import { addMessage } from '../state/appState.js';
+import { DropDownView } from '../views/dropDownView.js';
+import { getState, setCurrentModel } from '../state/appState.js';
+import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 
-/**
- * Append a new message to the chat container.
- * @param {string} content - Message text
- * @param {'user' | 'assistant'} role - Message sender
- */
-export function appendMessage(content, role) {
 
-    const container = document.getElementById('chat-container');
+export const chatView = {
 
-    if (!container) {
-        console.warn('Chat container not found');
-        return;
+    initialize(handleSend, onModelSelected) {
+        this.handleSend = handleSend;
+        // Initialize
+        this.modelDropDown = new DropDownView({
+            containerId: 'model-dropdown-menu-container',
+            menuId: 'model-dropdown-menu',
+            menuButtonId: 'model-selector-btn',
+            itemTemplate: (item, isActive) => {
+                const option = document.createElement('div');
+                option.className = `model-option ${isActive ? 'active' : ''}`;
+                option.dataset.value = item.id;
+
+                option.innerHTML = `
+                    <div class="model-info">
+                        <codify-icon name="lightning" class="low-vis"></codify-icon>
+                        <span>${item.name}</span>
+                    </div>
+                    <span class="multiplier">${item.multiplier || '1x'}</span>`;
+                return option;
+            },
+            onItemSelect: (model) => {
+                onModelSelected(model);
+                setCurrentModel(model);
+                this.setCurrentModelName();
+                return true;
+            }
+        });
+
+
+        const input = $('#userInput');
+        const sendBtn = $('#send-btn');
+
+        this.inputMinHeight = parseFloat(window.getComputedStyle(input).minHeight);
+
+        if (!input || !sendBtn) {
+            console.warn('Chat input or send button not found');
+            return;
+        }
+
+        /**
+         * Send button click
+         */
+        sendBtn.addEventListener('click', () => {
+            this.handleSendMessage(input);
+        });
+        /**
+         * Enter key send
+         */
+        input.addEventListener('keydown', (event) => {
+
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                this.handleSendMessage(input);
+            }
+
+        });
+
+        /**
+        * change 
+        */
+        input.addEventListener('input', (e) => {
+            input.style.height = 'auto';
+            if (input.scrollHeight > 500)
+                input.style.height = '500px';
+            else
+                input.style.height = (input.scrollHeight) + 'px';
+            togglePanelDisable('#send-btn', e.target.value != '');
+        }, false);
+    },
+
+    getInputMessage(input) {
+        const text = input.value.trim();
+
+        if (!text) return null;
+
+        // Clear input
+        input.value = '';
+
+        return text;
+    },
+
+    // updates current model name
+    setCurrentModelName() {
+        var appState = getState();
+        $('#current-model-name').innerHTML = appState.currentModel.name;
+    },
+
+    renderModelMenu(items, selectedValue) {
+        this.modelDropDown.render(items, selectedValue);
+        this.setCurrentModelName();
+    },
+    /**
+     * Append a new message to the chat container.
+     * @param {string} content - Message text
+     * @param {'user' | 'assistant'} role - Message sender
+     */
+    appendMessage(text, sender) {
+        const container = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+
+        // Add base and sender-specific classes
+        messageDiv.className = `chat-message ${sender}`;
+
+        // Optional: add data-sender for the CSS label
+        messageDiv.setAttribute('data-sender', sender === 'user' ? 'You' : 'Codify AI');
+
+        messageDiv.innerHTML = `<div class="message-content">${CodeRenderer.render(text)}</div>`;
+
+        container.appendChild(messageDiv);
+
+        // Auto-scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    },
+
+
+    handleSendMessage(input) {
+        togglePanelHidden('#chat-welcome', false);
+        this.handleSend(this.getInputMessage(input));
+        input.style.height = (this.inputMinHeight) + 'px';
     }
-
-    // Create message wrapper
-    const messageEl = document.createElement('div');
-    messageEl.classList.add('chat-message', role);
-
-    // Create content element
-    const contentEl = document.createElement('div');
-    contentEl.classList.add('message-content');
-
-    contentEl.innerText = content;
-
-    messageEl.appendChild(contentEl);
-    container.appendChild(messageEl);
-
-    // Save message in state
-    addMessage({ role, content });
-
-    scrollToBottom();
 }
-
 
 /**
  * Creates an empty assistant message element for streaming.

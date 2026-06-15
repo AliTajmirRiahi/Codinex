@@ -17,7 +17,7 @@ import '../../Shared/components/codify-image.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    setLoading({ isLoading: true });
+    setLoading(true);
     /**
      * Initialize Controllers
      */
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
+
             if (data.providers.current) {
                 setProvider(data.providers.current);
                 chatController.renderCurrentProvider();
@@ -47,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 togglePanelHidden('#loading-screen', false);
                 togglePanelHidden('#main-chat-wrapper', true);
             }
-            setLoading({ isLoading: false });
+
+            setLoading(false);
         },
 
         onSelectProvider: (payload) => {
