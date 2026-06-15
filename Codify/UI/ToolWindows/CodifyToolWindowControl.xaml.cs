@@ -2,7 +2,10 @@
 using Codify.Core.UseCases;
 using Codify.Infrastructure;
 using Codify.Infrastructure.AiProviders;
+using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Theme;
+using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Web.WebView2.Core;
@@ -10,7 +13,6 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Codify.Infrastructure.Serialization;
 
 namespace Codify.UI.ToolWindows
 {
@@ -24,9 +26,7 @@ namespace Codify.UI.ToolWindows
         /// </summary>
         private readonly IThemeService _themeService;
         private readonly IResourceServer _resourceServer;
-        private readonly IJsonSerializer _serializer;
         private readonly IPayloadBinder _payloadBinder;
-
 
         // These will be initialized once WebView is ready
         private IWebViewMessageRouter _messageRouter;
@@ -39,7 +39,6 @@ namespace Codify.UI.ToolWindows
             _resourceServer = new WebViewResourceServer(
                 typeof(CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources");
-            _serializer = new JsonSerializationService();
             _payloadBinder = new NewtonsoftPayloadBinder(new Newtonsoft.Json.JsonSerializer());
 
             InitializeComponent();
@@ -54,10 +53,11 @@ namespace Codify.UI.ToolWindows
         {
             try
             {
+
                 // Define the user data folder path to avoid permission issues.
                 var userDataFolder = System.IO.Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "CodifyExtension");
+                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                            "CodifyExtension");
 
                 // Create the WebView2 environment using the custom folder.
                 var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
@@ -69,9 +69,14 @@ namespace Codify.UI.ToolWindows
 
                 // Now that WebView is ready, initialize the messaging bridge
                 // Note: Replace 'new GapGPTProvider()' with your actual provider logic
-                _webViewClient = new WebViewClient(WebView, _serializer);
-                
-                _messageRouter = new WebViewMessageRouter(CodifyPackage.Providers, _webViewClient, _serializer , _payloadBinder);
+                _webViewClient = new WebViewClient(WebView, CodifyPackage.SerializationService);
+
+                _messageRouter = new WebViewMessageRouter(CodifyPackage.Providers,
+                    _webViewClient,
+                    CodifyPackage.SerializationService,
+                    _payloadBinder,
+                    CodifyPackage.ChatUseCaseFactory,
+                    CodifyPackage.ChatSessionService);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);

@@ -1,9 +1,12 @@
-﻿using Codify.Storage;
+﻿using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.Factory;
+using Codify.Infrastructure.Serialization;
+using Codify.Infrastructure.VisualStudio;
+using Codify.Storage;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Codify.Infrastructure.Serialization;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify
@@ -38,8 +41,14 @@ namespace Codify
 
         // Global access to settings and storage
         public static SettingsManager Settings { get; private set; }
+        public static ChatManager ChatManager { get; set; }
         public static ProviderManager Providers { get; private set; }
         public static IStorageService Storage { get; private set; }
+        public static ChatSessionService ChatSessionService { get; private set; }
+        public static ChatUseCaseFactory ChatUseCaseFactory { get; private set; }
+        public static JsonSerializationService SerializationService { get; private set; }
+        public static string ProjectName { get; set; }
+
 
         #region Package Members
 
@@ -55,7 +64,11 @@ namespace Codify
             // 1. Switch to background thread for IO operations
             await Task.Yield();
 
+            CodifyPackage.ProjectName = VsContextHelper.GetActiveProjectName();
+
             StoragePaths.EnsureCreated();
+
+            SerializationService = new JsonSerializationService();
 
             // 3. Initialize Services
             Storage = new FileStorageService();
@@ -63,8 +76,14 @@ namespace Codify
             Settings = new SettingsManager(Storage);
             await Settings.InitializeAsync();
 
-            Providers = new ProviderManager(Storage,new JsonSerializationService());
+            Providers = new ProviderManager(Storage, new JsonSerializationService());
             await Providers.InitializeAsync();
+
+            ChatManager = new ChatManager(Storage);
+
+            ChatSessionService = new ChatSessionService(ChatManager, Providers);
+
+            ChatUseCaseFactory = new ChatUseCaseFactory(Providers, ChatSessionService, SerializationService);
 
             // 4. Important: Only switch to Main Thread when UI/Commands are needed
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);

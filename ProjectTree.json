@@ -180,6 +180,40 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "Codify/Infrastructure/ChatSessions",
+                                                  "name":  "ChatSessions",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/ChatSessions/ChatSession.cs",
+                                                                       "name":  "ChatSession.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/ChatSessions/ChatSessionService.cs",
+                                                                       "name":  "ChatSessionService.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/Factory",
+                                                  "name":  "Factory",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Factory/ChatUseCaseFactory.cs",
+                                                                       "name":  "ChatUseCaseFactory.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Factory/IChatUseCaseFactory.cs",
+                                                                       "name":  "IChatUseCaseFactory.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "Codify/Infrastructure/Serialization",
                                                   "name":  "Serialization",
                                                   "type":  "folder",
@@ -203,6 +237,16 @@
                                                   "children":  {
                                                                    "path":  "Codify/Infrastructure/Theme/VsThemeService.cs",
                                                                    "name":  "VsThemeService.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/VisualStudio",
+                                                  "name":  "VisualStudio",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Infrastructure/VisualStudio/VsContextHelper.cs",
+                                                                   "name":  "VsContextHelper.cs",
                                                                    "type":  "file"
                                                                }
                                               },
@@ -290,6 +334,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Storage/Models/ChatSessionDocument.cs",
+                                                                       "name":  "ChatSessionDocument.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Storage/Models/CodifySettings.cs",
                                                                        "name":  "CodifySettings.cs",
                                                                        "type":  "file"
@@ -317,6 +366,11 @@
                                                                        "type":  "file"
                                                                    }
                                                                ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Storage/ChatManager.cs",
+                                                  "name":  "ChatManager.cs",
+                                                  "type":  "file"
                                               },
                                               {
                                                   "path":  "Codify/Storage/FileStorageService.cs",
