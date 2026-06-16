@@ -102,6 +102,16 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "Codify/Core/Chat",
+                                                  "name":  "Chat",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Core/Chat/ChatTitleGenerator.cs",
+                                                                   "name":  "ChatTitleGenerator.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "Codify/Core/Models",
                                                   "name":  "Models",
                                                   "type":  "folder",
@@ -808,6 +818,11 @@
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/lightning.svg",
                                                                                                              "name":  "lightning.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/linear-loading.svg",
+                                                                                                             "name":  "linear-loading.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {

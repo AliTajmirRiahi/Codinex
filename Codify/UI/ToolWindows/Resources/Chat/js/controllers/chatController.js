@@ -45,18 +45,8 @@ export function initChatController(transport) {
         setLoading(true);
 
         try {
-
-            //// Create streaming UI container
-            //const streamingEl = createStreamingMessage();
-
             // Send message to AI
             const response = await aiService.sendMessage(text, transport);
-
-            // Show AI message
-            //chatView.appendMessage(text, 'assistant');
-
-            // Update UI
-            //streamingEl.innerText = response;
 
         } catch (error) {
 
@@ -66,7 +56,6 @@ export function initChatController(transport) {
 
         } finally {
 
-            setLoading(false);
         }
 
     }
@@ -103,6 +92,7 @@ export function initChatController(transport) {
 
         handleAIResponse: (payload) => {
             // Show AI message
+            setLoading(false);
             chatView.appendMessage(payload, 'assistant');
         }
     };

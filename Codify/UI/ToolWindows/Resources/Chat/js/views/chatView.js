@@ -7,7 +7,7 @@
 import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
 import { addMessage } from '../state/appState.js';
 import { DropDownView } from '../views/dropDownView.js';
-import { getState, setCurrentModel } from '../state/appState.js';
+import { getState, setCurrentModel, setLoading, subscribe } from '../state/appState.js';
 import { messageView } from '../views/messageView.js';
 
 export const chatView = {
@@ -43,6 +43,7 @@ export const chatView = {
 
         const input = $('#userInput');
         const sendBtn = $('#send-btn');
+        const responseLoading = $('#response-loading');
 
         this.inputMinHeight = parseFloat(window.getComputedStyle(input).minHeight);
 
@@ -80,6 +81,10 @@ export const chatView = {
                 input.style.height = (input.scrollHeight) + 'px';
             togglePanelDisable('#send-btn', e.target.value != '');
         }, false);
+
+        subscribe(function (state) {
+            togglePanelHidden('#response-loading', state.isLoading);
+        })
     },
 
     getInputMessage(input) {
@@ -110,11 +115,16 @@ export const chatView = {
      */
     appendMessage(text, sender) {
         const container = document.getElementById('chat-container');
+        const element = document.getElementById('response-loading');
+        const parent = element.parentElement;
+
+        parent.removeChild(element);
 
         var messageDiv = messageView.createMessageElement(text, sender);
 
         container.appendChild(messageDiv);
 
+        parent.appendChild(element);
         // Auto-scroll to bottom
         container.scrollTop = container.scrollHeight;
     },

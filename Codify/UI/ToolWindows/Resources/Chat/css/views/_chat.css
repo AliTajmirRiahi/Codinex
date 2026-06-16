@@ -44,6 +44,10 @@
     gap: 12px;
 }
 
+.response-loading {
+    width: 40px;
+}
+
 .message {
     max-width: 85%;
     padding: 8px 12px;
@@ -123,17 +127,17 @@
     white-space: normal;*/ /* Allows text to wrap normally */
 /*}*/
 
-    /* Remove margin from the first element if it's a code block */
-    /*.message-text .code-wrapper:first-child {
+/* Remove margin from the first element if it's a code block */
+/*.message-text .code-wrapper:first-child {
         margin-top: 4px;
     }*/
 
-    /* Ensure no double-spacing from BR tags */
-    /*.message-text br {
+/* Ensure no double-spacing from BR tags */
+/*.message-text br {
         content: "";
         display: block;
         margin-bottom: 4px;*/ /* Minimal space between lines */
-    /*}*/
+/*}*/
 
 /* Handle the container of the AI response */
 /*.ai-message {

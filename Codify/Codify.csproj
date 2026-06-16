@@ -206,7 +206,7 @@
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\manageModelsView.test.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\loading.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\lightning.svg" />
-    <Content Include="UI\ToolWindows\Resources\Icons\linear-loading.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\linear-loading.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />
