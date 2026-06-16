@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Web.WebView2.Wpf;
 
 namespace Codify.Core.Abstractions;
 
@@ -7,6 +8,7 @@ namespace Codify.Core.Abstractions;
 /// </summary>
 public interface IWebViewClient
 {
+    void Initialize(WebView2 webView);
     /// <summary>
     /// Posts a message to the WebView UI.
     /// </summary>

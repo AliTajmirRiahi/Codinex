@@ -13,6 +13,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Codify.Infrastructure.DependencyInjection;
 
 namespace Codify.UI.ToolWindows
 {
@@ -35,11 +36,9 @@ namespace Codify.UI.ToolWindows
         public CodifyToolWindowControl()
         {
             // Initialize services that don't depend on WebView
-            _themeService = new VsThemeService();
-            _resourceServer = new WebViewResourceServer(
-                typeof(CodifyToolWindowControl).Assembly,
-                "Codify.UI.ToolWindows.Resources");
-            _payloadBinder = new NewtonsoftPayloadBinder(new Newtonsoft.Json.JsonSerializer());
+            _themeService = CodifyServiceContainer.Get<IThemeService>();
+            _resourceServer = CodifyServiceContainer.Get<IResourceServer>(); 
+            _payloadBinder = CodifyServiceContainer.Get<IPayloadBinder>();
 
             InitializeComponent();
 
@@ -67,17 +66,11 @@ namespace Codify.UI.ToolWindows
 
                 WebView.CoreWebView2.OpenDevToolsWindow();
 
-                // Now that WebView is ready, initialize the messaging bridge
-                // Note: Replace 'new GapGPTProvider()' with your actual provider logic
-                _webViewClient = new WebViewClient(WebView, CodifyPackage.SerializationService);
 
-                _messageRouter = new WebViewMessageRouter(CodifyPackage.Providers,
-                    _webViewClient,
-                    CodifyPackage.SerializationService,
-                    _payloadBinder,
-                    CodifyPackage.ChatUseCaseFactory,
-                    CodifyPackage.ChatSessionService,
-                    CodifyPackage.ChatManager);
+                // Get services from our DI Container
+                var webViewClient = CodifyServiceContainer.Get<IWebViewClient>();
+
+                webViewClient.Initialize(WebView);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);
@@ -111,8 +104,9 @@ namespace Codify.UI.ToolWindows
         {
             try
             {
-                // Forward the raw JSON from JS to our Clean Architecture Router
-                await _messageRouter.HandleMessageAsync(e.WebMessageAsJson);
+                var router = CodifyServiceContainer.Get<IWebViewMessageRouter>();
+                // The router now has everything it needs to be injected via DI
+                await router.HandleMessageAsync(e.WebMessageAsJson);
             }
             catch (Exception ex)
             {

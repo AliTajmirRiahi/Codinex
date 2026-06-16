@@ -207,6 +207,16 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "Codify/Infrastructure/DependencyInjection",
+                                                  "name":  "DependencyInjection",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Infrastructure/DependencyInjection/ServiceContainer.cs",
+                                                                   "name":  "ServiceContainer.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "Codify/Infrastructure/Factory",
                                                   "name":  "Factory",
                                                   "type":  "folder",

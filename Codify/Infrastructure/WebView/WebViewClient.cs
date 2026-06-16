@@ -10,13 +10,18 @@ namespace Codify.Infrastructure.WebView;
 /// </summary>
 public sealed class WebViewClient : IWebViewClient
 {
-    private readonly WebView2 _webView;
+    private WebView2 _webView;
     private readonly IJsonSerializer _serializer;
 
-    public WebViewClient(WebView2 webView, IJsonSerializer serializer)
+    public WebViewClient(IJsonSerializer serializer)
+    {
+        _serializer = serializer;
+    }
+
+    // Add this method to connect the UI element later
+    public void Initialize(WebView2 webView)
     {
         _webView = webView;
-        _serializer = serializer;
     }
 
     public Task PostMessageAsync(object message)

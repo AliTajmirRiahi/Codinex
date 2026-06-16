@@ -9,6 +9,10 @@ namespace Codify.Infrastructure.Serialization;
 
 public sealed class JsonSerializationService : IJsonSerializer
 {
+    public JsonSerializationService()
+    {
+
+    }
     private static readonly JsonSerializerSettings Settings = new()
     {
         ContractResolver = new CamelCasePropertyNamesContractResolver(),

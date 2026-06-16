@@ -1,12 +1,13 @@
-﻿using Codify.Infrastructure.ChatSessions;
-using Codify.Infrastructure.Factory;
-using Codify.Infrastructure.Serialization;
+﻿
 using Codify.Infrastructure.VisualStudio;
 using Codify.Storage;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Codify.Infrastructure.DependencyInjection;
+using Codify.UI.ToolWindows;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify
@@ -39,14 +40,6 @@ namespace Codify
         /// </summary>
         public const string PackageGuidString = "eb873b7a-8287-48ac-8a6b-646d4166809b";
 
-        // Global access to settings and storage
-        public static SettingsManager Settings { get; private set; }
-        public static ChatManager ChatManager { get; set; }
-        public static ProviderManager Providers { get; private set; }
-        public static IStorageService Storage { get; private set; }
-        public static ChatSessionService ChatSessionService { get; private set; }
-        public static ChatUseCaseFactory ChatUseCaseFactory { get; private set; }
-        public static JsonSerializationService SerializationService { get; private set; }
         public static string ProjectName { get; set; }
 
 
@@ -61,38 +54,44 @@ namespace Codify
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            // 1. Switch to background thread for IO operations
+            // 1. Basic IO setup (stays here as it's environment-related)
             await Task.Yield();
-
-            CodifyPackage.ProjectName = VsContextHelper.GetActiveProjectName();
+            // Project name can be set in a global State service or Context service later
+            ProjectName = VsContextHelper.GetActiveProjectName();
 
             StoragePaths.EnsureCreated();
 
-            SerializationService = new JsonSerializationService();
+            // 2. Initialize the Dependency Injection Container
+            // This replaces all manual "new Service()" calls.
+            CodifyServiceContainer.Initialize();
 
-            // 3. Initialize Services
-            Storage = new FileStorageService();
+            // 3. Perform Async Initializations
+            // Since some services need to load files from disk, we do it here.
+            await InitializeCoreServicesAsync();
 
-            Settings = new SettingsManager(Storage);
-            await Settings.InitializeAsync();
-
-            Providers = new ProviderManager(Storage, new JsonSerializationService());
-            await Providers.InitializeAsync();
-
-            ChatManager = new ChatManager(Storage);
-
-            ChatSessionService = new ChatSessionService(ChatManager, Providers);
-
-            ChatUseCaseFactory = new ChatUseCaseFactory(Providers, ChatSessionService, SerializationService);
-
-            // 4. Important: Only switch to Main Thread when UI/Commands are needed
+            // 4. UI/Command initialization on Main Thread
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             // Initialize UI Commands
-            await Codify.UI.ToolWindows.CodifyToolWindowCommand.InitializeAsync(this);
+            await CodifyToolWindowCommand.InitializeAsync(this);
 
-            System.Diagnostics.Debug.WriteLine("[Codify] Initialization Completed Successfully.");
+            Debug.WriteLine("[Codify] DI Container & Package Initialized.");
+        }
 
+        /// <summary>
+        /// Handles the async initialization of services that require file I/O or settings loading.
+        /// </summary>
+        private async Task InitializeCoreServicesAsync()
+        {
+            // We get the services from the container and call their init methods.
+
+            var settings = CodifyServiceContainer.Get<SettingsManager>();
+            await settings.InitializeAsync();
+
+            var providers = CodifyServiceContainer.Get<ProviderManager>();
+            await providers.InitializeAsync();
+
+            // Optional: ServiceContainer.Get<IProjectContext>().SetProjectName(projectName);
         }
 
         #endregion
