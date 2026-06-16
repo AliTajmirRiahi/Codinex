@@ -10,8 +10,8 @@ namespace Codify.Core.Abstractions
         IReadOnlyList<ChatMessage> Messages { get; }
         Task LoadAsync(string id);
         Task SaveAsync();
-        void AddUserMessage(string content);
-        void AddAssistantMessage(string content);
+        ChatMessage AddUserMessage(string content);
+        ChatMessage AddAssistantMessage(string content);
         IReadOnlyList<ChatMessage> GetRecentMessages(int count);
     }
 }

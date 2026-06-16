@@ -76,7 +76,8 @@ namespace Codify.UI.ToolWindows
                     CodifyPackage.SerializationService,
                     _payloadBinder,
                     CodifyPackage.ChatUseCaseFactory,
-                    CodifyPackage.ChatSessionService);
+                    CodifyPackage.ChatSessionService,
+                    CodifyPackage.ChatManager);
 
                 // Set up the resource server mapping
                 _resourceServer.Attach(WebView.CoreWebView2);

@@ -1,10 +1,13 @@
 ﻿using Codify.Core.Abstractions;
+using Codify.Core.Chat;
 using Codify.Core.Models;
 using Codify.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static Microsoft.VisualStudio.Shell.ThreadedWaitDialogHelper;
 
 namespace Codify.Infrastructure.ChatSessions
@@ -57,6 +60,9 @@ namespace Codify.Infrastructure.ChatSessions
         {
             var chatData = await ChatSessionDocumentAsync(SessionId);
 
+            if (_messages.Count > 0 && chatData.Title == string.Empty)
+                chatData.Title = ChatTitleGenerator.Generate(_messages.First().Content);
+
             chatData.Messages = _messages;
 
             await _chatManager.SaveChatAsync(chatData);
@@ -65,33 +71,41 @@ namespace Codify.Infrastructure.ChatSessions
         /// <summary>
         /// Adds a user message to the session.
         /// </summary>
-        public void AddUserMessage(string content)
+        public ChatMessage AddUserMessage(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
-                return;
+                throw new Exception();
 
-            _messages.Add(new ChatMessage
+            var msg = new ChatMessage
             {
                 Role = "user",
                 Content = content,
                 CreatedAt = DateTime.UtcNow
-            });
+            };
+
+            _messages.Add(msg);
+
+            return msg;
         }
 
         /// <summary>
         /// Adds an assistant message to the session.
         /// </summary>
-        public void AddAssistantMessage(string content)
+        public ChatMessage AddAssistantMessage(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
-                return;
+                throw new Exception();
 
-            _messages.Add(new ChatMessage
+            var msg = new ChatMessage
             {
                 Role = "assistant",
                 Content = content,
                 CreatedAt = DateTime.UtcNow
-            });
+            };
+
+            _messages.Add(msg);
+
+            return msg;
         }
 
         /// <summary>

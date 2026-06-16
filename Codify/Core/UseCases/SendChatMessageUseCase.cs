@@ -35,7 +35,7 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
         try
         {
             // Add user message to session
-            _chatSession.AddUserMessage(message.Content);
+            message = _chatSession.AddUserMessage(message.Content);
 
             // Get last 10 messages for context
             var context = _chatSession.GetRecentMessages(10);

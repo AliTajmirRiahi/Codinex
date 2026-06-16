@@ -23,6 +23,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IPayloadBinder _payloadBinder;
     private readonly ChatUseCaseFactory _chatUseCaseFactory;
     private readonly ChatSessionService _sessionService;
+    private readonly ChatManager _chatManager;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
@@ -32,7 +33,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IJsonSerializer serializer,
         IPayloadBinder payloadBinder,
         ChatUseCaseFactory chatUseCaseFactory,
-        ChatSessionService sessionService)
+        ChatSessionService sessionService,
+        ChatManager chatManager)
     {
         _providerManager = providerManager;
         _webViewClient = webViewClient;
@@ -40,6 +42,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _payloadBinder = payloadBinder;
         _chatUseCaseFactory = chatUseCaseFactory;
         _sessionService = sessionService;
+        _chatManager = chatManager;
     }
 
     public async Task HandleMessageAsync(string messageJson)
@@ -165,6 +168,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             {
                 Providers = new
                 {
+                    Chats = await _chatManager.GetAllChatsAsync(),
                     AvailableProviders = providers,
                     Current = _providerManager.ActiveProvider
                 },

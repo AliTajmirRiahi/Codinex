@@ -30,7 +30,6 @@ namespace Codify.Storage
             var doc = new ChatSessionDocument
             {
                 Id = id,
-                Title = "New Chat",
                 ProviderId = providerId,
                 ModelId = modelId,
                 CreatedAt = DateTime.UtcNow,
@@ -53,7 +52,7 @@ namespace Codify.Storage
         /// <summary>
         /// Loads a chat session from disk
         /// </summary>
-        public async Task<ChatSessionDocument?> LoadChatAsync(string chatId)
+        public async Task<ChatSessionDocument> LoadChatAsync(string chatId)
         {
             var path = GetChatPath(chatId);
 
@@ -110,22 +109,6 @@ namespace Codify.Storage
                 .OrderByDescending(x => x.UpdatedAt)
                 .ToList();
         }
-
-        /// <summary>
-        /// Adds a message to a chat session
-        /// </summary>
-        public async Task AddMessageAsync(string chatId, ChatMessage message)
-        {
-            var chat = await LoadChatAsync(chatId);
-
-            if (chat == null)
-                return;
-
-            chat.Messages.Add(message);
-
-            await SaveChatAsync(chat);
-        }
-
         /// <summary>
         /// Returns the last N messages for AI context
         /// </summary>

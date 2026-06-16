@@ -69,6 +69,7 @@
     <Compile Include="Core\Abstractions\IThemeService.cs" />
     <Compile Include="Core\Abstractions\IWebViewClient.cs" />
     <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
+    <Compile Include="Core\Chat\ChatTitleGenerator.cs" />
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
     <Compile Include="Infrastructure\ChatSessions\ChatSessionService.cs" />
@@ -205,6 +206,7 @@
     <Content Include="UI\ToolWindows\Resources\Chat\tests\views\manageModelsView.test.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\loading.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\lightning.svg" />
+    <Content Include="UI\ToolWindows\Resources\Icons\linear-loading.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />
