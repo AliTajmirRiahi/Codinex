@@ -45,7 +45,7 @@ namespace Codify.Infrastructure.VisualStudio
 
                 return _defaultProjectName;
             }
-            catch (Exception ex)
+            catch
             {
                 // Log exception if needed (System.Diagnostics.Debug.WriteLine(ex.Message);)
                 return _defaultProjectName;
