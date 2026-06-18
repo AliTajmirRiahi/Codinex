@@ -90,6 +90,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Core/Abstractions/IUserNotificationService.cs",
+                                                                       "name":  "IUserNotificationService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Abstractions/IWebViewClient.cs",
                                                                        "name":  "IWebViewClient.cs",
                                                                        "type":  "file"
@@ -217,6 +222,43 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "Codify/Infrastructure/Errors",
+                                                  "name":  "Errors",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Errors/ErrorHandler.cs",
+                                                                       "name":  "ErrorHandler.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Errors/ErrorInfo.cs",
+                                                                       "name":  "ErrorInfo.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Errors/ErrorMessages.cs",
+                                                                       "name":  "ErrorMessages.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Errors/IErrorHandler.cs",
+                                                                       "name":  "IErrorHandler.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/Execution",
+                                                  "name":  "Execution",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Infrastructure/Execution/ExecutionPipeline.cs",
+                                                                   "name":  "ExecutionPipeline.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "Codify/Infrastructure/Factory",
                                                   "name":  "Factory",
                                                   "type":  "folder",
@@ -229,6 +271,23 @@
                                                                    {
                                                                        "path":  "Codify/Infrastructure/Factory/IChatUseCaseFactory.cs",
                                                                        "name":  "IChatUseCaseFactory.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/Logging",
+                                                  "name":  "Logging",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Logging/IVsOutputLogger.cs",
+                                                                       "name":  "IVsOutputLogger.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Logging/VsOutputLogger.cs",
+                                                                       "name":  "VsOutputLogger.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -264,11 +323,18 @@
                                                   "path":  "Codify/Infrastructure/VisualStudio",
                                                   "name":  "VisualStudio",
                                                   "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "Codify/Infrastructure/VisualStudio/VsContextHelper.cs",
-                                                                   "name":  "VsContextHelper.cs",
-                                                                   "type":  "file"
-                                                               }
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/VsContextHelper.cs",
+                                                                       "name":  "VsContextHelper.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/VsUserNotificationService.cs",
+                                                                       "name":  "VsUserNotificationService.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "Codify/Infrastructure/WebView",
