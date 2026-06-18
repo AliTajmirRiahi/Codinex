@@ -67,27 +67,17 @@ namespace Codify.Infrastructure.AiProviders
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", provider.ApiKey);
             }
 
-            try
-            {
-                // 4. Send the request
-                var response = await HttpClient.SendAsync(request, ct);
-                var responseContent = await response.Content.ReadAsStringAsync();
+            var response = await HttpClient.SendAsync(request, ct);
+            var responseContent = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    return $"AI Error ({response.StatusCode}): {responseContent}";
-                }
+            if (!response.IsSuccessStatusCode)
+                throw new HttpRequestException($"AI Error ({response.StatusCode}): {responseContent}");
 
-                // 5. Parse the standard OpenAI Response
-                var jsonResponse = _jsonSerializer.Parse(responseContent);
-                var aiMessage = jsonResponse["choices"]?[0]?["message"]?["content"]?.ToString();
+            // 5. Parse the standard OpenAI Response
+            var jsonResponse = _jsonSerializer.Parse(responseContent);
+            var aiMessage = jsonResponse["choices"]?[0]?["message"]?["content"]?.ToString();
 
-                return aiMessage ?? "No response content received.";
-            }
-            catch (Exception ex)
-            {
-                return $"Network Error: {ex.Message}";
-            }
+            return aiMessage ?? throw new HttpRequestException("No response content received.");
         }
 
         private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts, IEnumerable<Attachment> attachments)

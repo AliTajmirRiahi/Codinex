@@ -3,12 +3,14 @@ using Codify.Core.Models;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.Errors;
+using Codify.Infrastructure.Factory;
 using Codify.Storage;
 using Codify.Storage.Models.Dtos;
+using Microsoft.VisualStudio;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.Infrastructure.Factory;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -24,6 +26,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly ChatUseCaseFactory _chatUseCaseFactory;
     private readonly ChatSessionService _sessionService;
     private readonly ChatManager _chatManager;
+    private readonly IErrorHandler _errorHandler;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
@@ -34,7 +37,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IPayloadBinder payloadBinder,
         ChatUseCaseFactory chatUseCaseFactory,
         ChatSessionService sessionService,
-        ChatManager chatManager)
+        ChatManager chatManager,
+        IErrorHandler errorHandler)
     {
         _providerManager = providerManager;
         _webViewClient = webViewClient;
@@ -43,40 +47,18 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _chatUseCaseFactory = chatUseCaseFactory;
         _sessionService = sessionService;
         _chatManager = chatManager;
+        _errorHandler = errorHandler;
     }
 
     public async Task HandleMessageAsync(string messageJson)
     {
         if (string.IsNullOrWhiteSpace(messageJson))
-        {
-            await _webViewClient.PostMessageAsync(new ChatResponse(
-                WebViewMessageType.Error,
-                "Empty message received."));
-            return;
-        }
+            throw new InvalidOperationException("Empty message received.");
 
-        WebViewMessage request;
-
-        try
-        {
-            request = _serializer.Deserialize<WebViewMessage>(messageJson);
-        }
-        catch
-        {
-            await _webViewClient.PostMessageAsync(new ChatResponse(
-                WebViewMessageType.Error,
-                "Invalid message format."));
-            return;
-        }
+        var request = _serializer.Deserialize<WebViewMessage>(messageJson);
 
         if (request is null)
-        {
-            await _webViewClient.PostMessageAsync(new ChatResponse(
-                WebViewMessageType.Error,
-                "Message could not be parsed."));
-            return;
-        }
-
+            throw new InvalidOperationException("Message could not be parsed.");
 
         switch (request.Type)
         {

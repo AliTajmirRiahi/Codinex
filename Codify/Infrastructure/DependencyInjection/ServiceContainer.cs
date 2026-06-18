@@ -4,14 +4,20 @@ using Codify.Core.Abstractions;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.Errors;
+using Codify.Infrastructure.Execution;
 using Codify.Infrastructure.Factory;
+using Codify.Infrastructure.Logging;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Theme;
+using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
+using System;
+using Microsoft.VisualStudio.Shell;
 
 namespace Codify.Infrastructure.DependencyInjection
 {
@@ -19,10 +25,17 @@ namespace Codify.Infrastructure.DependencyInjection
     {
         public static IServiceProvider Instance { get; private set; }
 
-        public static void Initialize()
+        /// <summary>
+        /// Indicates whether the DI container has been initialized.
+        /// This is useful during package bootstrap where errors may happen before DI is ready.
+        /// </summary>
+        public static bool IsInitialized => Instance != null;
+
+        public static void Initialize(
+            AsyncPackage package, IVsOutputWindowPane pane)
         {
             var services = new ServiceCollection();
-            services.AddSingleton<JsonSerializer>(sp =>
+            services.AddSingleton(sp =>
             {
                 var serializer = new JsonSerializer
                 {
@@ -42,6 +55,13 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IStorageService, FileStorageService>();
+            services.AddSingleton<ExecutionPipeline>();
+            // Pseudo-registration example.
+            // Adjust according to your actual service container implementation.
+            services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
+            services.AddSingleton<IUserNotificationService>(
+                _ => new VsUserNotificationService(package));
+            services.AddSingleton<IErrorHandler, ErrorHandler>();
 
             // 2. Storage & Configuration Managers
             services.AddSingleton<SettingsManager>();
@@ -71,6 +91,11 @@ namespace Codify.Infrastructure.DependencyInjection
         }
 
         public static T Get<T>() where T : notnull
-            => Instance.GetRequiredService<T>();
+        {
+            if (Instance == null)
+                throw new InvalidOperationException("Codify service container has not been initialized.");
+
+            return Instance.GetRequiredService<T>();
+        }
     }
 }
