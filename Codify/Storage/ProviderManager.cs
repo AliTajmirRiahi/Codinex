@@ -65,36 +65,33 @@ namespace Codify.Storage
             return providers;
         }
 
+        /// <summary>
+        /// Loads a list of models from a JSON file located inside the VSIX Resources folder.
+        /// Any exception is intentionally not caught here so it can be handled by the ExecutionPipeline.
+        /// </summary>
         private List<T> LoadModelsFromResources<T>(string modelFileName)
         {
-            try
-            {
-                // Get the directory of the executing assembly (Codify.dll location)
-                string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-                string assemblyDir = Path.GetDirectoryName(assemblyLocation);
+            // Get the directory of the executing assembly (Codify.dll location)
+            var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            var assemblyDir = Path.GetDirectoryName(assemblyLocation)!;
 
-                // Path inside the VSIX installation folder
-                string resourcePath = Path.Combine(assemblyDir, "Resources", modelFileName);
+            // Path inside the VSIX installation folder
+            var resourcePath = Path.Combine(assemblyDir, "Resources", modelFileName);
 
-                // Logging for debugging in "Output" window
-                System.Diagnostics.Debug.WriteLine($"[Codify] Looking for resource at: {resourcePath}");
+            if (!File.Exists(resourcePath))
+                throw new FileNotFoundException(
+                    $"Resource file not found: {modelFileName}",
+                    resourcePath);
 
-                if (File.Exists(resourcePath))
-                {
-                    string json = File.ReadAllText(resourcePath);
-                    return JsonConvert.DeserializeObject<List<T>>(json);
-                }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("[Codify] Resource file NOT found!");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[Codify] Resource Load Error: {ex.Message}");
-            }
+            var json = File.ReadAllText(resourcePath);
 
-            return new List<T>();
+            var models = JsonConvert.DeserializeObject<List<T>>(json);
+
+            if (models == null)
+                throw new InvalidOperationException(
+                    $"Failed to deserialize models from {modelFileName}");
+
+            return models;
         }
 
         public async Task SaveAsync()

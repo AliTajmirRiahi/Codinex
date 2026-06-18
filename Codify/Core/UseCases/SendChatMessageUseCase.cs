@@ -1,10 +1,12 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
 using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.Errors;
 using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Codify.Core.UseCases;
 
@@ -16,21 +18,21 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
 {
     private readonly IAiProvider _aiProvider;
     private readonly IChatSession _chatSession;
+    private readonly IErrorHandler _errorHandler;
 
     // We depend on the Interface (Abstraction), not the concrete implementation.
     // This makes it easy to swap GapGPT with Local AI or OpenAI.
-    public SendChatMessageUseCase(IAiProvider aiProvider, IChatSession chatSession)
+    public SendChatMessageUseCase(IAiProvider aiProvider, IChatSession chatSession, IErrorHandler errorHandler)
     {
         _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
         _chatSession = chatSession;
+        _errorHandler = errorHandler;
     }
 
     public async Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode)
     {
         if (message == null)
-        {
-            return new ChatResponse("ERROR", "Message cannot be empty.");
-        }
+            throw new InvalidOperationException("Message cannot be empty.");
 
         try
         {
@@ -49,11 +51,20 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
             // Save session
             await _chatSession.SaveAsync();
 
-            return new ChatResponse("AI_RESPONSE", aiResult);
+            return new ChatResponse(WebViewMessageType.AiResponse, aiResult);
         }
         catch (Exception ex)
         {
-            return new ChatResponse("ERROR", $"AI Provider Error: {ex.Message}");
+            // Log full error details in Visual Studio Output.
+            _errorHandler.Handle(ex, nameof(SendChatMessageUseCase), new
+            {
+                message.Content,
+                includeSelectedCode
+            });
+
+            // IMPORTANT:
+            // Do not save any error text into chat session.
+            return new ChatResponse(WebViewMessageType.Error, _errorHandler.GetUserFacingMessage());
         }
     }
 }
