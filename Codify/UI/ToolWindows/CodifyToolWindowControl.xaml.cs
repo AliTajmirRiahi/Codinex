@@ -3,6 +3,8 @@ using Codify.Core.UseCases;
 using Codify.Infrastructure;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
+using Codify.Infrastructure.DependencyInjection;
+using Codify.Infrastructure.Execution;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Theme;
 using Codify.Infrastructure.VisualStudio;
@@ -13,7 +15,6 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Codify.Infrastructure.DependencyInjection;
 
 namespace Codify.UI.ToolWindows
 {
@@ -27,68 +28,56 @@ namespace Codify.UI.ToolWindows
         /// </summary>
         private readonly IThemeService _themeService;
         private readonly IResourceServer _resourceServer;
-        private readonly IPayloadBinder _payloadBinder;
-
-        // These will be initialized once WebView is ready
-        private IWebViewMessageRouter _messageRouter;
-        private IWebViewClient _webViewClient;
+        private readonly ExecutionPipeline _pipeline;
 
         public CodifyToolWindowControl()
         {
             // Initialize services that don't depend on WebView
             _themeService = CodifyServiceContainer.Get<IThemeService>();
-            _resourceServer = CodifyServiceContainer.Get<IResourceServer>(); 
-            _payloadBinder = CodifyServiceContainer.Get<IPayloadBinder>();
+            _resourceServer = CodifyServiceContainer.Get<IResourceServer>();
 
             InitializeComponent();
 
             Unloaded += OnUnloaded;
             SetupThemeIntegration();
 
-            _ = InitializeWebViewAsync();
+            _pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+
+            _ = _pipeline.RunAsync(
+                InitializeWebViewAsync,
+                nameof(InitializeWebViewAsync),
+                showMessageBox: true);
         }
 
         private async Task InitializeWebViewAsync()
         {
-            try
-            {
+            // Define the user data folder path to avoid permission issues.
+            var userDataFolder = System.IO.Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "CodifyExtension");
 
-                // Define the user data folder path to avoid permission issues.
-                var userDataFolder = System.IO.Path.Combine(
-                            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                            "CodifyExtension");
+            // Create the WebView2 environment using the custom folder.
+            var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
 
-                // Create the WebView2 environment using the custom folder.
-                var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+            // Initialize WebView2 with the environment.
+            await WebView.EnsureCoreWebView2Async(environment);
 
-                // Initialize WebView2 with the environment.
-                await WebView.EnsureCoreWebView2Async(environment);
+            WebView.CoreWebView2.OpenDevToolsWindow();
 
-                WebView.CoreWebView2.OpenDevToolsWindow();
+            // Get services from our DI Container
+            var webViewClient = CodifyServiceContainer.Get<IWebViewClient>();
 
+            webViewClient.Initialize(WebView);
 
-                // Get services from our DI Container
-                var webViewClient = CodifyServiceContainer.Get<IWebViewClient>();
+            // Set up the resource server mapping
+            _resourceServer.Attach(WebView.CoreWebView2);
 
-                webViewClient.Initialize(WebView);
+            // 5. Subscribe to incoming messages from JS
+            WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
 
-                // Set up the resource server mapping
-                _resourceServer.Attach(WebView.CoreWebView2);
-
-                // 5. Subscribe to incoming messages from JS
-                WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
-
-                WebView.CoreWebView2.Navigate(
-                    "http://codify.resources/Chat/view/chat-view.html"
-                );
-            }
-            catch (Exception ex)
-            {
-                // Log the exception for debugging.
-                System.Diagnostics.Debug.WriteLine($"WebView2 Error: {ex.Message}");
-                MessageBox.Show($"WebView2 Init Failed:\n{ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            WebView.CoreWebView2.Navigate(
+                "http://codify.resources/Chat/view/chat-view.html"
+            );
         }
 
         private void SetupThemeIntegration()
@@ -100,21 +89,14 @@ namespace Codify.UI.ToolWindows
             _themeService.ThemeChanged += OnThemeChanged;
         }
 
-        private async void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
+        private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
-            try
-            {
-                var router = CodifyServiceContainer.Get<IWebViewMessageRouter>();
-                // The router now has everything it needs to be injected via DI
-                await router.HandleMessageAsync(e.WebMessageAsJson);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception for debugging.
-                System.Diagnostics.Debug.WriteLine($"WebView2 Error: {ex.Message}");
-                MessageBox.Show($"WebView2 Init Failed:\n{ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            var router = CodifyServiceContainer.Get<IWebViewMessageRouter>();
+            var pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+
+            _ = pipeline.RunAsync(
+                () => router.HandleMessageAsync(e.WebMessageAsJson),
+                "WebViewMessageRouter");
         }
         private void OnThemeChanged(object sender, EventArgs e)
         {

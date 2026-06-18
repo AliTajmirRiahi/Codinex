@@ -1,13 +1,17 @@
 ﻿
+using Codify.Infrastructure.DependencyInjection;
+using Codify.Infrastructure.Errors;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Storage;
+using Codify.UI.ToolWindows;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Codify.Infrastructure.DependencyInjection;
-using Codify.UI.ToolWindows;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify
@@ -54,30 +58,183 @@ namespace Codify
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            try
+            {
+                await InitializePackageCoreAsync(cancellationToken, progress);
+            }
+            catch (Exception ex)
+            {
+                await HandlePackageInitializationErrorAsync(ex, cancellationToken);
+            }
+        }
+        /// <summary>
+        /// Performs the actual package initialization.
+        /// Exceptions are intentionally not caught here because InitializeAsync is the bootstrap boundary.
+        /// </summary>
+        private async Task InitializePackageCoreAsync(
+            CancellationToken cancellationToken,
+            IProgress<ServiceProgressData> progress)
+        {
+            // Register global exception handlers as early as possible.
+            RegisterGlobalExceptionHandlers();
+
             // 1. Basic IO setup (stays here as it's environment-related)
             await Task.Yield();
+
+            // 4. UI/Command initialization on Main Thread
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
             // Project name can be set in a global State service or Context service later
             ProjectName = VsContextHelper.GetActiveProjectName();
 
             StoragePaths.EnsureCreated();
 
+            var pane = await CreateVsOutputWindowPaneAsync();
+
             // 2. Initialize the Dependency Injection Container
             // This replaces all manual "new Service()" calls.
-            CodifyServiceContainer.Initialize();
+            CodifyServiceContainer.Initialize(this, pane);
 
             // 3. Perform Async Initializations
             // Since some services need to load files from disk, we do it here.
             await InitializeCoreServicesAsync();
-
-            // 4. UI/Command initialization on Main Thread
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             // Initialize UI Commands
             await CodifyToolWindowCommand.InitializeAsync(this);
 
             Debug.WriteLine("[Codify] DI Container & Package Initialized.");
         }
+        /// <summary>
+        /// Handles package initialization errors safely.
+        /// This method must never throw because Visual Studio calls it during package loading.
+        /// </summary>
+        private async Task HandlePackageInitializationErrorAsync(
+            Exception exception,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
+                if (CodifyServiceContainer.IsInitialized)
+                {
+                    var handler = CodifyServiceContainer.Get<IErrorHandler>();
+
+                    handler.Handle(
+                        exception,
+                        "CodifyPackage.InitializeAsync");
+                }
+                else
+                {
+                    Debug.WriteLine("[Codify] Package initialization failed before DI initialization.");
+                    Debug.WriteLine(exception.ToString());
+
+                    try
+                    {
+                        var pane = await CreateVsOutputWindowPaneAsync();
+
+                        pane.OutputStringThreadSafe(
+                            "[Codify] Package initialization failed before DI initialization.\n");
+
+                        pane.OutputStringThreadSafe(
+                            exception.ToString() + "\n");
+                    }
+                    catch
+                    {
+                        // Ignore output pane creation failure during bootstrap error handling.
+                    }
+                }
+
+                VsShellUtilities.ShowMessageBox(
+                    this,
+                    "Codify could not start correctly. Please check Visual Studio Output window for details.",
+                    "Codify",
+                    OLEMSGICON.OLEMSGICON_CRITICAL,
+                    OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            }
+            catch
+            {
+                Debug.WriteLine("[Codify] Failed to handle package initialization error.");
+                Debug.WriteLine(exception.ToString());
+            }
+        }
+
+        private void RegisterGlobalExceptionHandlers()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                try
+                {
+                    var exception = e.ExceptionObject as Exception
+                                    ?? new Exception("Unknown AppDomain unhandled exception.");
+
+                    if (CodifyServiceContainer.IsInitialized)
+                    {
+                        var handler = CodifyServiceContainer.Get<IErrorHandler>();
+
+                        handler.Handle(
+                            exception,
+                            "AppDomain.UnhandledException");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("[Codify] AppDomain unhandled exception before DI initialization.");
+                        Debug.WriteLine(exception.ToString());
+                    }
+                }
+                catch
+                {
+                }
+            };
+
+            Dispatcher.CurrentDispatcher.UnhandledException += (s, e) =>
+            {
+                try
+                {
+                    if (CodifyServiceContainer.IsInitialized)
+                    {
+                        var handler = CodifyServiceContainer.Get<IErrorHandler>();
+
+                        handler.Handle(
+                            e.Exception,
+                            "DispatcherUnhandledException");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("[Codify] Dispatcher unhandled exception before DI initialization.");
+                        Debug.WriteLine(e.Exception.ToString());
+                    }
+
+                    e.Handled = true;
+                }
+                catch
+                {
+                    e.Handled = true;
+                }
+            };
+        }
+
+
+        private async Task<IVsOutputWindowPane> CreateVsOutputWindowPaneAsync()
+        {
+            // Create Output Window pane
+            var outputWindow = (IVsOutputWindow)await GetServiceAsync(typeof(SVsOutputWindow));
+
+            var paneGuid = new Guid("7F6D8F51-2A4E-4A33-B7A7-8B1E9A7D1234");
+
+            outputWindow?.CreatePane(
+                ref paneGuid,
+                "Codify",
+                fInitVisible: 1,
+                fClearWithSolution: 1);
+
+            IVsOutputWindowPane pane = null;
+
+            outputWindow?.GetPane(ref paneGuid, out pane);
+
+            return pane;
+        }
         /// <summary>
         /// Handles the async initialization of services that require file I/O or settings loading.
         /// </summary>
