@@ -4,16 +4,31 @@
  * Responsible for bootstrapping the entire frontend.
  */
 import { setLoading, setProvider } from '../js/state/appState.js';
-import { $, togglePanelHidden} from './utils/dom.js';
+import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
-import { EVENTS } from '../js/constants/events.js'
+import { EVENTS } from '../js/constants/events.js';
+import { reportError } from '../../Shared/bridge/errorReporter.js'
 
 // Register Custom Elements
 import '../../Shared/components/codify-icon.js';
 import '../../Shared/components/codify-image.js';
+
+window.addEventListener('error', (event) => {
+    debugger;
+    if (event.target && (event.target.src || event.target.href))
+        reportError(`Failed to load resource: ${event.target.src || event.target.href}`, 'Network/Resource Error');
+    else
+        reportError(event.error || event.message, "window");
+}, true);
+
+window.addEventListener('unhandledrejection', (event) => {
+    debugger;
+    reportError(event.reason, "promise");
+});
+
 
 document.addEventListener('DOMContentLoaded', () => {
 

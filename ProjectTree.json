@@ -428,6 +428,11 @@
                                                                        "path":  "Codify/Storage/Models/CodifySettings.cs",
                                                                        "name":  "CodifySettings.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Storage/Models/UiErrorModel.cs",
+                                                                       "name":  "UiErrorModel.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -638,11 +643,18 @@
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants",
                                                                                                                                   "name":  "constants",
                                                                                                                                   "type":  "folder",
-                                                                                                                                  "children":  {
-                                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants/events.js",
-                                                                                                                                                   "name":  "events.js",
-                                                                                                                                                   "type":  "file"
-                                                                                                                                               }
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants/events.js",
+                                                                                                                                                       "name":  "events.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/constants/statics.js",
+                                                                                                                                                       "name":  "statics.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
                                                                                                                               },
                                                                                                                               {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers",
@@ -956,6 +968,11 @@
                                                                                                                               {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge/bridge.js",
                                                                                                                                   "name":  "bridge.js",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Shared/bridge/errorReporter.js",
+                                                                                                                                  "name":  "errorReporter.js",
                                                                                                                                   "type":  "file"
                                                                                                                               },
                                                                                                                               {

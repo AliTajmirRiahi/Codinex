@@ -10,8 +10,7 @@ export function createMessageDispatcher(handlers) {
      */
     return function dispatch(message) {
         if (!message || !message.type) {
-            console.error("[Dispatcher] Invalid message format received", message);
-            return;
+            throw new Error("[Dispatcher] Invalid message format received from .NET");
         }
 
         const { type, payload } = message;
@@ -35,7 +34,7 @@ export function createMessageDispatcher(handlers) {
                 break;
 
             default:
-                console.warn(`[Dispatcher] No handler registered for message type: ${type}`);
+                throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }
     };
 }

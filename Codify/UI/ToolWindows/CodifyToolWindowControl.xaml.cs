@@ -15,6 +15,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Codify.Infrastructure.Errors;
 
 namespace Codify.UI.ToolWindows
 {
@@ -28,7 +29,7 @@ namespace Codify.UI.ToolWindows
         /// </summary>
         private readonly IThemeService _themeService;
         private readonly IResourceServer _resourceServer;
-        private readonly ExecutionPipeline _pipeline;
+        private readonly IUserNotificationService _userNotificationService;
 
         public CodifyToolWindowControl()
         {
@@ -41,9 +42,11 @@ namespace Codify.UI.ToolWindows
             Unloaded += OnUnloaded;
             SetupThemeIntegration();
 
-            _pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+            _userNotificationService = CodifyServiceContainer.Get<IUserNotificationService>();
 
-            _ = _pipeline.RunAsync(
+            var pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+
+            _ = pipeline.RunAsync(
                 InitializeWebViewAsync,
                 nameof(InitializeWebViewAsync),
                 showMessageBox: true);
@@ -72,12 +75,51 @@ namespace Codify.UI.ToolWindows
             // Set up the resource server mapping
             _resourceServer.Attach(WebView.CoreWebView2);
 
-            // 5. Subscribe to incoming messages from JS
-            WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+            await RegisterWebViewHandlersAsync();
 
             WebView.CoreWebView2.Navigate(
                 "http://codify.resources/Chat/view/chat-view.html"
             );
+        }
+
+        private async Task RegisterWebViewHandlersAsync()
+        {
+            var errorHandler = CodifyServiceContainer.Get<IErrorHandler>();
+            // 5. Subscribe to incoming messages from JS
+            WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
+
+            // In your WebView initialization code:
+            await WebView.EnsureCoreWebView2Async();
+
+            // Catch navigation errors (404, DNS, etc.)
+            WebView.CoreWebView2.NavigationCompleted += (s, e) => {
+                if (!e.IsSuccess)
+                {
+                    errorHandler.HandleUiError(
+                        "WebView_Navigation",
+                        "Ui_Navigation_Error",
+                        $"Navigation failed with error: {e.WebErrorStatus}",
+                        $"URL: {WebView.Source}"
+                    );
+
+                   _userNotificationService.ShowError(ErrorMessages.StartupError);
+                }
+            };
+
+            // Catch resource loading errors (Sub-resources like JS/CSS files)
+            WebView.CoreWebView2.WebResourceResponseReceived += (s, e) => {
+                if (e.Response.StatusCode >= 400)
+                {
+                    errorHandler.HandleUiError(
+                        "WebView_Resource",
+                        "Ui_ResourceResponse_Error",
+                        $"Failed to load: {e.Request.Uri}",
+                        $"Status Code: {e.Response.StatusCode}"
+                    );
+
+                    _userNotificationService.ShowError(ErrorMessages.StartupError);
+                }
+            };
         }
 
         private void SetupThemeIntegration()

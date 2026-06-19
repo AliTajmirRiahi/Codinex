@@ -117,6 +117,7 @@
     <Compile Include="Storage\Models\AiModel.cs" />
     <Compile Include="Storage\Models\AiProvider.cs" />
     <Compile Include="Storage\Models\CodifySettings.cs" />
+    <Compile Include="Storage\Models\UiErrorModel.cs" />
     <Compile Include="Storage\ProviderManager.cs" />
     <Compile Include="Storage\SettingsManager.cs" />
     <Compile Include="Storage\StoragePaths.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\errorReporter.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\code-renderer.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\lodash.min.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\components\toastify.css" />
@@ -203,6 +205,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_list.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_pagination.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\dropDownView.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\statics.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />

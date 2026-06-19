@@ -18,10 +18,9 @@ export const webViewTransport = {
      * @param {any} payload - The data to send.
      */
     send(type, payload) {
-        if (!this.isAvailable()) {
-            console.warn(`[Transport] WebView2 not available. Message dropped: ${type}`, payload);
-            return;
-        }
+        if (!this.isAvailable()) 
+            throw new Error("[Transport] WebView2 not available. Cannot send message.");
+
         window.chrome.webview.postMessage({ type, payload });
     },
 

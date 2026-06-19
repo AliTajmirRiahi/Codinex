@@ -48,7 +48,7 @@ export const chatView = {
         this.inputMinHeight = parseFloat(window.getComputedStyle(input).minHeight);
 
         if (!input || !sendBtn) {
-            console.warn('Chat input or send button not found');
+            throw new Error("ChatView initialization failed: Missing required DOM elements.");  
             return;
         }
 

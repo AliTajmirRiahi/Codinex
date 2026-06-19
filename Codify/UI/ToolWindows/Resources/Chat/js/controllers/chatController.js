@@ -8,7 +8,8 @@ import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading, setCurrentModel } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
-
+import { STATICS } from '../constants/statics.js';
+import { reportError } from '../../../Shared/bridge/errorReporter.js'
 
 /**
  * Initialize chat controller
@@ -50,14 +51,11 @@ export function initChatController(transport) {
 
         } catch (error) {
 
-            console.error('AI request failed:', error);
+            reportError(error, "chatController");
 
-            chatView.appendMessage('⚠️ Error generating response.', 'assistant');
-
-        } finally {
+            chatView.appendErrorMessage(STATICS.GENERIC_CHAT_ERROR);
 
         }
-
     }
     /**
      * Returns public methods to allow external interaction with the controller
