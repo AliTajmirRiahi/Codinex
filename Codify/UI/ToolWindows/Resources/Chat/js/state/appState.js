@@ -9,7 +9,8 @@ const _state = {
     currentModel: null,
     messages: [],
     isLoading: false,
-
+    chatList: [],
+    currentChat: null,
 };
 
 const listeners = [];
@@ -72,7 +73,32 @@ export function setCurrentModel(model) {
         currentModel: model
     });
 }
+/**
+ * Set active provider.
+ * Automatically resets model when provider changes.
+ */
+export function setChatList(chatList) {
+    if (!Array.isArray(chatList)) {
+        throw new Error('Chat list histories must be an array.');
+    }
 
+    updateState({
+        chatList: chatList,
+    });
+}
+/**
+ * Set active model.
+ * Automatically resets model when provider changes.
+ */
+export function setCurrentChat(chat) {
+    if (!chat) {
+        throw new Error('Chat cannot be null or empty.');
+    }
+
+    updateState({
+        currentChat: chat   
+    });
+}
 /**
  * Set loading state.
  */

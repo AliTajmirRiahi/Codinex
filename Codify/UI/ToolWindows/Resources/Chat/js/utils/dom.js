@@ -38,6 +38,27 @@ export const trigger = (element ,event) => {
     element.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
+/**
+ * Converts a date string to a relative time string (e.g., Today, Yesterday, 2 days ago)
+ * @param {string} dateString - ISO Date string
+ * @returns {string} Relative time
+ */
+export const getRelativeDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    // Reset hours to compare only days
+    const diffTime = now.setHours(0, 0, 0, 0) - date.setHours(0, 0, 0, 0);
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+
+    // For older dates, return short date format
+    return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
 //window.copyToClipboard = (btn) => {
 //    // Find the code element relative to the button
 //    const codeElement = btn.closest('.code-wrapper').querySelector('code');

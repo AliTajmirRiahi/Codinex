@@ -1,6 +1,5 @@
 ﻿using Codify.Storage.Models;
-using Codify.Storage.Models.Dtos;
-using Codify.UI.ToolWindows;
+using Codify.Storage.Models.DTO;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,9 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Codify.Core.Abstractions;
-using Codify.Core.UseCases;
-using Codify.Infrastructure.AiProviders;
-using Codify.Infrastructure.Serialization;
 
 namespace Codify.Storage
 {

@@ -6,12 +6,12 @@ using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
 using Codify.Infrastructure.Factory;
 using Codify.Storage;
-using Codify.Storage.Models.Dtos;
 using Microsoft.VisualStudio;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Codify.Storage.Models;
+using Codify.Storage.Models.DTO;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -111,6 +111,16 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     //await SendInitialDataAsync();
                     return;
                 }
+            case WebViewMessageType.SelectChat:
+                {
+                    var payload = _payloadBinder.Bind<ChatSelectedDto>(request.Payload);
+
+                    await _sessionService.LoadSessionAsync(payload.ChatId);
+
+                    await SendSelectedChatApprovedAsync();
+
+                    return;
+                }
 
             case WebViewMessageType.CancelGeneration:
                 {
@@ -150,6 +160,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         // Get all configured providers and their models from ProviderManager
         var providers = _providerManager.AllProviders;
 
+        var chatListTask = _chatManager.GetAllChatsAsync();
+        var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+
+        await Task.WhenAll(chatListTask, currentChatTask);
+
         var message = new
         {
             Type = WebViewMessageType.InitData,
@@ -157,9 +172,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             {
                 Providers = new
                 {
-                    Chats = await _chatManager.GetAllChatsAsync(),
                     AvailableProviders = providers,
                     Current = _providerManager.ActiveProvider
+                },
+                Chats = new
+                {
+                    ChatList = chatListTask?.Result,
+                    Current = currentChatTask?.Result
                 },
                 Timestamp = DateTime.Now
             }
@@ -186,5 +205,20 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
+    public async Task SendSelectedChatApprovedAsync()
+    {
+        var chat = await _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
 
+        var message = new
+        {
+            Type = WebViewMessageType.SelectChatApproved,
+            Payload = new
+            {
+                Chat = chat,
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
 }

@@ -14,6 +14,7 @@ public static class WebViewMessageType
     public const string CancelGeneration = "CANCEL_GENERATION";
     public const string UpdateSettings = "UPDATE_SETTINGS";
     public const string UiError = "UI_ERROR";
+    public const string SelectChat = "SELECT_CHAT";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -21,4 +22,5 @@ public static class WebViewMessageType
     public const string StreamChunk = "STREAM_CHUNK";
     public const string Error = "ERROR";
     public const string SetLoading = "SET_LOADING";
+    public const string SelectChatApproved = "SELECT_CHAT_APPROVED";
 }

@@ -74,6 +74,7 @@
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
     <Compile Include="Infrastructure\ChatSessions\ChatSessionService.cs" />
+    <Compile Include="Infrastructure\Commons\Statics.cs" />
     <Compile Include="Infrastructure\DependencyInjection\ServiceContainer.cs" />
     <Compile Include="Infrastructure\Errors\ErrorHandler.cs" />
     <Compile Include="Infrastructure\Errors\ErrorInfo.cs" />
@@ -90,8 +91,8 @@
     <Compile Include="Storage\Models\ChatSessionDocument.cs" />
     <Compile Include="Infrastructure\AiProviders\AiProviderRouter.cs" />
     <Compile Include="Infrastructure\ChatSessions\ChatSession.cs" />
-    <Compile Include="Storage\Models\Dtos\AiModelSelectedDto.cs" />
-    <Compile Include="Storage\Models\Dtos\AiProviderDto.cs" />
+    <Compile Include="Storage\Models\DTO\AiModelSelectedDto.cs" />
+    <Compile Include="Storage\Models\DTO\AiProviderDto.cs" />
     <Compile Include="Core\Models\WebViewMessage.cs" />
     <Compile Include="Core\Models\ChatResponse.cs" />
     <Compile Include="Core\Models\WebViewMessageType.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Storage\Models\AiModel.cs" />
     <Compile Include="Storage\Models\AiProvider.cs" />
     <Compile Include="Storage\Models\CodifySettings.cs" />
+    <Compile Include="Storage\Models\DTO\ChatSelectedDto.cs" />
     <Compile Include="Storage\Models\UiErrorModel.cs" />
     <Compile Include="Storage\ProviderManager.cs" />
     <Compile Include="Storage\SettingsManager.cs" />
@@ -206,6 +208,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_pagination.css" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\dropDownView.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\constants\statics.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\chatListView.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
@@ -220,6 +223,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\loading.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\lightning.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\linear-loading.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-circle-check.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />

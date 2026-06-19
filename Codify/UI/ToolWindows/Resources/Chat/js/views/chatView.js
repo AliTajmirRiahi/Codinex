@@ -21,11 +21,11 @@ export const chatView = {
             menuButtonId: 'model-selector-btn',
             itemTemplate: (item, isActive) => {
                 const option = document.createElement('div');
-                option.className = `model-option ${isActive ? 'active' : ''}`;
+                option.className = `drop-option ${isActive ? 'active' : ''}`;
                 option.dataset.value = item.id;
 
                 option.innerHTML = `
-                    <div class="model-info">
+                    <div class="drop-info">
                         <codify-icon name="lightning" class="low-vis"></codify-icon>
                         <span>${item.name}</span>
                     </div>
@@ -154,6 +154,12 @@ export const chatView = {
         togglePanelHidden('#chat-welcome', false);
         this.handleSend(this.getInputMessage(input));
         input.style.height = (this.inputMinHeight) + 'px';
+    },
+    renderMessages(messages) {
+        togglePanelHidden('#chat-welcome', false);
+        for (const message of messages) {
+            this.appendMessage(message.content, message.role);
+        }
     }
 }
 

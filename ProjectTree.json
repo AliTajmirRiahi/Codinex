@@ -212,6 +212,16 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "Codify/Infrastructure/Commons",
+                                                  "name":  "Commons",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "Codify/Infrastructure/Commons/Statics.cs",
+                                                                   "name":  "Statics.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "Codify/Infrastructure/DependencyInjection",
                                                   "name":  "DependencyInjection",
                                                   "type":  "folder",
@@ -393,18 +403,23 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
-                                                                       "path":  "Codify/Storage/Models/Dtos",
-                                                                       "name":  "Dtos",
+                                                                       "path":  "Codify/Storage/Models/DTO",
+                                                                       "name":  "DTO",
                                                                        "type":  "folder",
                                                                        "children":  [
                                                                                         {
-                                                                                            "path":  "Codify/Storage/Models/Dtos/AiModelSelectedDto.cs",
+                                                                                            "path":  "Codify/Storage/Models/DTO/AiModelSelectedDto.cs",
                                                                                             "name":  "AiModelSelectedDto.cs",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
-                                                                                            "path":  "Codify/Storage/Models/Dtos/AiProviderDto.cs",
+                                                                                            "path":  "Codify/Storage/Models/DTO/AiProviderDto.cs",
                                                                                             "name":  "AiProviderDto.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Storage/Models/DTO/ChatSelectedDto.cs",
+                                                                                            "name":  "ChatSelectedDto.cs",
                                                                                             "type":  "file"
                                                                                         }
                                                                                     ]
@@ -733,6 +748,11 @@
                                                                                                                                   "type":  "folder",
                                                                                                                                   "children":  [
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/chatListView.js",
+                                                                                                                                                       "name":  "chatListView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/chatView.js",
                                                                                                                                                        "name":  "chatView.js",
                                                                                                                                                        "type":  "file"
@@ -916,6 +936,11 @@
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/loading.svg",
                                                                                                              "name":  "loading.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/message-circle-check.svg",
+                                                                                                             "name":  "message-circle-check.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {

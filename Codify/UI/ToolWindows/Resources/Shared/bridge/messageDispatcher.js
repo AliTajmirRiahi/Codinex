@@ -24,6 +24,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onSelectProvider) handlers.onSelectProvider(payload);
                 break;
 
+            case EVENTS.SELECT_CHAT_APPROVED:
+                if (handlers.onSelectChat) handlers.onSelectChat(payload);
+                break;
+
             case EVENTS.AI_RESPONSE:
                 if (handlers.onAIResponse) handlers.onAIResponse(payload);
                 break;

@@ -27,9 +27,18 @@
         <!-- Toolbar for managing chat history and sessions -->
         <div class="chat-toolbar">
             <!-- Dropdown to select and switch between previous chat threads -->
-            <select id="chatHistorySelect" class="chat-history-select">
-                <option value="">New Chat</option>
-            </select>
+            <div class="chat-history-selector-wrapper">
+                <button id="chat-history-selector-btn" class="selector-btn" title="Select Model">
+                    <span id="chat-history-name">NAME</span>
+                    <codify-icon name="chevron-down"></codify-icon>
+                </button>
+
+                <div id="chat-history-dropdown" class="com-dropdown">
+                    <div class="menu-label">Chat List History</div>
+
+                    <div id="chat-history-dropdown-menu-container"></div>
+                </div>
+            </div>
 
             <!-- Button to create a new chat session -->
             <button id="newChatBtn" class="toolbar-btn" title="New Chat">
@@ -106,7 +115,7 @@
                                 <codify-icon name="chevron-down"></codify-icon>
                             </button>
 
-                            <div id="model-dropdown-menu" class="model-dropdown">
+                            <div id="model-dropdown-menu" class="com-dropdown">
                                 <div class="menu-label">Activated Models</div>
 
                                 <div id="model-dropdown-menu-container"></div>
@@ -202,7 +211,7 @@
     </div>
 
 
-    
+
 
 
 

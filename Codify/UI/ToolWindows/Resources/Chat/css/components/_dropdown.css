@@ -19,12 +19,9 @@
     }
 
 /* Model Selector Dropdown Styling */
-.model-dropdown {
+.com-dropdown {
     display: none;
     position: absolute;
-    bottom: 35px;
-    left: 0;
-    min-width: 300px;
     background-color: var(--vs-input-bg);
     border: 1px solid var(--vs-border);
     border-radius: 6px;
@@ -34,8 +31,8 @@
     overflow: hidden;
 }
 
-    .model-dropdown.show {
-        display: block;
+    .com-dropdown.show {
+        display: flex;
     }
 
 .menu-label {
@@ -47,7 +44,7 @@
     letter-spacing: 0.5px;
 }
 
-.model-option {
+.drop-option {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -58,18 +55,18 @@
     transition: background 0.15s ease;
 }
 
-    .model-option:hover {
+    .drop-option:hover {
         background: var( --vs-command-bar-hover-over-selected-icon-border-color);
         border-color: var( --vs-command-bar-hover-over-selected-icon-border-color);
         opacity: 1;
     }
 
-    .model-option.active {
+    .drop-option.active {
         background-color: rgba(255, 216, 0, 0.08);
         border-left: 2px solid var(--vs-button-bg);
     }
 
-.model-info {
+.drop-info {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -101,4 +98,75 @@
         border-color: var( --vs-command-bar-hover-over-selected-icon-border-color);
         opacity: 1;
     }
+/* Container for the 3-column row */
+.drop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+    padding: 4px 0;
+}
 
+/* Column 1: Occupies remaining space */
+.col-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0; /* Important for text-overflow */
+}
+
+.chat-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Column 2: Provider and Model badges */
+.col-info {
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.provider-tag {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--vs-link-foreground); /* Visual Studio theme variable */
+}
+
+.model-tag {
+    background: var(--vs-button-background);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+/* Column 3: Date */
+.col-date {
+    font-size: 0.75rem;
+    color: var(--vs-descriptionForeground);
+    min-width: 70px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+
+#model-dropdown-menu.com-dropdown {
+    bottom: 35px;
+    left: 0;
+    flex-direction: column;
+    min-width: 300px;
+}
+#chat-history-dropdown.com-dropdown {
+    top: 45px;
+    flex: 1;
+    flex-direction: column;
+    min-width: 420px;
+}
+
+codify-icon.chat-icon {
+    color: vaR(--vs-viz-surface-green-medium-color);
+}

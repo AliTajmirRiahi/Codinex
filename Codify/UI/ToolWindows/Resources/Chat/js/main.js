@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { setLoading, setProvider } from '../js/state/appState.js';
+import { setLoading, setProvider, setChatList, setCurrentChat } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -52,6 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatController.renderCurrentProvider();
             }
 
+            if (data.chats.chatList) {
+                setChatList(data.chats.chatList);
+                setCurrentChat(data.chats.current)
+                chatController.renderChatList();
+            }
+
             manageModelsController.updateUI(data.providers);
 
             // Get references to the loading screen and the main chat UI
@@ -72,6 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 setProvider({ provider: payload.provider });
 
             manageModelsController.closeProviderSettings();
+        },
+
+        onSelectChat: (payload) => {
+            setCurrentChat(payload.chat);
+            chatController.navigateToChat();
         },
 
         onAIResponse: (payload) => {

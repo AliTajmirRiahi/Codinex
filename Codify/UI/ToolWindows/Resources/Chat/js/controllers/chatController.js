@@ -5,6 +5,7 @@
  */
 import { $ } from '../utils/dom.js';
 import { createStreamingMessage, chatView } from '../views/chatView.js';
+import { chatListView } from '../views/chatListView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading, setCurrentModel } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
@@ -19,6 +20,8 @@ export function initChatController(transport) {
 
     chatView.initialize(handleSend, onModelSelected);
 
+    chatListView.initialize(onChatSelected);
+
     function onModelSelected(model) {
         var appState = getState();
         const data = {
@@ -26,6 +29,14 @@ export function initChatController(transport) {
             modelId: model.id
         };
         transport.send(EVENTS.SELECT_MODEL, data);
+    }
+
+    function onChatSelected(chat) {
+        var appState = getState();
+        const data = {
+            chatId: chat.id
+        };
+        transport.send(EVENTS.SELECT_CHAT, data);
     }
     
     /**
@@ -57,6 +68,14 @@ export function initChatController(transport) {
 
         }
     }
+
+    function clearChatContainer(){
+        const chatElements = document.getElementsByClassName('chat-message');
+        while (chatElements.length > 0) {
+            const parent = chatElements[0].parentElement;
+            parent.removeChild(chatElements[0]);
+        }
+    }
     /**
      * Returns public methods to allow external interaction with the controller
      */
@@ -79,13 +98,17 @@ export function initChatController(transport) {
          * Clears the chat UI if needed
          */
         clearChat: () => {
-            const container = document.getElementById('chatContainer');
-            if (container) container.innerHTML = '';
+            clearChatContainer();
         },
 
         renderCurrentProvider: () => {
             var appState = getState();
             chatView.renderModelMenu(appState.selectedModels, appState.currentModel.id);
+        },
+
+        renderChatList: () => {
+            var appState = getState();
+            chatListView.renderChatListMenu(appState.chatList, appState.currentChat.id);
         },
 
         handleAIResponse: (payload) => {
@@ -97,6 +120,12 @@ export function initChatController(transport) {
             // Show AI Error
             setLoading(false);
             chatView.appendErrorMessage(payload);
+        },
+        navigateToChat: () => {
+            clearChatContainer();
+            chatListView.setCurrentChatName();
+            var appState = getState();
+            chatView.renderMessages(appState.currentChat.messages);
         }
     };
 }

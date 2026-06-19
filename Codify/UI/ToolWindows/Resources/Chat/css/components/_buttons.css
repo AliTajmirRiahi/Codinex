@@ -70,6 +70,9 @@
     font: inherit;
     opacity: 0.92;
     transition: background 0.15s ease, border-color 0.15s ease;
+    flex-grow: 1;
+    justify-content: space-between;
+    margin: 0;
 }
 
     .selector-btn:hover {

@@ -5,12 +5,6 @@ import { EVENTS, CUSTOME_EVENTS } from '../constants/events.js';
  */
 export const initManageModelsController = (transport) => {
 
-    //// Listen for changes in the UI
-    //document.getElementById('provider-select')?.addEventListener('change', (e) => {
-    //    const providerId = e.target.value;
-    //    transport.send('UPDATE_SETTINGS', { provider: providerId });
-    //});
-
     // Open Modal logic
     document.getElementById('manage-models-action')?.addEventListener('click', () => {
         //Ask for close other dropdowns

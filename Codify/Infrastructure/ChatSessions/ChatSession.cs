@@ -1,6 +1,7 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Chat;
 using Codify.Core.Models;
+using Codify.Infrastructure.Commons;
 using Codify.Storage;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace Codify.Infrastructure.ChatSessions
         {
             var chatData = await ChatSessionDocumentAsync(SessionId);
 
-            if (_messages.Count > 0 && chatData.Title == string.Empty)
+            if (_messages.Count > 0 && chatData.Title == Statics.NewChatTitle)
                 chatData.Title = ChatTitleGenerator.Generate(_messages.First().Content);
 
             chatData.Messages = _messages;
