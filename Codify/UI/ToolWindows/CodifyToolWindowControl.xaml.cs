@@ -92,33 +92,33 @@ namespace Codify.UI.ToolWindows
             await WebView.EnsureCoreWebView2Async();
 
             // Catch navigation errors (404, DNS, etc.)
-            WebView.CoreWebView2.NavigationCompleted += (s, e) => {
-                if (!e.IsSuccess)
-                {
-                    errorHandler.HandleUiError(
-                        "WebView_Navigation",
-                        "Ui_Navigation_Error",
-                        $"Navigation failed with error: {e.WebErrorStatus}",
-                        $"URL: {WebView.Source}"
-                    );
+            WebView.CoreWebView2.NavigationCompleted += (s, e) =>
+            {
+                if (e.IsSuccess) return;
 
-                   _userNotificationService.ShowError(ErrorMessages.StartupError);
-                }
+                errorHandler.HandleUiError(
+                    "WebView_Navigation",
+                    "Ui_Navigation_Error",
+                    $"Navigation failed with error: {e.WebErrorStatus}",
+                    $"URL: {WebView.Source}"
+                );
+
+                _userNotificationService.ShowError(ErrorMessages.StartupError);
             };
 
             // Catch resource loading errors (Sub-resources like JS/CSS files)
-            WebView.CoreWebView2.WebResourceResponseReceived += (s, e) => {
-                if (e.Response.StatusCode >= 400)
-                {
-                    errorHandler.HandleUiError(
-                        "WebView_Resource",
-                        "Ui_ResourceResponse_Error",
-                        $"Failed to load: {e.Request.Uri}",
-                        $"Status Code: {e.Response.StatusCode}"
-                    );
+            WebView.CoreWebView2.WebResourceResponseReceived += (s, e) =>
+            {
+                if (e.Response.StatusCode < 400) return;
 
-                    _userNotificationService.ShowError(ErrorMessages.StartupError);
-                }
+                errorHandler.HandleUiError(
+                    "WebView_Resource",
+                    "Ui_ResourceResponse_Error",
+                    $"Failed to load: {e.Request.Uri}",
+                    $"Status Code: {e.Response.StatusCode}"
+                );
+
+                _userNotificationService.ShowError(ErrorMessages.StartupError);
             };
         }
 
