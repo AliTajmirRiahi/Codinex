@@ -94,6 +94,11 @@ export function initChatController(transport) {
             // Show AI message
             setLoading(false);
             chatView.appendMessage(payload, 'assistant');
+        },
+        handleAIError: (payload) => {
+            // Show AI Error
+            setLoading(false);
+            chatView.appendErrorMessage(payload);
         }
     };
 }

@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         onError: (error) => {
-            console.error("Bridge error:", error);
+            chatController.handleAIError(error);
         }
     });
 

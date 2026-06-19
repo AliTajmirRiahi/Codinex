@@ -119,33 +119,6 @@
     text-align: start;
     unicode-bidi: plaintext;
 }
-/* Styling for the text container inside messages */
-/*.message-text {
-    line-height: 1.6;
-    font-size: 13.5px;
-    word-wrap: break-word;
-    white-space: normal;*/ /* Allows text to wrap normally */
-/*}*/
-
-/* Remove margin from the first element if it's a code block */
-/*.message-text .code-wrapper:first-child {
-        margin-top: 4px;
-    }*/
-
-/* Ensure no double-spacing from BR tags */
-/*.message-text br {
-        content: "";
-        display: block;
-        margin-bottom: 4px;*/ /* Minimal space between lines */
-/*}*/
-
-/* Handle the container of the AI response */
-/*.ai-message {
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;*/ /* Controlled gap between text and code blocks */
-/*}*/
 
 
 /* Optional: Add a small label for 'AI' or 'You' */
@@ -236,4 +209,31 @@
 .ai-message {
     unicode-bidi: plaintext; /* Automatically detects RTL/LTR for the message container */
     line-height: 1.6;
+}
+.codify-error-box {
+    margin: 12px 16px;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 59, 59, 0.85);
+    border-radius: 12px;
+    background: rgba(255, 59, 59, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffdddd;
+    box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.15), 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.codify-error-box__title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #ff9a9a;
+    margin-bottom: 6px;
+    letter-spacing: 0.4px;
+}
+
+.codify-error-box__message {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #ffeaea;
+    word-break: break-word;
 }

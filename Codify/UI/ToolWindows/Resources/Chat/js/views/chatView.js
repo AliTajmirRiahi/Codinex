@@ -128,7 +128,27 @@ export const chatView = {
         // Auto-scroll to bottom
         container.scrollTop = container.scrollHeight;
     },
+    appendErrorMessage(text) {
+        const container = document.getElementById('chat-container');
+        const element = document.getElementById('response-loading');
+        const parent = element.parentElement;
 
+        parent.removeChild(element);
+
+        const errorBox = $('#error-box').cloneNode(true);
+
+        errorBox.classList.remove('hidden');
+
+        const messageEl = errorBox.querySelector('.codify-error-box__message');
+
+        messageEl.textContent = text;
+
+        container.appendChild(errorBox);
+
+        parent.appendChild(element);
+        // Auto-scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    },
 
     handleSendMessage(input) {
         togglePanelHidden('#chat-welcome', false);
