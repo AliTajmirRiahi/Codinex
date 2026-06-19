@@ -11,6 +11,7 @@ using Microsoft.VisualStudio;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Storage.Models;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -124,6 +125,12 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     var aiProviderDto = _payloadBinder.Bind<AiProviderDto>(request.Payload);
                     await _providerManager.UpdateSettingsAsync(aiProviderDto);
                     await SendSelectedProviderDataAsync();
+                    return;
+                }
+            case WebViewMessageType.UiError:
+                {
+                    var payload = _payloadBinder.Bind<UiErrorModel>(request.Payload);
+                    _errorHandler.HandleUiError(payload.Source, payload.Type, payload.Message, payload.Stack);
                     return;
                 }
             default:

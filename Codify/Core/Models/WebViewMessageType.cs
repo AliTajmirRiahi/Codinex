@@ -13,6 +13,7 @@ public static class WebViewMessageType
     public const string SelectModel = "SELECT_MODEL";
     public const string CancelGeneration = "CANCEL_GENERATION";
     public const string UpdateSettings = "UPDATE_SETTINGS";
+    public const string UiError = "UI_ERROR";
 
     // To JS
     public const string InitData = "INIT_DATA";

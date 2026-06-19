@@ -19,7 +19,7 @@ namespace Codify.Infrastructure.Errors
             _jsonSerializer = jsonSerializer;
         }
 
-        public void Handle(Exception exception, string source, object? context = null)
+        public void Handle(Exception exception, string source, object context = null)
         {
             var error = new ErrorInfo
             {
@@ -35,6 +35,20 @@ namespace Codify.Infrastructure.Errors
                 $"Id={error.ErrorId} Source={error.Source} Message={error.Message} " +
                 $"Context={error.Context}\n{error.StackTrace}"
             );
+        }
+
+        /// <summary>
+        /// Handles errors reported from the WebView UI.
+        /// </summary>
+        public void HandleUiError(string source,string type, string message, string stack)
+        {
+            var logMessage =
+                $"[UI ERROR]\n : {type}" +
+                $"Source: {source}\n" +
+                $"Message: {message}\n" +
+                $"Stack: {stack}";
+
+            _logger.WriteLine(logMessage);
         }
 
         public string GetUserFacingMessage()

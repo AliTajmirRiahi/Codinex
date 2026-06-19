@@ -2,7 +2,9 @@
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace Codify.Infrastructure.WebView
 {
@@ -39,6 +41,8 @@ namespace Codify.Infrastructure.WebView
             if (uri.Host != "codify.resources")
                 return;
 
+            var webview = (CoreWebView2)sender;
+
             // convert url path → embedded resource name
             string relativePath = uri.AbsolutePath.TrimStart('/').Replace("/", ".");
 
@@ -47,11 +51,21 @@ namespace Codify.Infrastructure.WebView
             var stream = _assembly.GetManifestResourceStream(resourceName);
 
             if (stream == null)
+            {
+                // Return a real 404 response instead of throwing.
+                var notFoundStream = new MemoryStream(Encoding.UTF8.GetBytes($"Resource not found {resourceName}."));
+
+                e.Response = webview.Environment.CreateWebResourceResponse(
+                    notFoundStream,
+                    404,
+                    "Not Found",
+                    "Content-Type: text/plain"
+                );
+
                 return;
+            }
 
             string contentType = GetContentType(resourceName);
-
-            var webview = (CoreWebView2)sender;
 
             e.Response = webview.Environment.CreateWebResourceResponse(
                 stream,
