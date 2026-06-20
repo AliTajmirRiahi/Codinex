@@ -32,6 +32,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onAIResponse) handlers.onAIResponse(payload);
                 break;
 
+            case EVENTS.CHAT_TITLE_CHANGED:
+                if (handlers.onChatTitleChanged) handlers.onChatTitleChanged(payload);
+                break;
+
             case EVENTS.ERROR:
                 // Fixed the typo from the original bridge.js (Ppayload -> payload)
                 if (handlers.onError) handlers.onError(payload.Message || payload);

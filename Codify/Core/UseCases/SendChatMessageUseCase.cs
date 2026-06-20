@@ -2,6 +2,7 @@
 using Codify.Core.Models;
 using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
+using Codify.Storage;
 using Microsoft.VisualStudio;
 using System;
 using System.Collections.Generic;
@@ -49,9 +50,16 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
             _chatSession.AddAssistantMessage(aiResult);
 
             // Save session
-            await _chatSession.SaveAsync();
+            var titleChanged = await _chatSession.SaveAsync();
 
-            return new ChatResponse(WebViewMessageType.AiResponse, aiResult);
+            if (!titleChanged) return new ChatResponse(WebViewMessageType.AiResponse, aiResult);
+
+            var meta = new Dictionary<string, object>
+            {
+                ["titleChanged"] = true
+            };
+
+            return new ChatResponse(WebViewMessageType.AiResponse, aiResult, meta);
         }
         catch (Exception ex)
         {

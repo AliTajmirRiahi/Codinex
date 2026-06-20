@@ -57,16 +57,23 @@ namespace Codify.Infrastructure.ChatSessions
         /// <summary>
         /// Saves the current session state.
         /// </summary>
-        public async Task SaveAsync()
+        public async Task<bool> SaveAsync()
         {
             var chatData = await ChatSessionDocumentAsync(SessionId);
 
+            var isTitleChanged = false;
+
             if (_messages.Count > 0 && chatData.Title == Statics.NewChatTitle)
+            {
                 chatData.Title = ChatTitleGenerator.Generate(_messages.First().Content);
+                isTitleChanged = true;
+            }
 
             chatData.Messages = _messages;
 
             await _chatManager.SaveChatAsync(chatData);
+
+            return isTitleChanged;
         }
 
         /// <summary>

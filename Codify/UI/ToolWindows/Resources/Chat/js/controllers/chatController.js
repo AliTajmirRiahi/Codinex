@@ -126,6 +126,9 @@ export function initChatController(transport) {
             chatListView.setCurrentChatName();
             var appState = getState();
             chatView.renderMessages(appState.currentChat.messages);
+        },
+        handleChatTitleChanged: () => {
+            chatListView.setCurrentChatName();
         }
     };
 }

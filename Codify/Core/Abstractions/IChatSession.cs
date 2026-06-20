@@ -9,7 +9,7 @@ namespace Codify.Core.Abstractions
         string SessionId { get; }
         IReadOnlyList<ChatMessage> Messages { get; }
         Task LoadAsync(string id);
-        Task SaveAsync();
+        Task<bool> SaveAsync();
         ChatMessage AddUserMessage(string content);
         ChatMessage AddAssistantMessage(string content);
         IReadOnlyList<ChatMessage> GetRecentMessages(int count);
