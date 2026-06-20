@@ -114,7 +114,7 @@
         background-color: var(--vs-sidebar-bg); /* Darker gray like VS sidebar */
         color: var(--vs-foreground);
         border-bottom-left-radius: 2px;
-        border: 1px solid var(--vs-border); /* Subtle border for assistant */
+        width:100%;
     }
 
 /* Content spacing */

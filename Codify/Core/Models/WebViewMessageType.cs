@@ -16,6 +16,7 @@ public static class WebViewMessageType
     public const string UiError = "UI_ERROR";
     public const string SelectChat = "SELECT_CHAT";
     public const string NewChat = "NEW_CHAT";
+    public const string DeleteChat = "DELETE_CHAT";
 
     // To JS
     public const string InitData = "INIT_DATA";

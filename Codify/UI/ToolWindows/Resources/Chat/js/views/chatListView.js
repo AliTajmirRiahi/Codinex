@@ -10,8 +10,9 @@ import { getState } from '../state/appState.js';
 
 export const chatListView = {
 
-    initialize(onChatSelected, handleNewChat) {
+    initialize(onChatSelected, handleNewChat, handleDeleteChat) {
         this.handleNewChat = handleNewChat;
+        this.handleDeleteChat = handleDeleteChat;
         // Initialize
         this.modelDropDown = new DropDownView({
             containerId: 'chat-history-dropdown-menu-container',
@@ -37,14 +38,21 @@ export const chatListView = {
         });
 
         const newChatBtn = $('#new-chat-btn');
-        //const sendBtn = $('#send-btn');
+        const deleteChatBtn = $('#delete-chat-btn');
 
-        if (!newChatBtn) {
+        if (!newChatBtn || !deleteChatBtn) {
             throw new Error("ChatListView initialization failed: Missing required DOM elements.");
             return;
         }
 
-        
+        deleteChatBtn.addEventListener('click', () => {
+            var appState = getState();
+
+            if (appState.currentChat.isNewChat) return;
+
+            this.handleDeleteChat(deleteChatBtn);
+        });
+
         newChatBtn.addEventListener('click', () => {
             var appState = getState();
 

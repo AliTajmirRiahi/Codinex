@@ -136,6 +136,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     await EnsureActiveChatSessionAsync();
                     return;
                 }
+            case WebViewMessageType.DeleteChat:
+                {
+                    await DeleteChatSessionAsync();
+                    return;
+                }
             case WebViewMessageType.UiError:
                 {
                     var payload = _payloadBinder.Bind<UiErrorModel>(request.Payload);
@@ -308,5 +313,24 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
+    public async Task DeleteChatSessionAsync()
+    {
+        _chatManager.DeleteChat(_sessionService.ActiveSession.SessionId);
 
+        var chatList = await _chatManager.GetAllChatsAsync();
+
+        if (chatList.Count == 0)
+        {
+            await EnsureActiveChatSessionAsync();
+            return;
+        }
+
+        await _sessionService.LoadSessionAsync(chatList.ElementAt(0).Id);
+
+        var currentChat = await _chatManager.LoadChatAsync(
+            _sessionService.ActiveSession.SessionId
+        );
+
+        await SendNewChatMessageAsync(chatList, currentChat);
+    }
 }
