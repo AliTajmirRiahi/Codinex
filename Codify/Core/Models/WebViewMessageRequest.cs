@@ -6,15 +6,15 @@ namespace Codify.Core.Models;
 /// <summary>
 /// Represents a chat request coming from the WebView UI.
 /// </summary>
-public sealed class WebViewMessage
+public sealed class WebViewMessageRequest
 {
     public string Type { get; set; } = string.Empty;
     // IMPORTANT: Use JObject instead of string
     public JObject Payload { get; set; } = new JObject();
 
-    public WebViewMessage() { }
+    public WebViewMessageRequest() { }
 
-    public WebViewMessage(string type, JObject payload)
+    public WebViewMessageRequest(string type, JObject payload)
     {
         Type = type;
         Payload = payload;

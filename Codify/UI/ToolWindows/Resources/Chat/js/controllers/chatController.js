@@ -20,7 +20,7 @@ export function initChatController(transport) {
 
     chatView.initialize(handleSend, onModelSelected);
 
-    chatListView.initialize(onChatSelected);
+    chatListView.initialize(onChatSelected, handleNewChat);
 
     function onModelSelected(model) {
         var appState = getState();
@@ -67,6 +67,11 @@ export function initChatController(transport) {
             chatView.appendErrorMessage(STATICS.GENERIC_CHAT_ERROR);
 
         }
+    }
+
+    async function handleNewChat() {
+        clearChatContainer();
+        transport.send(EVENTS.NEW_CHAT);
     }
 
     function clearChatContainer(){

@@ -7,8 +7,6 @@ namespace Codify.Core.Models
     public class ChatSessionDocument
     {
         private string _title;
-
-
         public string Id { get; set; }
 
         public string Title
@@ -21,6 +19,8 @@ namespace Codify.Core.Models
         public List<ChatMessage> Messages { get; set; } = new();
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public bool IsNewChat => string.IsNullOrWhiteSpace(Id) || (Messages.Count == 0 && Title == Statics.NewChatTitle);
     }
 
 }

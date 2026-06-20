@@ -56,7 +56,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         if (string.IsNullOrWhiteSpace(messageJson))
             throw new InvalidOperationException("Empty message received.");
 
-        var request = _serializer.Deserialize<WebViewMessage>(messageJson);
+        var request = _serializer.Deserialize<WebViewMessageRequest>(messageJson);
 
         if (request is null)
             throw new InvalidOperationException("Message could not be parsed.");
@@ -81,11 +81,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 }
 
             case WebViewMessageType.SendMessage:
-            {
-                await AskAiAssistantAsync(request);
+                {
+                    await AskAiAssistantAsync(request);
 
-                return;
-            }
+                    return;
+                }
 
             case WebViewMessageType.SelectProvider:
                 {
@@ -131,6 +131,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     await SendSelectedProviderDataAsync();
                     return;
                 }
+            case WebViewMessageType.NewChat:
+                {
+                    await EnsureActiveChatSessionAsync();
+                    return;
+                }
             case WebViewMessageType.UiError:
                 {
                     var payload = _payloadBinder.Bind<UiErrorModel>(request.Payload);
@@ -139,9 +144,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 }
             default:
                 {
-                    await _webViewClient.PostMessageAsync(new ChatResponse(
+                    await _webViewClient.PostMessageAsync(new WebViewMessageResponse(
                         WebViewMessageType.Error,
-                        $"Unknown message type: {request.Type}"));
+                        $"Unknown message type: {request.Type}",
+                        DateTime.Now
+                    ));
                     return;
                 }
 
@@ -149,7 +156,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         }
     }
 
-    private async Task AskAiAssistantAsync(WebViewMessage request)
+    private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {
         _sendChatMessageUseCase = _chatUseCaseFactory.Create();
 
@@ -164,7 +171,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             await Task.WhenAll(chatListTask, currentChatTask);
 
-            await _webViewClient.PostMessageAsync(new
+            await _webViewClient.PostMessageAsync(new WebViewMessageResponse()
             {
                 Type = WebViewMessageType.ChatTitleChanged,
                 Payload = new
@@ -174,7 +181,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                         ChatList = chatListTask?.Result,
                         Current = currentChatTask?.Result,
                     }
-                }
+                },
+                Timestamp = DateTime.Now
             });
         }
 
@@ -191,7 +199,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await Task.WhenAll(chatListTask, currentChatTask);
 
-        var message = new
+        var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.InitData,
             Payload = new
@@ -218,14 +226,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         // Get all configured providers and their models from ProviderManager
         var provider = _providerManager.AllProviders.FirstOrDefault(p => p.IsEnabled);
 
-        var message = new
+        var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.SelectProvider,
             Payload = new
             {
                 provider = provider,
-                Timestamp = DateTime.Now
-            }
+            },
+            Timestamp = DateTime.Now
         };
 
         await _webViewClient.PostMessageAsync(message);
@@ -235,7 +243,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     {
         var chat = await _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
 
-        var message = new
+        var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.SelectChatApproved,
             Payload = new
@@ -247,4 +255,58 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await _webViewClient.PostMessageAsync(message);
     }
+
+    public async Task EnsureActiveChatSessionAsync()
+    {
+        var chatList = await _chatManager.GetAllChatsAsync();
+
+        // Try to find an existing "new chat"
+        var newChat = chatList.FirstOrDefault(c => c.IsNewChat);
+
+        if (newChat != null)
+        {
+            await _sessionService.LoadSessionAsync(newChat.Id);
+
+            await SendNewChatMessageAsync(chatList, newChat);
+            return;
+        }
+
+        // Otherwise create a new session
+        await _sessionService.CreateNewSessionAsync(
+            _providerManager.ActiveProvider.Id,
+            _providerManager.ActiveModel.Id
+        );
+
+        var currentChat = await _chatManager.LoadChatAsync(
+            _sessionService.ActiveSession.SessionId
+        );
+
+        chatList = await _chatManager.GetAllChatsAsync();
+
+        await SendNewChatMessageAsync(chatList, currentChat);
+    }
+
+    /// <summary>
+    /// Sends the NewChat message to the WebView.
+    /// </summary>
+    private async Task SendNewChatMessageAsync(object chatList, object currentChat)
+    {
+        var message = new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.NewChat,
+            Payload = new
+            {
+                Chats = new
+                {
+                    ChatList = chatList,
+                    Current = currentChat
+                },
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+
 }

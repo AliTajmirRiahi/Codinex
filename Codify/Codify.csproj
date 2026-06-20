@@ -73,6 +73,7 @@
     <Compile Include="Core\Chat\ChatTitleGenerator.cs" />
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
+    <Compile Include="Core\Models\WebViewMessageResponse.cs" />
     <Compile Include="Infrastructure\ChatSessions\ChatSessionService.cs" />
     <Compile Include="Infrastructure\Commons\Statics.cs" />
     <Compile Include="Infrastructure\DependencyInjection\ServiceContainer.cs" />
@@ -93,7 +94,7 @@
     <Compile Include="Infrastructure\ChatSessions\ChatSession.cs" />
     <Compile Include="Storage\Models\DTO\AiModelSelectedDto.cs" />
     <Compile Include="Storage\Models\DTO\AiProviderDto.cs" />
-    <Compile Include="Core\Models\WebViewMessage.cs" />
+    <Compile Include="Core\Models\WebViewMessageRequest.cs" />
     <Compile Include="Core\Models\ChatResponse.cs" />
     <Compile Include="Core\Models\WebViewMessageType.cs" />
     <Compile Include="Core\UseCases\ISendChatMessageUseCase.cs" />

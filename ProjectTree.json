@@ -137,8 +137,13 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "Codify/Core/Models/WebViewMessage.cs",
-                                                                       "name":  "WebViewMessage.cs",
+                                                                       "path":  "Codify/Core/Models/WebViewMessageRequest.cs",
+                                                                       "name":  "WebViewMessageRequest.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/WebViewMessageResponse.cs",
+                                                                       "name":  "WebViewMessageResponse.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {

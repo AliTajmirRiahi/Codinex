@@ -10,7 +10,8 @@ import { getState } from '../state/appState.js';
 
 export const chatListView = {
 
-    initialize(onChatSelected) {
+    initialize(onChatSelected, handleNewChat) {
+        this.handleNewChat = handleNewChat;
         // Initialize
         this.modelDropDown = new DropDownView({
             containerId: 'chat-history-dropdown-menu-container',
@@ -34,6 +35,23 @@ export const chatListView = {
                 return true;
             }
         });
+
+        const newChatBtn = $('#new-chat-btn');
+        //const sendBtn = $('#send-btn');
+
+        if (!newChatBtn) {
+            throw new Error("ChatListView initialization failed: Missing required DOM elements.");
+            return;
+        }
+
+        
+        newChatBtn.addEventListener('click', () => {
+            var appState = getState();
+
+            if (appState.currentChat.isNewChat) return;
+
+            this.handleSendMessage(newChatBtn);
+        });
     },
     // updates current model name
     setCurrentChatName() {
@@ -46,5 +64,8 @@ export const chatListView = {
         this.setCurrentChatName();
     },
 
+    handleSendMessage(input) {
+        this.handleNewChat();
+    },
 }
 

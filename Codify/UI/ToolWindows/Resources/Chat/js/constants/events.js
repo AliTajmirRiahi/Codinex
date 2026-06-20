@@ -14,6 +14,7 @@ export const EVENTS = {
     UPDATE_SETTINGS: "UPDATE_SETTINGS",
     UI_ERROR: "UI_ERROR",
     SELECT_CHAT: "SELECT_CHAT",
+    NEW_CHAT: "NEW_CHAT",
 
     // Incoming
     INIT_DATA: 'INIT_DATA',

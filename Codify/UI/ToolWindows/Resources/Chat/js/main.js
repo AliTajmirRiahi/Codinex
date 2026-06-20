@@ -94,6 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
             setCurrentChat(payload.chats.current);
             chatController.renderChatList();
         },
+        onNewChat: (payload) => {
+            setChatList(payload.chats.chatList);
+            setCurrentChat(payload.chats.current);
+            chatController.renderChatList();
+            chatController.navigateToChat();
+        },  
         onError: (error) => {
             chatController.handleAIError(error);
         }
