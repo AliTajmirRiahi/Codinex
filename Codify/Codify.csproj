@@ -129,7 +129,6 @@
     <Compile Include="UI\ToolWindows\CodifyToolWindowControl.xaml.cs">
       <DependentUpon>CodifyToolWindowControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ChatViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\ToolWindows\Resources\Shared\bridge\errorReporter.js" />
@@ -298,7 +297,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

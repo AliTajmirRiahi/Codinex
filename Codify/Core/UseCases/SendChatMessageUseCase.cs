@@ -75,4 +75,63 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
             return new ChatResponse(WebViewMessageType.Error, _errorHandler.GetUserFacingMessage());
         }
     }
+
+    public async Task ExecuteStreamingAsync(ChatMessage message, bool includeSelectedCode, Func<ChatResponse, Task> onMessage)
+    {
+        if (message == null)
+            throw new InvalidOperationException("Message cannot be empty.");
+
+        if (onMessage == null)
+            throw new ArgumentNullException(nameof(onMessage));
+
+        try
+        {
+            // Add user message to the session.
+            message = _chatSession.AddUserMessage(message.Content);
+
+            // Build context for the provider.
+            var context = _chatSession.GetRecentMessages(10);
+
+            // Accumulate the full assistant text while chunks arrive.
+            var fullText = string.Empty;
+
+            await _aiProvider.SendStreamAsync(
+                context,
+                async chunk =>
+                {
+                    if (string.IsNullOrEmpty(chunk))
+                        return;
+
+                    fullText += chunk;
+
+                    // Emit a chunk to the caller/UI.
+                    await onMessage(new ChatResponse(
+                        WebViewMessageType.StreamChunk,
+                        chunk));
+                });
+
+            // Persist the final assistant answer.
+            _chatSession.AddAssistantMessage(fullText);
+
+            await _chatSession.SaveAsync();
+
+            // Emit the final completed response.
+            await onMessage(new ChatResponse(
+                WebViewMessageType.AiResponse,
+                fullText));
+        }
+        catch (Exception ex)
+        {
+            _errorHandler.Handle(ex, nameof(SendChatMessageUseCase), new
+            {
+                message.Content,
+                includeSelectedCode,
+                Stream = true
+            });
+
+            await onMessage(new ChatResponse(
+                WebViewMessageType.Error,
+                _errorHandler.GetUserFacingMessage()));
+        }
+    }
 }

@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using Codify.Core.Models;
+﻿using Codify.Core.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace Codify.Core.UseCases;
 
@@ -12,4 +13,13 @@ public interface ISendChatMessageUseCase
     /// Executes the chat flow for a single user message.
     /// </summary>
     Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode);
+
+    /// <summary>
+    /// Executes the chat request in streaming mode.
+    /// The callback receives both chunk and final messages.
+    /// </summary>
+    Task ExecuteStreamingAsync(
+        ChatMessage message,
+        bool includeSelectedCode,
+        Func<ChatResponse, Task> onMessage);
 }

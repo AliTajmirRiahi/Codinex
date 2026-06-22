@@ -87,6 +87,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     return;
                 }
 
+            case WebViewMessageType.CancelGeneration:
+                {
+                    // Future: cancel streaming AI response
+                    // Example: _generationCancellation.Cancel();
+
+                    return;
+                }
             case WebViewMessageType.SelectProvider:
                 {
                     //var payload = _payloadBinder.Bind<SelectProviderPayload>(request.Payload);
@@ -116,13 +123,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     return;
                 }
 
-            case WebViewMessageType.CancelGeneration:
-                {
-                    // Future: cancel streaming AI response
-                    // Example: _generationCancellation.Cancel();
-
-                    return;
-                }
             case WebViewMessageType.UpdateSettings:
                 {
                     // Future: update provider settings
@@ -167,31 +167,44 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var payload = _payloadBinder.Bind<ChatMessage>(request.Payload);
 
-        var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
-
-        if (response.Meta.TryGetValue("titleChanged", out var changed) && (bool)changed)
+        if (payload?.Stream == true)
         {
-            var chatListTask = _chatManager.GetAllChatsAsync();
-            var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
-
-            await Task.WhenAll(chatListTask, currentChatTask);
-
-            await _webViewClient.PostMessageAsync(new WebViewMessageResponse()
-            {
-                Type = WebViewMessageType.ChatTitleChanged,
-                Payload = new
+            await _sendChatMessageUseCase.ExecuteStreamingAsync(
+                payload,
+                false,
+                async response =>
                 {
-                    Chats = new
-                    {
-                        ChatList = chatListTask?.Result,
-                        Current = currentChatTask?.Result,
-                    }
-                },
-                Timestamp = DateTime.Now
-            });
+                    await _webViewClient.PostMessageAsync(response);
+                });
         }
+        else
+        {
+            var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
 
-        await _webViewClient.PostMessageAsync(response);
+            if (response.Meta.TryGetValue("titleChanged", out var changed) && (bool)changed)
+            {
+                var chatListTask = _chatManager.GetAllChatsAsync();
+                var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+
+                await Task.WhenAll(chatListTask, currentChatTask);
+
+                await _webViewClient.PostMessageAsync(new WebViewMessageResponse()
+                {
+                    Type = WebViewMessageType.ChatTitleChanged,
+                    Payload = new
+                    {
+                        Chats = new
+                        {
+                            ChatList = chatListTask?.Result,
+                            Current = currentChatTask?.Result,
+                        }
+                    },
+                    Timestamp = DateTime.Now
+                });
+            }
+
+            await _webViewClient.PostMessageAsync(response);
+        }
     }
 
     public async Task SendInitialDataAsync()
