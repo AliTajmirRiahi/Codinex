@@ -18,8 +18,5 @@ public interface ISendChatMessageUseCase
     /// Executes the chat request in streaming mode.
     /// The callback receives both chunk and final messages.
     /// </summary>
-    Task ExecuteStreamingAsync(
-        ChatMessage message,
-        bool includeSelectedCode,
-        Func<ChatResponse, Task> onMessage);
+    Task ExecuteStreamingAsync(ChatMessage message, bool includeSelectedCode, Func<ChatResponse, Task> onMessage);
 }

@@ -22,5 +22,11 @@ namespace Codify.Infrastructure.AiProviders
         {
             throw new NotImplementedException();
         }
+
+        public Task SendStreamAsync(IReadOnlyList<ChatMessage> prompt, Func<string, Task> onChunk, IEnumerable<Attachment> attachments = null,
+            CancellationToken ct = default)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
