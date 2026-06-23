@@ -9,6 +9,7 @@ import { addMessage } from '../state/appState.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { getState, setCurrentModel, setLoading, subscribe } from '../state/appState.js';
 import { messageView } from '../views/messageView.js';
+import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 
 export const chatView = {
 
@@ -116,18 +117,25 @@ export const chatView = {
     appendMessage(text, sender) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
+
+        if (!container || !element) return null;
+
         const parent = element.parentElement;
 
         parent.removeChild(element);
 
-        var messageDiv = messageView.createMessageElement(text, sender);
+        const messageDiv = messageView.createMessageElement(text, sender);
 
         container.appendChild(messageDiv);
 
         parent.appendChild(element);
+
         // Auto-scroll to bottom
         container.scrollTop = container.scrollHeight;
+
+        return messageDiv;
     },
+
     appendErrorMessage(text) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
@@ -160,7 +168,36 @@ export const chatView = {
         for (const message of messages) {
             this.appendMessage(message.content, message.role);
         }
-    }
+    },
+    /**
+     * Updates an existing streaming message by appending new text.
+     * @param {HTMLElement} contentEl - The message content element returned from createStreamingMessage
+     * @param {string} chunk - The streamed text chunk
+     */
+    updateMessage(contentEl, chunk) {
+
+        if (!contentEl) return;
+
+        contentEl.innerHTML += chunk;
+
+        scrollToBottom();
+    },
+
+    /**
+     * Finalizes a streaming message once the full AI response is received.
+     * This can be used to perform final formatting (markdown, code highlighting, etc).
+     * @param {HTMLElement} contentEl
+     * @param {string} finalText
+     */
+    finalizeMessage(contentEl, finalText) {
+
+        if (!contentEl) return;
+
+        // Render markdown/code only once after the stream is complete.
+        contentEl.innerHTML = CodeRenderer.render(finalText || contentEl.textContent);
+
+        scrollToBottom();
+    },
 }
 
 /**
@@ -171,19 +208,20 @@ export function createStreamingMessage() {
 
     const container = document.getElementById('chat-container');
 
-    const messageEl = document.createElement('div');
-    messageEl.classList.add('chat-message', 'assistant');
+    const element = document.getElementById('response-loading');
+    const parent = element.parentElement;
 
-    const contentEl = document.createElement('div');
-    contentEl.classList.add('message-content');
+    parent.removeChild(element);
 
-    messageEl.appendChild(contentEl);
-    container.appendChild(messageEl);
+    const contentEl = messageView.createStreamingMessage();
+
+    parent.appendChild(element);
 
     scrollToBottom();
 
     return contentEl;
 }
+
 
 
 /**

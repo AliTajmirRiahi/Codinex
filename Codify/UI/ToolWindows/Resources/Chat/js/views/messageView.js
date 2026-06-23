@@ -17,5 +17,18 @@ export const messageView = {
         messageDiv.innerHTML = `<div class="message-content">${CodeRenderer.render(text)}</div>`;
 
         return messageDiv;
+    },
+    createStreamingMessage() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message assistant';
+
+        const contentEl = document.createElement('div');
+        contentEl.className = 'message-content';
+
+        messageDiv.appendChild(contentEl);
+
+        document.getElementById('chat-container').appendChild(messageDiv);
+
+        return contentEl;
     }
 };

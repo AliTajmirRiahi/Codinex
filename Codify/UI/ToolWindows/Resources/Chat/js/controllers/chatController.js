@@ -12,6 +12,10 @@ import { EVENTS } from '../constants/events.js';
 import { STATICS } from '../constants/statics.js';
 import { reportError } from '../../../Shared/bridge/errorReporter.js'
 
+
+let activeStreamMessage = null;
+let accumulatedText = '';
+
 /**
  * Initialize chat controller
  * @param {Object} transport - Communication transport with VS extension host
@@ -122,9 +126,35 @@ export function initChatController(transport) {
         },
 
         handleAIResponse: (payload) => {
-            // Show AI message
             setLoading(false);
+
+            // If streaming was active → finalize it
+            if (activeStreamMessage) {
+
+                // Use full accumulated text OR payload (depending on backend behavior)
+                const finalText = payload || accumulatedText;
+
+                chatView.finalizeMessage(activeStreamMessage, finalText);
+
+                activeStreamMessage = null;
+                accumulatedText = '';
+
+                return;
+            }
+
+            // Non-stream fallback
             chatView.appendMessage(payload, 'assistant');
+        },
+        handleStreamChunk: (payload) => {
+            // Stop loading spinner only on first chunk
+            if (!activeStreamMessage) {
+                activeStreamMessage = createStreamingMessage();
+                accumulatedText = '';
+            }
+
+            accumulatedText += payload;
+
+            chatView.updateMessage(activeStreamMessage, payload);
         },
         handleAIError: (payload) => {
             // Show AI Error

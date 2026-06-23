@@ -88,6 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
         onAIResponse: (payload) => {
             chatController.handleAIResponse(payload);
         },
+        onHandleStreamChunk: (payload) => {
+            chatController.handleStreamChunk(payload);
+        },
 
         onChatTitleChanged: (payload) => {
             setChatList(payload.chats.chatList);

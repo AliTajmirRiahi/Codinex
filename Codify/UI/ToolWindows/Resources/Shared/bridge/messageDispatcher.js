@@ -32,6 +32,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onAIResponse) handlers.onAIResponse(payload);
                 break;
 
+            case EVENTS.STREAM_CHUNK:
+                if (handlers.onHandleStreamChunk) handlers.onHandleStreamChunk(payload);
+                break;
+
             case EVENTS.CHAT_TITLE_CHANGED:
                 if (handlers.onChatTitleChanged) handlers.onChatTitleChanged(payload);
                 break;
