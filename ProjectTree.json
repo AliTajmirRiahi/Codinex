@@ -110,11 +110,18 @@
                                                   "path":  "Codify/Core/Chat",
                                                   "name":  "Chat",
                                                   "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "Codify/Core/Chat/ChatTitleGenerator.cs",
-                                                                   "name":  "ChatTitleGenerator.cs",
-                                                                   "type":  "file"
-                                                               }
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Core/Chat/ChatTitleGenerator.cs",
+                                                                       "name":  "ChatTitleGenerator.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Chat/SystemPrompts.cs",
+                                                                       "name":  "SystemPrompts.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "Codify/Core/Models",
@@ -286,6 +293,23 @@
                                                                    {
                                                                        "path":  "Codify/Infrastructure/Factory/IChatUseCaseFactory.cs",
                                                                        "name":  "IChatUseCaseFactory.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/Filters",
+                                                  "name":  "Filters",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Filters/IIntentClassifier.cs",
+                                                                       "name":  "IIntentClassifier.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/Filters/IntentClassifier.cs",
+                                                                       "name":  "IntentClassifier.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -1116,9 +1140,7 @@
                              "name":  "ViewModels",
                              "type":  "folder",
                              "children":  {
-                                              "path":  "Codify/ViewModels/ChatViewModel.cs",
-                                              "name":  "ChatViewModel.cs",
-                                              "type":  "file"
+
                                           }
                          },
                          {

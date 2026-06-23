@@ -1,5 +1,7 @@
 ﻿using Codify.Core.Abstractions;
+using Codify.Core.Chat;
 using Codify.Core.Models;
+using Codify.Storage;
 using Codify.Storage.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,7 +14,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Storage;
 
 namespace Codify.Infrastructure.AiProviders
 {
@@ -42,7 +43,7 @@ namespace Codify.Infrastructure.AiProviders
 
             // 1. Prepare the Endpoint URL
             var baseUrl = string.IsNullOrWhiteSpace(provider.BaseUrl)
-                ? "https://api.openai.com/v1"
+                ? "https://api.gapgpt.app/v1"
                 : provider.BaseUrl.TrimEnd('/');
 
             var requestUri = $"{baseUrl}/chat/completions";
@@ -97,7 +98,7 @@ namespace Codify.Infrastructure.AiProviders
 
                 // Prepare endpoint
                 var baseUrl = string.IsNullOrWhiteSpace(provider.BaseUrl)
-                    ? "https://api.openai.com/v1"
+                    ? "https://api.gapgpt.app/v1"
                     : provider.BaseUrl.TrimEnd('/');
 
                 var requestUri = $"{baseUrl}/chat/completions";
@@ -184,7 +185,9 @@ namespace Codify.Infrastructure.AiProviders
             var messages = new List<object>();
 
             // Handle multi-modal content (Text + Attachments)
-            var contentList = new List<object>();
+            var contentList = new List<object> {
+                // Add strict system rule first
+                new { type = "text", role = "System", text = SystemPrompts.DeveloperOnlyAssistant } };
 
             // Add the main user text
             foreach (var prompt in prompts)

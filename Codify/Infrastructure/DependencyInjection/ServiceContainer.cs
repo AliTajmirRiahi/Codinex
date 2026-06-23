@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
+using Codify.Infrastructure.Filters;
 using Microsoft.VisualStudio.Shell;
 
 namespace Codify.Infrastructure.DependencyInjection
@@ -50,6 +51,7 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
                 typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources"));
+            services.AddSingleton<IIntentClassifier, IntentClassifier>();
             services.AddSingleton<IJsonSerializer, JsonSerializationService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
