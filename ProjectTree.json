@@ -711,6 +711,11 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js",
+                                                                                                                                                       "name":  "composerController.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/controllers/manageModelsController.js",
                                                                                                                                                        "name":  "manageModelsController.js",
                                                                                                                                                        "type":  "file"
@@ -784,6 +789,11 @@
                                                                                                                                                    {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/chatView.js",
                                                                                                                                                        "name":  "chatView.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js",
+                                                                                                                                                       "name":  "composerView.js",
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {

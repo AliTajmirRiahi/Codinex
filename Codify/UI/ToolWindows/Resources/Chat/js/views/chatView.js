@@ -2,20 +2,31 @@
  * ChatView
  * Responsible only for rendering UI elements.
  * No business logic or AI communication should exist here.
- */
+ **/
 
-import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
-import { addMessage } from '../state/appState.js';
+
+import { $, togglePanelHidden } from '../utils/dom.js';
 import { DropDownView } from '../views/dropDownView.js';
-import { getState, setCurrentModel, setLoading, subscribe } from '../state/appState.js';
+import { getState, setCurrentModel, subscribe } from '../state/appState.js';
 import { messageView } from '../views/messageView.js';
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
+import { ComposerView } from './composerView.js';
 
 export const chatView = {
 
     initialize(handleSend, onModelSelected) {
         this.handleSend = handleSend;
-        // Initialize
+
+        this.initializeModelDropdown(onModelSelected);
+
+        this.composer = new ComposerView({
+            onSend: (text) => this.handleSendMessage(text),
+        });
+
+        this.bindLoadingState();
+    },
+
+    initializeModelDropdown(onModelSelected) {
         this.modelDropDown = new DropDownView({
             containerId: 'model-dropdown-menu-container',
             menuId: 'model-dropdown-menu',
@@ -31,61 +42,34 @@ export const chatView = {
                         <span>${item.name}</span>
                     </div>
                     <span class="multiplier">${item.multiplier || '1x'}</span>`;
+
                 return option;
             },
             onItemSelect: (model) => {
-                onModelSelected(model);
+                if (onModelSelected) {
+                    onModelSelected(model);
+                }
+
                 setCurrentModel(model);
                 this.setCurrentModelName();
+
                 return true;
             }
         });
+    },
 
+    bindLoadingState() {
+        subscribe((state) => {
+            togglePanelHidden('#response-loading', state.isLoading);
 
-        const input = $('#userInput');
-        const sendBtn = $('#send-btn');
-        const responseLoading = $('#response-loading');
-
-        this.inputMinHeight = parseFloat(window.getComputedStyle(input).minHeight);
-
-        if (!input || !sendBtn) {
-            throw new Error("ChatView initialization failed: Missing required DOM elements.");  
-            return;
-        }
-
-        /**
-         * Send button click
-         */
-        sendBtn.addEventListener('click', () => {
-            this.handleSendMessage(input);
-        });
-        /**
-         * Enter key send
-         */
-        input.addEventListener('keydown', (event) => {
-
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                this.handleSendMessage(input);
+            if (this.input) {
+                this.input.disabled = state.isLoading;
             }
 
+            if (this.sendBtn) {
+                this.sendBtn.disabled = state.isLoading || !this.getInputText();
+            }
         });
-
-        /**
-        * change 
-        */
-        input.addEventListener('input', (e) => {
-            input.style.height = 'auto';
-            if (input.scrollHeight > 500)
-                input.style.height = '500px';
-            else
-                input.style.height = (input.scrollHeight) + 'px';
-            togglePanelDisable('#send-btn', e.target.value != '');
-        }, false);
-
-        subscribe(function (state) {
-            togglePanelHidden('#response-loading', state.isLoading);
-        })
     },
 
     getInputMessage(input) {
@@ -93,22 +77,34 @@ export const chatView = {
 
         if (!text) return null;
 
-        // Clear input
         input.value = '';
+        this.updateSendButtonState('');
+        this.hideComposerMenu();
 
         return text;
     },
 
     // updates current model name
     setCurrentModelName() {
-        var appState = getState();
-        $('#current-model-name').innerHTML = appState.currentModel.name;
+        const currentModelName = $('#current-model-name');
+        const appState = getState();
+
+        if (!currentModelName || !appState.currentModel) return;
+
+        currentModelName.innerHTML = appState.currentModel.name;
     },
 
     renderModelMenu(items, selectedValue) {
-        this.modelDropDown.render(items, selectedValue);
+        if (!this.modelDropDown) return;
+
+        this.modelDropDown.render(items || [], selectedValue);
         this.setCurrentModelName();
     },
+
+    dispatchComposerEvent(name, detail) {
+        document.dispatchEvent(new CustomEvent(name, { detail }));
+    },
+
     /**
      * Append a new message to the chat container.
      * @param {string} content - Message text
@@ -158,10 +154,9 @@ export const chatView = {
         container.scrollTop = container.scrollHeight;
     },
 
-    handleSendMessage(input) {
+    handleSendMessage(text) {
         togglePanelHidden('#chat-welcome', false);
-        this.handleSend(this.getInputMessage(input));
-        input.style.height = (this.inputMinHeight) + 'px';
+        this.handleSend(text);
     },
     renderMessages(messages) {
         togglePanelHidden('#chat-welcome', false);
@@ -198,6 +193,15 @@ export const chatView = {
 
         scrollToBottom();
     },
+
+    clearMessages() {
+        const chatElements = document.getElementsByClassName('chat-message');
+
+        while (chatElements.length > 0) {
+            const parent = chatElements[0].parentElement;
+            parent.removeChild(chatElements[0]);
+        }
+    }
 }
 
 /**

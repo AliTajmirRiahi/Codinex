@@ -48,3 +48,69 @@
         opacity: 1;
     }
 
+.composer-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.composer-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: var(--codify-chip-bg);
+    font-size: 12px;
+}
+
+.composer-menu {
+    position: absolute;
+    bottom: 95px;
+    left: 31px;
+    width: 470px;
+    background-color: var(--vs-background);
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    box-shadow: 0 0px 13px rgba(0, 0, 0, 0.7);
+    z-index: 20;
+}
+
+.composer-menu-item {
+    display: flex; 
+    align-items: center;
+    gap: 12px; 
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+    .composer-menu-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
+
+    .composer-menu-item .item-name {
+        color: var(--vs-foreground);
+        min-width: 100px;
+        padding-left: 20px;
+        border-left: 0.16rem solid;
+        border-color: var(--vs-auto-hide-tab-mouse-over-border-color);
+    }
+
+    .composer-menu-item .item-desc {
+        color: var(--vs-access-tool-tip-color);
+        font-size: 0.9em;
+    }
+
+    /* Styling for the selected item via keyboard */
+    .composer-menu-item.active {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }

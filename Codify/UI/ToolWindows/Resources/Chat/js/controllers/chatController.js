@@ -3,14 +3,14 @@
  * Handles user interaction and coordinates between
  * the view layer and the service layer.
  */
-import { $ } from '../utils/dom.js';
 import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { chatListView } from '../views/chatListView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading, setCurrentModel } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 import { STATICS } from '../constants/statics.js';
-import { reportError } from '../../../Shared/bridge/errorReporter.js'
+import { reportError } from '../../../Shared/bridge/errorReporter.js';
+import { ComposerController } from '../controllers/composerController.js';
 
 
 let activeStreamMessage = null;
@@ -24,6 +24,12 @@ export function initChatController(transport) {
 
     chatView.initialize(handleSend, onModelSelected);
 
+    const composerController = new ComposerController(chatView.composer);
+
+    chatView.composer.setOnChange((ctx) => {
+        composerController.handleInput(ctx);
+    });
+
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat);
 
     function onModelSelected(model) {
@@ -36,13 +42,12 @@ export function initChatController(transport) {
     }
 
     function onChatSelected(chat) {
-        var appState = getState();
         const data = {
             chatId: chat.id
         };
         transport.send(EVENTS.SELECT_CHAT, data);
     }
-    
+
     /**
      * Main send handler
      */
@@ -62,9 +67,10 @@ export function initChatController(transport) {
 
         try {
             // Send message to AI
-            const response = await aiService.sendMessage(text, transport);
+            await aiService.sendMessage(text, transport);
 
         } catch (error) {
+            setLoading(false);
 
             reportError(error, "chatController");
 
@@ -74,34 +80,18 @@ export function initChatController(transport) {
     }
 
     async function handleNewChat() {
-        clearChatContainer();
+        chatView.clearMessages();
         transport.send(EVENTS.NEW_CHAT);
     }
 
     async function handleDeleteChat() {
-        clearChatContainer();
+        chatView.clearMessages();
         transport.send(EVENTS.DELETE_CHAT);
-    }
-
-    function clearChatContainer(){
-        const chatElements = document.getElementsByClassName('chat-message');
-        while (chatElements.length > 0) {
-            const parent = chatElements[0].parentElement;
-            parent.removeChild(chatElements[0]);
-        }
     }
     /**
      * Returns public methods to allow external interaction with the controller
      */
     return {
-        /**
-         * Allows external components to programmatically trigger a message
-         */
-        sendMessage: (text) => {
-            input.value = text;
-            handleSend();
-        },
-
         /**
          * Updates the active model from outside (e.g., when loading saved settings)
          */
@@ -112,17 +102,33 @@ export function initChatController(transport) {
          * Clears the chat UI if needed
          */
         clearChat: () => {
-            clearChatContainer();
+            chatView.clearMessages();
         },
 
         renderCurrentProvider: () => {
-            var appState = getState();
-            chatView.renderModelMenu(appState.selectedModels, appState.currentModel.id);
+            const appState = getState();
+
+            const currentModelId = appState.currentModel
+                ? appState.currentModel.id
+                : null;
+
+            chatView.renderModelMenu(
+                appState.selectedModels,
+                currentModelId
+            );
         },
 
         renderChatList: () => {
-            var appState = getState();
-            chatListView.renderChatListMenu(appState.chatList, appState.currentChat.id);
+            const appState = getState();
+
+            const currentChatId = appState.currentChat
+                ? appState.currentChat.id
+                : null;
+
+            chatListView.renderChatListMenu(
+                appState.chatList,
+                currentChatId
+            );
         },
 
         handleAIResponse: (payload) => {

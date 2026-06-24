@@ -11,6 +11,17 @@ const _state = {
     isLoading: false,
     chatList: [],
     currentChat: null,
+
+    composer: {
+        draftText: "",
+        activeTrigger: null,
+        activeMenu: null,
+        selectedCommand: null,
+        selectedAgents: [],
+        selectedReferences: [],
+        cursorContext: null,
+        filterText: ""
+    }\ا
 };
 
 const listeners = [];
@@ -19,9 +30,18 @@ const listeners = [];
  * Returns a frozen copy of state (read-only).
  */
 export function getState() {
-    return Object.freeze({ ..._state });
+    return Object.freeze({
+        ..._state,
+        composer: Object.freeze({
+            ..._state.composer,
+            selectedAgents: Object.freeze([..._state.composer.selectedAgents]),
+            selectedReferences: Object.freeze([..._state.composer.selectedReferences]),
+        }),
+        messages: Object.freeze([..._state.messages]),
+        chatList: Object.freeze([..._state.chatList]),
+        selectedModels: _state.selectedModels ? Object.freeze([..._state.selectedModels]) : null,
+    });
 }
-
 /**
  * Subscribe to state changes.
  */
@@ -122,4 +142,80 @@ export function addMessage(message) {
  */
 export function clearMessages() {
     updateState({ messages: [] });
+}
+
+/**
+ * Composer setters
+ */
+export function setDraftText(text) {
+    if (typeof text !== 'string') {
+        throw new Error('Draft text must be a string.');
+    }
+
+    const composer = { ..._state.composer, draftText: text };
+
+    updateState({ composer });
+}
+
+export function setActiveTrigger(trigger) {
+    // trigger can be null to clear
+    const composer = { ..._state.composer, activeTrigger: trigger };
+
+    updateState({ composer });
+}
+
+export function setActiveMenu(menu) {
+    // menu can be null to clear
+    const composer = { ..._state.composer, activeMenu: menu };
+
+    updateState({ composer });
+}
+
+export function setSelectedCommand(command) {
+    // command can be null to clear selection
+    const composer = { ..._state.composer, selectedCommand: command };
+
+    updateState({ composer });
+}
+
+export function setSelectedAgents(agents) {
+    if (!Array.isArray(agents)) {
+        throw new Error('Selected agents must be an array.');
+    }
+
+    const composer = { ..._state.composer, selectedAgents: agents };
+
+    updateState({ composer });
+}
+
+export function setSelectedReferences(references) {
+    if (!Array.isArray(references)) {
+        throw new Error('Selected references must be an array.');
+    }
+
+    const composer = { ..._state.composer, selectedReferences: references };
+
+    updateState({ composer });
+}
+
+export function setCursorContext(context) {
+    // context can be any value (object/string/null)
+    const composer = { ..._state.composer, cursorContext: context };
+
+    updateState({ composer });
+}
+
+export function resetComposer() {
+    const composer = {
+        draftText: "",
+        activeTrigger: null,
+        activeMenu: null,
+        selectedCommand: null,
+        selectedAgents: [],
+        selectedReferences: [],
+        cursorContext: null,
+        filterText: ""
+    };
+
+    updateState({ composer });
 }
