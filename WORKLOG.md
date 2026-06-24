@@ -66,10 +66,12 @@ Use this format for every meaningful change:
 - **Result**: Users can now fluidly type and delete context items using only the keyboard.
 
 
-### 2026-06-24 - State Consistency Validation
-## Current
-- **Goal**: Ensure `AppState.composer.draftText` is always synchronized with the UI, especially after chip insertion/removal.
-- **Files**: `composerView.js`, `composerController.js`, `appState.js`
-- **Issue**: `draftText` was appearing empty in console despite UI having content.
-- **Action**: Implement `getPlainText()` in View to strip HTML and sync on every `input` and `chip-change` event.
-- **Next step**: Verify that sending a message correctly packages both the `draftText` and `selectedAgents`.
+### 2026-06-24 - Composer Trigger Behavior Fixes
+
+- **Goal**: Fix bugs related to `@`, `/`, and `#` triggers in `contenteditable`.
+- **Status**: In-Progress
+- **Issues to fix**: 
+  - Double trigger characters remaining in text.
+  - Sticky cursor after chip insertion (text entering chip's span).
+  - Proper removal of the trigger character upon selection.
+- **Action**: Implementing `removeTriggerAtCursor` and trailing-space logic in `composerView.js`.

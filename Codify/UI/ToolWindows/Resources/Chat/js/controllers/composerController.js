@@ -139,6 +139,8 @@ export class ComposerController {
      * @param {Object} context - { text, cursor, trigger }
      */
     handleInput(context) {
+        setDraftText(this.view.getPlainText());
+
         if (!context.trigger) {
             this.view.hideMenu();
             setActiveTrigger(null);
@@ -154,7 +156,7 @@ export class ComposerController {
         setActiveTrigger(context.trigger);
         setActiveMenu(context.menuType);
         setCursorContext(context);
-
+        
         const options = this.filterOptions(type, filter);
 
         if (options.length > 0) {
@@ -172,9 +174,7 @@ export class ComposerController {
     }
 
     handleSelection(type, item) {
-        console.log(`Selecting ${type}:`, item);
-
-        // 2. Insert chip into the view (replaces the typed trigger)
+        // Insert chip into the view (replaces the typed trigger)
         // The insertChip method we implemented in the view handles selection and DOM insertion
         this.view.insertChip({
             id: item.id,
@@ -193,15 +193,15 @@ export class ComposerController {
             setSelectedReferences(newRefs);
         }
 
-        // 3. Update the selected items list in the controller (for quick access)
+        // Update the selected items list in the controller (for quick access)
         // Note: in the new model the DOM is the source of truth, but keeping this list
         // is useful to quickly send data to the AI
         this.selectedItems.push({ ...item, type });
 
-        // 4. Hide menu and clear menu selection state
+        // Hide menu and clear menu selection state
         this.view.hideMenu();
 
-        // 5. Sync with AppState (we'll complete this in a later step)
+        // Sync with AppState (we'll complete this in a later step)
         setActiveMenu(null);
         setActiveTrigger(null);
     }

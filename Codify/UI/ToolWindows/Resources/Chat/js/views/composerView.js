@@ -387,4 +387,43 @@ export class ComposerView {
 
         return false;
     }
+    /**
+     * Extracts a plain text representation from the contenteditable composer.
+     * Chips are converted to their textual value instead of being removed.
+     */
+    getPlainText() {
+        if (!this.input) {
+            return '';
+        }
+
+        const tempDiv = this.input.cloneNode(true);
+
+        const chips = tempDiv.querySelectorAll('.composer-chip');
+
+        chips.forEach((chip) => {
+            const chipText =
+                chip.dataset.name ||
+                chip.querySelector('.chip-label')?.textContent ||
+                chip.textContent ||
+                '';
+
+            const textNode = document.createTextNode(chipText);
+
+            chip.replaceWith(textNode);
+        });
+
+        return this.normalizeComposerText(tempDiv.textContent || '');
+    }
+
+    /**
+     * Normalizes composer plain text while preserving meaningful user content.
+     */
+    normalizeComposerText(text) {
+        return text
+            .replace(/\u00A0/g, ' ')
+            .replace(/[ \t]+/g, ' ')
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
+    }
+
 }   
