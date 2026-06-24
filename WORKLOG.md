@@ -53,6 +53,7 @@ Use this format for every meaningful change:
 
 ### 2026-06-24 - Backspace Chip Removal Implementation
 
+### Completed
 - **Goal**: Allow users to remove chips (agents, commands, references) using the Backspace key in the composer.
 - **Files touched**: 
   - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
@@ -63,3 +64,12 @@ Use this format for every meaningful change:
   - Wired `composer:chip-remove` event to `composerController` to ensure `AppState` is updated when a chip is deleted via keyboard.
 - **Reason for the change**: Improving UX consistency, making the AI-powered editor feel more native (similar to GitHub Copilot).
 - **Result**: Users can now fluidly type and delete context items using only the keyboard.
+
+
+### 2026-06-24 - State Consistency Validation
+## Current
+- **Goal**: Ensure `AppState.composer.draftText` is always synchronized with the UI, especially after chip insertion/removal.
+- **Files**: `composerView.js`, `composerController.js`, `appState.js`
+- **Issue**: `draftText` was appearing empty in console despite UI having content.
+- **Action**: Implement `getPlainText()` in View to strip HTML and sync on every `input` and `chip-change` event.
+- **Next step**: Verify that sending a message correctly packages both the `draftText` and `selectedAgents`.
