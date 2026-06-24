@@ -236,6 +236,16 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\lightning.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\linear-loading.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\message-circle-check.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\bug.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\flask-conical.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\hand-platter.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\monitor.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\refresh-cw.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\test-tube-diagonal.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\visual-studio-svgrepo-com.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\Visual-Studio-Icon.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\activity.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\Visual-Studio-Icon-Flat.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />

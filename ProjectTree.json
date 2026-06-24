@@ -938,8 +938,18 @@
                                                                                         "type":  "folder",
                                                                                         "children":  [
                                                                                                          {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/activity.svg",
+                                                                                                             "name":  "activity.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/brain.svg",
                                                                                                              "name":  "brain.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/bug.svg",
+                                                                                                             "name":  "bug.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
@@ -955,6 +965,16 @@
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/codify-AI-logo-black.svg",
                                                                                                              "name":  "codify-AI-logo-black.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/flask-conical.svg",
+                                                                                                             "name":  "flask-conical.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/hand-platter.svg",
+                                                                                                             "name":  "hand-platter.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
@@ -993,8 +1013,18 @@
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/monitor.svg",
+                                                                                                             "name":  "monitor.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/plus.svg",
                                                                                                              "name":  "plus.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/refresh-cw.svg",
+                                                                                                             "name":  "refresh-cw.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
@@ -1008,8 +1038,28 @@
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/test-tube-diagonal.svg",
+                                                                                                             "name":  "test-tube-diagonal.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/trash-2.svg",
                                                                                                              "name":  "trash-2.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/Visual-Studio-Icon-Flat.svg",
+                                                                                                             "name":  "Visual-Studio-Icon-Flat.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/Visual-Studio-Icon.svg",
+                                                                                                             "name":  "Visual-Studio-Icon.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/visual-studio-svgrepo-com.svg",
+                                                                                                             "name":  "visual-studio-svgrepo-com.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {

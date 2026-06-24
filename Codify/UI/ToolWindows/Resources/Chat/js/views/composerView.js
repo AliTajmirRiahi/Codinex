@@ -171,7 +171,8 @@ export class ComposerView {
         const chip = document.createElement('span');
         chip.className = `composer-chip composer-chip--${item.type || 'default'}`;
         chip.contentEditable = 'false';
-        chip.innerHTML = `<span>${item.label || item.name || item.text}</span>`;
+        // Render icon (if provided) and label
+        chip.innerHTML = `${item.icon ? `<codify-icon name="${item.icon}"></codify-icon>` : ''}<span class="chip-label">${item.label || item.name || item.text}</span>`;
         chip.dataset.id = item.id;
         chip.dataset.type = item.type;
         chip.dataset.name = item.label || item.name || item.text
@@ -259,6 +260,8 @@ export class ComposerView {
         this.selectedIndex = 0; // Reset to first item whenever list changes
         this.currentType = type;
 
+        // mark menu with the current section type (commands/agents/references)
+        this.menu.setAttribute('data-section', type);
         this.menu.innerHTML = '';
         this.menu.classList.remove('hidden');
 
@@ -273,6 +276,7 @@ export class ComposerView {
             el['data-index'] = index;
 
             el.innerHTML = `
+                ${item.icon ? `<div class="item-icon"><codify-icon name="${item.icon}"></codify-icon></div>` : ''}
                 <div class="item-name">${item.label || item.name}</div>
                 ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
             `;
@@ -383,4 +387,4 @@ export class ComposerView {
 
         return false;
     }
-}
+}   

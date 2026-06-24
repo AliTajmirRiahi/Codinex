@@ -32,7 +32,7 @@ export class ComposerController {
                     description: 'Generate documentation for the selected symbol or code'
                 },
                 {
-                    id: 'cmd2', 
+                    id: 'cmd2',
                     name: '/describe',
                     description: 'Describe what the selected code does'
                 },
@@ -47,28 +47,74 @@ export class ComposerController {
                     description: 'Create project-level AI coding guidelines'
                 },
                 {
-                    id: 'cmd5', 
+                    id: 'cmd5',
                     name: '/assist',
                     description: 'Show available Codify commands and usage tips'
                 },
                 {
-                    id: 'cmd6', 
+                    id: 'cmd6',
                     name: '/improve',
                     description: 'Improve code quality, readability, and performance'
                 },
                 {
-                    id: 'cmd7', 
+                    id: 'cmd7',
                     name: '/storePrompt',
                     description: 'Save the current prompt for later reuse'
                 },
-                {   
+                {
                     id: 'cmd8',
                     name: '/createTests',
                     description: 'Generate tests for the selected code'
                 }
             ],
-            agents: [{ name: '@python-expert', description: 'Best for Python' }, { name: '@web-dev', description: 'Frontend specialist' }],
-            references: [{ name: '#file1.js', description: 'Current file' }, { name: '#components.js', description: 'Dependency' }]
+            agents: [
+                {
+                    id: 'agent-python',
+                    name: '@python-expert',
+                    icon: 'hat-glasses',
+                    description: 'Best for Python'
+                },
+                {
+                    id: 'agent-web',
+                    name: '@web-dev',
+                    icon: 'monitor',
+                    description: 'Frontend specialist'
+                },
+                {
+                    id: 'agent-debugger',
+                    name: '@debugger',
+                    icon: 'bug',
+                    description: 'Diagnose and fix bugs'
+                },
+                {
+                    id: 'agent-modernize',
+                    name: '@modernize',
+                    icon: 'refresh-cw',
+                    description: 'Modernize your applications'
+                },
+                {
+                    id: 'agent-profiler',
+                    name: '@profiler',
+                    icon: 'activity',
+                    description: 'Optimize your code'
+                },
+                {
+                    id: 'agent-test',
+                    name: '@test',
+                    icon: 'test-tube-diagonal',
+                    description: 'Generate unit tests'
+                },
+                {
+                    id: 'agent-vs',
+                    name: '@vs',
+                    icon: 'Visual-Studio-Icon-Flat',
+                    description: 'Ask questions about Visual Studio'
+                }
+            ],
+            references: [
+                { id: 'ref-file1', name: '#file1.js', icon: 'file', description: 'Current file' },
+                { id: 'ref-components', name: '#components.js', icon: 'file-text', description: 'Dependency' }
+            ]
         };
 
         this.selectedItems = []; // Current chips in composer
@@ -108,7 +154,7 @@ export class ComposerController {
         setActiveTrigger(context.trigger);
         setActiveMenu(context.menuType);
         setCursorContext(context);
-        
+
         const options = this.filterOptions(type, filter);
 
         if (options.length > 0) {
@@ -133,7 +179,8 @@ export class ComposerController {
         this.view.insertChip({
             id: item.id,
             text: item.name || item.text,
-            type: type
+            type: type,
+            icon: item.icon
         });
 
 

@@ -56,10 +56,10 @@
 }
 
 .composer-chip {
-    display: inline;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 4px;
+    padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
     background: rgba(255, 255, 255, 0.1);
@@ -67,6 +67,15 @@
     opacity: 1;
     border: 1px solid var(--vs-access-tool-tip-border-color);
 }
+
+    .composer-chip .chip-label {
+        line-height: 1;
+    }
+
+    .composer-chip codify-icon {
+        width: 10px;
+        height: 10px;
+    }
 
 .composer-menu {
     position: absolute;
@@ -81,11 +90,11 @@
 }
 
 .composer-menu-item {
-    display: flex; 
+    display: flex;
     align-items: center;
-    gap: 12px; 
+    gap: 12px;
     width: 100%;
-    padding: 8px 12px;
+    padding: 5px 7px;
     background: none;
     border: none;
     cursor: pointer;
@@ -100,10 +109,23 @@
 
     .composer-menu-item .item-name {
         color: var(--vs-foreground);
-        min-width: 100px;
-        padding-left: 20px;
-        border-left: 0.16rem solid;
+        min-width: 120px;
+        padding-left: 8px;
+        border-left: 0.0rem solid;
         border-color: var(--vs-auto-hide-tab-mouse-over-border-color);
+    }
+
+    .composer-menu-item .item-icon {
+        width: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--vs-viz-surface-plum-medium-color);
+    }
+
+    .composer-menu-item codify-icon {
+        width: 18px;
+        height: 18px;
     }
 
     .composer-menu-item .item-desc {
