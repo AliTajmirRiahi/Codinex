@@ -85,7 +85,13 @@ export class ComposerView {
                 e.preventDefault();
                 this.navigateMenu(-1);
             }
-
+            else if (e.key === 'Backspace') {
+                const handled = this.handleBackspace();
+                if (handled) {
+                    e.preventDefault();
+                    return;
+                }
+            }
             // Handle actions when the Escape key is pressed
             if (e.key === 'Escape') {
                 if (menuVisible) {
@@ -167,6 +173,8 @@ export class ComposerView {
         chip.contentEditable = 'false';
         chip.innerHTML = `<span>${item.label || item.name || item.text}</span>`;
         chip.dataset.id = item.id;
+        chip.dataset.type = item.type;
+        chip.dataset.name = item.label || item.name || item.text
 
         // For example, if you want to add a space after the chip
         range.deleteContents();
@@ -317,5 +325,62 @@ export class ComposerView {
         if (selectedData) {
             this.applySelection(selectedData.name); // Your existing logic to insert text
         }
+    }
+    handleBackspace() {
+        const selection = window.getSelection();
+        if (!selection || !selection.rangeCount) return false;
+
+        const range = selection.getRangeAt(0);
+        if (!range.collapsed) return false;
+
+        let nodeToDelete = null;
+        const container = range.startContainer;
+        const offset = range.startOffset;
+
+        // Case 1: Caret is at the very beginning of a text node
+        if (container.nodeType === Node.TEXT_NODE && offset === 0) {
+            nodeToDelete = container.previousSibling;
+        }
+        // Case 2: Caret is in a text node, but there's only whitespace behind it
+        else if (container.nodeType === Node.TEXT_NODE && offset > 0) {
+            const textBefore = container.textContent.substring(0, offset);
+            // If the only thing before the cursor in this node is a space/newline
+            if (textBefore.trim() === '' && textBefore.length > 0) {
+                // Manually clear this whitespace to "jump" to the chip
+                container.textContent = container.textContent.substring(offset);
+                nodeToDelete = container.previousSibling.previousSibling;
+            }
+        }
+        // Case 3: Caret is directly in the parent container
+        else if (container === this.input) {
+            nodeToDelete = this.input.childNodes[offset - 1];
+        }
+
+        // Validation: Is it really a chip?
+        if (nodeToDelete && nodeToDelete.nodeType === Node.ELEMENT_NODE &&
+            nodeToDelete.classList.contains('composer-chip')) {
+
+            // Prepare data for removal
+            const chipData = {
+                id: nodeToDelete.getAttribute('data-id'),
+                type: nodeToDelete.getAttribute('data-type'),
+                name: nodeToDelete.getAttribute('data-name')
+            };
+
+            // Dispatch removal to controller
+            document.dispatchEvent(new CustomEvent('composer:chip-remove', {
+                detail: chipData
+            }));
+
+            // 2. Remove from UI
+            nodeToDelete.remove();
+
+            // 3. Clean up the DOM (merges adjacent text nodes)
+            this.input.normalize();
+
+            return true; // Stop browser from doing default backspace
+        }
+
+        return false;
     }
 }

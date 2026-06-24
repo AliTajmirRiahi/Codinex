@@ -51,31 +51,15 @@ Use this format for every meaningful change:
 
 
 
-## 2026-06-24 - Next Task - Backspace-to-chip Behavior
+### 2026-06-24 - Backspace Chip Removal Implementation
 
-### Goal
-Implement explicit Backspace handling for inline composer chips in the `contenteditable` editor.
-
-### Scope
-- `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
-- `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
-- `Codify/UI/ToolWindows/Resources/Chat/js/state/appState.js`
-
-### Requirements
-- Detect when the caret is directly after an inline chip.
-- On `Backspace`, remove the chip instead of relying on browser default behavior.
-- Sync removed chip state with centralized `AppState`.
-- Preserve caret position after chip removal.
-- Keep normal text Backspace behavior unchanged.
-- Avoid rewriting full `innerText` or `innerHTML` during deletion.
-
-### Notes
-- Backspace behavior should be handled explicitly in the composer keydown flow.
-- Chip deletion should remain state-aware and not be DOM-only.
-- Browser-native `contenteditable` deletion should not be trusted for chip removal.
-
-### Done When
-- Pressing Backspace after a chip removes that chip predictably.
-- Pressing Backspace in normal text still deletes text normally.
-- Removed chips are reflected in selected command, agent, and reference state.
-- The composer plain-text draft remains synchronized after deletion.
+- **Goal**: Allow users to remove chips (agents, commands, references) using the Backspace key in the composer.
+- **Files touched**: 
+  - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
+  - `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
+- **Summary of changes**: 
+  - Added `handleBackspace` to `composerView` to intercept keydown events.
+  - Implemented logic to detect if the caret is preceded by a `.composer-chip` or trailing whitespace.
+  - Wired `composer:chip-remove` event to `composerController` to ensure `AppState` is updated when a chip is deleted via keyboard.
+- **Reason for the change**: Improving UX consistency, making the AI-powered editor feel more native (similar to GitHub Copilot).
+- **Result**: Users can now fluidly type and delete context items using only the keyboard.

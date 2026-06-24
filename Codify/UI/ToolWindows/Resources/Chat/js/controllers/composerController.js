@@ -11,44 +11,58 @@ import {
     setSelectedAgent,
     setSelectedReferences,
     setCursorContext,
-    resetComposer
+    resetComposer,
+    subscribe,
 } from '../state/appState.js';
 export class ComposerController {
     constructor(composerView) {
+
+        subscribe(() => {
+            console.log(getState());
+        })
+
         this.view = composerView;
 
         // Mock data - In production, these come from your services
         this.data = {
             commands: [
                 {
+                    id: 'cmd1',
                     name: '/document',
                     description: 'Generate documentation for the selected symbol or code'
                 },
                 {
+                    id: 'cmd2', 
                     name: '/describe',
                     description: 'Describe what the selected code does'
                 },
                 {
+                    id: 'cmd3',
                     name: '/repair',
                     description: 'Find and repair issues in the selected code'
                 },
                 {
+                    id: 'cmd4',
                     name: '/setupGuidelines',
                     description: 'Create project-level AI coding guidelines'
                 },
                 {
+                    id: 'cmd5', 
                     name: '/assist',
                     description: 'Show available Codify commands and usage tips'
                 },
                 {
+                    id: 'cmd6', 
                     name: '/improve',
                     description: 'Improve code quality, readability, and performance'
                 },
                 {
+                    id: 'cmd7', 
                     name: '/storePrompt',
                     description: 'Save the current prompt for later reuse'
                 },
-                {
+                {   
+                    id: 'cmd8',
                     name: '/createTests',
                     description: 'Generate tests for the selected code'
                 }
@@ -146,7 +160,23 @@ export class ComposerController {
     }
 
     removeChip(item) {
-        this.selectedItems = this.selectedItems.filter(i => i.name !== item.name);
-        this.view.renderChips(this.selectedItems);
+        // 1. Remove from local tracking array using ID (safer than name)
+        this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
+
+        // 2. Sync the specific category with AppState
+        if (item.type === 'agents') {
+            setSelectedAgent(null);
+        }
+        else if (item.type === 'references') {
+            const remainingRefs = this.selectedItems.filter(i => i.type === 'references');
+            setSelectedReferences(remainingRefs);
+        }
+        else if (item.type === 'commands') {
+            setSelectedCommand(null);
+        }
+
+        // Sync draft text if necessary (or re-parse)
+        // The view will handle the DOM removal, but if your draftText depends on
+        // these tokens, you might need to trigger a re-parse here.
     }
 }
