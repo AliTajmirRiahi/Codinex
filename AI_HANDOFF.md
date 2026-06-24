@@ -55,3 +55,7 @@
 - Include this file at the start of a new AI session.
 - Update it only when the product direction or architecture meaningfully changes.
 - Keep task-specific progress out of this file and put it into `WORKLOG.md` or `AI_HANDOFF.md`.
+
+### Technical Design Rules
+- Composer Input: Must use `contenteditable` instead of `textarea` to enable dynamic token injection (Chips for @, /, #) and inline rich-text formatting. 
+- State Synchronization: Any manipulation of the composer content must update the underlying AppState (plain text representation) to ensure AiService receives valid input.

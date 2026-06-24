@@ -23,3 +23,13 @@ Use this format for every meaningful change:
 - Reason for the change: Codify is a multi-file Visual Studio extension with provider abstractions, storage, UI, and execution pipeline layers. This kind of project needs a durable source of truth outside chat history.
 - Result: Future AI sessions can be restarted with consistent project context and less risk of losing architectural decisions.
 - Next step: Inspect and document the exact startup flow and end-to-end chat execution path from package initialization to provider response.
+
+
+## [2026-06-24] Composer Architecture Audit & Transition
+- Status: Completed.
+- Findings:
+    - DOM wiring and Event flow between `ComposerView`, `ChatController`, and `ChatView` are verified and functional.
+    - Component uses standard `textarea` which limits inline token/chip rendering.
+- Decisions:
+    - Shifted architectural focus from `textarea` to `contenteditable`.
+    - Next Task: Implement `contenteditable` logic for Composer, including Caret management and Chip rendering.
