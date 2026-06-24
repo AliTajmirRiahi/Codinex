@@ -2,7 +2,17 @@
  * ComposerController
  * Orchestrates logic for triggers (@, /, #), menu items, and context chips.
  */
-
+import {
+    getState,
+    setDraftText,
+    setActiveTrigger,
+    setActiveMenu,
+    setSelectedCommand,
+    setSelectedAgent,
+    setSelectedReferences,
+    setCursorContext,
+    resetComposer
+} from '../state/appState.js';
 export class ComposerController {
     constructor(composerView) {
         this.view = composerView;
@@ -71,10 +81,20 @@ export class ComposerController {
     handleInput(context) {
         if (!context.trigger) {
             this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
             return;
         }
 
+        const state = getState();
         const { type, filter } = context.trigger;
+
+        if ((type === 'commands' && state.composer.selectedCommand != null) || (type === 'agents' && state.composer.selectedAgent != null)) return;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+        
         const options = this.filterOptions(type, filter);
 
         if (options.length > 0) {
@@ -92,15 +112,37 @@ export class ComposerController {
     }
 
     handleSelection(type, item) {
-        // 1. Add to chips
-        this.selectedItems.push({ ...item, type });
-        this.view.renderChips(this.selectedItems);
+        console.log(`Selecting ${type}:`, item);
 
-        // 2. Clear menu
+        // 2. Insert chip into the view (replaces the typed trigger)
+        // The insertChip method we implemented in the view handles selection and DOM insertion
+        this.view.insertChip({
+            id: item.id,
+            text: item.name || item.text,
+            type: type
+        });
+
+
+        if (type === 'commands') {
+            setSelectedCommand(item);
+        } else if (type === 'agents') {
+            setSelectedAgent(item);
+        } else if (type === 'reference') {
+            const newRefs = [...this.selectedItems.filter(i => i.type === 'reference'), item];
+            setSelectedReferences(newRefs);
+        }
+
+        // 3. Update the selected items list in the controller (for quick access)
+        // Note: in the new model the DOM is the source of truth, but keeping this list
+        // is useful to quickly send data to the AI
+        this.selectedItems.push({ ...item, type });
+
+        // 4. Hide menu and clear menu selection state
         this.view.hideMenu();
 
-        // 3. Optional: Clear the trigger text from input
-        console.log(`Selected ${type}: ${item.name}`);
+        // 5. Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
     }
 
     removeChip(item) {

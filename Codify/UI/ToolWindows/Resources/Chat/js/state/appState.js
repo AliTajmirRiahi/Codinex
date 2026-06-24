@@ -17,11 +17,11 @@ const _state = {
         activeTrigger: null,
         activeMenu: null,
         selectedCommand: null,
-        selectedAgents: [],
+        selectedAgent: null,
         selectedReferences: [],
         cursorContext: null,
         filterText: ""
-    }\ا
+    }
 };
 
 const listeners = [];
@@ -34,7 +34,6 @@ export function getState() {
         ..._state,
         composer: Object.freeze({
             ..._state.composer,
-            selectedAgents: Object.freeze([..._state.composer.selectedAgents]),
             selectedReferences: Object.freeze([..._state.composer.selectedReferences]),
         }),
         messages: Object.freeze([..._state.messages]),
@@ -178,12 +177,8 @@ export function setSelectedCommand(command) {
     updateState({ composer });
 }
 
-export function setSelectedAgents(agents) {
-    if (!Array.isArray(agents)) {
-        throw new Error('Selected agents must be an array.');
-    }
-
-    const composer = { ..._state.composer, selectedAgents: agents };
+export function setSelectedAgent(agent) {
+    const composer = { ..._state.composer, selectedAgent: agent };
 
     updateState({ composer });
 }

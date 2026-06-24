@@ -25,11 +25,26 @@ Use this format for every meaningful change:
 - Next step: Inspect and document the exact startup flow and end-to-end chat execution path from package initialization to provider response.
 
 
-## [2026-06-24] Composer Architecture Audit & Transition
-- Status: Completed.
-- Findings:
-    - DOM wiring and Event flow between `ComposerView`, `ChatController`, and `ChatView` are verified and functional.
-    - Component uses standard `textarea` which limits inline token/chip rendering.
-- Decisions:
-    - Shifted architectural focus from `textarea` to `contenteditable`.
-    - Next Task: Implement `contenteditable` logic for Composer, including Caret management and Chip rendering.
+## 2026-06-24 - Contenteditable Composer Implementation
+
+### Completed
+- Replaced the textarea-based composer input with a `contenteditable` editor surface.
+- Updated composer DOM bindings to read and write from the editable element instead of textarea-specific APIs.
+- Added inline chip/token rendering support for `/`, `@`, and `#` composer selections.
+- Connected composer input changes to centralized `AppState` setters.
+- Updated command menu interaction so `Enter` confirms the selected menu item while the menu is open.
+- Added keyboard handling for `Escape`, `ArrowUp`, and `ArrowDown` in the composer command flow.
+- Kept slash command, agent, and reference data mocked inside `composerController.js` for now.
+
+### Files Touched
+- `Codify/UI/ToolWindows/Resources/Chat/view/chat-view.html`
+- `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
+- `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
+- `Codify/UI/ToolWindows/Resources/Chat/js/state/appState.js`
+- `Codify/UI/ToolWindows/Resources/Chat/js/views/chatView.js`
+- `Codify/UI/ToolWindows/Resources/Chat/css/components/_inputs.css`
+
+### Notes
+- Composer text changes now update centralized state through the new composer setters.
+- Inline chips are rendered inside the editable composer instead of being shown as detached tags above the input.
+- The current command, agent, and reference sources are mock data and should later move behind a provider/context service.

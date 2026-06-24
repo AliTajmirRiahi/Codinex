@@ -1213,6 +1213,11 @@
         "type":  "file"
     },
     {
+        "path":  "AI_HANDOFF.md",
+        "name":  "AI_HANDOFF.md",
+        "type":  "file"
+    },
+    {
         "path":  "Codify.sln.DotSettings.user",
         "name":  "Codify.sln.DotSettings.user",
         "type":  "file"
@@ -1235,6 +1240,11 @@
     {
         "path":  "README.md",
         "name":  "README.md",
+        "type":  "file"
+    },
+    {
+        "path":  "WORKLOG.md",
+        "name":  "WORKLOG.md",
         "type":  "file"
     }
 ]

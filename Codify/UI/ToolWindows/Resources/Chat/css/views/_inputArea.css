@@ -56,13 +56,16 @@
 }
 
 .composer-chip {
-    display: flex;
+    display: inline;
     align-items: center;
     gap: 6px;
-    padding: 4px 8px;
+    padding: 4px 4px;
     border-radius: 6px;
-    background: var(--codify-chip-bg);
     font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.08);
+    opacity: 1;
+    border: 1px solid var(--vs-access-tool-tip-border-color);
 }
 
 .composer-menu {

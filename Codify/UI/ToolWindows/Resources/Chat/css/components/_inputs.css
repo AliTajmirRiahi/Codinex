@@ -59,3 +59,21 @@
     gap: 8px;
     flex-wrap: wrap;
 }
+
+.composer-input.content-editable {
+    min-height: 40px;
+    max-height: 200px;
+    overflow-y: auto;
+    outline: none;
+    padding: 8px 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    user-select: text;
+}
+
+    .composer-input.content-editable:empty:before {
+        content: attr(data-placeholder);
+        color: var(--vs-access-tool-tip-color);
+        cursor: text;
+    }

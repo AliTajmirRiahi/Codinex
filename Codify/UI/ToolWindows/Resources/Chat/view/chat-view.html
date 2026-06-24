@@ -96,7 +96,15 @@
                     </div>
                 </div>
                 <!-- Main textarea -->
-                <textarea id="userInput" placeholder="Ask Codify…" rows="1"></textarea>
+                <!--<textarea id="userInput" placeholder="Ask Codify…" rows="1"></textarea>-->
+
+                <div id="userInput"
+                     class="composer-input content-editable"
+                     contenteditable="true"
+                     role="textbox"
+                     aria-multiline="true"
+                     data-placeholder="Ask Codify …"></div>
+
                 <!-- Slash / Agent / Reference menu -->
                 <div id="composer-menu" class="composer-menu hidden"></div>
                 <!-- Bottom row: agent / model selector + actions -->

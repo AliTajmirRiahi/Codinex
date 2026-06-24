@@ -26,6 +26,7 @@ export class ComposerView {
 
         this.selectedIndex = 0;
         this.filteredItems = []; 
+        this.currentType = null;
 
         if (!this.input || !this.sendBtn)
             throw new Error("ComposerView: missing input elements");
@@ -106,11 +107,11 @@ export class ComposerView {
 
     send() {
 
-        const text = this.input.value.trim();
+        const text = this.input.innerText.trim();
 
         if (!text) return;
 
-        this.input.value = '';
+        this.input.innerHTML = '';
 
         this.resetHeight();
         this.updateSendState();
@@ -124,23 +125,64 @@ export class ComposerView {
 
         if (!this.onChange) return;
 
-        const cursor = this.input.selectionStart || 0;
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        // 1. Get the text before the cursor to detect the trigger
+        const preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(this.input);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        const textBeforeCursor = preCaretRange.toString();
+
+        // 2. Detect trigger
+        const triggerData = this.detectTrigger(textBeforeCursor, textBeforeCursor.length);
+
+        if (triggerData) {
+            // 3. Safely remove the trigger from the DOM
+            const triggerRange = document.createRange();
+            triggerRange.setStart(range.startContainer, range.startOffset - triggerData.length);
+            triggerRange.setEnd(range.startContainer, range.startOffset);
+            triggerRange.deleteContents();
+        }
 
         this.onChange({
-            text: this.input.value,
-            cursor,
-            trigger: this.detectTrigger(this.input.value, cursor)
+            text: this.input.innerText,
+            cursor: range.endOffset,
+            trigger: triggerData
         });
+    }
+
+    insertChip(item) {
+        this.input.focus();
+        const selection = window.getSelection();
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        // Create a chip element
+        const chip = document.createElement('span');
+        chip.className = `composer-chip composer-chip--${item.type || 'default'}`;
+        chip.contentEditable = 'false';
+        chip.innerHTML = `<span>${item.label || item.name || item.text}</span>`;
+        chip.dataset.id = item.id;
+
+        // For example, if you want to add a space after the chip
+        range.deleteContents();
+        range.insertNode(chip);
+
+        // Set the cursor position after the chip
+        range.setStartAfter(chip);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
     resize() {
 
         this.input.style.height = 'auto';
-
-        if (this.input.scrollHeight > 500)
-            this.input.style.height = '500px';
-        else
-            this.input.style.height = this.input.scrollHeight + 'px';
+        this.input.style.height = Math.min(this.input.scrollHeight, 500) + 'px';
 
     }
 
@@ -149,12 +191,12 @@ export class ComposerView {
     }
 
     updateSendState() {
-        togglePanelDisable('#send-btn', this.input.value.trim() !== '');
+        togglePanelDisable('#send-btn', this.input.innerText.trim() !== '');
     }
 
     setText(text) {
 
-        this.input.value = text || '';
+        this.input.innerText = text || '';
         this.resize();
         this.updateSendState();
 
@@ -162,7 +204,7 @@ export class ComposerView {
 
     clear() {
 
-        this.input.value = '';
+        this.input.innerHTML = '';
         this.resetHeight();
         this.updateSendState();
         this.hideMenu();
@@ -170,7 +212,7 @@ export class ComposerView {
     }
 
     getText() {
-        return this.input.value.trim();
+        return this.input.innerText.trim();
     }
 
     detectTrigger(text, cursor) {
@@ -199,37 +241,6 @@ export class ComposerView {
             start: before.lastIndexOf(symbol),
             end: cursor
         };
-    }
-
-
-    renderChips(items = []) {
-
-        if (!this.chipsContainer) return;
-
-        this.chipsContainer.innerHTML = '';
-
-        for (const item of items) {
-
-            const chip = document.createElement('button');
-
-            chip.className = `composer-chip composer-chip--${item.type || 'default'}`;
-
-            chip.innerHTML = `
-                <span>${item.label || item.name}</span>
-                <span class="remove">×</span>
-            `;
-
-            chip.addEventListener('click', () => {
-
-                document.dispatchEvent(new CustomEvent('composer:chip-remove', {
-                    detail: item
-                }));
-
-            });
-
-            this.chipsContainer.appendChild(chip);
-
-        }
     }
 
     showMenu(items = [], type) {
