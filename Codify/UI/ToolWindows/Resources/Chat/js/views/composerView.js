@@ -7,9 +7,9 @@
 import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
 
 const TRIGGERS = {
-    '/': 'command',
-    '@': 'agent',
-    '#': 'reference'
+    '/': 'commands',
+    '@': 'agents',
+    '#': 'references'
 };
 
 export class ComposerView {
@@ -27,6 +27,7 @@ export class ComposerView {
         this.selectedIndex = 0;
         this.filteredItems = []; 
         this.currentType = null;
+        this.currentTrigger = null;
 
         if (!this.input || !this.sendBtn)
             throw new Error("ComposerView: missing input elements");
@@ -70,7 +71,7 @@ export class ComposerView {
                     e.preventDefault();
 
                     // Trigger the selection of the currently highlighted menu item
-                    this.composerMenuSelect(this.currentType, this.filteredItems[this.selectedIndex]);
+                    this.composerMenuSelect(this.currentType, this.filteredItems[this.selectedIndex], this.currentTrigger);
                 } else if (!e.shiftKey) {
                     // Prevent the default behavior (new line) and send the message only if Shift is NOT held
                     e.preventDefault();
@@ -86,11 +87,11 @@ export class ComposerView {
                 this.navigateMenu(-1);
             }
             else if (e.key === 'Backspace') {
-                const handled = this.handleBackspace();
-                if (handled) {
-                    e.preventDefault();
-                    return;
-                }
+                //const handled = this.handleBackspace();
+                //if (handled) {
+                //    e.preventDefault();
+                //    return;
+                //}
             }
             // Handle actions when the Escape key is pressed
             if (e.key === 'Escape') {
@@ -104,6 +105,7 @@ export class ComposerView {
 
         this.input.addEventListener('input', () => {
 
+            this.updatePlaceholder();
             this.resize();
             this.updateSendState();
             this.notifyChange();
@@ -117,11 +119,7 @@ export class ComposerView {
 
         if (!text) return;
 
-        this.input.innerHTML = '';
-
-        this.resetHeight();
-        this.updateSendState();
-        this.hideMenu();
+        this.clear();
 
         if (this.onSend)
             this.onSend(text);
@@ -130,6 +128,17 @@ export class ComposerView {
     notifyChange() {
 
         if (!this.onChange) return;
+
+        // If the content is completely empty (e.g. after Select All + Delete)
+        if (this.getText() === '') {
+            this.clear();
+            this.onChange({
+                text: this.getText(),
+                cursor: 0,
+                trigger: null
+            });
+            return;
+        }
 
         const selection = window.getSelection();
         if (!selection.rangeCount) return;
@@ -150,7 +159,7 @@ export class ComposerView {
             const triggerRange = document.createRange();
             triggerRange.setStart(range.startContainer, range.startOffset - triggerData.length);
             triggerRange.setEnd(range.startContainer, range.startOffset);
-            triggerRange.deleteContents();
+            //triggerRange.deleteContents();
         }
 
         this.onChange({
@@ -178,11 +187,21 @@ export class ComposerView {
         chip.dataset.name = item.label || item.name || item.text
 
         // For example, if you want to add a space after the chip
-        range.deleteContents();
+        const node = range.startContainer;
+        const text = node.textContent;
+        const symbol = text.lastIndexOf(item.trigger.symbol, range.startOffset);
+        if (symbol !== -1) {
+            range.setStart(node, symbol);
+            range.deleteContents();
+        }
+
+        const spaceNode = document.createTextNode('\u00A0');
+
+        range.insertNode(spaceNode);
         range.insertNode(chip);
 
         // Set the cursor position after the chip
-        range.setStartAfter(chip);
+        range.setStartAfter(spaceNode);
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
@@ -220,6 +239,18 @@ export class ComposerView {
 
     }
 
+    updatePlaceholder() {
+        // Check if there is any actual text or any chips
+        const text = this.getText();
+        const hasChips = this.input.querySelectorAll('.chip').length > 0;
+
+        if (!text && !hasChips) {
+            this.input.classList.add('is-empty');
+        } else {
+            this.input.classList.remove('is-empty');
+        }
+    }
+
     getText() {
         return this.input.innerText.trim();
     }
@@ -237,28 +268,23 @@ export class ComposerView {
         const symbol = match[1];
         const filterText = match[2] || ''; // match[2] will be the text after symbol
 
-        const typeMap = {
-            '/': 'commands',
-            '@': 'agents',
-            '#': 'references'
-        };
-
         return {
             symbol,
-            type: typeMap[symbol],
+            type: TRIGGERS[symbol],
             filter: filterText,
             start: before.lastIndexOf(symbol),
             end: cursor
         };
     }
 
-    showMenu(items = [], type) {
+    showMenu(items = [], type , trigger) {
 
         if (!this.menu) return;
 
         this.filteredItems = items;
         this.selectedIndex = 0; // Reset to first item whenever list changes
         this.currentType = type;
+        this.currentTrigger = trigger;
 
         // mark menu with the current section type (commands/agents/references)
         this.menu.setAttribute('data-section', type);
@@ -282,7 +308,7 @@ export class ComposerView {
             `;
 
             el.addEventListener('click', () => {
-                this.composerMenuSelect(type, item);
+                this.composerMenuSelect(type, item, trigger);
             });
 
             this.menu.appendChild(el);
@@ -290,9 +316,9 @@ export class ComposerView {
         }
 
     }
-    composerMenuSelect(type, item) {
+    composerMenuSelect(type, item, trigger) {
         document.dispatchEvent(new CustomEvent('composer:menu-select', {
-            detail: { type, item }
+            detail: { type, item, trigger }
         }));
     }
 

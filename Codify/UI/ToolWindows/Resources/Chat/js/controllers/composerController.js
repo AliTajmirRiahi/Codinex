@@ -124,8 +124,8 @@ export class ComposerController {
     bindEvents() {
         // Handle menu selection from View
         document.addEventListener('composer:menu-select', (e) => {
-            const { type, item } = e.detail;
-            this.handleSelection(type, item);
+            const { type, item, trigger } = e.detail;
+            this.handleSelection(type, item, trigger);
         });
 
         // Handle chip removal
@@ -141,6 +141,12 @@ export class ComposerController {
     handleInput(context) {
         setDraftText(this.view.getPlainText());
 
+        if (this.view.getPlainText() == '') {
+            setSelectedReferences([]);
+            setSelectedCommand(null);
+            setSelectedAgent(null);
+        }
+
         if (!context.trigger) {
             this.view.hideMenu();
             setActiveTrigger(null);
@@ -148,10 +154,11 @@ export class ComposerController {
             return;
         }
 
+
         const state = getState();
         const { type, filter } = context.trigger;
 
-        if ((type === 'commands' && state.composer.selectedCommand != null) || (type === 'agents' && state.composer.selectedAgent != null)) return;
+        if (type != 'refrences' && (state.composer.selectedCommand != null || state.composer.selectedAgent != null)) return;
 
         setActiveTrigger(context.trigger);
         setActiveMenu(context.menuType);
@@ -160,7 +167,7 @@ export class ComposerController {
         const options = this.filterOptions(type, filter);
 
         if (options.length > 0) {
-            this.view.showMenu(options, type);
+            this.view.showMenu(options, type, context.trigger);
         } else {
             this.view.hideMenu();
         }
@@ -173,14 +180,15 @@ export class ComposerController {
         );
     }
 
-    handleSelection(type, item) {
+    handleSelection(type, item, trigger) {
         // Insert chip into the view (replaces the typed trigger)
         // The insertChip method we implemented in the view handles selection and DOM insertion
         this.view.insertChip({
             id: item.id,
             text: item.name || item.text,
             type: type,
-            icon: item.icon
+            icon: item.icon,
+            trigger: trigger
         });
 
 

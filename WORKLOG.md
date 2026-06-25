@@ -67,11 +67,21 @@ Use this format for every meaningful change:
 
 
 ### 2026-06-24 - Composer Trigger Behavior Fixes
-
 - **Goal**: Fix bugs related to `@`, `/`, and `#` triggers in `contenteditable`.
-- **Status**: In-Progress
-- **Issues to fix**: 
-  - Double trigger characters remaining in text.
-  - Sticky cursor after chip insertion (text entering chip's span).
-  - Proper removal of the trigger character upon selection.
-- **Action**: Implementing `removeTriggerAtCursor` and trailing-space logic in `composerView.js`.
+- **Status**: Completed
+- **Summary of changes**: 
+  - Implemented `removeTriggerAtCursor` to prevent double trigger characters.
+  - Added trailing-space logic to ensure cursor doesn't get stuck inside chip spans.
+- **Result**: Triggers now clean up correctly upon selection and cursor positioning is fluid.
+
+### 2026-06-25 - Implement menu for # trigger
+- **Goal**: Show a context menu of available file/folder references when `#` is typed.
+- **Files touched**: 
+  - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
+  - `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
+- **Summary of changes**: 
+  - Added `#` to the active trigger detection in `composerView`.
+  - Updated `composerController` to fetch and filter workspace references when `#` is active.
+- **Reason for the change**: Enable users to easily attach code context to their prompts using the `#` symbol.
+- **Result**: Typing `#` now opens a searchable list of project files.
+- **Next step**: Implement multi-provider support for the chat backend.

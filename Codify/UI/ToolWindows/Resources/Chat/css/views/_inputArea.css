@@ -79,7 +79,7 @@
 
 .composer-menu {
     position: absolute;
-    bottom: 95px;
+    bottom: 120px;
     left: 31px;
     width: 470px;
     background-color: var(--vs-background);
