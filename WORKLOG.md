@@ -76,6 +76,7 @@ Use this format for every meaningful change:
 
 ### 2026-06-25 - Implement menu for # trigger
 - **Goal**: Show a context menu of available file/folder references when `#` is typed.
+- **Status**: Completed
 - **Files touched**: 
   - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
   - `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
@@ -85,3 +86,21 @@ Use this format for every meaningful change:
 - **Reason for the change**: Enable users to easily attach code context to their prompts using the `#` symbol.
 - **Result**: Typing `#` now opens a searchable list of project files.
 - **Next step**: Implement multi-provider support for the chat backend.
+
+### 2026-06-26 - Add reference menu and implement reference bar
+- Goal: Add a dedicated reference menu UI for the `#` trigger and implement selected reference chips as a reference bar inside the composer flow.
+- Files touched:
+  - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
+  - `Codify/UI/ToolWindows/Resources/Chat/js/controllers/composerController.js`
+  - `Codify/UI/ToolWindows/Resources/Chat/js/state/appState.js`
+  - `Codify/UI/ToolWindows/Resources/Chat/css/components/_inputs.css`
+  - `WORKLOG.md`
+- Summary of changes:
+  - Added a dedicated reference menu surface positioned near the caret for `#` trigger interactions.
+  - Implemented grouped rendering for available references in the composer menu.
+  - Added centralized `selectedReferences` state for chosen project context items.
+  - Implemented reference chip rendering so selected references appear as a reference bar in the composer experience.
+  - Kept chip add/remove behavior synchronized with composer keyboard interactions and state updates.
+- Reason for the change: The composer needs a complete project-context attachment flow so users can discover references with `#` and see active context selections clearly before sending a prompt.
+- Result: The `#` flow now supports menu-based discovery and visible selected reference chips in the composer UI.
+- Next step: Connect the reference menu to backend-provided references through the bridge instead of relying on mocked data.

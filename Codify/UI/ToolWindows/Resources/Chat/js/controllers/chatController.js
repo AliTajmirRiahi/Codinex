@@ -131,6 +131,10 @@ export function initChatController(transport) {
             );
         },
 
+        setComposerReferences: () => {
+            composerController.setRefrences();
+        },
+
         handleAIResponse: (payload) => {
             setLoading(false);
 

@@ -111,14 +111,17 @@ export class ComposerController {
                     description: 'Ask questions about Visual Studio'
                 }
             ],
-            references: [
-                { id: 'ref-file1', name: '#file1.js', icon: 'file', description: 'Current file' },
-                { id: 'ref-components', name: '#components.js', icon: 'file-text', description: 'Dependency' }
-            ]
+            references: []
         };
 
         this.selectedItems = []; // Current chips in composer
         this.bindEvents();
+    }
+
+    setRefrences() {
+        var state = getState();
+
+        this.data.references = state.composerReferences;
     }
 
     bindEvents() {

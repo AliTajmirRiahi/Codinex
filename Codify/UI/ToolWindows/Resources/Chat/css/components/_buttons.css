@@ -42,7 +42,7 @@
     height: 36px;
     border: 1px solid var(--vs-border);
     border-radius: 8px;
-    background: transparent;
+    background: var(--vs-background);
     color: var(--vs-foreground);
     display: inline-flex;
     align-items: center;

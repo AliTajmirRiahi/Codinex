@@ -80,6 +80,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Core/Abstractions/IReferenceProvider.cs",
+                                                                       "name":  "IReferenceProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Abstractions/IResourceServer.cs",
                                                                        "name":  "IResourceServer.cs",
                                                                        "type":  "file"
@@ -141,6 +146,11 @@
                                                                    {
                                                                        "path":  "Codify/Core/Models/ChatResponse.cs",
                                                                        "name":  "ChatResponse.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ReferenceItem.cs",
+                                                                       "name":  "ReferenceItem.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -327,6 +337,40 @@
                                                                    {
                                                                        "path":  "Codify/Infrastructure/Logging/VsOutputLogger.cs",
                                                                        "name":  "VsOutputLogger.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
+                                                  "path":  "Codify/Infrastructure/References",
+                                                  "name":  "References",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/References/Providers",
+                                                                       "name":  "Providers",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/FileReferenceProvider.cs",
+                                                                                            "name":  "FileReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/SolutionReferenceProvider.cs",
+                                                                                            "name":  "SolutionReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/SystemReferenceProvider.cs",
+                                                                                            "name":  "SystemReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/References/ReferenceManager.cs",
+                                                                       "name":  "ReferenceManager.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -937,6 +981,278 @@
                                                                                         "name":  "Icons",
                                                                                         "type":  "folder",
                                                                                         "children":  [
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes",
+                                                                                                             "name":  "fileTypes",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/debug-console.svg",
+                                                                                                                                  "name":  "debug-console.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/default_file.svg",
+                                                                                                                                  "name":  "default_file.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_c.svg",
+                                                                                                                                  "name":  "file_type_c.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_config.svg",
+                                                                                                                                  "name":  "file_type_config.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_cpp.svg",
+                                                                                                                                  "name":  "file_type_cpp.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_csharp.svg",
+                                                                                                                                  "name":  "file_type_csharp.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_csproj.svg",
+                                                                                                                                  "name":  "file_type_csproj.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_css.svg",
+                                                                                                                                  "name":  "file_type_css.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_dll.svg",
+                                                                                                                                  "name":  "file_type_dll.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_editorconfig.svg",
+                                                                                                                                  "name":  "file_type_editorconfig.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_exe.svg",
+                                                                                                                                  "name":  "file_type_exe.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_fsharp2.svg",
+                                                                                                                                  "name":  "file_type_fsharp2.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_fsproj.svg",
+                                                                                                                                  "name":  "file_type_fsproj.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_git.svg",
+                                                                                                                                  "name":  "file_type_git.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_gitignore.svg",
+                                                                                                                                  "name":  "file_type_gitignore.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_go.svg",
+                                                                                                                                  "name":  "file_type_go.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_h.svg",
+                                                                                                                                  "name":  "file_type_h.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_hpp.svg",
+                                                                                                                                  "name":  "file_type_hpp.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_html.svg",
+                                                                                                                                  "name":  "file_type_html.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_icon.svg",
+                                                                                                                                  "name":  "file_type_icon.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_image.svg",
+                                                                                                                                  "name":  "file_type_image.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_java.svg",
+                                                                                                                                  "name":  "file_type_java.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_jpeg.svg",
+                                                                                                                                  "name":  "file_type_jpeg.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_js.svg",
+                                                                                                                                  "name":  "file_type_js.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_json.svg",
+                                                                                                                                  "name":  "file_type_json.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_less.svg",
+                                                                                                                                  "name":  "file_type_less.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_light_testcafe.svg",
+                                                                                                                                  "name":  "file_type_light_testcafe.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_markdown.svg",
+                                                                                                                                  "name":  "file_type_markdown.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_markdown2.svg",
+                                                                                                                                  "name":  "file_type_markdown2.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_php.svg",
+                                                                                                                                  "name":  "file_type_php.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_python.svg",
+                                                                                                                                  "name":  "file_type_python.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_reactjs.svg",
+                                                                                                                                  "name":  "file_type_reactjs.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_resx.svg",
+                                                                                                                                  "name":  "file_type_resx.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_rs.svg",
+                                                                                                                                  "name":  "file_type_rs.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_sass.svg",
+                                                                                                                                  "name":  "file_type_sass.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_scss.svg",
+                                                                                                                                  "name":  "file_type_scss.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_sln.svg",
+                                                                                                                                  "name":  "file_type_sln.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_sln2.svg",
+                                                                                                                                  "name":  "file_type_sln2.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_sql.svg",
+                                                                                                                                  "name":  "file_type_sql.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_svg.svg",
+                                                                                                                                  "name":  "file_type_svg.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_table.svg",
+                                                                                                                                  "name":  "file_type_table.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_text.svg",
+                                                                                                                                  "name":  "file_type_text.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_ts.svg",
+                                                                                                                                  "name":  "file_type_ts.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_vb.svg",
+                                                                                                                                  "name":  "file_type_vb.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_vbproj.svg",
+                                                                                                                                  "name":  "file_type_vbproj.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_webpack.svg",
+                                                                                                                                  "name":  "file_type_webpack.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_xaml.svg",
+                                                                                                                                  "name":  "file_type_xaml.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_xml.svg",
+                                                                                                                                  "name":  "file_type_xml.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/file_type_yaml.svg",
+                                                                                                                                  "name":  "file_type_yaml.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/folder_type_environments.svg",
+                                                                                                                                  "name":  "folder_type_environments.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/icon-build.svg",
+                                                                                                                                  "name":  "icon-build.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/icon-project.svg",
+                                                                                                                                  "name":  "icon-project.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/terminal-compact.svg",
+                                                                                                                                  "name":  "terminal-compact.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         },
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/activity.svg",
                                                                                                              "name":  "activity.svg",

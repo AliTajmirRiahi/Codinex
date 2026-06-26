@@ -19,7 +19,7 @@
     padding: 8px 10px;
     border: 1px solid var(--vs-border);
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--vs-background);
     color: var(--vs-foreground);
     min-height: 36px;
     box-sizing: border-box;
@@ -87,6 +87,8 @@
     border-radius: 8px;
     box-shadow: 0 0px 13px rgba(0, 0, 0, 0.7);
     z-index: 20;
+    max-height: 400px;
+    overflow: scroll;
 }
 
 .composer-menu-item {
@@ -131,6 +133,8 @@
     .composer-menu-item .item-desc {
         color: var(--vs-access-tool-tip-color);
         font-size: 0.9em;
+        margin-left: auto;
+        text-align: right;
     }
 
     /* Styling for the selected item via keyboard */

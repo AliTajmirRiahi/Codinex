@@ -11,6 +11,7 @@ const _state = {
     isLoading: false,
     chatList: [],
     currentChat: null,
+    composerReferences: [],
 
     composer: {
         draftText: "",
@@ -213,4 +214,14 @@ export function resetComposer() {
     };
 
     updateState({ composer });
+}
+
+export function setComposerController(refs) {
+    if (!Array.isArray(refs)) {
+        throw new Error('Composer references must be an array.');
+    }
+
+    updateState({
+        composerReferences: refs
+    });
 }

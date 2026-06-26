@@ -59,3 +59,11 @@
 ### Technical Design Rules
 - Composer Input: Must use `contenteditable` instead of `textarea` to enable dynamic token injection (Chips for @, /, #) and inline rich-text formatting. 
 - State Synchronization: Any manipulation of the composer content must update the underlying AppState (plain text representation) to ensure AiService receives valid input.
+
+## Reference Composer UI Rules
+- The `#` trigger should open a dedicated reference menu positioned near the current caret location.
+- Reference menu items may be grouped by `ReferenceKind` for better scanning in large projects.
+- Selected references must be stored in centralized state using `selectedReferences`.
+- Selected references should be rendered as visible chips in the composer experience as the reference bar.
+- Reference chip insertion and removal must stay synchronized with keyboard behavior in the `contenteditable` composer.
+- Frontend mock reference data is still temporary until bridge-backed reference retrieval is connected.
