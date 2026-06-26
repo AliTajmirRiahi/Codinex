@@ -25,7 +25,7 @@ export class ComposerView {
         this.menu = $('#composer-menu') || document.querySelector('.composer-menu');
 
         this.selectedIndex = 0;
-        this.filteredItems = []; 
+        this.filteredItems = [];
         this.currentType = null;
         this.currentTrigger = null;
 
@@ -277,7 +277,7 @@ export class ComposerView {
         };
     }
 
-    showMenu(items = [], type , trigger) {
+    showMenu(items = [], type, trigger) {
 
         if (!this.menu) return;
 
@@ -451,5 +451,44 @@ export class ComposerView {
             .replace(/\n{3,}/g, '\n\n')
             .trim();
     }
+
+    /**
+     * Renders the reference chips based on the selectedReferences array.
+     * Clears old dynamic chips and renders current ones.
+     */
+    updateReferenceChips(selectedReferences) {
+        const contextRow = document.querySelector('.input-context-row');
+        const addBtn = document.getElementById('addContextBtn');
+
+        // 1. Remove existing dynamic chips to avoid duplicates
+        // Assuming dynamic chips have a class '.dynamic-chip'
+        const existingChips = contextRow.querySelectorAll('.dynamic-chip');
+        existingChips.forEach(chip => chip.remove());
+
+        // 2. Iterate and create new chips
+        selectedReferences.forEach(ref => {
+            const chip = document.createElement('div');
+            chip.className = 'context-chip dynamic-chip';
+            chip.innerHTML = `
+                <codify-icon name="${ref.icon}"></codify-icon>
+                <span class="context-chip-text">${ref.name}</span>
+                <button class="context-chip-remove" title="Remove Context" data-id="${ref.id}">
+                    <codify-icon name="circle-x"></codify-icon>
+                </button>`;
+
+            // 3. Attach remove event
+            chip.querySelector('.context-chip-remove').addEventListener('click', (e) => {
+                e.stopPropagation();
+                //// Call the controller method to remove from state and re-render
+                //window.composerController.removeReference(ref.id);
+            });
+
+            // Insert before the add button
+            contextRow.insertBefore(chip, addBtn.nextSibling);
+        });
+    }
+
+
+
 
 }   

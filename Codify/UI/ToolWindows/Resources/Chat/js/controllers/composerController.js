@@ -145,7 +145,6 @@ export class ComposerController {
         setDraftText(this.view.getPlainText());
 
         if (this.view.getPlainText() == '') {
-            setSelectedReferences([]);
             setSelectedCommand(null);
             setSelectedAgent(null);
         }
@@ -184,24 +183,40 @@ export class ComposerController {
     }
 
     handleSelection(type, item, trigger) {
-        // Insert chip into the view (replaces the typed trigger)
-        // The insertChip method we implemented in the view handles selection and DOM insertion
-        this.view.insertChip({
-            id: item.id,
-            text: item.name || item.text,
-            type: type,
-            icon: item.icon,
-            trigger: trigger
-        });
+        // Define strategies for different item types to clean up conditional logic
+        const selectionStrategies = {
+            commands: (item) => {
+                setSelectedCommand(item);
+                return { shouldInsertChip: true };
+            },
+            agents: (item) => {
+                setSelectedAgent(item);
+                return { shouldInsertChip: true };
+            },
+            references: (item) => {
+                const newRefs = [...this.selectedItems.filter(i => i.type === 'reference'), item];
+                setSelectedReferences(newRefs);
+                return { shouldInsertChip: false, updateRefs: true };
+            }
+        };
 
+        // Execute the strategy based on type
+        const strategy = selectionStrategies[type];
+        const result = strategy ? strategy(item) : { shouldInsertChip: false };
 
-        if (type === 'commands') {
-            setSelectedCommand(item);
-        } else if (type === 'agents') {
-            setSelectedAgent(item);
-        } else if (type === 'reference') {
-            const newRefs = [...this.selectedItems.filter(i => i.type === 'reference'), item];
-            setSelectedReferences(newRefs);
+        if (result.shouldInsertChip) {
+            // Insert chip into the view
+            this.view.insertChip({
+                id: item.id,
+                text: item.name || item.text,
+                type: type,
+                icon: item.icon,
+                trigger: trigger
+            });
+        } else if (result.updateRefs) {
+            // Update reference chips specifically
+            const state = getState();
+            this.view.updateReferenceChips(state.composer.selectedReferences);
         }
 
         // Update the selected items list in the controller (for quick access)
