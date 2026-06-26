@@ -7,18 +7,20 @@ using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
 using Codify.Infrastructure.Execution;
 using Codify.Infrastructure.Factory;
+using Codify.Infrastructure.Filters;
 using Codify.Infrastructure.Logging;
+using Codify.Infrastructure.References;
+using Codify.Infrastructure.References.Providers;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Theme;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Storage;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
-using Codify.Infrastructure.Filters;
-using Microsoft.VisualStudio.Shell;
 
 namespace Codify.Infrastructure.DependencyInjection
 {
@@ -69,6 +71,12 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<SettingsManager>();
             services.AddSingleton<ProviderManager>();
             services.AddSingleton<ChatManager>();
+            services.AddSingleton<IReferenceProvider>(sp => new FileReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
+            services.AddSingleton<IReferenceProvider>(sp => new SolutionReferenceProvider(package));
+
+            // Register Manager
+            services.AddSingleton<ReferenceManager>();
 
             // Chat Logic
             services.AddSingleton<ChatSessionService>();

@@ -10,6 +10,7 @@ using Microsoft.VisualStudio;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Infrastructure.References;
 using Codify.Storage.Models;
 using Codify.Storage.Models.DTO;
 
@@ -28,6 +29,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly ChatSessionService _sessionService;
     private readonly ChatManager _chatManager;
     private readonly IErrorHandler _errorHandler;
+    private readonly ReferenceManager _referenceManager;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
@@ -39,7 +41,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ChatUseCaseFactory chatUseCaseFactory,
         ChatSessionService sessionService,
         ChatManager chatManager,
-        IErrorHandler errorHandler)
+        IErrorHandler errorHandler,
+        ReferenceManager referenceManager)
     {
         _providerManager = providerManager;
         _webViewClient = webViewClient;
@@ -49,6 +52,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _sessionService = sessionService;
         _chatManager = chatManager;
         _errorHandler = errorHandler;
+        _referenceManager = referenceManager;
     }
 
     public async Task HandleMessageAsync(string messageJson)
@@ -240,6 +244,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     ChatList = chatListTask?.Result,
                     Current = currentChatTask?.Result
                 },
+                References = await _referenceManager.GetAllReferencesAsync(),
                 Timestamp = DateTime.Now
             }
         };
