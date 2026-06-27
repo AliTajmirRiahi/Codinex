@@ -48,8 +48,13 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.25s ease, border-color 0.25s ease;
 }
+    .context-add-btn::after {
+        opacity: 0;
+        margin-left: 6px;
+        transition: opacity 0.25s ease;
+    }
 
     .context-add-btn:hover {
         background: rgba(255, 255, 255, 0.04);

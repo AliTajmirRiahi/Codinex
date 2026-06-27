@@ -9,7 +9,8 @@ import { $, togglePanelDisable, togglePanelHidden } from '../utils/dom.js';
 const TRIGGERS = {
     '/': 'commands',
     '@': 'agents',
-    '#': 'references'
+    '#': 'references',
+    '+': 'contexts'
 };
 
 export class ComposerView {
@@ -23,6 +24,7 @@ export class ComposerView {
         this.sendBtn = $('#send-btn');
         this.chipsContainer = $('#composer-chips') || document.querySelector('.composer-chips');
         this.menu = $('#composer-menu') || document.querySelector('.composer-menu');
+        this.contextBtn = $('#contextBtn') || document.querySelector('#contextBtn');
 
         this.selectedIndex = 0;
         this.filteredItems = [];
@@ -44,6 +46,10 @@ export class ComposerView {
      */
     setOnChange(callback) {
         this.onChange = typeof callback === 'function' ? callback : null;
+    }
+
+    setOnContextClicked(callback) {
+        this.onContextClicked = typeof callback === 'function' ? callback : null;
     }
 
     /**
@@ -111,6 +117,56 @@ export class ComposerView {
             this.notifyChange();
 
         });
+
+        this.contextBtn.addEventListener('click', () => {
+            var triggerData = {
+                symbol: '+',
+                type: TRIGGERS['+'],
+                filter: '',
+            };
+
+            this.onContextClicked({
+                trigger: triggerData
+            });
+        });
+
+        this.contextBtn.addEventListener('keydown', (e) => {
+
+            // Check if the composer menu is currently visible on the screen
+            const menuVisible = document.querySelector('.composer-menu') && !document.querySelector('.composer-menu').classList.contains('hidden');
+
+            // Handle actions when the Enter key is pressed
+            if (e.key === 'Enter') {
+                if (menuVisible) {
+                    // Prevent sending the message or inserting a newline when the menu is open
+                    e.preventDefault();
+
+                    // Trigger the selection of the currently highlighted menu item
+                    this.composerMenuSelect(this.currentType, this.filteredItems[this.selectedIndex], this.currentTrigger);
+                } else if (!e.shiftKey) {
+                    // Prevent the default behavior (new line) and send the message only if Shift is NOT held
+                    e.preventDefault();
+                    this.send();
+                }
+            }
+            else if (e.key === 'ArrowDown' && menuVisible) {
+                e.preventDefault();
+                this.navigateMenu(1);
+            }
+            else if (e.key === 'ArrowUp' && menuVisible) {
+                e.preventDefault();
+                this.navigateMenu(-1);
+            }
+            // Handle actions when the Escape key is pressed
+            if (e.key === 'Escape') {
+                if (menuVisible) {
+                    e.preventDefault();
+                    this.hideMenu();
+                }
+            }
+
+        });
+
     }
 
     send() {
@@ -458,7 +514,7 @@ export class ComposerView {
      */
     updateReferenceChips(selectedReferences) {
         const contextRow = document.querySelector('.input-context-row');
-        const addBtn = document.getElementById('addContextBtn');
+        const addBtn = document.getElementById('contextBtn');
 
         // 1. Remove existing dynamic chips to avoid duplicates
         // Assuming dynamic chips have a class '.dynamic-chip'
@@ -481,13 +537,38 @@ export class ComposerView {
                 e.stopPropagation();
                 //// Call the controller method to remove from state and re-render
                 //window.composerController.removeReference(ref.id);
+                document.dispatchEvent(new CustomEvent('composer:ref-remove', {
+                    detail: { id: ref.id }
+                }));
             });
 
             // Insert before the add button
             contextRow.insertBefore(chip, addBtn.nextSibling);
         });
+
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        const node = range.startContainer;
+        const text = node.textContent;
+        const symbol = text.lastIndexOf('#', range.startOffset);
+        if (symbol !== -1) {
+            range.setStart(node, symbol);
+            range.deleteContents();
+        }
+
     }
 
+    removeRefNode(refId) {
+        const chip = document.querySelector(`.context-chip-remove[data-id="${refId}"]`);
+
+        if (!chip) return;
+
+        chip.parentNode.remove();
+    }
 
 
 

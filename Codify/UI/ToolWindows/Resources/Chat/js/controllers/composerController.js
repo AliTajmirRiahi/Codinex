@@ -17,14 +17,68 @@ import {
 export class ComposerController {
     constructor(composerView) {
 
-        subscribe(() => {
-            console.log(getState());
-        })
+        //subscribe(() => {
+        //    console.log(getState());
+        //})
 
         this.view = composerView;
 
         // Mock data - In production, these come from your services
         this.data = {
+            contexts: [
+                {
+                    id: 'ref-active-document',
+                    name: 'Active Document',
+                    description: 'Attach the currently active document',
+                },
+                {
+                    id: 'ref-solution',
+                    name: 'Solution',
+                    description: 'Attach the entire solution',
+                },
+                {
+                    id: 'ref-files',
+                    name: 'Files',
+                    description: 'Browse and attach files from the solution',
+                },
+                {
+                    id: 'ref-classes',
+                    name: 'Classes',
+                    description: 'List classes from the project for selection',
+                },
+                {
+                    id: 'ref-methods',
+                    name: 'Methods',
+                    description: 'List methods from the current file or selection',
+                },
+                {
+                    id: 'ref-output-logs',
+                    name: 'Output Window logs',
+                    description: 'Include recent messages from the Output window',
+                },
+                {
+                    id: 'ref-mcp-prompts',
+                    name: 'MCP prompts',
+                    description: 'Insert saved MCP prompts as context',
+                },
+                {
+                    id: 'ref-mcp-resources',
+                    name: 'MCP resources',
+                    description: 'Attach MCP-generated resources and artifacts',
+                },
+                {
+                    id: 'ref-upload-image',
+                    name: 'Upload Image',
+                    description: 'Upload an image to include as context',
+                },
+                {
+                    id: 'ref-auto-attach',
+                    name: 'Auto-attach active document',
+                    description: 'Automatically attach the active document when composing',
+                    isToggle: true,
+                    toggled: true
+                }
+            ],
             commands: [
                 {
                     id: 'cmd1',
@@ -135,6 +189,11 @@ export class ComposerController {
         document.addEventListener('composer:chip-remove', (e) => {
             this.removeChip(e.detail);
         });
+
+        // Handle reference removal
+        document.addEventListener('composer:ref-remove', (e) => {
+            this.removeRef(e.detail);
+        });
     }
 
     /**
@@ -160,12 +219,36 @@ export class ComposerController {
         const state = getState();
         const { type, filter } = context.trigger;
 
-        if (type != 'refrences' && (state.composer.selectedCommand != null || state.composer.selectedAgent != null)) return;
+        if (type != 'references' && (state.composer.selectedCommand != null || state.composer.selectedAgent != null)) return;
 
         setActiveTrigger(context.trigger);
         setActiveMenu(context.menuType);
         setCursorContext(context);
-        
+
+        const options = this.filterOptions(type, filter);
+
+        if (options.length > 0) {
+            this.view.showMenu(options, type, context.trigger);
+        } else {
+            this.view.hideMenu();
+        }
+    }
+
+    handleContextClick(context) {
+        if (!context.trigger) {
+            this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
+            return;
+        }
+
+        const state = getState();
+        const { type, filter } = context.trigger;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+
         const options = this.filterOptions(type, filter);
 
         if (options.length > 0) {
@@ -194,7 +277,7 @@ export class ComposerController {
                 return { shouldInsertChip: true };
             },
             references: (item) => {
-                const newRefs = [...this.selectedItems.filter(i => i.type === 'reference'), item];
+                const newRefs = [...this.selectedItems.filter(i => i.type === 'references'), item];
                 setSelectedReferences(newRefs);
                 return { shouldInsertChip: false, updateRefs: true };
             }
@@ -251,5 +334,20 @@ export class ComposerController {
         // Sync draft text if necessary (or re-parse)
         // The view will handle the DOM removal, but if your draftText depends on
         // these tokens, you might need to trigger a re-parse here.
+    }
+
+    removeRef(item) {
+        // 1. Remove from local tracking array using ID (safer than name)
+        this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
+
+        // 2. Sync the specific category with AppState
+        const remainingRefs = this.selectedItems.filter(i => i.type === 'references');
+        setSelectedReferences(remainingRefs);
+
+        // Sync draft text if necessary (or re-parse)
+        // The view will handle the DOM removal, but if your draftText depends on
+        // these tokens, you might need to trigger a re-parse here.
+
+        this.view.removeRefNode(item.id);
     }
 }

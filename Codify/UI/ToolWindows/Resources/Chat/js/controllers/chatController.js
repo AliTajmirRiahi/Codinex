@@ -30,6 +30,10 @@ export function initChatController(transport) {
         composerController.handleInput(ctx);
     });
 
+    chatView.composer.setOnContextClicked((ctx) => {
+        composerController.handleContextClick(ctx);
+    });
+
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat);
 
     function onModelSelected(model) {

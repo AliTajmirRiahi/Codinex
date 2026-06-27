@@ -11,6 +11,17 @@
     gap: 8px;
     flex-wrap: wrap;
 }
+    .input-context-row:not(:has(.context-chip)) .context-add-btn:after {
+        content: attr(data-placeholder);
+        color: var(--vs-access-tool-tip-color);
+        cursor: text;
+        font-size: 12px;
+        opacity: 1;
+    }
+
+    .input-context-row:not(:has(.context-chip)) .context-add-btn {
+        width: 100px;
+    }
 
 .context-chip {
     display: inline-flex;
@@ -90,6 +101,10 @@
     max-height: 400px;
     overflow: scroll;
 }
+    .composer-menu[data-section="contexts"] {
+        bottom: 165px;
+        left: 22px;
+    }
 
 .composer-menu-item {
     display: flex;

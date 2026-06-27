@@ -82,16 +82,23 @@
             <div class="input-box-wrapper">
                 <!-- Top row: context / file selector -->
                 <div class="input-context-row">
-                    <button id="addContextBtn" class="context-add-btn" title="Add Context">
+                    <button id="contextBtn" class="context-add-btn" title="Add Context" data-placeholder=" References">
                         <codify-icon name="plus"></codify-icon>
                     </button>
-                    <div class="context-chip" id="activeDocumentChip">
+                    <!--<div id="contextInput"
+                         class="context-input content-editable is-empty"
+                         contenteditable="true"
+                         role="textbox"
+                         aria-multiline="false"
+                         data-placeholder=""></div>-->
+
+                    <!--<div class="context-chip" id="activeDocumentChip">
                         <codify-icon name="scroll-text"></codify-icon>
                         <span class="context-chip-text">Active Document</span>
                         <button class="context-chip-remove" title="Remove Context">
                             <codify-icon name="circle-x"></codify-icon>
                         </button>
-                    </div>
+                    </div>-->
                 </div>
                 <!-- Main textarea -->
                 <!--<textarea id="userInput" placeholder="Ask Codify…" rows="1"></textarea>-->
