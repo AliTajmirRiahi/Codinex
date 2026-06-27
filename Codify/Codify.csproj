@@ -189,6 +189,8 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="CodifyPackage.vsct" />
+    <Content Include="Resources\Codify.png" />
     <Content Include="Storage\Resources\gapgpt_models.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -378,6 +380,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+  <VSCTCompile Include="CodifyPackage.vsct">
+    <ResourceName>Menus.ctmenu</ResourceName>
+  </VSCTCompile>
+</ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\" />
   </ItemGroup>

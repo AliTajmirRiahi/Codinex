@@ -1,78 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-	<!--  This is the file that defines the actual layout and type of the commands.
-        It is divided in different sections (e.g. command definition, command
-        placement, ...), with each defining a specific set of properties.
-        See the comment before each section for more details about how to
-        use it. -->
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
 
-	<!--  The VSCT compiler (the tool that translates this file into the binary
-        format that VisualStudio will consume) has the ability to run a preprocessor
-        on the vsct file; this preprocessor is (usually) the C++ preprocessor, so
-        it is possible to define includes and macros with the same syntax used
-        in C++ files. Using this ability of the compiler here, we include some files
-        defining some of the constants that we will use inside the file. -->
+  <Commands package="guidCodifyPackage">
 
-	<!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
-	<Extern href="stdidcmd.h" />
+    <Buttons>
+      <Button guid="guidCodifyPackageCmdSet" id="cmdidCodifyToolWindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Codify AI</ButtonText>
+          <LocCanonicalName>.View.CodifyAI</LocCanonicalName>
+        </Strings>
+      </Button>
+    </Buttons>
 
-	<!--This header contains the command ids for the menus provided by the shell. -->
-	<Extern href="vsshlids.h" />
+    <Bitmaps>
+      <Bitmap guid="guidImages"
+              href="Resources\Codify.png"
+              usedList="bmpPic1" />
+    </Bitmaps>
 
-	<!--The Commands section is where commands, menus, and menu groups are defined.
-      This section uses a Guid to identify the package that provides the command defined inside it. -->
-	<Commands package="guidCodifyPackage">
-		<!-- Inside this section we have different sub-sections: one for the menus, another
-    for the menu groups, one for the buttons (the actual commands), one for the combos
-    and the last one for the bitmaps used. Each element is identified by a command id that
-    is a unique pair of guid and numeric identifier; the guid part of the identifier is usually
-    called "command set" and is used to group different command inside a logically related
-    group; your package should define its own command set in order to avoid collisions
-    with command ids defined by other packages. -->
-
-		<!--Buttons section. -->
-		<Buttons>
-			<Button guid="guidCodifyPackageCmdSet" id="cmdidCodifyToolWindowCommand" priority="0x0100" type="Button">
-				<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-				<Strings>
-					<ButtonText>Codify AI</ButtonText>
-					<LocCanonicalName>.View.CodifyAI</LocCanonicalName>
-				</Strings>
-			</Button>
-		</Buttons>
-	</Commands>
+  </Commands>
 
 	<KeyBindings>
-		<KeyBinding guid="guidCodifyPackageCmdSet" id="cmdidCodifyToolWindowCommand"
-		            editor="guidVSStd97" key1="C" mod1="Control" mod2="Shift" mod3="Alt" />
+		<KeyBinding guid="guidCodifyPackageCmdSet"
+            id="cmdidCodifyToolWindowCommand"
+            editor="guidVSStd97"
+            key1="Y"
+            mod1="Control Shift" />
 	</KeyBindings>
 
-	<Symbols>
-		<!-- This is the package guid. -->
-		<GuidSymbol name="guidCodifyPackage" value="{eb873b7a-8287-48ac-8a6b-646d4166809b}" />
+  <Symbols>
+    <!-- ✅ This must match PackageGuidString in CodifyPackage.cs -->
+    <GuidSymbol name="guidCodifyPackage" value="{eb873b7a-8287-48ac-8a6b-646d4166809b}" />
 
-		<!-- This is the guid used to group the menu commands together -->
-		<GuidSymbol name="guidCodifyPackageCmdSet" value="{f695020e-3b35-40ae-b466-57fc5bbe2d6c}">
-			<IDSymbol name="cmdidCodifyToolWindowCommand" value="0x0100" />
-		</GuidSymbol>
+    <!-- ✅ This is the command set GUID — keep as is -->
+    <GuidSymbol name="guidCodifyPackageCmdSet" value="{f695020e-3b35-40ae-b466-57fc5bbe2d6c}">
+      <IDSymbol name="cmdidCodifyToolWindowCommand" value="0x0100" />
+    </GuidSymbol>
 
-		<GuidSymbol name="guidImages" value="{9aec0997-06e0-4254-ad9f-243180b4acdc}">
-			<IDSymbol name="bmpPic1" value="1" />
-			<IDSymbol name="bmpPic2" value="2" />
-			<IDSymbol name="bmpPicSearch" value="3" />
-			<IDSymbol name="bmpPicX" value="4" />
-			<IDSymbol name="bmpPicArrows" value="5" />
-			<IDSymbol name="bmpPicStrikethrough" value="6" />
-		</GuidSymbol>
+    <!-- ✅ Icon GUID -->
+    <GuidSymbol name="guidImages" value="{9aec0997-06e0-4254-ad9f-243180b4acdc}">
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
 
-		<GuidSymbol value="{55cb8c35-857e-4351-bd5a-facbc790a12b}" name="guidImages1">
-			<IDSymbol name="bmpPic1" value="1" />
-			<IDSymbol name="bmpPic2" value="2" />
-			<IDSymbol name="bmpPicSearch" value="3" />
-			<IDSymbol name="bmpPicX" value="4" />
-			<IDSymbol name="bmpPicArrows" value="5" />
-			<IDSymbol name="bmpPicStrikethrough" value="6" />
-		</GuidSymbol>
-	</Symbols>
+  </Symbols>
+
 </CommandTable>

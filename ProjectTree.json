@@ -466,6 +466,16 @@
                                           ]
                          },
                          {
+                             "path":  "Codify/Resources",
+                             "name":  "Resources",
+                             "type":  "folder",
+                             "children":  {
+                                              "path":  "Codify/Resources/Codify.png",
+                                              "name":  "Codify.png",
+                                              "type":  "file"
+                                          }
+                         },
+                         {
                              "path":  "Codify/Storage",
                              "name":  "Storage",
                              "type":  "folder",

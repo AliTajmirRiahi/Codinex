@@ -84,6 +84,9 @@ namespace Codify
             // 4. UI/Command initialization on Main Thread
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
+            // Initialize UI Commands
+            await CodifyToolWindowCommand.InitializeAsync(this);
+
             // Project name can be set in a global State service or Context service later
             ProjectName = VsContextHelper.GetActiveProjectName();
 
@@ -99,8 +102,7 @@ namespace Codify
             // Since some services need to load files from disk, we do it here.
             await InitializeCoreServicesAsync();
 
-            // Initialize UI Commands
-            await CodifyToolWindowCommand.InitializeAsync(this);
+
 
             Debug.WriteLine("[Codify] DI Container & Package Initialized.");
         }
