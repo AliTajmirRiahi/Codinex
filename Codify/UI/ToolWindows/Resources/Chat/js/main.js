@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
 
-            if (data.providers.current) {
+            if (data.providers != null && data.providers.current) {
                 setProvider(data.providers.current);
                 chatController.renderCurrentProvider();
             }
 
-            if (data.chats.chatList) {
+            if (data.chats != null && data.chats.chatList) {
                 setChatList(data.chats.chatList);
                 setCurrentChat(data.chats.current)
                 chatController.renderChatList();

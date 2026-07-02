@@ -19,5 +19,5 @@ public interface IWebViewMessageRouter
     /// Sends the initial configuration, providers, and models to the WebView.
     /// This is triggered when the UI is ready. It now uses the correct message type from WebViewMessageType.
     /// </summary>
-    Task SendInitialDataAsync();
+    Task SendInitialDataAsync(bool includeChats = false);
 }

@@ -20,6 +20,7 @@ public static class WebViewMessageType
 
     // To JS
     public const string InitData = "INIT_DATA";
+    public const string OpenProviderManager = "OPEN_PROVIDER_MANAGER";
     public const string AiResponse = "AI_RESPONSE";
     public const string StreamChunk = "STREAM_CHUNK";
     public const string Error = "ERROR";

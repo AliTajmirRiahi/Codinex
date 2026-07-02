@@ -105,8 +105,10 @@ export const manageModelsView = {
 
         });
 
-        if (!currentProviderId) {
+        if (!currentProviderId || currentProviderId == -1) {
+            togglePanelHidden('#close-settings', false);
             select.selectedIndex = 0;
+            this.show()
         }
 
     },

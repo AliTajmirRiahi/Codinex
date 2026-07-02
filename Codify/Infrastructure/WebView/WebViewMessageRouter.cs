@@ -5,14 +5,15 @@ using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
 using Codify.Infrastructure.Factory;
-using Codify.Storage;
-using Microsoft.VisualStudio;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Codify.Infrastructure.References;
+using Codify.Storage;
 using Codify.Storage.Models;
 using Codify.Storage.Models.DTO;
+using Microsoft.VisualStudio;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.WebView;
 
@@ -69,11 +70,15 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             case WebViewMessageType.Ready:
                 {
-                    await _sessionService.InitializeAsync();
 
-                    // UI initialized and ready
-                    await SendInitialDataAsync();
+                    if (_providerManager.ActiveProvider != null)
+                    {
+                        await _sessionService.InitializeAsync();
+                        await SendInitialDataAsync(true);
+                        return;
+                    }
 
+                    await SendInitialDataAsync(false);
                     return;
                 }
 
@@ -219,38 +224,56 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         }
     }
 
-    public async Task SendInitialDataAsync()
+    public async Task SendInitialDataAsync(bool includeChats = false)
     {
-        // Get all configured providers and their models from ProviderManager
+        // Get all configured providers
         var providers = _providerManager.AllProviders;
 
-        var chatListTask = _chatManager.GetAllChatsAsync();
-        var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+        Task<List<ChatSessionDocument>> chatListTask = null;
+        Task<ChatSessionDocument> currentChatTask = null;
 
-        await Task.WhenAll(chatListTask, currentChatTask);
+        if (includeChats && _sessionService?.ActiveSession != null)
+        {
+            chatListTask = _chatManager.GetAllChatsAsync();
+            currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+        }
+
+        var referencesTask = _referenceManager.GetAllReferencesAsync();
+
+        // Wait for all tasks that exist
+        var tasks = new List<Task> { referencesTask };
+        if (chatListTask != null) tasks.Add(chatListTask);
+        if (currentChatTask != null) tasks.Add(currentChatTask);
+
+        await Task.WhenAll(tasks);
+
+        var payload = new
+        {
+            Providers = new
+            {
+                AvailableProviders = providers,
+                Current = _providerManager.ActiveProvider
+            },
+            Chats = includeChats
+                ? new
+                {
+                    ChatList = chatListTask?.Result,
+                    Current = currentChatTask?.Result
+                }
+                : null,
+            References = referencesTask.Result,
+            Timestamp = DateTime.Now
+        };
 
         var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.InitData,
-            Payload = new
-            {
-                Providers = new
-                {
-                    AvailableProviders = providers,
-                    Current = _providerManager.ActiveProvider
-                },
-                Chats = new
-                {
-                    ChatList = chatListTask?.Result,
-                    Current = currentChatTask?.Result
-                },
-                References = await _referenceManager.GetAllReferencesAsync(),
-                Timestamp = DateTime.Now
-            }
+            Payload = payload
         };
 
         await _webViewClient.PostMessageAsync(message);
     }
+
 
     public async Task SendSelectedProviderDataAsync()
     {
@@ -359,4 +382,5 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await SendNewChatMessageAsync(chatList, currentChat);
     }
+
 }

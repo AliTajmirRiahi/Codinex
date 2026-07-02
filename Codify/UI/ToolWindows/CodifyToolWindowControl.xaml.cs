@@ -77,9 +77,42 @@ namespace Codify.UI.ToolWindows
 
             await RegisterWebViewHandlersAsync();
 
+            await InitializeWebViewZoomAsync();
+
             WebView.CoreWebView2.Navigate(
                 "http://codify.resources/Chat/view/chat-view.html"
             );
+        }
+        // Initialize WebView settings
+        private async Task InitializeWebViewZoomAsync()
+        {
+
+            // Disable default browser zoom shortcuts (Ctrl + Plus/Minus/MouseWheel) if you want consistent scale
+            WebView.CoreWebView2.Settings.IsZoomControlEnabled = false;
+
+            // Detect screen width/height or DPI to apply scaling factor
+            double scalingFactor = CalculateZoomFactorBasedOnScreen();
+
+            // Set the WebView zoom factor (e.g., 0.9 for 90% size)
+            WebView.ZoomFactor = scalingFactor;
+        }
+
+        private double CalculateZoomFactorBasedOnScreen()
+        {
+            // Get primary screen working area width (or use SystemParameters in WPF / Screen in WinForms)
+            double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+
+            // If the monitor is smaller than full HD (1920px width), reduce the zoom factor
+            if (screenWidth < 1366)
+            {
+                return 0.55; // 85% scale for small screens
+            }
+            if (screenWidth < 1980)
+            {
+                return 0.60; // 90% scale for laptop screens
+            }
+
+            return 1.0; // 100% scale for standard desktop monitors
         }
 
         private async Task RegisterWebViewHandlersAsync()
@@ -88,8 +121,6 @@ namespace Codify.UI.ToolWindows
             // 5. Subscribe to incoming messages from JS
             WebView.CoreWebView2.WebMessageReceived += OnWebMessageReceived;
 
-            // In your WebView initialization code:
-            await WebView.EnsureCoreWebView2Async();
 
             // Catch navigation errors (404, DNS, etc.)
             WebView.CoreWebView2.NavigationCompleted += (s, e) =>
