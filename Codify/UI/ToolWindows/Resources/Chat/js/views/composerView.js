@@ -25,6 +25,7 @@ export class ComposerView {
         this.chipsContainer = $('#composer-chips') || document.querySelector('.composer-chips');
         this.menu = $('#composer-menu') || document.querySelector('.composer-menu');
         this.contextBtn = $('#contextBtn') || document.querySelector('#contextBtn');
+        this.contextInput = $('#contextInput') || document.querySelector('#contextInput');
 
         this.selectedIndex = 0;
         this.filteredItems = [];
@@ -110,12 +111,7 @@ export class ComposerView {
         });
 
         this.input.addEventListener('input', () => {
-
-            this.updatePlaceholder();
-            this.resize();
-            this.updateSendState();
-            this.notifyChange();
-
+            this.configInput();
         });
 
         this.contextBtn.addEventListener('click', () => {
@@ -167,6 +163,13 @@ export class ComposerView {
 
         });
 
+    }
+
+    configInput() {
+        this.updatePlaceholder();
+        this.resize();
+        this.updateSendState();
+        this.notifyChange();
     }
 
     send() {
@@ -514,7 +517,7 @@ export class ComposerView {
      */
     updateReferenceChips(selectedReferences) {
         const contextRow = document.querySelector('.input-context-row');
-        const addBtn = document.getElementById('contextBtn');
+        const contextInput = document.getElementById('contextInput');
 
         // 1. Remove existing dynamic chips to avoid duplicates
         // Assuming dynamic chips have a class '.dynamic-chip'
@@ -543,7 +546,7 @@ export class ComposerView {
             });
 
             // Insert before the add button
-            contextRow.insertBefore(chip, addBtn.nextSibling);
+            contextRow.insertBefore(chip, contextInput.nextSibling);
         });
 
         const selection = window.getSelection();
@@ -568,6 +571,60 @@ export class ComposerView {
         if (!chip) return;
 
         chip.parentNode.remove();
+    }
+
+    insertTextAtCursor(filter) {
+        const text = ' #' + filter;
+        const input = this.input;
+        input.focus();
+
+        const selection = window.getSelection();
+
+        // Fallback: if there is no valid selection, append using DOM nodes
+        if (!selection || selection.rangeCount === 0) {
+            input.appendChild(document.createTextNode(text));
+            this.moveCaretToEnd();
+            this.configInput();
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+
+        // Ensure insertion happens inside the composer
+        if (!input.contains(range.startContainer)) {
+            input.appendChild(document.createTextNode(text));
+            this.moveCaretToEnd();
+            this.configInput();
+            return;
+        }
+
+        range.deleteContents();
+
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+        // Move caret to the end of the inserted text
+        const newRange = document.createRange();
+        newRange.setStartAfter(textNode);
+        newRange.collapse(true);
+
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+
+        this.moveCaretToEnd();
+        this.configInput();
+    }
+
+    moveCaretToEnd() {
+        const input = this.input;
+        const selection = window.getSelection();
+        const range = document.createRange();
+
+        range.selectNodeContents(input);
+        range.collapse(false);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
 

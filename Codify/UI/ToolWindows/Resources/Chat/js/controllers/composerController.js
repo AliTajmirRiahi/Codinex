@@ -59,6 +59,9 @@ export class ComposerController {
                     id: 'ref-files',
                     name: 'Files',
                     description: 'Browse and attach files from the solution',
+                    action: () => {
+                        this.view.insertTextAtCursor('file');
+                    }
                 },
                 {
                     id: 'ref-classes',
@@ -252,6 +255,34 @@ export class ComposerController {
             this.view.hideMenu();
         }
     }
+    /**
+     * Main entry point called when input changes
+     * @param {Object} context - { text, cursor, trigger }
+     */
+    handleContextInput(context) {
+        if (!context.trigger) {
+            this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
+            return;
+        }
+
+
+        const state = getState();
+        const { type, filter } = context.trigger;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+
+        const options = this.filterOptions(type, filter);
+
+        if (options.length > 0) {
+            this.view.showMenu(options, type, context.trigger);
+        } else {
+            this.view.hideMenu();
+        }
+    }
 
     handleContextClick(context) {
         if (!context.trigger) {
@@ -280,11 +311,21 @@ export class ComposerController {
     filterOptions(type, filter) {
         const list = this.data[type] || [];
         return list.filter(item =>
-            item.name.toLowerCase().includes(filter.toLowerCase())
+            item.name.toLowerCase().includes(filter.toLowerCase()) ||
+            (item.type && item.type.toLowerCase().includes(filter.toLowerCase()))
         );
     }
 
     handleSelection(type, item, trigger) {
+
+        // Hide menu and clear menu selection state
+        this.view.hideMenu();
+
+        // Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
+
+
         // Define strategies for different item types to clean up conditional logic
         const selectionStrategies = {
             contexts: (item) => {
@@ -329,6 +370,21 @@ export class ComposerController {
         // Update the selected items list in the controller (for quick access)
         // Note: in the new model the DOM is the source of truth, but keeping this list
         // is useful to quickly send data to the AI
+        if (type != 'contexts')
+            this.selectedItems.push({ ...item, type });
+    }
+
+    handleSpecialDocument(type, item, name) {
+
+        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != name)];
+        setSelectedReferences(newRefs);
+
+        const state = getState();
+        this.view.updateReferenceChips(state.composer.selectedReferences);
+
+        // Update the selected items list in the controller (for quick access)
+        // Note: in the new model the DOM is the source of truth, but keeping this list
+        // is useful to quickly send data to the AI
         this.selectedItems.push({ ...item, type });
 
         // Hide menu and clear menu selection state
@@ -338,8 +394,7 @@ export class ComposerController {
         setActiveMenu(null);
         setActiveTrigger(null);
     }
-
-    handleSpecialDocument(type, item, name) {
+    handleFileContext(type, item, name) {
 
         const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != name)];
         setSelectedReferences(newRefs);
