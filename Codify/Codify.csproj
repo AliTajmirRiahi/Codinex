@@ -67,19 +67,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CodifyToolWindowCommand.cs" />
+    <Compile Include="Core\Abstractions\IActiveDocumentWatcher.cs" />
     <Compile Include="Core\Abstractions\IAiProvider.cs" />
     <Compile Include="Core\Abstractions\IAiRouterProvider.cs" />
     <Compile Include="Core\Abstractions\IChatSession.cs" />
     <Compile Include="Core\Abstractions\IJsonSerializer.cs" />
     <Compile Include="Core\Abstractions\IPayloadBinder.cs" />
+    <Compile Include="Core\Abstractions\IActiveReferenceProvider.cs" />
     <Compile Include="Core\Abstractions\IReferenceProvider.cs" />
     <Compile Include="Core\Abstractions\IResourceServer.cs" />
+    <Compile Include="Core\Abstractions\IStartupTask.cs" />
     <Compile Include="Core\Abstractions\IThemeService.cs" />
     <Compile Include="Core\Abstractions\IUserNotificationService.cs" />
     <Compile Include="Core\Abstractions\IWebViewClient.cs" />
     <Compile Include="Core\Abstractions\IWebViewMessageRouter.cs" />
     <Compile Include="Core\Chat\ChatTitleGenerator.cs" />
     <Compile Include="Core\Chat\SystemPrompts.cs" />
+    <Compile Include="Core\Models\ActiveDocumentChangedEventArgs.cs" />
     <Compile Include="Core\Models\Attachment.cs" />
     <Compile Include="Core\Models\ChatMessage.cs" />
     <Compile Include="Core\Models\ReferenceItem.cs" />
@@ -102,6 +106,7 @@
     <Compile Include="Infrastructure\References\Providers\SolutionReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\FileReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\ReferenceManager.cs" />
+    <Compile Include="Infrastructure\VisualStudio\VsActiveDocumentWatcher.cs" />
     <Compile Include="Infrastructure\VisualStudio\VsContextHelper.cs" />
     <Compile Include="Infrastructure\VisualStudio\VsUserNotificationService.cs" />
     <Compile Include="Storage\ChatManager.cs" />
@@ -381,10 +386,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-  <VSCTCompile Include="CodifyPackage.vsct">
-    <ResourceName>Menus.ctmenu</ResourceName>
-  </VSCTCompile>
-</ItemGroup>
+    <VSCTCompile Include="CodifyPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\" />
   </ItemGroup>

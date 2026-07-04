@@ -29,7 +29,7 @@
 		<KeyBinding guid="guidCodifyPackageCmdSet"
             id="cmdidCodifyToolWindowCommand"
             editor="guidVSStd97"
-            key1="Y"
+            key1="Z"
             mod1="Control Shift" />
 	</KeyBindings>
 

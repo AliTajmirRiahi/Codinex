@@ -12,6 +12,7 @@ const _state = {
     chatList: [],
     currentChat: null,
     composerReferences: [],
+    activeDocument: null,
 
     composer: {
         draftText: "",
@@ -223,5 +224,11 @@ export function setComposerController(refs) {
 
     updateState({
         composerReferences: refs
+    });
+}
+
+export function setActiveDocument(doc) {
+    updateState({
+        activeDocument: doc
     });
 }

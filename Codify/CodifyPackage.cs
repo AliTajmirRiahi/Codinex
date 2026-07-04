@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Codify.Core.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify
@@ -103,7 +105,6 @@ namespace Codify
             await InitializeCoreServicesAsync();
 
 
-
             Debug.WriteLine("[Codify] DI Container & Package Initialized.");
         }
         /// <summary>
@@ -162,7 +163,7 @@ namespace Codify
             }
         }
 
-        private void RegisterGlobalExceptionHandlers()
+        private static void RegisterGlobalExceptionHandlers()
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
@@ -250,7 +251,10 @@ namespace Codify
             var providers = CodifyServiceContainer.Get<ProviderManager>();
             await providers.InitializeAsync();
 
-            // Optional: ServiceContainer.Get<IProjectContext>().SetProjectName(projectName);
+            foreach (var startupTask in CodifyServiceContainer.Instance.GetServices<IStartupTask>())
+            {
+                startupTask.Start();
+            }
         }
 
         #endregion

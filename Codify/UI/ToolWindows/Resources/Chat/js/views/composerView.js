@@ -360,7 +360,7 @@ export class ComposerView {
             el.innerHTML = `
                 ${item.icon ? `<div class="item-icon"><codify-icon name="${item.icon}"></codify-icon></div>` : ''}
                 <div class="item-name">${item.label || item.name}</div>
-                ${item.description ? `<div class="item-desc">${item.description}</div>` : ''}
+                ${item.description ? `<div class="item-desc">${typeof (item.description) == 'function' ? item.description() : item.description}</div>` : ''}
             `;
 
             el.addEventListener('click', () => {

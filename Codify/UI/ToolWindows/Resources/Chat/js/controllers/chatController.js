@@ -176,13 +176,21 @@ export function initChatController(transport) {
             chatView.appendErrorMessage(payload);
         },
         navigateToChat: () => {
-            clearChatContainer();
+            chatView.clearMessages();
             chatListView.setCurrentChatName();
             var appState = getState();
             chatView.renderMessages(appState.currentChat.messages);
         },
         handleChatTitleChanged: () => {
             chatListView.setCurrentChatName();
+        },
+        handleActiveDocument: () => {
+            const state = getState();
+            const activeDocument = state.activeDocument;
+
+            if (activeDocument) {
+                composerController.handleActiveDocument('references', activeDocument);
+            }
         }
     };
 }

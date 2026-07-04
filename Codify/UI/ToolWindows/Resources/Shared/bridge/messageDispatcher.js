@@ -44,6 +44,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onNewChat) handlers.onNewChat(payload);
                 break;
 
+            case EVENTS.ACTIVE_DOCUMENT_CHANGED:
+                if (handlers.onActiveDocumentChanged) handlers.onActiveDocumentChanged(payload);
+                break;
+
             case EVENTS.ERROR:
                 // Fixed the typo from the original bridge.js (Ppayload -> payload)
                 if (handlers.onError) handlers.onError(payload.Message || payload);

@@ -29,7 +29,17 @@ export class ComposerController {
                 {
                     id: 'ref-active-document',
                     name: 'Active Document',
-                    description: 'Attach the currently active document',
+                    description: () => {
+                        var state = getState();
+                        return state.activeDocument ? `${state.activeDocument.description}` : 'No active document to attach';
+                    },
+                    action: () => {
+                        var state = getState();
+
+                        if (!state.activeDocument) return;
+
+                        this.handleActiveDocument('references', state.activeDocument);
+                    }
                 },
                 {
                     id: 'ref-solution',
@@ -268,6 +278,13 @@ export class ComposerController {
     handleSelection(type, item, trigger) {
         // Define strategies for different item types to clean up conditional logic
         const selectionStrategies = {
+            contexts: (item) => {
+                if (!item.action) return;
+
+                item.action();
+
+                return { shouldInsertChip: false, updateRefs: false };
+            },
             commands: (item) => {
                 setSelectedCommand(item);
                 return { shouldInsertChip: true };
@@ -301,6 +318,27 @@ export class ComposerController {
             const state = getState();
             this.view.updateReferenceChips(state.composer.selectedReferences);
         }
+
+        // Update the selected items list in the controller (for quick access)
+        // Note: in the new model the DOM is the source of truth, but keeping this list
+        // is useful to quickly send data to the AI
+        this.selectedItems.push({ ...item, type });
+
+        // Hide menu and clear menu selection state
+        this.view.hideMenu();
+
+        // Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
+    }
+
+    handleActiveDocument(type, item) {
+
+        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != 'Active Document')];
+        setSelectedReferences(newRefs);
+
+        const state = getState();
+        this.view.updateReferenceChips(state.composer.selectedReferences);
 
         // Update the selected items list in the controller (for quick access)
         // Note: in the new model the DOM is the source of truth, but keeping this list

@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, setLoading, setProvider, setChatList, setCurrentChat, setComposerController } from '../js/state/appState.js';
+import { getState, setLoading, setProvider, setChatList, setCurrentChat, setComposerController, setActiveDocument } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.references) {
                 setComposerController(data.references);
+                setActiveDocument(data.activeDocument);
                 chatController.setComposerReferences();
+                chatController.handleActiveDocument();
             }
 
             manageModelsController.updateUI(data.providers);
@@ -108,6 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
             chatController.renderChatList();
             chatController.navigateToChat();
         },  
+        onActiveDocumentChanged: (payload) => {
+            setActiveDocument(payload);
+            chatController.handleActiveDocument();
+        },
         onError: (error) => {
             chatController.handleAIError(error);
         }

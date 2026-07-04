@@ -55,6 +55,16 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "Codify/Core/Abstractions/IActiveDocumentWatcher.cs",
+                                                                       "name":  "IActiveDocumentWatcher.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Abstractions/IActiveReferenceProvider.cs",
+                                                                       "name":  "IActiveReferenceProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Abstractions/IAiProvider.cs",
                                                                        "name":  "IAiProvider.cs",
                                                                        "type":  "file"
@@ -87,6 +97,11 @@
                                                                    {
                                                                        "path":  "Codify/Core/Abstractions/IResourceServer.cs",
                                                                        "name":  "IResourceServer.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Abstractions/IStartupTask.cs",
+                                                                       "name":  "IStartupTask.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -133,6 +148,11 @@
                                                   "name":  "Models",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ActiveDocumentChangedEventArgs.cs",
+                                                                       "name":  "ActiveDocumentChangedEventArgs.cs",
+                                                                       "type":  "file"
+                                                                   },
                                                                    {
                                                                        "path":  "Codify/Core/Models/Attachment.cs",
                                                                        "name":  "Attachment.cs",
@@ -407,6 +427,11 @@
                                                   "name":  "VisualStudio",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/VsActiveDocumentWatcher.cs",
+                                                                       "name":  "VsActiveDocumentWatcher.cs",
+                                                                       "type":  "file"
+                                                                   },
                                                                    {
                                                                        "path":  "Codify/Infrastructure/VisualStudio/VsContextHelper.cs",
                                                                        "name":  "VsContextHelper.cs",
