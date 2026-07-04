@@ -39,9 +39,8 @@
 
 .context-add-btn {
     width: 36px;
-    height: 36px;
+    height: 32px;
     border: 1px solid var(--vs-border);
-    border-radius: 8px;
     background: var(--vs-background);
     color: var(--vs-foreground);
     display: inline-flex;

@@ -29,10 +29,8 @@
     gap: 8px;
     padding: 8px 10px;
     border: 1px solid var(--vs-border);
-    border-radius: 8px;
     background: var(--vs-background);
     color: var(--vs-foreground);
-    min-height: 36px;
     box-sizing: border-box;
 }
 

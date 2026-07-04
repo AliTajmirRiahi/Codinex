@@ -81,15 +81,14 @@
 .context-input.content-editable {
     overflow-y: auto;
     outline: none;
-    padding: 8px 12px;
+    padding: 2px 12px;
     line-height: 1.5;
     white-space: pre-wrap;
     word-break: break-word;
     user-select: text;
     min-width: 150px;
-    border: 1px solid;
-    border-radius: 10px;
-}
+    border: 1px solid var(--vs-access-tool-tip-color);
+    border-radius: 5px;
 }
 
     .composer-input.content-editable.is-empty:before {
