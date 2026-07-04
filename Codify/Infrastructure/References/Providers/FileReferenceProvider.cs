@@ -3,6 +3,7 @@ using Codify.Core.Models;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public class FileReferenceProvider : IReferenceProvider
+    public class FileReferenceProvider : IReferenceProvider, IActiveDocumentProvider
     {
         public sealed class FileIconInfo
         {
@@ -121,7 +122,7 @@ namespace Codify.Infrastructure.References.Providers
                 return items;
             }
 
-            AddActiveDocument(dte, items);
+            items.Add(await GetActiveDocumentAsync());
 
             // Traverse all projects in the solution
             foreach (var project in dte.Solution.Projects.Cast<Project>().Where(project => project != null))
@@ -132,27 +133,45 @@ namespace Codify.Infrastructure.References.Providers
             return items;
         }
 
-        private void AddActiveDocument(DTE2 dte, List<ReferenceItem> items)
+        public async Task<ReferenceItem> GetActiveDocumentAsync()
         {
-            if (dte?.ActiveDocument == null) return;
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE2;
+
+            if (dte?.ActiveDocument == null) return null;
 
             var doc = dte?.ActiveDocument;
             var filePath = doc?.FullName;
+            var fileName = Path.GetFileName(filePath);
+
+            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                return await GetActiveDocumentAsync(filePath);
+
+            return null;
+        }
+
+        public async Task<ReferenceItem> GetActiveDocumentAsync(string filePath)
+        {
             var fileName = Path.GetFileName(filePath);
             var iconForFile = GetIconForFile(fileName);
 
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
-                items.Add(new ReferenceItem
+                return new ReferenceItem
                 {
                     Id = $"file:{Guid.NewGuid()}",
-                    Name = $"Active Document ({fileName})",
-                    Description = iconForFile.Description,
-                    Type = ReferenceKind.File, 
+                    Name = $"Active Document",
+                    Description = fileName,
+                    Type = ReferenceKind.File,
                     Value = filePath,
-                    Icon = iconForFile.Icon
-                });
+                    Icon = iconForFile.Icon,
+                };
             }
+
+            await Task.CompletedTask;
+
+            return null;
         }
 
         private void ProcessProjectItems(ProjectItems projectItems, List<ReferenceItem> items)

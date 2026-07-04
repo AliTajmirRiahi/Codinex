@@ -4,6 +4,7 @@ using Codify.Core.UseCases;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
+using Codify.Infrastructure.Execution;
 using Codify.Infrastructure.Factory;
 using Codify.Infrastructure.References;
 using Codify.Storage;
@@ -24,6 +25,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 {
     private readonly IWebViewClient _webViewClient;
     private readonly IJsonSerializer _serializer;
+    private readonly ExecutionPipeline _pipeline;
     private readonly ProviderManager _providerManager;
     private readonly IPayloadBinder _payloadBinder;
     private readonly ChatUseCaseFactory _chatUseCaseFactory;
@@ -35,6 +37,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
     public WebViewMessageRouter(
+        ExecutionPipeline pipeline,
         ProviderManager providerManager,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
@@ -45,6 +48,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IErrorHandler errorHandler,
         ReferenceManager referenceManager)
     {
+        _pipeline = pipeline;
         _providerManager = providerManager;
         _webViewClient = webViewClient;
         _serializer = serializer;
@@ -54,7 +58,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _chatManager = chatManager;
         _errorHandler = errorHandler;
         _referenceManager = referenceManager;
+
+
+        RegisterEventHandlers();
     }
+
 
     public async Task HandleMessageAsync(string messageJson)
     {
@@ -170,6 +178,18 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         }
     }
 
+    private void RegisterEventHandlers()
+    {
+        _referenceManager.ActiveDocumentUpdated += (s, e) =>
+        {
+            _ = _pipeline.RunAsync(
+                () => SendActiveDocumentAsync(e.ActiveDocument),
+                nameof(SendActiveDocumentAsync));
+        };
+    }
+
+
+
     private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {
         _sendChatMessageUseCase = _chatUseCaseFactory.Create();
@@ -239,9 +259,10 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         }
 
         var referencesTask = _referenceManager.GetAllReferencesAsync();
+        var activeDocumentTask = _referenceManager.GetActiveDocumentAsync();
 
         // Wait for all tasks that exist
-        var tasks = new List<Task> { referencesTask };
+        var tasks = new List<Task> { referencesTask, activeDocumentTask };
         if (chatListTask != null) tasks.Add(chatListTask);
         if (currentChatTask != null) tasks.Add(currentChatTask);
 
@@ -261,7 +282,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     Current = currentChatTask?.Result
                 }
                 : null,
-            References = referencesTask.Result,
+            References = referencesTask?.Result,
+            ActiveDocument = activeDocumentTask?.Result,
             Timestamp = DateTime.Now
         };
 
@@ -381,6 +403,17 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         );
 
         await SendNewChatMessageAsync(chatList, currentChat);
+    }
+
+    public async Task SendActiveDocumentAsync(ReferenceItem activeDocument)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ActiveDocumentChanged,
+            Payload = activeDocument
+        };
+
+        await _webViewClient.PostMessageAsync(message);
     }
 
 }

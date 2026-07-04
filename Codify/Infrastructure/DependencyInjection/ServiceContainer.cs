@@ -71,11 +71,18 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<SettingsManager>();
             services.AddSingleton<ProviderManager>();
             services.AddSingleton<ChatManager>();
-            services.AddSingleton<IReferenceProvider>(sp => new FileReferenceProvider(package));
+            services.AddSingleton(sp => new FileReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
             services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
             services.AddSingleton<IReferenceProvider>(sp => new SolutionReferenceProvider(package));
 
+            services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
+
+
             // Register Manager
+            services.AddSingleton(sp=> new VsActiveDocumentWatcher(package));
+            services.AddSingleton<IActiveDocumentWatcher>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
+            services.AddSingleton<IStartupTask>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
             services.AddSingleton<ReferenceManager>();
 
             // Chat Logic
