@@ -189,7 +189,7 @@ export function initChatController(transport) {
             const activeDocument = state.activeDocument;
 
             if (activeDocument) {
-                composerController.handleActiveDocument('references', activeDocument);
+                composerController.handleSpecialDocument('references', activeDocument, 'Active Document');
             }
         }
     };

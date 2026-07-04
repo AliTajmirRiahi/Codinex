@@ -38,13 +38,22 @@ export class ComposerController {
 
                         if (!state.activeDocument) return;
 
-                        this.handleActiveDocument('references', state.activeDocument);
+                        this.handleSpecialDocument('references', state.activeDocument, 'Active Document');
                     }
                 },
                 {
                     id: 'ref-solution',
                     name: 'Solution',
                     description: 'Attach the entire solution',
+                    action: () => {
+                        var state = getState();
+
+                        var solutionItem = _.filter(state.composerReferences, { type: 'Solution' });
+
+                        if (!solutionItem || solutionItem.length == 0) return;
+
+                        this.handleSpecialDocument('references', solutionItem[0], 'Solution');
+                    }
                 },
                 {
                     id: 'ref-files',
@@ -280,9 +289,7 @@ export class ComposerController {
         const selectionStrategies = {
             contexts: (item) => {
                 if (!item.action) return;
-
                 item.action();
-
                 return { shouldInsertChip: false, updateRefs: false };
             },
             commands: (item) => {
@@ -332,9 +339,9 @@ export class ComposerController {
         setActiveTrigger(null);
     }
 
-    handleActiveDocument(type, item) {
+    handleSpecialDocument(type, item, name) {
 
-        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != 'Active Document')];
+        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != name)];
         setSelectedReferences(newRefs);
 
         const state = getState();

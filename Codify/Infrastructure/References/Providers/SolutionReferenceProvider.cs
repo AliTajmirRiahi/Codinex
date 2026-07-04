@@ -35,8 +35,8 @@ namespace Codify.Infrastructure.References.Providers
             items.Add(new ReferenceItem
             {
                 Id = "sol:root",
-                Name = dte.Solution.FullName.Split('\\', '/')[1], // Solution Name
-                Description = "Entire Solution",
+                Name = "Solution",
+                Description = CodifyPackage.ProjectName,
                 Type = ReferenceKind.Solution,
                 Icon = "fileTypes/file_type_sln2",
                 Value = dte.Solution.FullName
