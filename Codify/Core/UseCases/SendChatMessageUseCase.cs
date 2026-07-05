@@ -1,14 +1,9 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
-using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.Errors;
-using Codify.Storage;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Codify.Core.UseCases;
 

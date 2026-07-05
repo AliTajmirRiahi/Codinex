@@ -212,7 +212,6 @@ export class ComposerController {
             references: []
         };
 
-        this.selectedItems = []; // Current chips in composer
         this.bindEvents();
     }
 
@@ -378,7 +377,8 @@ export class ComposerController {
                 return { shouldInsertChip: true };
             },
             references: (item) => {
-                const newRefs = [...this.selectedItems.filter(i => i.type === 'references'), item];
+                const state = getState();
+                const newRefs = [...state.composer.selectedReferences, item];
                 setSelectedReferences(newRefs);
                 return { shouldInsertChip: false, updateRefs: true };
             }
@@ -403,25 +403,16 @@ export class ComposerController {
             this.view.updateReferenceChips(state.composer.selectedReferences);
         }
 
-        // Update the selected items list in the controller (for quick access)
-        // Note: in the new model the DOM is the source of truth, but keeping this list
-        // is useful to quickly send data to the AI
-        if (type != 'contexts')
-            this.selectedItems.push({ ...item, type });
     }
 
     handleSpecialDocument(type, item, name) {
+        const state = getState();
 
-        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != name)];
+        const newRefs = [item, ...state.composer.selectedReferences.filter(i => i.name != name)];
+
         setSelectedReferences(newRefs);
 
-        const state = getState();
         this.view.updateReferenceChips(state.composer.selectedReferences);
-
-        // Update the selected items list in the controller (for quick access)
-        // Note: in the new model the DOM is the source of truth, but keeping this list
-        // is useful to quickly send data to the AI
-        this.selectedItems.push({ ...item, type });
 
         // Hide menu and clear menu selection state
         this.view.hideMenu();
@@ -431,17 +422,14 @@ export class ComposerController {
         setActiveTrigger(null);
     }
     handleFileContext(type, item, name) {
+        const state = getState();
 
-        const newRefs = [item, ...this.selectedItems.filter(i => i.type === 'references' && i.name != name)];
+        const newRefs = [item, ...state.composer.selectedReferences.filter(i => i.name != name)];
+
         setSelectedReferences(newRefs);
 
-        const state = getState();
         this.view.updateReferenceChips(state.composer.selectedReferences);
 
-        // Update the selected items list in the controller (for quick access)
-        // Note: in the new model the DOM is the source of truth, but keeping this list
-        // is useful to quickly send data to the AI
-        this.selectedItems.push({ ...item, type });
 
         // Hide menu and clear menu selection state
         this.view.hideMenu();
@@ -452,32 +440,27 @@ export class ComposerController {
     }
 
     removeChip(item) {
-        // 1. Remove from local tracking array using ID (safer than name)
-        this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
 
-        // 2. Sync the specific category with AppState
+        // Sync the specific category with AppState
         if (item.type === 'agents') {
             setSelectedAgent(null);
         }
         else if (item.type === 'references') {
-            const remainingRefs = this.selectedItems.filter(i => i.type === 'references');
+            const state = getState();
+
+            const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
+
             setSelectedReferences(remainingRefs);
         }
         else if (item.type === 'commands') {
             setSelectedCommand(null);
         }
-
-        // Sync draft text if necessary (or re-parse)
-        // The view will handle the DOM removal, but if your draftText depends on
-        // these tokens, you might need to trigger a re-parse here.
     }
 
     removeRef(item) {
-        // 1. Remove from local tracking array using ID (safer than name)
-        this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
-
-        // 2. Sync the specific category with AppState
-        const remainingRefs = this.selectedItems.filter(i => i.type === 'references');
+        const state = getState();
+        // Sync the specific category with AppState
+        const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
         setSelectedReferences(remainingRefs);
 
         // Sync draft text if necessary (or re-parse)
