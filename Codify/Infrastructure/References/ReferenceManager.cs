@@ -42,7 +42,18 @@ namespace Codify.Infrastructure.References
 
         public async Task<IReadOnlyList<ReferenceItem>> GetAllReferencesAsync()
         {
-            var tasks = _providers.Select(provider => provider.GetReferencesAsync());
+            var tasks = _providers.Select(provider =>
+            {
+                try
+                {
+                    return provider.GetReferencesAsync();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            });
             var results = await Task.WhenAll(tasks);
 
             return results

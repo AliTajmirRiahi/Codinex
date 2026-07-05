@@ -14,25 +14,32 @@ namespace Codify.Core.Models
         Log = 4,
         Git = 5,
         Project = 6,
-        Folder = 7
+        Folder = 7,
+        Method = 8,
+        Class = 9,
     }
 
-    public class ReferenceItem
+    public sealed class ReferenceItem
     {
-        public string Id { get; set; }
-        // The main display name (e.g., "ExecutionPipeline.cs")
-        public string Name { get; set; }
-
-        // The sub-text or secondary info (e.g., "Execution\ExecutionPipeline.cs")
-        public string Description { get; set; }
-
-        // Categorization to help UI logic (e.g., "file", "log", "system")
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public ReferenceKind Type { get; set; }
+        public string Icon { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
 
-        // Identifier for the icon rendering (e.g., "icon-file-code")
-        public string Icon { get; set; }
+        public ReferenceMetadata Metadata { get; set; }
+    }
 
-        // The raw payload if specific action is needed (e.g., file path or ID)
-        public string Value { get; set; }
+    public sealed class ReferenceMetadata
+    {
+        public string FilePath { get; set; }
+        public string ProjectName { get; set; }
+        public string ContainerName { get; set; }
+        public string Signature { get; set; }
+        public string Body { get; set; }
+        public string Content { get; set; }
+        public int? StartLine { get; set; }
+        public int? EndLine { get; set; }
     }
 }

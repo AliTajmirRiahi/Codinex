@@ -377,6 +377,11 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/MethodReferenceProvider.cs",
+                                                                                            "name":  "MethodReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "Codify/Infrastructure/References/Providers/SolutionReferenceProvider.cs",
                                                                                             "name":  "SolutionReferenceProvider.cs",
                                                                                             "type":  "file"
@@ -1284,6 +1289,153 @@
                                                                                                                               {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Icons/fileTypes/terminal-compact.svg",
                                                                                                                                   "name":  "terminal-compact.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols",
+                                                                                                             "name":  "symbols",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-array.svg",
+                                                                                                                                  "name":  "symbol-array.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-boolean.svg",
+                                                                                                                                  "name":  "symbol-boolean.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-class.svg",
+                                                                                                                                  "name":  "symbol-class.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-color-compact.svg",
+                                                                                                                                  "name":  "symbol-color-compact.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-color.svg",
+                                                                                                                                  "name":  "symbol-color.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-constant.svg",
+                                                                                                                                  "name":  "symbol-constant.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-enum-member.svg",
+                                                                                                                                  "name":  "symbol-enum-member.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-enum.svg",
+                                                                                                                                  "name":  "symbol-enum.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-event.svg",
+                                                                                                                                  "name":  "symbol-event.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-field.svg",
+                                                                                                                                  "name":  "symbol-field.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-file.svg",
+                                                                                                                                  "name":  "symbol-file.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-interface.svg",
+                                                                                                                                  "name":  "symbol-interface.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-key.svg",
+                                                                                                                                  "name":  "symbol-key.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-keyword.svg",
+                                                                                                                                  "name":  "symbol-keyword.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-method-arrow.svg",
+                                                                                                                                  "name":  "symbol-method-arrow.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-method.svg",
+                                                                                                                                  "name":  "symbol-method.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-misc.svg",
+                                                                                                                                  "name":  "symbol-misc.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-namespace.svg",
+                                                                                                                                  "name":  "symbol-namespace.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-numeric.svg",
+                                                                                                                                  "name":  "symbol-numeric.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-operator.svg",
+                                                                                                                                  "name":  "symbol-operator.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-parameter.svg",
+                                                                                                                                  "name":  "symbol-parameter.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-property.svg",
+                                                                                                                                  "name":  "symbol-property.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-ruler.svg",
+                                                                                                                                  "name":  "symbol-ruler.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-snippet.svg",
+                                                                                                                                  "name":  "symbol-snippet.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-string.svg",
+                                                                                                                                  "name":  "symbol-string.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-structure.svg",
+                                                                                                                                  "name":  "symbol-structure.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbol-variable.svg",
+                                                                                                                                  "name":  "symbol-variable.svg",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Icons/symbols/symbolab.svg",
+                                                                                                                                  "name":  "symbolab.svg",
                                                                                                                                   "type":  "file"
                                                                                                                               }
                                                                                                                           ]

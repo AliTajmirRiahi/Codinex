@@ -49,7 +49,7 @@ namespace Codify.Infrastructure.DependencyInjection
                 return serializer;
             });
 
-            // 1. Core Services (Singletons)
+            // Core Services (Singletons)
             services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
                 typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources"));
@@ -60,14 +60,14 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<ExecutionPipeline>();
-            // Pseudo-registration example.
-            // Adjust according to your actual service container implementation.
+
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
             services.AddSingleton<IUserNotificationService>(
                 _ => new VsUserNotificationService(package));
             services.AddSingleton<IErrorHandler, ErrorHandler>();
 
-            // 2. Storage & Configuration Managers
+
+            // Storage & Configuration Managers
             services.AddSingleton<SettingsManager>();
             services.AddSingleton<ProviderManager>();
             services.AddSingleton<ChatManager>();
@@ -75,6 +75,7 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IReferenceProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
             services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
             services.AddSingleton<IReferenceProvider>(sp => new SolutionReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => new MethodReferenceProvider(package));
 
             services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
 
@@ -89,7 +90,7 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<ChatSessionService>();
             services.AddSingleton<ChatUseCaseFactory>();
 
-            // 3. AI Providers (The Plugin System)
+            // AI Providers (The Plugin System)
             // Register all available providers here
             services.AddSingleton<IAiProvider, OpenAiProvider>();
             services.AddSingleton<IAiProvider, GapGptProvider>();
@@ -97,10 +98,10 @@ namespace Codify.Infrastructure.DependencyInjection
             // Note: To add a local AI (e.g. Ollama), just create the class 
             // and add: services.AddSingleton<IAiProvider, OllamaProvider>();
 
-            // 4. Use Cases (Business Logic)
+            // Use Cases (Business Logic)
             services.AddTransient<ISendChatMessageUseCase, SendChatMessageUseCase>();
 
-            // 5. WebView Infrastructure
+            // WebView Infrastructure
             services.AddSingleton<IWebViewClient, WebViewClient>();
             services.AddSingleton<IWebViewMessageRouter, WebViewMessageRouter>();
 

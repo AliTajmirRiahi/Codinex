@@ -88,6 +88,7 @@ Use this format for every meaningful change:
 - **Next step**: Implement multi-provider support for the chat backend.
 
 ### 2026-06-26 - Add reference menu and implement reference bar
+- **Status**: Completed
 - Goal: Add a dedicated reference menu UI for the `#` trigger and implement selected reference chips as a reference bar inside the composer flow.
 - Files touched:
   - `Codify/UI/ToolWindows/Resources/Chat/js/views/composerView.js`
@@ -104,3 +105,15 @@ Use this format for every meaningful change:
 - Reason for the change: The composer needs a complete project-context attachment flow so users can discover references with `#` and see active context selections clearly before sending a prompt.
 - Result: The `#` flow now supports menu-based discovery and visible selected reference chips in the composer UI.
 - Next step: Connect the reference menu to backend-provided references through the bridge instead of relying on mocked data.
+
+## 2026-07-05 – Added MethodReferenceProvider
+
+### Summary
+Implemented new provider: `MethodReferenceProvider`, which extracts method symbols from the current solution using Roslyn and exposes them as `ReferenceItem` objects.
+
+### Files modified
+- MethodReferenceProvider.cs
+- ServiceContainer.cs
+
+### Result
+Codify can now show methods as selectable references inside Composer (e.g., #method). Fully integrated into DI.

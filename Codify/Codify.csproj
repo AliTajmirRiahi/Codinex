@@ -28,6 +28,7 @@
     <RootNamespace>Codify</RootNamespace>
     <AssemblyName>Codify</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
@@ -102,6 +103,7 @@
     <Compile Include="Infrastructure\Filters\IntentClassifier.cs" />
     <Compile Include="Infrastructure\Logging\IVsOutputLogger.cs" />
     <Compile Include="Infrastructure\Logging\VsOutputLogger.cs" />
+    <Compile Include="Infrastructure\References\Providers\MethodReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\SystemReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\SolutionReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\FileReferenceProvider.cs" />
@@ -312,6 +314,34 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\fileTypes\file_type_xaml.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\fileTypes\file_type_exe.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\fileTypes\file_type_resx.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-array.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-boolean.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-class.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-color-compact.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-color.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-constant.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-enum-member.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-enum.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-event.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-field.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-file.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-interface.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-key.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-keyword.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-method-arrow.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-method.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-misc.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-namespace.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-numeric.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-operator.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-parameter.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-property.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-ruler.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-snippet.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-string.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-structure.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-variable.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbolab.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />
@@ -367,11 +397,13 @@
     <PackageReference Include="Microsoft.ML.CpuMath">
       <Version>1.7.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" NoWarn="NU1604" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" NoWarn="NU1604" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2120" NoWarn="NU1604" />
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.3967.48</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.13.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UI\ToolWindows\CodifyToolWindowControl.xaml">
