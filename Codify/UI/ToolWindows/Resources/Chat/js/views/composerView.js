@@ -124,6 +124,8 @@ export class ComposerView {
             this.onContextClicked({
                 trigger: triggerData
             });
+
+            this.input.focus();
         });
 
         this.contextBtn.addEventListener('keydown', (e) => {
@@ -319,18 +321,31 @@ export class ComposerView {
         const before = text.slice(0, cursor);
 
         // Look for the last symbol followed by word characters at the end of the string
-        const regex = /([/@#])([a-zA-Z0-9_-]*)$/;
+        // Group 1: Symbol (/@#)
+        // Group 2: Potential type (e.g., 'folder')
+        // Group 3: Optional colon and subsequent filter text
+        const regex = /([/@#])([a-zA-Z0-9_-]*)(?::([a-zA-Z0-9_-]*))?$/;
         const match = before.match(regex);
 
         if (!match) return null;
 
         const symbol = match[1];
-        const filterText = match[2] || ''; // match[2] will be the text after symbol
+        let typeFilter = null;
+        let filterText = '';
+
+        // If there is a third group (content after colon), it means #type:filter was used
+        if (match[3] !== undefined) {
+            typeFilter = match[2]; // e.g., 'folder'
+            filterText = match[3]; // e.g., 'src'
+        } else {
+            filterText = match[2] || ''; // standard #filter syntax
+        }
 
         return {
             symbol,
             type: TRIGGERS[symbol],
             filter: filterText,
+            typeFilter: typeFilter,
             start: before.lastIndexOf(symbol),
             end: cursor
         };
@@ -538,8 +553,6 @@ export class ComposerView {
             // 3. Attach remove event
             chip.querySelector('.context-chip-remove').addEventListener('click', (e) => {
                 e.stopPropagation();
-                //// Call the controller method to remove from state and re-render
-                //window.composerController.removeReference(ref.id);
                 document.dispatchEvent(new CustomEvent('composer:ref-remove', {
                     detail: { id: ref.id }
                 }));
@@ -549,22 +562,71 @@ export class ComposerView {
             contextRow.insertBefore(chip, contextInput.nextSibling);
         });
 
-        const selection = window.getSelection();
-
-        if (!selection.rangeCount) return;
-
-        const range = selection.getRangeAt(0);
-
-        const node = range.startContainer;
-        const text = node.textContent;
-        const symbol = text.lastIndexOf('#', range.startOffset);
-        if (symbol !== -1) {
-            range.setStart(node, symbol);
-            range.deleteContents();
-        }
+        // Remove typed filter text before converting 
+        this.removeTypedFilterFromCaret();
 
     }
+    removeTypedFilterFromCaret() {
+        const input = this.input;
+        const selection = window.getSelection();
 
+        if (!selection || selection.rangeCount === 0) return;
+
+        let range = selection.getRangeAt(0);
+
+        // Ensure we're inside composer
+        if (!input.contains(range.startContainer)) return;
+
+        // If startContainer is an element node, try to resolve to a text node
+        let container = range.startContainer;
+        let offset = range.startOffset;
+
+        if (container.nodeType === Node.ELEMENT_NODE) {
+            // Find the text node before caret position
+            const child = container.childNodes[offset - 1];
+            if (child && child.nodeType === Node.TEXT_NODE) {
+                container = child;
+                offset = child.textContent.length;
+            } else {
+                // Try next/first text node
+                const walker = document.createTreeWalker(
+                    input,
+                    NodeFilter.SHOW_TEXT,
+                    null
+                );
+
+                let textNode = null;
+                while (walker.nextNode()) {
+                    textNode = walker.currentNode;
+                    if (textNode.parentNode === container) {
+                        break;
+                    }
+                }
+
+                if (!textNode) return;
+                container = textNode;
+                offset = textNode.textContent.length;
+            }
+        }
+
+        const text = container.textContent || '';
+        const hashIndex = text.lastIndexOf('#', offset);
+
+        if (hashIndex === -1) return;
+
+        // Remove from # to caret
+        const deleteRange = document.createRange();
+        deleteRange.setStart(container, hashIndex);
+        deleteRange.setEnd(container, offset);
+        deleteRange.deleteContents();
+
+        // Restore caret
+        const caretRange = document.createRange();
+        caretRange.setStart(container, hashIndex);
+        caretRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(caretRange);
+    }
     removeRefNode(refId) {
         const chip = document.querySelector(`.context-chip-remove[data-id="${refId}"]`);
 
@@ -574,13 +636,12 @@ export class ComposerView {
     }
 
     insertTextAtCursor(filter) {
-        const text = ' #' + filter;
+        const text = ' #' + filter + ':';
         const input = this.input;
         input.focus();
 
         const selection = window.getSelection();
 
-        // Fallback: if there is no valid selection, append using DOM nodes
         if (!selection || selection.rangeCount === 0) {
             input.appendChild(document.createTextNode(text));
             this.moveCaretToEnd();
@@ -590,7 +651,6 @@ export class ComposerView {
 
         const range = selection.getRangeAt(0);
 
-        // Ensure insertion happens inside the composer
         if (!input.contains(range.startContainer)) {
             input.appendChild(document.createTextNode(text));
             this.moveCaretToEnd();
@@ -603,17 +663,15 @@ export class ComposerView {
         const textNode = document.createTextNode(text);
         range.insertNode(textNode);
 
-        // Move caret to the end of the inserted text
-        const newRange = document.createRange();
-        newRange.setStartAfter(textNode);
-        newRange.collapse(true);
-
+        // Place caret after inserted node
+        range.setStartAfter(textNode);
+        range.collapse(true);
         selection.removeAllRanges();
-        selection.addRange(newRange);
+        selection.addRange(range);
 
-        this.moveCaretToEnd();
         this.configInput();
     }
+
 
     moveCaretToEnd() {
         const input = this.input;

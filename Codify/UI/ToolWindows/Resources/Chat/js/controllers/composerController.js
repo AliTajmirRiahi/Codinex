@@ -67,11 +67,33 @@ export class ComposerController {
                     id: 'ref-classes',
                     name: 'Classes',
                     description: 'List classes from the project for selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('class');
+                    }
+                },
+                {
+                    id: 'ref-interfaces',
+                    name: 'Interfaces',
+                    description: 'List interfaces from the project for selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('interface');
+                    }
                 },
                 {
                     id: 'ref-methods',
                     name: 'Methods',
                     description: 'List methods from the current file or selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('method');
+                    }
+                },
+                {
+                    id: 'ref-fields',
+                    name: 'Fields',
+                    description: 'List fields from the current file or selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('field');
+                    }
                 },
                 {
                     id: 'ref-output-logs',
@@ -285,14 +307,18 @@ export class ComposerController {
     }
 
     handleContextClick(context) {
-        if (!context.trigger) {
+        var state = getState();
+
+        if (!context.trigger || (state.composer.activeTrigger && state.composer.activeTrigger.symbol == '+')) {
             this.view.hideMenu();
             setActiveTrigger(null);
             setActiveMenu(null);
             return;
         }
 
-        const state = getState();
+        if (state.composer.activeTrigger)
+            return;
+
         const { type, filter } = context.trigger;
 
         setActiveTrigger(context.trigger);
@@ -310,10 +336,20 @@ export class ComposerController {
 
     filterOptions(type, filter) {
         const list = this.data[type] || [];
-        return list.filter(item =>
-            item.name.toLowerCase().includes(filter.toLowerCase()) ||
-            (item.type && item.type.toLowerCase().includes(filter.toLowerCase()))
-        );
+        const trigger = getState().composer.activeTrigger;
+
+        return list.filter(item => {
+            const nameMatch = item.name.toLowerCase().includes(filter.toLowerCase());
+
+            // If user typed #type:filter (e.g., #folder:), strict check the ReferenceKind
+            if (trigger && trigger.typeFilter) {
+                const kindMatch = item.type && item.type.toLowerCase() === trigger.typeFilter.toLowerCase();
+                return kindMatch && nameMatch;
+            }
+
+            // Default behavior for #filter
+            return nameMatch || (item.type && item.type.toLowerCase().includes(filter.toLowerCase()));
+        });
     }
 
     handleSelection(type, item, trigger) {

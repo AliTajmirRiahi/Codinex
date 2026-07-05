@@ -107,7 +107,7 @@ Use this format for every meaningful change:
 - Next step: Connect the reference menu to backend-provided references through the bridge instead of relying on mocked data.
 
 ## 2026-07-05 – Added MethodReferenceProvider
-
+- **Status**: Completed
 ### Summary
 Implemented new provider: `MethodReferenceProvider`, which extracts method symbols from the current solution using Roslyn and exposes them as `ReferenceItem` objects.
 
@@ -117,3 +117,4 @@ Implemented new provider: `MethodReferenceProvider`, which extracts method symbo
 
 ### Result
 Codify can now show methods as selectable references inside Composer (e.g., #method). Fully integrated into DI.
+
