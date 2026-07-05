@@ -98,7 +98,7 @@ namespace Codify.Infrastructure.References.Providers
 
 
                 // Default
-                ["default"] = new FileIconInfo { Id = "default", Icon = "fileTypes/default_file", Description = "Default File" }
+                ["default"] = new FileIconInfo { Id = "default", Icon = "fileTypes/default_file", Description = "File" }
             };
 
 
@@ -191,7 +191,7 @@ namespace Codify.Infrastructure.References.Providers
                     items.Add(new ReferenceItem
                     {
                         Id = $"file:{Guid.NewGuid()}",
-                        Name = fileName + (iconForFile.Id == "default" ? " default" : ""),
+                        Name = fileName,
                         Description = iconForFile.Description,
                         Type = ReferenceKind.File,
                         Icon = iconForFile.Icon,

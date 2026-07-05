@@ -361,7 +361,7 @@ export class ComposerView {
             el['data-index'] = index;
 
             el.innerHTML = `
-                ${item.icon ? `<div class="item-icon"><codify-icon name="${item.icon}"></codify-icon></div>` : ''}
+                ${item.icon ? `<div class="item-icon" style="${item.color ? `color: var(${item.color});` : ''}"><codify-icon name="${item.icon}"></codify-icon></div>` : ''}
                 <div class="item-name">${item.label || item.name}</div>
                 ${item.description ? `<div class="item-desc">${typeof (item.description) == 'function' ? item.description() : item.description}</div>` : ''}
             `;
@@ -529,7 +529,7 @@ export class ComposerView {
             const chip = document.createElement('div');
             chip.className = 'context-chip dynamic-chip';
             chip.innerHTML = `
-                <codify-icon name="${ref.icon}"></codify-icon>
+                ${ref.icon ? `<div class="item-icon" style="${ref.color ? `color: var(${ref.color});` : ''}"><codify-icon name="${ref.icon}"></codify-icon></div>` : ''}
                 <span class="context-chip-text">${ref.name}</span>
                 <button class="context-chip-remove" title="Remove Context" data-id="${ref.id}">
                     <codify-icon name="circle-x"></codify-icon>

@@ -17,6 +17,8 @@ namespace Codify.Core.Models
         Folder = 7,
         Method = 8,
         Class = 9,
+        Interface = 10,
+        Field = 11,
     }
 
     public sealed class ReferenceItem
@@ -26,6 +28,7 @@ namespace Codify.Core.Models
         public string Description { get; set; } = string.Empty;
         public ReferenceKind Type { get; set; }
         public string Icon { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;
 
         public ReferenceMetadata Metadata { get; set; }

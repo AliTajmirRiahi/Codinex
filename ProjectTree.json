@@ -372,8 +372,28 @@
                                                                        "type":  "folder",
                                                                        "children":  [
                                                                                         {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/ClassReferenceProvider.cs",
+                                                                                            "name":  "ClassReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/FieldReferenceProvider.cs",
+                                                                                            "name":  "FieldReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "Codify/Infrastructure/References/Providers/FileReferenceProvider.cs",
                                                                                             "name":  "FileReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/FolderReferenceProvider.cs",
+                                                                                            "name":  "FolderReferenceProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/InterfaceReferenceProvider.cs",
+                                                                                            "name":  "InterfaceReferenceProvider.cs",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
@@ -1473,6 +1493,11 @@
                                                                                                          {
                                                                                                              "path":  "Codify/UI/ToolWindows/Resources/Icons/flask-conical.svg",
                                                                                                              "name":  "flask-conical.svg",
+                                                                                                             "type":  "file"
+                                                                                                         },
+                                                                                                         {
+                                                                                                             "path":  "Codify/UI/ToolWindows/Resources/Icons/folder.svg",
+                                                                                                             "name":  "folder.svg",
                                                                                                              "type":  "file"
                                                                                                          },
                                                                                                          {

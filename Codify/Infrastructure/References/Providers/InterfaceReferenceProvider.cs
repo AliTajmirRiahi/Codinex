@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public sealed class MethodReferenceProvider : IReferenceProvider
+    public sealed class InterfaceReferenceProvider : IReferenceProvider
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public MethodReferenceProvider(IServiceProvider serviceProvider)
+        public InterfaceReferenceProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
@@ -54,8 +54,8 @@ namespace Codify.Infrastructure.References.Providers
                     }
 
                     // Await the static task without using implicit or explicit instance methods
-                    var methodItems = await ExtractMethodsFromDocumentAsync(project, document).ConfigureAwait(false);
-                    result.AddRange(methodItems);
+                    var interfaceItems = await ExtractInterfacesFromDocumentAsync(project, document).ConfigureAwait(false);
+                    result.AddRange(interfaceItems);
                 }
             }
 
@@ -76,6 +76,7 @@ namespace Codify.Infrastructure.References.Providers
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var dte = _serviceProvider.GetService(typeof(DTE)) as DTE ?? Package.GetGlobalService(typeof(DTE)) as DTE;
+
             return dte;
         }
 
@@ -83,14 +84,16 @@ namespace Codify.Infrastructure.References.Providers
         private static bool IsSupportedDocument(Microsoft.CodeAnalysis.Document document)
         {
             if (document == null)
+            {
                 return false;
+            }
 
             var filePath = document.FilePath;
             return !string.IsNullOrWhiteSpace(filePath) && filePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase);
         }
 
         // Fully static implementation ensures the generated async state machine class does not need to reference 'this'
-        private static async Task<IReadOnlyList<ReferenceItem>> ExtractMethodsFromDocumentAsync(
+        private static async Task<IReadOnlyList<ReferenceItem>> ExtractInterfacesFromDocumentAsync(
             Microsoft.CodeAnalysis.Project project,
             Microsoft.CodeAnalysis.Document document)
         {
@@ -106,32 +109,53 @@ namespace Codify.Infrastructure.References.Providers
             var sourceText = await document.GetTextAsync().ConfigureAwait(false);
             var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(false);
 
-            var methodDeclarations = syntaxRoot.DescendantNodes().OfType<MethodDeclarationSyntax>();
-            results.AddRange(methodDeclarations.Select(methodDeclaration => BuildMethodReferenceItem(project, document, sourceText, semanticModel, methodDeclaration)).Where(item => item != null));
+            var interfaceDeclarations = syntaxRoot.DescendantNodes().OfType<InterfaceDeclarationSyntax>();
+            foreach (var interfaceDeclaration in interfaceDeclarations)
+            {
+                var item = BuildInterfaceReferenceItem(
+                    project,
+                    document,
+                    sourceText,
+                    semanticModel,
+                    interfaceDeclaration);
+
+                if (item != null)
+                {
+                    results.Add(item);
+                }
+            }
 
             return results;
         }
 
-        private static ReferenceItem BuildMethodReferenceItem(
+        private static ReferenceItem BuildInterfaceReferenceItem(
             Microsoft.CodeAnalysis.Project project,
             Microsoft.CodeAnalysis.Document document,
             SourceText sourceText,
             SemanticModel semanticModel,
-            MethodDeclarationSyntax methodDeclaration)
+            InterfaceDeclarationSyntax interfaceDeclaration)
         {
-            var symbol = semanticModel?.GetDeclaredSymbol(methodDeclaration);
-            var methodName = methodDeclaration.Identifier.ValueText;
+            var symbol = semanticModel?.GetDeclaredSymbol(interfaceDeclaration);
+            var interfaceName = interfaceDeclaration.Identifier.ValueText;
+
+            var namespaceName = symbol?.ContainingNamespace?.IsGlobalNamespace == false
+                ? symbol.ContainingNamespace.ToDisplayString()
+                : GetContainingNamespaceName(interfaceDeclaration);
 
             var containingType = symbol?.ContainingType?.ToDisplayString()
-                                 ?? GetContainingTypeName(methodDeclaration);
+                                 ?? GetContainingTypeName(interfaceDeclaration);
+
+            var containerName = !string.IsNullOrWhiteSpace(containingType)
+                ? containingType
+                : namespaceName;
 
             var signature = symbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)
-                           ?? BuildFallbackSignature(methodDeclaration);
+                           ?? BuildFallbackSignature(interfaceDeclaration);
 
-            var body = GetMethodBody(methodDeclaration);
-            var fullCode = methodDeclaration.NormalizeWhitespace().ToFullString();
+            var body = GetInterfaceBody(interfaceDeclaration);
+            var fullCode = interfaceDeclaration.NormalizeWhitespace().ToFullString();
 
-            var lineSpan = sourceText.Lines.GetLinePositionSpan(methodDeclaration.Span);
+            var lineSpan = sourceText.Lines.GetLinePositionSpan(interfaceDeclaration.Span);
             var startLine = lineSpan.Start.Line + 1;
             var endLine = lineSpan.End.Line + 1;
 
@@ -142,15 +166,16 @@ namespace Codify.Infrastructure.References.Providers
             return new ReferenceItem
             {
                 Id = $"file:{Guid.NewGuid()}",
-                Name = methodName,
+                Name = interfaceName,
                 Description = fileName,
-                Type = ReferenceKind.Method,
-                Icon = "symbols/symbol-method", // Placeholder for actual icon representation
+                Type = ReferenceKind.Interface,
+                Icon = "symbols/symbol-interface", // Placeholder for actual icon representation
+                Color = "--vs-viz-surface-steel-blue-medium-color",
                 Metadata = new ReferenceMetadata()
                 {
                     FilePath = filePath,
                     ProjectName = projectName,
-                    ContainerName = containingType,
+                    ContainerName = containerName,
                     Signature = signature,
                     Body = body,
                     Content = fullCode,
@@ -160,38 +185,61 @@ namespace Codify.Infrastructure.References.Providers
             };
         }
 
-        private static string GetContainingTypeName(MethodDeclarationSyntax methodDeclaration)
+        private static string GetContainingNamespaceName(InterfaceDeclarationSyntax interfaceDeclaration)
         {
-            if (methodDeclaration.Parent is TypeDeclarationSyntax typeDeclaration)
+            var current = interfaceDeclaration.Parent;
+
+            while (current != null)
             {
-                return typeDeclaration.Identifier.ValueText;
-            }
+                if (current is BaseNamespaceDeclarationSyntax namespaceDeclaration)
+                {
+                    return namespaceDeclaration.Name.ToString();
+                }
 
-            return "UnknownType";
-        }
-
-        private static string BuildFallbackSignature(MethodDeclarationSyntax methodDeclaration)
-        {
-            var returnType = methodDeclaration.ReturnType?.ToString() ?? "void";
-            var methodName = methodDeclaration.Identifier.ValueText;
-            var parameters = string.Join(", ", methodDeclaration.ParameterList.Parameters.Select(p => p.ToString()));
-
-            return $"{returnType} {methodName}({parameters})";
-        }
-
-        private static string GetMethodBody(MethodDeclarationSyntax methodDeclaration)
-        {
-            if (methodDeclaration.Body != null)
-            {
-                return methodDeclaration.Body.NormalizeWhitespace().ToFullString();
-            }
-
-            if (methodDeclaration.ExpressionBody != null)
-            {
-                return "=> " + methodDeclaration.ExpressionBody.Expression.NormalizeWhitespace().ToFullString() + ";";
+                current = current.Parent;
             }
 
             return string.Empty;
+        }
+
+        private static string GetContainingTypeName(InterfaceDeclarationSyntax interfaceDeclaration)
+        {
+            return interfaceDeclaration.Parent is TypeDeclarationSyntax parentType ? parentType.Identifier.ValueText : string.Empty;
+        }
+
+        private static string BuildFallbackSignature(InterfaceDeclarationSyntax interfaceDeclaration)
+        {
+            var modifiers = interfaceDeclaration.Modifiers.ToString();
+            var interfaceName = interfaceDeclaration.Identifier.ValueText;
+            var typeParameters = interfaceDeclaration.TypeParameterList?.ToString() ?? string.Empty;
+            var baseList = interfaceDeclaration.BaseList?.ToString() ?? string.Empty;
+            var constraintClauses = interfaceDeclaration.ConstraintClauses.Any()
+                ? " " + string.Join(" ", interfaceDeclaration.ConstraintClauses.Select(c => c.ToString()))
+                : string.Empty;
+
+            var prefix = string.IsNullOrWhiteSpace(modifiers)
+                ? "interface"
+                : $"{modifiers} interface";
+
+            return $"{prefix} {interfaceName}{typeParameters} {baseList}{constraintClauses}".Trim();
+        }
+
+        private static string GetInterfaceBody(InterfaceDeclarationSyntax interfaceDeclaration)
+        {
+            if (interfaceDeclaration.OpenBraceToken.IsMissing || interfaceDeclaration.CloseBraceToken.IsMissing)
+            {
+                return string.Empty;
+            }
+
+            var members = interfaceDeclaration.Members;
+            if (members.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return string.Join(
+                Environment.NewLine + Environment.NewLine,
+                members.Select(member => member.NormalizeWhitespace().ToFullString()));
         }
     }
 }

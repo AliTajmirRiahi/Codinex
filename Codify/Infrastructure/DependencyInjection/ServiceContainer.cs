@@ -76,6 +76,10 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
             services.AddSingleton<IReferenceProvider>(sp => new SolutionReferenceProvider(package));
             services.AddSingleton<IReferenceProvider>(sp => new MethodReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => new ClassReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => new InterfaceReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => new FieldReferenceProvider(package));
+            services.AddSingleton<IReferenceProvider>(sp => new FolderReferenceProvider(package));
 
             services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
 

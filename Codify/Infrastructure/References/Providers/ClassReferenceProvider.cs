@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public sealed class MethodReferenceProvider : IReferenceProvider
+    public sealed class ClassReferenceProvider : IReferenceProvider
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public MethodReferenceProvider(IServiceProvider serviceProvider)
+        public ClassReferenceProvider(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
@@ -54,8 +54,8 @@ namespace Codify.Infrastructure.References.Providers
                     }
 
                     // Await the static task without using implicit or explicit instance methods
-                    var methodItems = await ExtractMethodsFromDocumentAsync(project, document).ConfigureAwait(false);
-                    result.AddRange(methodItems);
+                    var classItems = await ExtractClassesFromDocumentAsync(project, document).ConfigureAwait(false);
+                    result.AddRange(classItems);
                 }
             }
 
@@ -75,7 +75,12 @@ namespace Codify.Infrastructure.References.Providers
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE ?? Package.GetGlobalService(typeof(DTE)) as DTE;
+            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE;
+            if (dte == null)
+            {
+                dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            }
+
             return dte;
         }
 
@@ -83,14 +88,21 @@ namespace Codify.Infrastructure.References.Providers
         private static bool IsSupportedDocument(Microsoft.CodeAnalysis.Document document)
         {
             if (document == null)
+            {
                 return false;
+            }
 
             var filePath = document.FilePath;
-            return !string.IsNullOrWhiteSpace(filePath) && filePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase);
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                return false;
+            }
+
+            return filePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase);
         }
 
         // Fully static implementation ensures the generated async state machine class does not need to reference 'this'
-        private static async Task<IReadOnlyList<ReferenceItem>> ExtractMethodsFromDocumentAsync(
+        private static async Task<IReadOnlyList<ReferenceItem>> ExtractClassesFromDocumentAsync(
             Microsoft.CodeAnalysis.Project project,
             Microsoft.CodeAnalysis.Document document)
         {
@@ -106,32 +118,40 @@ namespace Codify.Infrastructure.References.Providers
             var sourceText = await document.GetTextAsync().ConfigureAwait(false);
             var semanticModel = await document.GetSemanticModelAsync().ConfigureAwait(false);
 
-            var methodDeclarations = syntaxRoot.DescendantNodes().OfType<MethodDeclarationSyntax>();
-            results.AddRange(methodDeclarations.Select(methodDeclaration => BuildMethodReferenceItem(project, document, sourceText, semanticModel, methodDeclaration)).Where(item => item != null));
+            var classDeclarations = syntaxRoot.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            results.AddRange(classDeclarations.Select(classDeclaration => BuildClassReferenceItem(project, document, sourceText, semanticModel, classDeclaration)).Where(item => item != null));
 
             return results;
         }
 
-        private static ReferenceItem BuildMethodReferenceItem(
+        private static ReferenceItem BuildClassReferenceItem(
             Microsoft.CodeAnalysis.Project project,
             Microsoft.CodeAnalysis.Document document,
             SourceText sourceText,
             SemanticModel semanticModel,
-            MethodDeclarationSyntax methodDeclaration)
+            ClassDeclarationSyntax classDeclaration)
         {
-            var symbol = semanticModel?.GetDeclaredSymbol(methodDeclaration);
-            var methodName = methodDeclaration.Identifier.ValueText;
+            var symbol = semanticModel?.GetDeclaredSymbol(classDeclaration);
+            var className = classDeclaration.Identifier.ValueText;
+
+            var namespaceName = symbol?.ContainingNamespace?.IsGlobalNamespace == false
+                ? symbol.ContainingNamespace.ToDisplayString()
+                : GetContainingNamespaceName(classDeclaration);
 
             var containingType = symbol?.ContainingType?.ToDisplayString()
-                                 ?? GetContainingTypeName(methodDeclaration);
+                                 ?? GetContainingTypeName(classDeclaration);
+
+            var containerName = !string.IsNullOrWhiteSpace(containingType)
+                ? containingType
+                : namespaceName;
 
             var signature = symbol?.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)
-                           ?? BuildFallbackSignature(methodDeclaration);
+                           ?? BuildFallbackSignature(classDeclaration);
 
-            var body = GetMethodBody(methodDeclaration);
-            var fullCode = methodDeclaration.NormalizeWhitespace().ToFullString();
+            var body = GetClassBody(classDeclaration);
+            var fullCode = classDeclaration.NormalizeWhitespace().ToFullString();
 
-            var lineSpan = sourceText.Lines.GetLinePositionSpan(methodDeclaration.Span);
+            var lineSpan = sourceText.Lines.GetLinePositionSpan(classDeclaration.Span);
             var startLine = lineSpan.Start.Line + 1;
             var endLine = lineSpan.End.Line + 1;
 
@@ -142,15 +162,16 @@ namespace Codify.Infrastructure.References.Providers
             return new ReferenceItem
             {
                 Id = $"file:{Guid.NewGuid()}",
-                Name = methodName,
+                Name = className,
                 Description = fileName,
-                Type = ReferenceKind.Method,
-                Icon = "symbols/symbol-method", // Placeholder for actual icon representation
+                Type = ReferenceKind.Class,
+                Icon = "symbols/symbol-class", // Placeholder for actual icon representation
+                Color = "--vs-viz-surface-gold-medium-color",
                 Metadata = new ReferenceMetadata()
                 {
                     FilePath = filePath,
                     ProjectName = projectName,
-                    ContainerName = containingType,
+                    ContainerName = containerName,
                     Signature = signature,
                     Body = body,
                     Content = fullCode,
@@ -160,38 +181,66 @@ namespace Codify.Infrastructure.References.Providers
             };
         }
 
-        private static string GetContainingTypeName(MethodDeclarationSyntax methodDeclaration)
+        private static string GetContainingNamespaceName(ClassDeclarationSyntax classDeclaration)
         {
-            if (methodDeclaration.Parent is TypeDeclarationSyntax typeDeclaration)
+            var current = classDeclaration.Parent;
+
+            while (current != null)
             {
-                return typeDeclaration.Identifier.ValueText;
-            }
+                if (current is BaseNamespaceDeclarationSyntax namespaceDeclaration)
+                {
+                    return namespaceDeclaration.Name.ToString();
+                }
 
-            return "UnknownType";
-        }
-
-        private static string BuildFallbackSignature(MethodDeclarationSyntax methodDeclaration)
-        {
-            var returnType = methodDeclaration.ReturnType?.ToString() ?? "void";
-            var methodName = methodDeclaration.Identifier.ValueText;
-            var parameters = string.Join(", ", methodDeclaration.ParameterList.Parameters.Select(p => p.ToString()));
-
-            return $"{returnType} {methodName}({parameters})";
-        }
-
-        private static string GetMethodBody(MethodDeclarationSyntax methodDeclaration)
-        {
-            if (methodDeclaration.Body != null)
-            {
-                return methodDeclaration.Body.NormalizeWhitespace().ToFullString();
-            }
-
-            if (methodDeclaration.ExpressionBody != null)
-            {
-                return "=> " + methodDeclaration.ExpressionBody.Expression.NormalizeWhitespace().ToFullString() + ";";
+                current = current.Parent;
             }
 
             return string.Empty;
+        }
+
+        private static string GetContainingTypeName(ClassDeclarationSyntax classDeclaration)
+        {
+            if (classDeclaration.Parent is TypeDeclarationSyntax parentType)
+            {
+                return parentType.Identifier.ValueText;
+            }
+
+            return string.Empty;
+        }
+
+        private static string BuildFallbackSignature(ClassDeclarationSyntax classDeclaration)
+        {
+            var modifiers = classDeclaration.Modifiers.ToString();
+            var className = classDeclaration.Identifier.ValueText;
+            var typeParameters = classDeclaration.TypeParameterList?.ToString() ?? string.Empty;
+            var baseList = classDeclaration.BaseList?.ToString() ?? string.Empty;
+            var constraintClauses = classDeclaration.ConstraintClauses.Any()
+                ? " " + string.Join(" ", classDeclaration.ConstraintClauses.Select(c => c.ToString()))
+                : string.Empty;
+
+            var prefix = string.IsNullOrWhiteSpace(modifiers)
+                ? "class"
+                : $"{modifiers} class";
+
+            return $"{prefix} {className}{typeParameters} {baseList}{constraintClauses}".Trim();
+        }
+
+        private static string GetClassBody(ClassDeclarationSyntax classDeclaration)
+        {
+            if (classDeclaration.OpenBraceToken.IsMissing || classDeclaration.CloseBraceToken.IsMissing)
+            {
+                return string.Empty;
+            }
+
+            var members = classDeclaration.Members;
+            if (members.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return string.Join(
+                Environment.NewLine + Environment.NewLine,
+                members.Select(member => member.NormalizeWhitespace().ToFullString()));
         }
     }
 }

@@ -103,6 +103,10 @@
     <Compile Include="Infrastructure\Filters\IntentClassifier.cs" />
     <Compile Include="Infrastructure\Logging\IVsOutputLogger.cs" />
     <Compile Include="Infrastructure\Logging\VsOutputLogger.cs" />
+    <Compile Include="Infrastructure\References\Providers\ClassReferenceProvider.cs" />
+    <Compile Include="Infrastructure\References\Providers\FieldReferenceProvider.cs" />
+    <Compile Include="Infrastructure\References\Providers\FolderReferenceProvider.cs" />
+    <Compile Include="Infrastructure\References\Providers\InterfaceReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\MethodReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\SystemReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\SolutionReferenceProvider.cs" />
@@ -342,6 +346,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-structure.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbol-variable.svg" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\symbols\symbolab.svg" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\folder.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
     <None Include="UI\ToolWindows\Resources\package.json" />
