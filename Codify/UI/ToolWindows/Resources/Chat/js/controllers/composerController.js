@@ -469,4 +469,16 @@ export class ComposerController {
 
         this.view.removeRefNode(item.id);
     }
+
+    resetComposer() {
+        setDraftText("");
+        setActiveTrigger(null);
+        setActiveMenu(null);
+        setSelectedCommand(null);
+        setSelectedAgent(null);
+        setSelectedReferences([]);
+        setCursorContext(null);
+
+        this.view.updateReferenceChips([]);
+    }
 }

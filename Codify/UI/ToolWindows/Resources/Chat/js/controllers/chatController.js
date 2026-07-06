@@ -70,12 +70,15 @@ export function initChatController(transport) {
         setLoading(true);
 
         try {
+
             var messageModel = {
                 draftText: state.composer.draftText,
                 selectedCommand: state.composer.selectedCommand,
                 selectedAgent: state.composer.selectedAgent,
                 selectedReferences: state.composer.selectedReferences,
             }
+            composerController.resetComposer();
+
             await aiService.sendMessage(messageModel, transport);
 
         } catch (error) {
