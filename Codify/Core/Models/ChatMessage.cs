@@ -18,6 +18,5 @@ namespace Codify.Core.Models
         /// Default is false to preserve current behavior.
         /// </summary>
         public bool Stream { get; set; } = true;
-
     }
 }
