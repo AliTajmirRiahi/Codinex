@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Codify.Infrastructure.References.Providers
 {
@@ -158,6 +159,18 @@ namespace Codify.Infrastructure.References.Providers
 
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
             {
+                var content = string.Empty;
+
+                try
+                {
+                    /* Read file content safely for metadata context */
+                    content = File.ReadAllText(filePath);
+                }
+                catch
+                {
+                    /* Fallback to empty string if file is locked or inaccessible */
+                }
+
                 return new ReferenceItem
                 {
                     Id = $"file:{Guid.NewGuid()}",
@@ -166,6 +179,13 @@ namespace Codify.Infrastructure.References.Providers
                     Type = ReferenceKind.File,
                     Value = filePath,
                     Icon = iconForFile.Icon,
+                    Metadata = new ReferenceMetadata
+                    {
+                        FilePath = filePath,
+                        ContainerName = Path.GetDirectoryName(filePath),
+                        ProjectName = CodifyPackage.ProjectName,
+                        Content = content,
+                    }
                 };
             }
 
@@ -188,6 +208,18 @@ namespace Codify.Infrastructure.References.Providers
                     var fileName = Path.GetFileName(filePath);
                     var iconForFile = GetIconForFile(fileName);
 
+                    var content = string.Empty;
+
+                    try
+                    {
+                        /* Read file content safely for metadata context */
+                        content = File.ReadAllText(filePath);
+                    }
+                    catch
+                    {
+                        /* Fallback to empty string if file is locked or inaccessible */
+                    }
+
                     items.Add(new ReferenceItem
                     {
                         Id = $"file:{Guid.NewGuid()}",
@@ -195,7 +227,14 @@ namespace Codify.Infrastructure.References.Providers
                         Description = iconForFile.Description,
                         Type = ReferenceKind.File,
                         Icon = iconForFile.Icon,
-                        Value = filePath
+                        Value = filePath,
+                        Metadata = new ReferenceMetadata
+                        {
+                            FilePath = filePath,
+                            ContainerName = Path.GetDirectoryName(filePath),
+                            ProjectName = item.ContainingProject?.Name ?? string.Empty,
+                            Content = content,
+                        }
                     });
                 }
 

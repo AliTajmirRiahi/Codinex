@@ -33,7 +33,7 @@ namespace Codify.Infrastructure.AiProviders
             _providerManager = providerManager;
         }
 
-        public async Task<string> SendAsync(IReadOnlyList<ChatMessage> prompts, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
+        public async Task<string> SendAsync(IReadOnlyList<ChatMessage> prompts, CancellationToken ct = default)
         {
             var model = _providerManager.ActiveModel;
             var provider = _providerManager.ActiveProvider;
@@ -41,29 +41,25 @@ namespace Codify.Infrastructure.AiProviders
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
-            // 1. Prepare the Endpoint URL
             var baseUrl = string.IsNullOrWhiteSpace(provider.BaseUrl)
                 ? "https://api.gapgpt.app/v1"
                 : provider.BaseUrl.TrimEnd('/');
 
             var requestUri = $"{baseUrl}/chat/completions";
 
-            // 2. Prepare the Payload (Exact format you requested)
             var payload = new
             {
-                model = model.Id, // e.g., "gpt-5.3-chat-latest"
-                messages = BuildMessages(prompts, attachments),
+                model = model.Id,
+                messages = BuildMessages(prompts),
                 stream = false
             };
 
             var jsonPayload = _jsonSerializer.Serialize(payload);
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            // 3. Create the Request
             using var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
             request.Content = content;
 
-            // Add Bearer Token if ApiKey exists
             if (!string.IsNullOrWhiteSpace(provider.ApiKey))
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", provider.ApiKey);
@@ -75,7 +71,6 @@ namespace Codify.Infrastructure.AiProviders
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"AI Error ({response.StatusCode}): {responseContent}");
 
-            // 5. Parse the standard OpenAI Response
             var jsonResponse = _jsonSerializer.Parse(responseContent);
             var aiMessage = jsonResponse["choices"]?[0]?["message"]?["content"]?.ToString();
 
@@ -83,10 +78,9 @@ namespace Codify.Infrastructure.AiProviders
         }
 
         public async Task SendStreamAsync(
-                IReadOnlyList<ChatMessage> prompts,
-                Func<string, Task> onChunk,
-                IEnumerable<Attachment> attachments = null,
-                CancellationToken ct = default)
+            IReadOnlyList<ChatMessage> prompts,
+            Func<string, Task> onChunk,
+            CancellationToken ct = default)
         {
             try
             {
@@ -96,18 +90,16 @@ namespace Codify.Infrastructure.AiProviders
                 if (provider == null || model == null)
                     throw new ArgumentException("Provider or Model is not configured correctly.");
 
-                // Prepare endpoint
                 var baseUrl = string.IsNullOrWhiteSpace(provider.BaseUrl)
                     ? "https://api.gapgpt.app/v1"
                     : provider.BaseUrl.TrimEnd('/');
 
                 var requestUri = $"{baseUrl}/chat/completions";
 
-                // Prepare payload with stream enabled
                 var payload = new
                 {
                     model = model.Id,
-                    messages = BuildMessages(prompts, attachments),
+                    messages = BuildMessages(prompts),
                     stream = true
                 };
 
@@ -123,7 +115,6 @@ namespace Codify.Infrastructure.AiProviders
                         new AuthenticationHeaderValue("Bearer", provider.ApiKey);
                 }
 
-                // IMPORTANT: ResponseHeadersRead enables streaming
                 using var response = await HttpClient.SendAsync(
                     request,
                     HttpCompletionOption.ResponseHeadersRead,
@@ -145,7 +136,6 @@ namespace Codify.Infrastructure.AiProviders
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
 
-                    // SSE lines start with "data:"
                     if (!line.StartsWith("data:"))
                         continue;
 
@@ -157,7 +147,6 @@ namespace Codify.Infrastructure.AiProviders
                     try
                     {
                         var obj = _jsonSerializer.Parse(json);
-
                         var chunk = obj["choices"]?[0]?["delta"]?["content"]?.ToString();
 
                         if (!string.IsNullOrEmpty(chunk))
@@ -179,54 +168,33 @@ namespace Codify.Infrastructure.AiProviders
             }
         }
 
-
-        private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts, IEnumerable<Attachment> attachments)
+        private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts)
         {
             var messages = new List<object>();
 
-            // Handle multi-modal content (Text + Attachments)
-            var contentList = new List<object> {
-                // Add strict system rule first
-                new { type = "text", role = "System", text = SystemPrompts.DeveloperOnlyAssistant } };
-
-            // Add the main user text
             foreach (var prompt in prompts)
-                contentList.Add(new { type = "text", role = prompt.Role, text = prompt.Content });
-
-            // Add attachments if any
-            if (attachments != null)
             {
-                foreach (var attachment in attachments)
+                messages.Add(new
                 {
-                    if (attachment.Type == AttachmentType.Image && attachment.RawData != null)
-                    {
-                        var base64Image = Convert.ToBase64String(attachment.RawData);
-                        contentList.Add(new
-                        {
-                            type = "image_url",
-                            image_url = new { url = $"data:image/png;base64,{base64Image}" }
-                        });
-                    }
-                    else if (!string.IsNullOrEmpty(attachment.Content))
-                    {
-                        // Add files or code snippets as text context
-                        contentList.Add(new
-                        {
-                            type = "text",
-                            text = $"\n--- {attachment.Type} ({attachment.FileName ?? "unnamed"}) ---\n{attachment.Content}"
-                        });
-                    }
-                }
+                    role = NormalizeRole(prompt.Role),
+                    content = prompt.Content
+                });
             }
 
-            // The format required: {"role": "user", "content": [...]}
-            messages.Add(new
-            {
-                role = "user",
-                content = contentList
-            });
-
             return messages;
+        }
+
+        private static string NormalizeRole(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+                return "user";
+
+            return role.Trim().ToLowerInvariant() switch
+            {
+                "assistant" => "assistant",
+                "system" => "system",
+                _ => "user"
+            };
         }
     }
 }

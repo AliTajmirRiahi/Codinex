@@ -18,12 +18,14 @@ namespace Codify.Infrastructure.AiProviders
     /// </summary>
     public class OpenAiProvider : IAiProvider
     {
-        public Task<string> SendAsync(IReadOnlyList<ChatMessage> prompt, IEnumerable<Attachment> attachments = null, CancellationToken ct = default)
+        public Task<string> SendAsync(IReadOnlyList<ChatMessage> prompt, CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task SendStreamAsync(IReadOnlyList<ChatMessage> prompt, Func<string, Task> onChunk, IEnumerable<Attachment> attachments = null,
+        public Task SendStreamAsync(
+            IReadOnlyList<ChatMessage> prompt,
+            Func<string, Task> onChunk,
             CancellationToken ct = default)
         {
             return Task.CompletedTask;

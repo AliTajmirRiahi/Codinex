@@ -1,6 +1,7 @@
 ﻿// Path: Codify\Infrastructure\DependencyInjection\ServiceContainer.cs
 
 using Codify.Core.Abstractions;
+using Codify.Core.Chat;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
@@ -80,9 +81,11 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IReferenceProvider>(sp => new InterfaceReferenceProvider(package));
             services.AddSingleton<IReferenceProvider>(sp => new FieldReferenceProvider(package));
             services.AddSingleton<IReferenceProvider>(sp => new FolderReferenceProvider(package));
-
             services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
 
+            // Reference Context Services
+            services.AddSingleton<IReferenceContextFormatter, ReferenceContextFormatter>();
+            services.AddSingleton<IChatMessageBuilder, ChatMessageBuilder>();
 
             // Register Manager
             services.AddSingleton(sp=> new VsActiveDocumentWatcher(package));

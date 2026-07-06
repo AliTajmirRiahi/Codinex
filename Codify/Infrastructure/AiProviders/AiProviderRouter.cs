@@ -29,7 +29,6 @@ namespace Codify.Infrastructure.AiProviders
 
 
         public async Task<string> SendAsync(IReadOnlyList<ChatMessage> prompt,
-            IEnumerable<Attachment> attachments = null,
             CancellationToken ct = default)
         {
             var family = _providerManager.ActiveModel?.Family;
@@ -45,7 +44,7 @@ namespace Codify.Infrastructure.AiProviders
                 throw new NotSupportedException(
                     $"No provider found for family {family}");
 
-            return await provider.AiProvider.SendAsync(prompt, attachments, ct);
+            return await provider.AiProvider.SendAsync(prompt, ct);
         }
     }
 }

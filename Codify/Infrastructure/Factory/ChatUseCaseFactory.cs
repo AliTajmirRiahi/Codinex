@@ -1,5 +1,6 @@
 ﻿using System;
 using Codify.Core.Abstractions;
+using Codify.Core.Chat;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AiProviders;
 using Codify.Infrastructure.ChatSessions;
@@ -23,17 +24,20 @@ namespace Codify.Infrastructure.Factory
         private readonly ChatSessionService _sessionService;
         private readonly IJsonSerializer _serializer;
         private readonly IErrorHandler _errorHandler;
+        private readonly IChatMessageBuilder _chatMessageBuilder;
 
         public ChatUseCaseFactory(
             ProviderManager providerManager,
             ChatSessionService sessionService,
             IJsonSerializer serializer,
-            IErrorHandler errorHandler)
+            IErrorHandler errorHandler,
+            IChatMessageBuilder chatMessageBuilder)
         {
             _providerManager = providerManager;
             _sessionService = sessionService;
             _serializer = serializer;
             _errorHandler = errorHandler;
+            _chatMessageBuilder = chatMessageBuilder;
         }
 
         public ISendChatMessageUseCase Create()
@@ -54,7 +58,7 @@ namespace Codify.Infrastructure.Factory
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 
-            return new SendChatMessageUseCase(aiProvider, session, _errorHandler);
+            return new SendChatMessageUseCase(aiProvider, session, _errorHandler, _chatMessageBuilder);
         }
     }
 

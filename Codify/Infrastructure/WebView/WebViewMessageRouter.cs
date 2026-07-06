@@ -194,7 +194,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     {
         _sendChatMessageUseCase = _chatUseCaseFactory.Create();
 
-        var payload = _payloadBinder.Bind<ChatMessage>(request.Payload);
+        var payload = _payloadBinder.Bind<ChatMessageBuildRequest>(request.Payload);
 
         //if (payload?.Stream == true)
         if (true)
