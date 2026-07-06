@@ -132,8 +132,28 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "Codify/Core/Chat/ChatMessageBuilder.cs",
+                                                                       "name":  "ChatMessageBuilder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Chat/ChatTitleGenerator.cs",
                                                                        "name":  "ChatTitleGenerator.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Chat/IChatMessageBuilder.cs",
+                                                                       "name":  "IChatMessageBuilder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Chat/IReferenceContextFormatter.cs",
+                                                                       "name":  "IReferenceContextFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Chat/ReferenceContextFormatter.cs",
+                                                                       "name":  "ReferenceContextFormatter.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -159,8 +179,33 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "Codify/Core/Models/ChatAgent.cs",
+                                                                       "name":  "ChatAgent.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ChatCommand.cs",
+                                                                       "name":  "ChatCommand.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "Codify/Core/Models/ChatMessage.cs",
                                                                        "name":  "ChatMessage.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ChatMessageBuildRequest.cs",
+                                                                       "name":  "ChatMessageBuildRequest.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ChatMessageBuildResult.cs",
+                                                                       "name":  "ChatMessageBuildResult.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Core/Models/ChatMessageRequestContext.cs",
+                                                                       "name":  "ChatMessageRequestContext.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {

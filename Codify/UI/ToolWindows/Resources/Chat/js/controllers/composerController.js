@@ -412,7 +412,7 @@ export class ComposerController {
 
         setSelectedReferences(newRefs);
 
-        this.view.updateReferenceChips(state.composer.selectedReferences);
+        this.view.updateReferenceChips(newRefs);
 
         // Hide menu and clear menu selection state
         this.view.hideMenu();
@@ -421,6 +421,7 @@ export class ComposerController {
         setActiveMenu(null);
         setActiveTrigger(null);
     }
+
     handleFileContext(type, item, name) {
         const state = getState();
 
@@ -428,8 +429,7 @@ export class ComposerController {
 
         setSelectedReferences(newRefs);
 
-        this.view.updateReferenceChips(state.composer.selectedReferences);
-
+        this.view.updateReferenceChips(newRefs);
 
         // Hide menu and clear menu selection state
         this.view.hideMenu();

@@ -175,15 +175,10 @@ export class ComposerView {
     }
 
     send() {
-
-        const text = this.input.innerText.trim();
-
-        if (!text) return;
-
         this.clear();
 
         if (this.onSend)
-            this.onSend(text);
+            this.onSend();
     }
 
     notifyChange() {

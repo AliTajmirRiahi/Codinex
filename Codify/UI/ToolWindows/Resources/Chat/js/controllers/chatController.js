@@ -55,23 +55,28 @@ export function initChatController(transport) {
     /**
      * Main send handler
      */
-    async function handleSend(text) {
-        if (!text) return;
-
+    async function handleSend() {
         const state = getState();
+
+        if (state.composer.draftText == '') return;
 
         // Prevent sending while AI is generating
         if (state.isLoading) return;
 
         // Show user message immediately
-        chatView.appendMessage(text, 'user');
+        chatView.appendMessage(state.composer.draftText, 'user');
 
         // Set loading state
         setLoading(true);
 
         try {
-            // Send message to AI
-            await aiService.sendMessage(text, transport);
+            var messageModel = {
+                draftText: state.composer.draftText,
+                selectedCommand: state.composer.selectedCommand,
+                selectedAgent: state.composer.selectedAgent,
+                selectedReferences: state.composer.selectedReferences,
+            }
+            await aiService.sendMessage(messageModel, transport);
 
         } catch (error) {
             setLoading(false);
@@ -79,7 +84,6 @@ export function initChatController(transport) {
             reportError(error, "chatController");
 
             chatView.appendErrorMessage(STATICS.GENERIC_CHAT_ERROR);
-
         }
     }
 

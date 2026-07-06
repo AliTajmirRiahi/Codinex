@@ -12,10 +12,7 @@ export const aiService = {
      * @param {object} transport - The webViewTransport instance
      */
     sendMessage(prompt, transport) {
-        transport.send(EVENTS.SEND_MESSAGE, {
-            content: prompt,
-            timestamp: new Date().toISOString()
-        });
+        transport.send(EVENTS.SEND_MESSAGE, prompt);
     },
 
     /**

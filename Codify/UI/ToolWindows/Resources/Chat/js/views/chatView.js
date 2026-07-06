@@ -20,7 +20,7 @@ export const chatView = {
         this.initializeModelDropdown(onModelSelected);
 
         this.composer = new ComposerView({
-            onSend: (text) => this.handleSendMessage(text),
+            onSend: () => this.handleSendMessage(),
         });
 
         this.bindLoadingState();
@@ -154,9 +154,9 @@ export const chatView = {
         container.scrollTop = container.scrollHeight;
     },
 
-    handleSendMessage(text) {
+    handleSendMessage() {
         togglePanelHidden('#chat-welcome', false);
-        this.handleSend(text);
+        this.handleSend();
     },
     renderMessages(messages) {
         togglePanelHidden('#chat-welcome', false);
