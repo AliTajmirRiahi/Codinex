@@ -1,4 +1,5 @@
 ﻿using Codify.Core.Abstractions;
+using Codify.Core.Chat;
 using Codify.Core.Models;
 using Codify.Infrastructure.Errors;
 using System;
@@ -16,31 +17,39 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
     private readonly IAiProvider _aiProvider;
     private readonly IChatSession _chatSession;
     private readonly IErrorHandler _errorHandler;
+    private readonly IChatMessageBuilder _chatMessageBuilder;
 
     // We depend on the Interface (Abstraction), not the concrete implementation.
     // This makes it easy to swap GapGPT with Local AI or OpenAI.
-    public SendChatMessageUseCase(IAiProvider aiProvider, IChatSession chatSession, IErrorHandler errorHandler)
+    public SendChatMessageUseCase(
+        IAiProvider aiProvider,
+        IChatSession chatSession,
+        IErrorHandler errorHandler,
+        IChatMessageBuilder chatMessageBuilder)
     {
         _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
         _chatSession = chatSession;
         _errorHandler = errorHandler;
+        _chatMessageBuilder = chatMessageBuilder;
     }
 
-    public async Task<ChatResponse> ExecuteAsync(ChatMessage message, bool includeSelectedCode)
+    public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode)
     {
-        if (message == null)
-            throw new InvalidOperationException("Message cannot be empty.");
+        if (request == null)
+            throw new InvalidOperationException("Request cannot be empty.");
 
         try
         {
             // Add user message to session
-            message = _chatSession.AddUserMessage(message.Content);
+            _chatSession.AddUserMessage(request.DraftText);
 
             // Get last 10 messages for context
-            var context = _chatSession.GetRecentMessages(10);
+            request.ConversationHistory = _chatSession.GetRecentMessages(10);
+
+            var buildResult = _chatMessageBuilder.Build(request);
 
             // Send to provider
-            var aiResult = await _aiProvider.SendAsync(context);
+            var aiResult = await _aiProvider.SendAsync(buildResult.Messages);
 
             // Save assistant message
             _chatSession.AddAssistantMessage(aiResult);
@@ -62,7 +71,7 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
             // Log full error details in Visual Studio Output.
             _errorHandler.Handle(ex, nameof(SendChatMessageUseCase), new
             {
-                message.Content,
+                request,
                 includeSelectedCode
             });
 
@@ -72,27 +81,29 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
         }
     }
 
-    public async Task ExecuteStreamingAsync(ChatMessage message, bool includeSelectedCode, Func<ChatResponse, Task> onMessage)
+    public async Task ExecuteStreamingAsync(ChatMessageBuildRequest request, bool includeSelectedCode, Func<ChatResponse, Task> onMessage)
     {
-        if (message == null)
-            throw new InvalidOperationException("Message cannot be empty.");
+        if (request == null)
+            throw new InvalidOperationException("Request cannot be empty.");
 
         if (onMessage == null)
             throw new ArgumentNullException(nameof(onMessage));
 
         try
         {
-            // Add user message to the session.
-            message = _chatSession.AddUserMessage(message.Content);
+            // Add user message to session
+            _chatSession.AddUserMessage(request.DraftText);
 
-            // Build context for the provider.
-            var context = _chatSession.GetRecentMessages(10);
+            // Get last 10 messages for context
+            request.ConversationHistory = _chatSession.GetRecentMessages(10);
+
+            var buildResult = _chatMessageBuilder.Build(request);
 
             // Accumulate the full assistant text while chunks arrive.
             var fullText = string.Empty;
 
             await _aiProvider.SendStreamAsync(
-                context,
+                buildResult.Messages,
                 async chunk =>
                 {
                     if (string.IsNullOrEmpty(chunk))
@@ -137,7 +148,7 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
         {
             _errorHandler.Handle(ex, nameof(SendChatMessageUseCase), new
             {
-                message.Content,
+                request,
                 includeSelectedCode,
                 Stream = true
             });
