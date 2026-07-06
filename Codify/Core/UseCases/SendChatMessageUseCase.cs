@@ -40,13 +40,14 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
 
         try
         {
-            // Add user message to session
-            _chatSession.AddUserMessage(request.DraftText);
-
             // Get last 10 messages for context
             request.ConversationHistory = _chatSession.GetRecentMessages(10);
 
             var buildResult = _chatMessageBuilder.Build(request);
+
+            // Add user message to session
+            _chatSession.AddUserMessage(request.DraftText, buildResult.Context);
+
 
             // Send to provider
             var aiResult = await _aiProvider.SendAsync(buildResult.Messages);
@@ -91,13 +92,13 @@ public sealed class SendChatMessageUseCase : ISendChatMessageUseCase
 
         try
         {
-            // Add user message to session
-            _chatSession.AddUserMessage(request.DraftText);
-
             // Get last 10 messages for context
             request.ConversationHistory = _chatSession.GetRecentMessages(10);
 
             var buildResult = _chatMessageBuilder.Build(request);
+
+            // Add user message to session
+            _chatSession.AddUserMessage(request.DraftText, buildResult.Context);
 
             // Accumulate the full assistant text while chunks arrive.
             var fullText = string.Empty;

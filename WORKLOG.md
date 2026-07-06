@@ -118,3 +118,12 @@ Implemented new provider: `MethodReferenceProvider`, which extracts method symbo
 ### Result
 Codify can now show methods as selectable references inside Composer (e.g., #method). Fully integrated into DI.
 
+## 2026-07-06 — Decoupled Message Building from AI Providers
+- **Status**: Completed
+### Summary
+    Created ChatMessageBuilder to handle the assembly of system prompts, agent instructions, and user context.
+    Introduced IReferenceContextFormatter to standardize how different ReferenceKind types (Files, Methods, Classes, etc.) are presented to the AI.
+    Refactored GapGptProvider to focus solely on serialization and transport, removing any prompt injection logic.
+    Updated SendChatMessageUseCase to use the new builder pipeline before dispatching requests to providers.
+##Result:
+ The system is now provider-agnostic, allowing local or cloud AI agents to receive structured, formatted context regardless of the underlying API.

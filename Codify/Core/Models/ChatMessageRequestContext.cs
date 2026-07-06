@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.Utilities;
 
 namespace Codify.Core.Models
@@ -16,6 +17,20 @@ namespace Codify.Core.Models
 
         public ChatAgent SelectedAgent { get; set; }
 
-        public IReadOnlyList<ReferenceItem> SelectedReferences { get; set; } = new ArrayBuilder<ReferenceItem>();
+        public IReadOnlyList<ReferenceItem> SelectedReferences { get; set; }
+
+        public static ChatMessageRequestContext CreateChatMessageRequestContextWithoutMetaData(ChatMessageRequestContext context)
+        {
+            var selectedReferences = (new List<ReferenceItem>(context.SelectedReferences));
+
+            selectedReferences.ForEach(p => p.Metadata = null);
+
+            return new ChatMessageRequestContext()
+            {
+                SelectedCommand = context.SelectedCommand,
+                SelectedAgent = context.SelectedAgent,
+                SelectedReferences = selectedReferences
+            };
+        }
     }
 }

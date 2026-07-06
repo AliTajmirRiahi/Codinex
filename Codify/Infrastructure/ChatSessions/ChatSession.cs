@@ -6,10 +6,7 @@ using Codify.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using static Microsoft.VisualStudio.Shell.ThreadedWaitDialogHelper;
 
 namespace Codify.Infrastructure.ChatSessions
 {
@@ -79,7 +76,7 @@ namespace Codify.Infrastructure.ChatSessions
         /// <summary>
         /// Adds a user message to the session.
         /// </summary>
-        public ChatMessage AddUserMessage(string content)
+        public ChatMessage AddUserMessage(string content, ChatMessageRequestContext context)
         {
             if (string.IsNullOrWhiteSpace(content))
                 throw new Exception();
@@ -88,6 +85,7 @@ namespace Codify.Infrastructure.ChatSessions
             {
                 Role = "user",
                 Content = content,
+                Context = ChatMessageRequestContext.CreateChatMessageRequestContextWithoutMetaData(context),
                 CreatedAt = DateTime.UtcNow
             };
 
