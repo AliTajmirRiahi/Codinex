@@ -35,6 +35,5 @@ public interface IAiRouterProvider
     /// </summary>
     Task<string> SendAsync(
         IReadOnlyList<ChatMessage> prompt,
-        IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
 }

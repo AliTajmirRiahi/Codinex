@@ -15,7 +15,6 @@ public interface IAiProvider
     /// </summary>
     Task<string> SendAsync(
         IReadOnlyList<ChatMessage> prompt,
-        IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
 
 
@@ -25,6 +24,5 @@ public interface IAiProvider
     Task SendStreamAsync(
         IReadOnlyList<ChatMessage> prompt,
         Func<string, Task> onChunk,
-        IEnumerable<Attachment> attachments = null,
         CancellationToken ct = default);
 }
