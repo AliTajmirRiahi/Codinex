@@ -127,3 +127,12 @@ Codify can now show methods as selectable references inside Composer (e.g., #met
     Updated SendChatMessageUseCase to use the new builder pipeline before dispatching requests to providers.
 ##Result:
  The system is now provider-agnostic, allowing local or cloud AI agents to receive structured, formatted context regardless of the underlying API.
+ 
+## 2026-07-06 — Refactored ChatSession to Persist Message Context
+- **Status**: Completed
+### Summary
+    Updated ChatSession to store full ChatMessageRequestContext alongside each message instead of saving only plain text.
+    Extended message creation so both user and assistant messages can carry reference and context metadata for full history recovery.
+    Fixed recent-message retrieval to return the newest messages correctly using descending ordering.
+### Result
+chat history now preserves reference context and can be restored with complete prompt state, not just message content.
