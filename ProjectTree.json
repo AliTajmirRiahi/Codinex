@@ -745,6 +745,11 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    },
                                                                                                                                                    {
+                                                                                                                                                       "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_fonts.css",
+                                                                                                                                                       "name":  "_fonts.css",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
                                                                                                                                                        "path":  "Codify/UI/ToolWindows/Resources/Chat/css/components/_form.css",
                                                                                                                                                        "name":  "_form.css",
                                                                                                                                                        "type":  "file"
@@ -775,6 +780,16 @@
                                                                                                                                                        "type":  "file"
                                                                                                                                                    }
                                                                                                                                                ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "Codify/UI/ToolWindows/Resources/Chat/css/fonts",
+                                                                                                                                  "name":  "fonts",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  {
+                                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/css/fonts/iransans.ttf",
+                                                                                                                                                   "name":  "iransans.ttf",
+                                                                                                                                                   "type":  "file"
+                                                                                                                                               }
                                                                                                                               },
                                                                                                                               {
                                                                                                                                   "path":  "Codify/UI/ToolWindows/Resources/Chat/css/layout",

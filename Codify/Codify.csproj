@@ -249,6 +249,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\chatListView.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\views\composerView.js" />
     <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\js\controllers\composerController.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\components\_fonts.css" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="UI\ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
@@ -358,6 +359,7 @@
     <EmbeddedResource Include="UI\ToolWindows\Resources\Icons\folder.svg" />
     <Content Include="UI\ToolWindows\Resources\jest.config.js" />
     <Content Include="UI\ToolWindows\Resources\babel.config.js" />
+    <EmbeddedResource Include="UI\ToolWindows\Resources\Chat\css\fonts\iransans.ttf" />
     <None Include="UI\ToolWindows\Resources\package.json" />
   </ItemGroup>
   <ItemGroup>
