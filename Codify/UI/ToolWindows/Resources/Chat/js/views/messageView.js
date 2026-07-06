@@ -1,5 +1,6 @@
 import { createElement } from '../utils/dom.js';
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
+import { getState } from "../state/appState.js"; 
 
 /**
  * Specifically handles message rendering logic.
@@ -11,8 +12,9 @@ export const messageView = {
         // Add base and sender-specific classes
         messageDiv.className = `chat-message ${sender}`;
 
+        var state = getState();
         // Optional: add data-sender for the CSS label
-        messageDiv.setAttribute('data-sender', sender === 'user' ? 'You' : 'Codify AI');
+        messageDiv.setAttribute('data-sender', sender === 'user' ? 'You' : `Codify AI (${state.currentChat.providerId} ${state.currentChat.modelId}) `);
 
         messageDiv.innerHTML = `<div class="message-content">${CodeRenderer.render(text)}</div>`;
 
