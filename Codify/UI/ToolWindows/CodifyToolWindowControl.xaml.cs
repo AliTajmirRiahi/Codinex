@@ -1,21 +1,15 @@
 ﻿using Codify.Core.Abstractions;
-using Codify.Core.UseCases;
-using Codify.Infrastructure;
-using Codify.Infrastructure.AiProviders;
-using Codify.Infrastructure.ChatSessions;
 using Codify.Infrastructure.DependencyInjection;
+using Codify.Infrastructure.Errors;
 using Codify.Infrastructure.Execution;
-using Codify.Infrastructure.Serialization;
-using Codify.Infrastructure.Theme;
-using Codify.Infrastructure.VisualStudio;
-using Codify.Infrastructure.WebView;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Web.WebView2.Core;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Codify.Infrastructure.Errors;
 
 namespace Codify.UI.ToolWindows
 {
@@ -27,29 +21,50 @@ namespace Codify.UI.ToolWindows
         /// <summary>
         /// Initializes a new instance of the <see cref="CodifyToolWindowControl"/> class.
         /// </summary>
-        private readonly IThemeService _themeService;
-        private readonly IResourceServer _resourceServer;
-        private readonly IUserNotificationService _userNotificationService;
+        private IThemeService _themeService;
+        private IResourceServer _resourceServer;
+        private IUserNotificationService _userNotificationService;
 
         public CodifyToolWindowControl()
         {
-            // Initialize services that don't depend on WebView
-            _themeService = CodifyServiceContainer.Get<IThemeService>();
-            _resourceServer = CodifyServiceContainer.Get<IResourceServer>();
+            try
+            {
+                InitializeComponent();
 
-            InitializeComponent();
+                Loaded += OnLoaded;
+                Unloaded += OnUnloaded;
+            }
+            catch (Exception ex)
+            {
+                _ = HandleInitializationErrorAsync(ex, "Constructor");
+            }
 
-            Unloaded += OnUnloaded;
-            SetupThemeIntegration();
+        }
 
-            _userNotificationService = CodifyServiceContainer.Get<IUserNotificationService>();
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            try
+            {
+                // Initialize services that don't depend on WebView
+                _themeService = CodifyServiceContainer.Get<IThemeService>();
+                _resourceServer = CodifyServiceContainer.Get<IResourceServer>();
 
-            var pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+                SetupThemeIntegration();
 
-            _ = pipeline.RunAsync(
-                InitializeWebViewAsync,
-                nameof(InitializeWebViewAsync),
-                showMessageBox: true);
+                _userNotificationService = CodifyServiceContainer.Get<IUserNotificationService>();
+
+                var pipeline = CodifyServiceContainer.Get<ExecutionPipeline>();
+
+                _ = pipeline.RunAsync(
+                    InitializeWebViewAsync,
+                    nameof(InitializeWebViewAsync),
+                    showMessageBox: true);
+            }
+            catch (Exception ex)
+            {
+                _ = HandleInitializationErrorAsync(ex, "CodifyToolWindowControl|OnLoaded");
+            }
         }
 
         private async Task InitializeWebViewAsync()
@@ -153,6 +168,61 @@ namespace Codify.UI.ToolWindows
             };
         }
 
+        /// <summary>
+        /// Handles UI initialization errors safely.
+        /// This method must never throw because it is used during tool window creation.
+        /// </summary>
+        private static async Task HandleInitializationErrorAsync(
+            Exception exception,
+            string operationName)
+        {
+            try
+            {
+                if (CodifyServiceContainer.IsInitialized)
+                {
+                    try
+                    {
+                        var handler = CodifyServiceContainer.Get<IErrorHandler>();
+
+                        handler.Handle(
+                            exception,
+                            $"CodifyToolWindowControl.{operationName}");
+                    }
+                    catch
+                    {
+                        Debug.WriteLine(exception);
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("[Codify] UI initialization failed before DI initialization.");
+                    Debug.WriteLine(exception);
+                }
+
+                try
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                    VsShellUtilities.ShowMessageBox(
+                        ServiceProvider.GlobalProvider,
+                        $"Codify failed while executing '{operationName}'.\n\nPlease check the Output window for more details.",
+                        "Codify",
+                        OLEMSGICON.OLEMSGICON_CRITICAL,
+                        OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                        OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                }
+                catch
+                {
+                    // Never throw from the error handler.
+                }
+            }
+            catch
+            {
+                Debug.WriteLine("[Codify] Failed to handle UI initialization error.");
+                Debug.WriteLine(exception);
+            }
+        }
+
         private void SetupThemeIntegration()
         {
             //1.Initial Apply
@@ -194,6 +264,7 @@ namespace Codify.UI.ToolWindows
         }
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
+
             if (WebView.CoreWebView2 != null)
             {
                 WebView.CoreWebView2.WebMessageReceived -= OnWebMessageReceived;

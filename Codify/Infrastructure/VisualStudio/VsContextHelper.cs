@@ -1,5 +1,4 @@
-﻿using System;
-using EnvDTE;
+﻿using System.IO;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -11,45 +10,18 @@ namespace Codify.Infrastructure.VisualStudio
     /// </summary>
     public static class VsContextHelper
     {
-        private const string _defaultProjectName = "DefaultProject";
+        private const string _defaultSolutionName = "DefaultSolution";
         /// <summary>
-        /// Gets the name of the project associated with the currently active document.
+        /// Gets the name of the Solution associated with the currently active document.
         /// </summary>
-        public static string GetActiveProjectName()
+        public static string GetCurrentSolutionName()
         {
-            try
-            {
-                // Thread safety check: DTE must be accessed on the UI thread.
-                ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.ThrowIfNotOnUIThread();
 
-                // Get the DTE service from the global service provider
-                var dte = Package.GetGlobalService(typeof(SDTE)) as DTE2;
+            if (Package.GetGlobalService(typeof(SDTE)) is not DTE2 dte || string.IsNullOrWhiteSpace(dte.Solution?.FullName))
+                return _defaultSolutionName;
 
-                if (dte == null) return _defaultProjectName;
-
-                // 1. Try to get the project from the active document (best for context)
-                if (dte.ActiveDocument?.ProjectItem?.ContainingProject != null)
-                {
-                    return dte.ActiveDocument.ProjectItem.ContainingProject.Name;
-                }
-
-                // 2. Fallback: Try to get the selected project in Solution Explorer
-                if (dte.SelectedItems != null && dte.SelectedItems.Count > 0)
-                {
-                    foreach (SelectedItem item in dte.SelectedItems)
-                    {
-                        if (item.Project != null) return item.Project.Name;
-                        if (item.ProjectItem?.ContainingProject != null) return item.ProjectItem.ContainingProject.Name;
-                    }
-                }
-
-                return _defaultProjectName;
-            }
-            catch
-            {
-                // Log exception if needed (System.Diagnostics.Debug.WriteLine(ex.Message);)
-                return _defaultProjectName;
-            }
+            return Path.GetFileNameWithoutExtension(dte.Solution.FullName);
         }
     }
 }

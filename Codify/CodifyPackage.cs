@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Codify.Core.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +63,7 @@ namespace Codify
         {
             try
             {
+                //System.Diagnostics.Debugger.Launch();
                 await InitializePackageCoreAsync(cancellationToken, progress);
             }
             catch (Exception ex)
@@ -90,7 +92,7 @@ namespace Codify
             await CodifyToolWindowCommand.InitializeAsync(this);
 
             // Project name can be set in a global State service or Context service later
-            ProjectName = VsContextHelper.GetActiveProjectName();
+            ProjectName = VsContextHelper.GetCurrentSolutionName();
 
             StoragePaths.EnsureCreated();
 

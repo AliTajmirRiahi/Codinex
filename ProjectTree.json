@@ -564,11 +564,18 @@
                              "path":  "Codify/Resources",
                              "name":  "Resources",
                              "type":  "folder",
-                             "children":  {
-                                              "path":  "Codify/Resources/Codify.png",
-                                              "name":  "Codify.png",
-                                              "type":  "file"
-                                          }
+                             "children":  [
+                                              {
+                                                  "path":  "Codify/Resources/Codify.png",
+                                                  "name":  "Codify.png",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "Codify/Resources/CodifyAI128x128.png",
+                                                  "name":  "CodifyAI128x128.png",
+                                                  "type":  "file"
+                                              }
+                                          ]
                          },
                          {
                              "path":  "Codify/Storage",
@@ -1856,13 +1863,18 @@
         "type":  "file"
     },
     {
-        "path":  "Codify.sln.DotSettings.user",
-        "name":  "Codify.sln.DotSettings.user",
+        "path":  "Codify AI.slnx",
+        "name":  "Codify AI.slnx",
         "type":  "file"
     },
     {
-        "path":  "Codify.slnx",
-        "name":  "Codify.slnx",
+        "path":  "Codify AI.zip",
+        "name":  "Codify AI.zip",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify.sln.DotSettings.user",
+        "name":  "Codify.sln.DotSettings.user",
         "type":  "file"
     },
     {
