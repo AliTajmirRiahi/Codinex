@@ -1,101 +1,38 @@
-﻿using Codify.Core.Abstractions;
-using Codify.Core.Models;
+﻿using Codify.Core.Models;
+using Codify.Infrastructure.VisualStudio.Internal;
 using EnvDTE;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.LanguageServices;
-using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Infrastructure.References.Providers.Base;
+using Document = Microsoft.CodeAnalysis.Document;
+using Project = Microsoft.CodeAnalysis.Project;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public sealed class InterfaceReferenceProvider : IReferenceProvider
+    public sealed class InterfaceReferenceProvider : RoslynReferenceProviderBase
     {
-        private readonly IServiceProvider _serviceProvider;
 
-        public InterfaceReferenceProvider(IServiceProvider serviceProvider)
+        public InterfaceReferenceProvider(IVisualStudioServices visualStudio) : base(visualStudio)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
+        protected override Task<IReadOnlyList<ReferenceItem>> ExtractReferencesAsync(Project project, Document document)
         {
-            // Ensure execution starts on the VS UI thread
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var workspace = GetWorkspace();
-            if (workspace == null)
-            {
-                return Array.Empty<ReferenceItem>();
-            }
-
-            var dte = await GetDteAsync();
-            if (dte?.Solution == null)
-            {
-                return Array.Empty<ReferenceItem>();
-            }
-
-            var currentSolution = workspace.CurrentSolution;
-            var result = new List<ReferenceItem>();
-
-            foreach (var project in currentSolution.Projects)
-            {
-                foreach (var document in project.Documents)
-                {
-                    if (!IsSupportedDocument(document))
-                    {
-                        continue;
-                    }
-
-                    // Await the static task without using implicit or explicit instance methods
-                    var interfaceItems = await ExtractInterfacesFromDocumentAsync(project, document).ConfigureAwait(false);
-                    result.AddRange(interfaceItems);
-                }
-            }
-
-            return result;
-        }
-
-        private VisualStudioWorkspace GetWorkspace()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            var componentModel = _serviceProvider.GetService(typeof(SComponentModel)) as IComponentModel ?? Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel;
-
-            return componentModel?.GetService<VisualStudioWorkspace>();
-        }
-
-        private async Task<DTE> GetDteAsync()
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE ?? Package.GetGlobalService(typeof(DTE)) as DTE;
-
-            return dte;
-        }
-
-        // Static implementation to avoid capturing state machine context
-        private static bool IsSupportedDocument(Microsoft.CodeAnalysis.Document document)
-        {
-            if (document == null)
-            {
-                return false;
-            }
-
-            var filePath = document.FilePath;
-            return !string.IsNullOrWhiteSpace(filePath) && filePath.EndsWith(".cs", StringComparison.OrdinalIgnoreCase);
+            return ExtractInterfacesFromDocumentAsync(
+                project,
+                document);
         }
 
         // Fully static implementation ensures the generated async state machine class does not need to reference 'this'
         private static async Task<IReadOnlyList<ReferenceItem>> ExtractInterfacesFromDocumentAsync(
-            Microsoft.CodeAnalysis.Project project,
-            Microsoft.CodeAnalysis.Document document)
+            Project project,
+            Document document)
         {
             var results = new List<ReferenceItem>();
 
@@ -129,7 +66,7 @@ namespace Codify.Infrastructure.References.Providers
         }
 
         private static ReferenceItem BuildInterfaceReferenceItem(
-            Microsoft.CodeAnalysis.Project project,
+            Project project,
             Microsoft.CodeAnalysis.Document document,
             SourceText sourceText,
             SemanticModel semanticModel,

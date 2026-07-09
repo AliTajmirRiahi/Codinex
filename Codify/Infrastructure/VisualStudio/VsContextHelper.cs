@@ -10,7 +10,7 @@ namespace Codify.Infrastructure.VisualStudio
     /// </summary>
     public static class VsContextHelper
     {
-        private const string _defaultSolutionName = "DefaultSolution";
+        private const string DefaultSolutionName = "DefaultSolution";
         /// <summary>
         /// Gets the name of the Solution associated with the currently active document.
         /// </summary>
@@ -19,7 +19,7 @@ namespace Codify.Infrastructure.VisualStudio
             ThreadHelper.ThrowIfNotOnUIThread();
 
             if (Package.GetGlobalService(typeof(SDTE)) is not DTE2 dte || string.IsNullOrWhiteSpace(dte.Solution?.FullName))
-                return _defaultSolutionName;
+                return DefaultSolutionName;
 
             return Path.GetFileNameWithoutExtension(dte.Solution.FullName);
         }

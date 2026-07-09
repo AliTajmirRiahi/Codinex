@@ -113,6 +113,8 @@
     <Compile Include="Infrastructure\Filters\IntentClassifier.cs" />
     <Compile Include="Infrastructure\Logging\IVsOutputLogger.cs" />
     <Compile Include="Infrastructure\Logging\VsOutputLogger.cs" />
+    <Compile Include="Infrastructure\References\Providers\Base\RoslynReferenceProviderBase.cs" />
+    <Compile Include="Infrastructure\References\Providers\Base\WorkspaceReferenceProviderBase.cs" />
     <Compile Include="Infrastructure\References\Providers\ClassReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\FieldReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\FolderReferenceProvider.cs" />
@@ -122,8 +124,14 @@
     <Compile Include="Infrastructure\References\Providers\SolutionReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\Providers\FileReferenceProvider.cs" />
     <Compile Include="Infrastructure\References\ReferenceManager.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Internal\IVisualStudioServices.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Internal\VsServiceBase.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Models\OutputPaneInfo.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Services\IVsOutputWindowService.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Services\VsOutputWindowService.cs" />
     <Compile Include="Infrastructure\VisualStudio\VsActiveDocumentWatcher.cs" />
     <Compile Include="Infrastructure\VisualStudio\VsContextHelper.cs" />
+    <Compile Include="Infrastructure\VisualStudio\Internal\VisualStudioServices.cs" />
     <Compile Include="Infrastructure\VisualStudio\VsUserNotificationService.cs" />
     <Compile Include="Storage\ChatManager.cs" />
     <Compile Include="Storage\Models\ChatSessionDocument.cs" />
