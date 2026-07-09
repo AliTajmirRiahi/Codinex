@@ -15,6 +15,8 @@ using Codify.Infrastructure.References.Providers;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Theme;
 using Codify.Infrastructure.VisualStudio;
+using Codify.Infrastructure.VisualStudio.Internal;
+using Codify.Infrastructure.VisualStudio.Services;
 using Codify.Infrastructure.WebView;
 using Codify.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +56,7 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
                 typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources"));
+            services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package));
             services.AddSingleton<IIntentClassifier, IntentClassifier>();
             services.AddSingleton<IJsonSerializer, JsonSerializationService>();
             services.AddSingleton<IStorageService, FileStorageService>();
@@ -61,6 +64,7 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<ExecutionPipeline>();
+            services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
             services.AddSingleton<IUserNotificationService>(
@@ -72,23 +76,23 @@ namespace Codify.Infrastructure.DependencyInjection
             services.AddSingleton<SettingsManager>();
             services.AddSingleton<ProviderManager>();
             services.AddSingleton<ChatManager>();
-            services.AddSingleton(sp => new FileReferenceProvider(package));
+            services.AddSingleton<FileReferenceProvider>();
             services.AddSingleton<IReferenceProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
-            services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
-            services.AddSingleton<IReferenceProvider>(sp => new SolutionReferenceProvider(package));
-            services.AddSingleton<IReferenceProvider>(sp => new MethodReferenceProvider(package));
-            services.AddSingleton<IReferenceProvider>(sp => new ClassReferenceProvider(package));
-            services.AddSingleton<IReferenceProvider>(sp => new InterfaceReferenceProvider(package));
-            services.AddSingleton<IReferenceProvider>(sp => new FieldReferenceProvider(package));
-            services.AddSingleton<IReferenceProvider>(sp => new FolderReferenceProvider(package));
             services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
+            services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, SolutionReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, MethodReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, ClassReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, InterfaceReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, FieldReferenceProvider>();
+            services.AddSingleton<IReferenceProvider, FolderReferenceProvider>();
 
             // Reference Context Services
             services.AddSingleton<IReferenceContextFormatter, ReferenceContextFormatter>();
             services.AddSingleton<IChatMessageBuilder, ChatMessageBuilder>();
 
             // Register Manager
-            services.AddSingleton(sp=> new VsActiveDocumentWatcher(package));
+            services.AddSingleton(sp => new VsActiveDocumentWatcher(package));
             services.AddSingleton<IActiveDocumentWatcher>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
             services.AddSingleton<IStartupTask>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
             services.AddSingleton<ReferenceManager>();

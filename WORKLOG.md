@@ -136,3 +136,62 @@ Codify can now show methods as selectable references inside Composer (e.g., #met
     Fixed recent-message retrieval to return the newest messages correctly using descending ordering.
 ### Result
 chat history now preserves reference context and can be restored with complete prompt state, not just message content.
+
+### 2026-07-08 - Runtime Reference Discovery
+
+### Goal
+Allow users to attach live Visual Studio runtime contexts (Build Output, Debug Console, Git, Terminal, etc.) through the existing ReferenceManager infrastructure using the `#` reference picker.
+
+### Files Touched
+- `Infrastructure/References/Providers/SystemReferenceProvider.cs`
+- `Infrastructure/References/ReferenceManager.cs`
+- `Core/Models/ReferenceItem.cs`
+- (UI bridge files to be determined after implementation)
+
+### Summary of Changes
+- Started redesigning `SystemReferenceProvider` to support runtime references instead of a fixed hardcoded list.
+- Confirmed that the existing `ReferenceManager` pipeline should remain unchanged.
+- Decided to treat runtime contexts exactly like existing file references from the UI perspective.
+- Runtime references will continue to use `ReferenceItem` so the composer does not require a separate workflow.
+
+### Design Decision
+The existing reference architecture is already suitable.
+
+Instead of introducing a new "Context" pipeline:
+
+ReferenceManager
+→ ReferenceItem
+→ Composer
+→ ChatMessageBuilder
+
+will continue to be used for both source files and runtime contexts.
+
+### Current Investigation
+Determine how Visual Studio runtime targets (Output, Debugger, Terminal, Git, etc.) can be discovered dynamically and exposed as selectable `ReferenceItem`s.
+
+The first objective is only discovery.
+
+Capturing their content will be implemented in a later step.
+
+## Phase 1 — Output References
+
+For the first implementation step, focus exclusively on Visual Studio **Output** contexts.
+
+The objective is to allow users to attach Output windows through the existing `#` reference workflow without introducing any architectural changes.
+
+Examples:
+
+- Build Output
+- Debug Output
+- Source Control - Git
+- Package Manager
+- Tests
+- General Output
+
+Each Output target should appear as a normal `ReferenceItem` inside the existing reference picker.
+
+No output content will be captured during this phase.
+
+Only the discovery and presentation of available Output references will be implemented.
+
+Once this foundation is complete, additional runtime contexts (Debugger, Error List, Terminal, Call Stack, Watch, etc.) can be added using the same infrastructure without changing the composer or chat pipeline.

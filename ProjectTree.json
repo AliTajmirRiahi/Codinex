@@ -417,6 +417,23 @@
                                                                        "type":  "folder",
                                                                        "children":  [
                                                                                         {
+                                                                                            "path":  "Codify/Infrastructure/References/Providers/Base",
+                                                                                            "name":  "Base",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "Codify/Infrastructure/References/Providers/Base/RoslynReferenceProviderBase.cs",
+                                                                                                                 "name":  "RoslynReferenceProviderBase.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "Codify/Infrastructure/References/Providers/Base/WorkspaceReferenceProviderBase.cs",
+                                                                                                                 "name":  "WorkspaceReferenceProviderBase.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "Codify/Infrastructure/References/Providers/ClassReferenceProvider.cs",
                                                                                             "name":  "ClassReferenceProvider.cs",
                                                                                             "type":  "file"
@@ -497,6 +514,55 @@
                                                   "name":  "VisualStudio",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/Internal",
+                                                                       "name":  "Internal",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/VisualStudio/Internal/IVisualStudioServices.cs",
+                                                                                            "name":  "IVisualStudioServices.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/VisualStudio/Internal/VisualStudioServices.cs",
+                                                                                            "name":  "VisualStudioServices.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/VisualStudio/Internal/VsServiceBase.cs",
+                                                                                            "name":  "VsServiceBase.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/Models",
+                                                                       "name":  "Models",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "Codify/Infrastructure/VisualStudio/Models/OutputPaneInfo.cs",
+                                                                                        "name":  "OutputPaneInfo.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
+                                                                       "path":  "Codify/Infrastructure/VisualStudio/Services",
+                                                                       "name":  "Services",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/VisualStudio/Services/IVsOutputWindowService.cs",
+                                                                                            "name":  "IVsOutputWindowService.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "Codify/Infrastructure/VisualStudio/Services/VsOutputWindowService.cs",
+                                                                                            "name":  "VsOutputWindowService.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
                                                                    {
                                                                        "path":  "Codify/Infrastructure/VisualStudio/VsActiveDocumentWatcher.cs",
                                                                        "name":  "VsActiveDocumentWatcher.cs",
@@ -1875,11 +1941,6 @@
     {
         "path":  "Codify.sln.DotSettings.user",
         "name":  "Codify.sln.DotSettings.user",
-        "type":  "file"
-    },
-    {
-        "path":  "Codify.zip",
-        "name":  "Codify.zip",
         "type":  "file"
     },
     {

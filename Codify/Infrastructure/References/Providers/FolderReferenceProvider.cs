@@ -1,117 +1,71 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
-using EnvDTE;
-using Microsoft.CodeAnalysis;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.LanguageServices;
+using Codify.Infrastructure.References.Providers.Base;
+using Codify.Infrastructure.VisualStudio.Internal;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public sealed class FolderReferenceProvider : IReferenceProvider
+    public sealed class FolderReferenceProvider : WorkspaceReferenceProviderBase
     {
-        private readonly IServiceProvider _serviceProvider;
+        public FolderReferenceProvider(IVisualStudioServices visualStudio) : base(visualStudio) { }
 
-        public FolderReferenceProvider(IServiceProvider serviceProvider)
+        protected override Task<IReadOnlyList<ReferenceItem>> ExtractReferencesAsync(Project project)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-        }
-
-        public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
-        {
-            // Ensure execution starts on the VS UI thread
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var workspace = GetWorkspace();
-            if (workspace == null)
-            {
-                return Array.Empty<ReferenceItem>();
-            }
-
-            var dte = await GetDteAsync();
-            if (dte?.Solution == null)
-            {
-                return Array.Empty<ReferenceItem>();
-            }
-
-            var currentSolution = workspace.CurrentSolution;
             var result = new List<ReferenceItem>();
             var processedFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var project in currentSolution.Projects)
+            foreach (var document in project.Documents)
             {
-                foreach (var document in project.Documents)
-                {
-                    var filePath = document.FilePath;
-                    if (string.IsNullOrWhiteSpace(filePath))
-                    {
-                        continue;
-                    }
+                var filePath = document.FilePath;
 
-                    // Extract the directory path of the document file
-                    var directoryPath = Path.GetDirectoryName(filePath);
-                    if (string.IsNullOrWhiteSpace(directoryPath) || !Directory.Exists(directoryPath))
-                    {
-                        continue;
-                    }
+                if (string.IsNullOrWhiteSpace(filePath))
+                    continue;
 
-                    // Process the folder and its ancestor folders within the project scope
-                    var currentDir = new DirectoryInfo(directoryPath);
-                    var projectDir = !string.IsNullOrWhiteSpace(project.FilePath)
+                var directoryPath = Path.GetDirectoryName(filePath);
+
+                if (string.IsNullOrWhiteSpace(directoryPath) ||
+                    !Directory.Exists(directoryPath))
+                    continue;
+
+                var currentDirectory = new DirectoryInfo(directoryPath);
+
+                var projectDirectory =
+                    !string.IsNullOrWhiteSpace(project.FilePath)
                         ? Path.GetDirectoryName(project.FilePath)
                         : null;
 
-                    while (currentDir != null)
+                while (currentDirectory != null)
+                {
+                    if (projectDirectory != null &&
+                        !currentDirectory.FullName.StartsWith(projectDirectory,
+                            StringComparison.OrdinalIgnoreCase))
                     {
-                        var currentDirFullName = currentDir.FullName;
-
-                        // Stop climbing up if we go outside the project directory root (to keep scope relative to project)
-                        if (projectDir != null && !currentDirFullName.StartsWith(projectDir, StringComparison.OrdinalIgnoreCase))
-                        {
-                            break;
-                        }
-
-                        if (processedFolders.Add(currentDirFullName))
-                        {
-                            var folderItem = BuildFolderReferenceItem(project, currentDir);
-                            if (folderItem != null)
-                            {
-                                result.Add(folderItem);
-                            }
-                        }
-
-                        currentDir = currentDir.Parent;
+                        break;
                     }
+
+                    if (processedFolders.Add(currentDirectory.FullName))
+                    {
+                        var item = BuildFolderReferenceItem(project, currentDirectory);
+
+                        if (item != null)
+                            result.Add(item);
+                    }
+
+                    currentDirectory = currentDirectory.Parent;
                 }
             }
 
-            return result;
+            return Task.FromResult<IReadOnlyList<ReferenceItem>>(result);
         }
 
-        private VisualStudioWorkspace GetWorkspace()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            var componentModel = _serviceProvider.GetService(typeof(SComponentModel)) as IComponentModel ?? Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel;
-
-            return componentModel?.GetService<VisualStudioWorkspace>();
-        }
-
-        private async Task<DTE> GetDteAsync()
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE ?? Package.GetGlobalService(typeof(DTE)) as DTE;
-
-            return dte;
-        }
-
-        private static ReferenceItem BuildFolderReferenceItem(Microsoft.CodeAnalysis.Project project, DirectoryInfo directoryInfo)
+        private static ReferenceItem BuildFolderReferenceItem(Project project, DirectoryInfo directoryInfo)
         {
             var folderPath = directoryInfo.FullName;
             var folderName = directoryInfo.Name;

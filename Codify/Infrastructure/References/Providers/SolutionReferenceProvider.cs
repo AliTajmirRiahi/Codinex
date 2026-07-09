@@ -1,6 +1,7 @@
 ﻿// Infrastructure/References/Providers/SolutionReferenceProvider.cs
 using Codify.Core.Abstractions;
 using Codify.Core.Models;
+using Codify.Infrastructure.VisualStudio.Internal;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -10,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public class SolutionReferenceProvider : IReferenceProvider
+    public class SolutionReferenceProvider : VsServiceBase, IReferenceProvider
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IVisualStudioServices _visualStudio;
 
-        public SolutionReferenceProvider(IServiceProvider serviceProvider)
+        public SolutionReferenceProvider(IVisualStudioServices visualStudio) : base(visualStudio)
         {
-            _serviceProvider = serviceProvider;
+            _visualStudio = visualStudio;
         }
 
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
@@ -24,9 +25,9 @@ namespace Codify.Infrastructure.References.Providers
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var items = new List<ReferenceItem>();
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE2;
+            var dte = await _visualStudio.GetDteAsync();
 
-            if (dte?.Solution == null || !dte.Solution.IsOpen)
+            if (dte?.Solution is not { IsOpen: true })
             {
                 return items;
             }

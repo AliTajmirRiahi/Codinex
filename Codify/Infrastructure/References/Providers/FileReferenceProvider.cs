@@ -1,20 +1,19 @@
 ﻿using Codify.Core.Abstractions;
 using Codify.Core.Models;
+using Codify.Infrastructure.VisualStudio.Internal;
 using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Codify.Infrastructure.References.Providers
 {
-    public class FileReferenceProvider : IReferenceProvider, IActiveDocumentProvider
+    public class FileReferenceProvider : VsServiceBase, IReferenceProvider, IActiveDocumentProvider
     {
+
         public sealed class FileIconInfo
         {
             public string Id { get; set; }
@@ -103,12 +102,8 @@ namespace Codify.Infrastructure.References.Providers
             };
 
 
-        private readonly IServiceProvider _serviceProvider;
-
-        public FileReferenceProvider(IServiceProvider serviceProvider)
+        public FileReferenceProvider(IVisualStudioServices visualStudio) : base(visualStudio)
         {
-            // We need service provider to access DTE (Visual Studio Automation Object)
-            _serviceProvider = serviceProvider;
         }
 
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
@@ -116,7 +111,7 @@ namespace Codify.Infrastructure.References.Providers
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var items = new List<ReferenceItem>();
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE2;
+            var dte = await GetDteAsync();
 
             if (dte?.Solution is not { IsOpen: true })
             {
@@ -138,7 +133,7 @@ namespace Codify.Infrastructure.References.Providers
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var dte = _serviceProvider.GetService(typeof(DTE)) as DTE2;
+            var dte = await GetDteAsync();
 
             if (dte?.ActiveDocument == null) return null;
 
