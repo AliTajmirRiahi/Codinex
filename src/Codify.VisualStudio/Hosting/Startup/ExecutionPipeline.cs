@@ -10,7 +10,7 @@ namespace Codify.VisualStudio.Hosting.Startup
     /// Central execution boundary for async operations.
     /// All unhandled exceptions should pass through this pipeline.
     /// </summary>
-    public sealed class ExecutionPipeline
+    public sealed class ExecutionPipeline : IExecutionPipeline
     {
         private readonly IErrorHandler _errorHandler;
         private readonly IUserNotificationService _userNotificationService;

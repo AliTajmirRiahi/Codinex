@@ -17,183 +17,19 @@
                      ]
     },
     {
-        "path":  "packages",
-        "name":  "packages",
+        "path":  "Codify",
+        "name":  "Codify",
         "type":  "folder",
         "children":  {
-                         "path":  "packages/Newtonsoft.Json.13.0.3",
-                         "name":  "Newtonsoft.Json.13.0.3",
-                         "type":  "folder",
-                         "children":  [
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/lib",
-                                              "name":  "lib",
-                                              "type":  "folder",
-                                              "children":  [
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/net20",
-                                                                   "name":  "net20",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net20/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net20/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/net35",
-                                                                   "name":  "net35",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net35/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net35/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/net40",
-                                                                   "name":  "net40",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net40/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net40/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/net45",
-                                                                   "name":  "net45",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net45/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net45/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/net6.0",
-                                                                   "name":  "net6.0",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net6.0/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/net6.0/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.0",
-                                                                   "name":  "netstandard1.0",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.0/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.0/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.3",
-                                                                   "name":  "netstandard1.3",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.3/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard1.3/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               },
-                                                               {
-                                                                   "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard2.0",
-                                                                   "name":  "netstandard2.0",
-                                                                   "type":  "folder",
-                                                                   "children":  [
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard2.0/Newtonsoft.Json.dll",
-                                                                                        "name":  "Newtonsoft.Json.dll",
-                                                                                        "type":  "file"
-                                                                                    },
-                                                                                    {
-                                                                                        "path":  "packages/Newtonsoft.Json.13.0.3/lib/netstandard2.0/Newtonsoft.Json.xml",
-                                                                                        "name":  "Newtonsoft.Json.xml",
-                                                                                        "type":  "file"
-                                                                                    }
-                                                                                ]
-                                                               }
-                                                           ]
-                                          },
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/.signature.p7s",
-                                              "name":  ".signature.p7s",
-                                              "type":  "file"
-                                          },
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/LICENSE.md",
-                                              "name":  "LICENSE.md",
-                                              "type":  "file"
-                                          },
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/Newtonsoft.Json.13.0.3.nupkg",
-                                              "name":  "Newtonsoft.Json.13.0.3.nupkg",
-                                              "type":  "file"
-                                          },
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/packageIcon.png",
-                                              "name":  "packageIcon.png",
-                                              "type":  "file"
-                                          },
-                                          {
-                                              "path":  "packages/Newtonsoft.Json.13.0.3/README.md",
-                                              "name":  "README.md",
-                                              "type":  "file"
-                                          }
-                                      ]
+
+                     }
+    },
+    {
+        "path":  "Codify.Tests",
+        "name":  "Codify.Tests",
+        "type":  "folder",
+        "children":  {
+
                      }
     },
     {
@@ -2173,8 +2009,24 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "tests/Codify.TestCommon/Extensions",
+                                                  "name":  "Extensions",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.TestCommon/Fakes",
                                                   "name":  "Fakes",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Fixtures",
+                                                  "name":  "Fixtures",
                                                   "type":  "folder",
                                                   "children":  {
 
@@ -2187,6 +2039,34 @@
                                                   "children":  {
 
                                                                }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Properties",
+                                                  "name":  "Properties",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "tests/Codify.TestCommon/Properties/AssemblyInfo.cs",
+                                                                   "name":  "AssemblyInfo.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/TestData",
+                                                  "name":  "TestData",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj",
+                                                  "name":  "Codify.TestCommon.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj.user",
+                                                  "name":  "Codify.TestCommon.csproj.user",
+                                                  "type":  "file"
                                               }
                                           ]
                          },
@@ -2196,13 +2076,93 @@
                              "type":  "folder",
                              "children":  [
                                               {
+                                                  "path":  "tests/Codify.Tests/Core",
+                                                  "name":  "Core",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Infrastructure",
+                                                  "name":  "Infrastructure",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Properties",
+                                                  "name":  "Properties",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "tests/Codify.Tests/Properties/AssemblyInfo.cs",
+                                                                   "name":  "AssemblyInfo.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Storage",
+                                                  "name":  "Storage",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/VisualStudio",
+                                                  "name":  "VisualStudio",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "tests/Codify.Tests/VisualStudio/References",
+                                                                   "name":  "References",
+                                                                   "type":  "folder",
+                                                                   "children":  [
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/BaseTests",
+                                                                                        "name":  "BaseTests",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+
+                                                                                                     }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests",
+                                                                                        "name":  "ProviderTests",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+
+                                                                                                     }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/TestDoubles",
+                                                                                        "name":  "TestDoubles",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+
+                                                                                                     }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerGetReferencesTests.cs",
+                                                                                        "name":  "ReferenceManagerGetReferencesTests.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                                ]
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.Tests/Codify.Tests.csproj",
                                                   "name":  "Codify.Tests.csproj",
                                                   "type":  "file"
                                               },
                                               {
-                                                  "path":  "tests/Codify.Tests/UnitTest1.cs",
-                                                  "name":  "UnitTest1.cs",
+                                                  "path":  "tests/Codify.Tests/Codify.Tests.csproj.user",
+                                                  "name":  "Codify.Tests.csproj.user",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/packages.config",
+                                                  "name":  "packages.config",
                                                   "type":  "file"
                                               }
                                           ]

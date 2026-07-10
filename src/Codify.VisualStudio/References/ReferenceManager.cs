@@ -16,14 +16,18 @@ namespace Codify.VisualStudio.References
     {
         private readonly IActiveDocumentWatcher _activeDocumentWatcher;
         private readonly IActiveDocumentProvider _activeDocumentProvider;
-        private readonly ExecutionPipeline _pipeline;
+        private readonly IExecutionPipeline _pipeline;
         private readonly IReadOnlyList<IReferenceProvider> _providers;
 
         private ReferenceItem _activeDocumentItem;
 
         public event EventHandler<ActiveDocumentUpdatedEventArgs> ActiveDocumentUpdated;
 
-        public ReferenceManager(IEnumerable<IReferenceProvider> providers, IActiveDocumentWatcher activeDocumentWatcher, IActiveDocumentProvider activeDocumentProvider, ExecutionPipeline pipeline)
+        public ReferenceManager(
+            IEnumerable<IReferenceProvider> providers,
+            IActiveDocumentWatcher activeDocumentWatcher,
+            IActiveDocumentProvider activeDocumentProvider,
+            IExecutionPipeline pipeline)
         {
             _activeDocumentWatcher = activeDocumentWatcher;
             _activeDocumentProvider = activeDocumentProvider;

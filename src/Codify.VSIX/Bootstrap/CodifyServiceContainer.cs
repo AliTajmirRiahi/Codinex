@@ -65,7 +65,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IWorkspaceContext, VsWorkspaceContext>();
             services.AddSingleton<IStorageService, FileStorageService>();
-            services.AddSingleton<ExecutionPipeline>();
+            services.AddSingleton<IExecutionPipeline, ExecutionPipeline>();
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));

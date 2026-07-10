@@ -15,6 +15,9 @@
       <Platform Solution="*|x86" Project="x86" />
     </Project>
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/Codify.TestCommon/Codify.TestCommon.csproj" Id="7d929c88-a9c1-4790-9a84-efd18fbbd580" />
+    <Project Path="tests/Codify.Tests/Codify.Tests.csproj" Id="c0a8615c-14d8-47c8-91df-59062c1d3979" />
+  </Folder>
   
 </Solution>

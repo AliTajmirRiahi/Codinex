@@ -12,7 +12,7 @@ function Get-ProjectTree($path, $rootPath) {
     if (-not (Test-Path $path)) { return $null }
 
     # Folders to ignore
-    $excludeList = @("bin", "obj", ".git", ".vs", "node_modules", "dist", "out", "scripts")
+    $excludeList = @("bin", "obj", ".git", ".vs", "node_modules", "dist", "out", "scripts" , "packages")
     
     $items = Get-ChildItem -Path $path -Force | Where-Object { $_.Name -notin $excludeList }
     
