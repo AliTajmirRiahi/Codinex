@@ -62,7 +62,7 @@ public class ReferenceManagerGetReferencesTests
             .Returns(Task.FromResult<IReadOnlyList<ReferenceItem>>(expected));
 
         var sut = new ReferenceManager(
-            new[] { provider },
+            [provider],
             watcher,
             activeDocumentProvider,
             pipeline);
@@ -105,7 +105,7 @@ public class ReferenceManagerGetReferencesTests
                 }));
 
         var sut = new ReferenceManager(
-            new[] { provider1, provider2 },
+            [provider1, provider2],
             watcher,
             activeDocumentProvider,
             pipeline);

@@ -45,15 +45,21 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\TestExecutionPipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Builders\" />
     <Folder Include="Extensions\" />
-    <Folder Include="Fakes\" />
     <Folder Include="Fixtures\" />
     <Folder Include="Helpers\" />
     <Folder Include="TestData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Codify.Core\Codify.Core.csproj">
+      <Project>{fab3acec-0007-48d9-99b7-cd6820fb97f2}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

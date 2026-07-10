@@ -75,13 +75,13 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
-                                                                       "path":  "src/Codify.Core/Interfaces/IActiveDocumentWatcher.cs",
-                                                                       "name":  "IActiveDocumentWatcher.cs",
+                                                                       "path":  "src/Codify.Core/Interfaces/IActiveDocumentProvider.cs",
+                                                                       "name":  "IActiveDocumentProvider.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codify.Core/Interfaces/IActiveReferenceProvider.cs",
-                                                                       "name":  "IActiveReferenceProvider.cs",
+                                                                       "path":  "src/Codify.Core/Interfaces/IActiveDocumentWatcher.cs",
+                                                                       "name":  "IActiveDocumentWatcher.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -102,6 +102,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IErrorHandler.cs",
                                                                        "name":  "IErrorHandler.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IExecutionPipeline.cs",
+                                                                       "name":  "IExecutionPipeline.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
