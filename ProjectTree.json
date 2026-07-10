@@ -2026,7 +2026,9 @@
                                                   "name":  "Fakes",
                                                   "type":  "folder",
                                                   "children":  {
-
+                                                                   "path":  "tests/Codify.TestCommon/Fakes/TestExecutionPipeline.cs",
+                                                                   "name":  "TestExecutionPipeline.cs",
+                                                                   "type":  "file"
                                                                }
                                               },
                                               {
@@ -2146,6 +2148,16 @@
                                                                                         "children":  {
 
                                                                                                      }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerActiveDocumentTests.cs",
+                                                                                        "name":  "ReferenceManagerActiveDocumentTests.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerEventsTests.cs",
+                                                                                        "name":  "ReferenceManagerEventsTests.cs",
+                                                                                        "type":  "file"
                                                                                     },
                                                                                     {
                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerGetReferencesTests.cs",

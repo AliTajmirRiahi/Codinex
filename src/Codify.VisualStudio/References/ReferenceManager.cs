@@ -17,6 +17,7 @@ namespace Codify.VisualStudio.References
         private readonly IActiveDocumentWatcher _activeDocumentWatcher;
         private readonly IActiveDocumentProvider _activeDocumentProvider;
         private readonly IExecutionPipeline _pipeline;
+        private readonly IErrorHandler _errorHandler;
         private readonly IReadOnlyList<IReferenceProvider> _providers;
 
         private ReferenceItem _activeDocumentItem;
@@ -27,11 +28,13 @@ namespace Codify.VisualStudio.References
             IEnumerable<IReferenceProvider> providers,
             IActiveDocumentWatcher activeDocumentWatcher,
             IActiveDocumentProvider activeDocumentProvider,
-            IExecutionPipeline pipeline)
+            IExecutionPipeline pipeline,
+            IErrorHandler errorHandler)
         {
             _activeDocumentWatcher = activeDocumentWatcher;
             _activeDocumentProvider = activeDocumentProvider;
             _pipeline = pipeline;
+            _errorHandler = errorHandler;
             _providers = providers.ToList();
 
             _activeDocumentWatcher.ActiveDocumentChanged += OnActiveDocumentChanged;
@@ -39,18 +42,22 @@ namespace Codify.VisualStudio.References
 
         public async Task<IReadOnlyList<ReferenceItem>> GetAllReferencesAsync()
         {
-            var tasks = _providers.Select(provider =>
+            var tasks = _providers.Select(async provider =>
             {
                 try
                 {
-                    return provider.GetReferencesAsync();
+                    return await provider.GetReferencesAsync();
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e);
+                    _errorHandler.Handle(
+                        ex,
+                        nameof(GetAllReferencesAsync));
+
                     throw;
                 }
             });
+
             var results = await Task.WhenAll(tasks);
 
             return results

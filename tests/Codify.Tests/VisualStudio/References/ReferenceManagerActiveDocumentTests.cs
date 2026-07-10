@@ -22,6 +22,7 @@ public class ReferenceManagerActiveDocumentTests
         // Arrange
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var provider = Substitute.For<IActiveDocumentProvider>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         var expected = new ReferenceItem();
 
@@ -33,7 +34,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
-            new TestExecutionPipeline());
+            new TestExecutionPipeline(),
+            errorHandler);
 
         // Act
         await sut.GetActiveDocumentAsync();
@@ -49,6 +51,7 @@ public class ReferenceManagerActiveDocumentTests
         // Arrange
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var provider = Substitute.For<IActiveDocumentProvider>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         var expected = new ReferenceItem();
 
@@ -60,7 +63,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
-            new TestExecutionPipeline());
+            new TestExecutionPipeline(),
+            errorHandler);
 
         // Act
         var first = await sut.GetActiveDocumentAsync();
@@ -78,6 +82,7 @@ public class ReferenceManagerActiveDocumentTests
         // Arrange
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var provider = Substitute.For<IActiveDocumentProvider>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         var expected = new ReferenceItem();
 
@@ -89,7 +94,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
-            new TestExecutionPipeline());
+            new TestExecutionPipeline(),
+            errorHandler);
 
         // Act
         var result = await sut.GetActiveDocumentAsync();
@@ -104,6 +110,7 @@ public class ReferenceManagerActiveDocumentTests
         // Arrange
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var provider = Substitute.For<IActiveDocumentProvider>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         provider
             .GetActiveDocumentAsync()
@@ -113,7 +120,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
-            new TestExecutionPipeline());
+            new TestExecutionPipeline(),
+            errorHandler);
 
         // Act
         var result = await sut.GetActiveDocumentAsync();

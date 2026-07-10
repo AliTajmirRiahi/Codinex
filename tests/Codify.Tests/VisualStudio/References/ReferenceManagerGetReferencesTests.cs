@@ -24,12 +24,15 @@ public class ReferenceManagerGetReferencesTests
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var activeDocumentProvider = Substitute.For<IActiveDocumentProvider>();
         var pipeline = Substitute.For<IExecutionPipeline>();
+        var errorHandler = Substitute.For<IErrorHandler>();
+
 
         var sut = new ReferenceManager(
             new List<IReferenceProvider>(),
             watcher,
             activeDocumentProvider,
-            pipeline);
+            pipeline,
+            errorHandler);
 
         // Act
         var result = await sut.GetAllReferencesAsync();
@@ -46,6 +49,7 @@ public class ReferenceManagerGetReferencesTests
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var activeDocumentProvider = Substitute.For<IActiveDocumentProvider>();
         var pipeline = Substitute.For<IExecutionPipeline>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         var provider = Substitute.For<IReferenceProvider>();
 
@@ -65,7 +69,8 @@ public class ReferenceManagerGetReferencesTests
             [provider],
             watcher,
             activeDocumentProvider,
-            pipeline);
+            pipeline,
+            errorHandler);
 
         // Act
         var result = await sut.GetAllReferencesAsync();
@@ -84,6 +89,7 @@ public class ReferenceManagerGetReferencesTests
         var watcher = Substitute.For<IActiveDocumentWatcher>();
         var activeDocumentProvider = Substitute.For<IActiveDocumentProvider>();
         var pipeline = Substitute.For<IExecutionPipeline>();
+        var errorHandler = Substitute.For<IErrorHandler>();
 
         var provider1 = Substitute.For<IReferenceProvider>();
         var provider2 = Substitute.For<IReferenceProvider>();
@@ -108,7 +114,8 @@ public class ReferenceManagerGetReferencesTests
             [provider1, provider2],
             watcher,
             activeDocumentProvider,
-            pipeline);
+            pipeline,
+            errorHandler);
 
         // Act
         var result = await sut.GetAllReferencesAsync();

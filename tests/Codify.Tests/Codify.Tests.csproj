@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
+    <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
   </ItemGroup>
   <ItemGroup>

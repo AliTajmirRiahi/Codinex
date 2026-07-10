@@ -6,21 +6,27 @@ namespace Codify.TestCommon.Fakes
 {
     public sealed class TestExecutionPipeline : IExecutionPipeline
     {
-        public Task RunAsync(
+        public int RunCount { get; private set; }
+
+        public async Task RunAsync(
             Func<Task> action,
             string source,
             bool showMessageBox = false)
         {
-            return action();
+            RunCount++;
+
+            await action();
         }
 
-        public Task<T> RunAsync<T>(
+        public async Task<T> RunAsync<T>(
             Func<Task<T>> action,
             string source,
             T fallback,
             bool showMessageBox = false)
         {
-            return action();
+            RunCount++;
+
+            return await action();
         }
     }
 }
