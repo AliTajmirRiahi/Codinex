@@ -4,12 +4,17 @@
     <Platform Name="arm64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Codify.Tests/Codify.Tests.csproj">
-    <Build Solution="Debug|*" Project="false" />
-  </Project>
-  <Project Path="src/Codify.VSIX/Codify.VSIX.csproj" Id="0ce33667-6fb1-4d5c-b376-26994bfbe080">
-    <Platform Solution="*|arm64" Project="arm64" />
-    <Platform Solution="*|x86" Project="x86" />
-  </Project>
+  <Folder Name="/src/">
+    <Project Path="src/Codify.Core/Codify.Core.csproj" Id="fab3acec-0007-48d9-99b7-cd6820fb97f2" />
+    <Project Path="src/Codify.Infrastructure/Codify.Infrastructure.csproj" Id="1d853c03-bfd1-42b5-a53a-15b76d1b5c0b" />
+    <Project Path="src/Codify.Storage/Codify.Storage.csproj" Id="7cfe5bdb-2d98-4e9a-9508-97b18367280c" />
+    <Project Path="src/Codify.UI/Codify.UI.csproj" Id="0bfd8ba2-dd44-48c9-82a8-5de3faea95d2" />
+    <Project Path="src/Codify.VisualStudio/Codify.VisualStudio.csproj" Id="1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9" />
+    <Project Path="src/Codify.VSIX/Codify.VSIX.csproj" Id="0ce33667-6fb1-4d5c-b376-26994bfbe080">
+      <Platform Solution="*|arm64" Project="arm64" />
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/" />
   
 </Solution>
