@@ -1,0 +1,172 @@
+/* Chat history dropdown */
+.chat-history-select {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    background-color: var(--vs-input-bg);
+    color: var(--vs-foreground);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+}
+
+    /* Focus state for dropdown */
+    .chat-history-select:focus {
+        border-color: var(--vs-button-bg);
+    }
+
+/* Model Selector Dropdown Styling */
+.com-dropdown {
+    display: none;
+    position: absolute;
+    background-color: var(--vs-input-bg);
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    padding: 4px 0;
+    overflow: hidden;
+}
+
+    .com-dropdown.show {
+        display: flex;
+    }
+
+.menu-label {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.drop-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--vs-foreground);
+    transition: background 0.15s ease;
+}
+
+    .drop-option:hover {
+        background: var( --vs-command-bar-hover-over-selected-icon-border-color);
+        border-color: var( --vs-command-bar-hover-over-selected-icon-border-color);
+        opacity: 1;
+    }
+
+    .drop-option.active {
+        background-color: rgba(255, 216, 0, 0.08);
+        border-left: 2px solid var(--vs-button-bg);
+    }
+
+.drop-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.multiplier {
+    font-size: 11px;
+    opacity: 0.5;
+}
+
+.menu-divider {
+    height: 1px;
+    background-color: var(--vs-class-designer-comment-border-color);
+    margin: 4px 0;
+}
+
+.menu-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--vs-foreground);
+}
+
+    .menu-action:hover {
+        background: var( --vs-command-bar-hover-over-selected-icon-border-color);
+        border-color: var( --vs-command-bar-hover-over-selected-icon-border-color);
+        opacity: 1;
+    }
+/* Container for the 3-column row */
+.drop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+/* Column 1: Occupies remaining space */
+.col-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0; /* Important for text-overflow */
+}
+
+.chat-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Column 2: Provider and Model badges */
+.col-info {
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.provider-tag {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--vs-link-foreground); /* Visual Studio theme variable */
+}
+
+.model-tag {
+    background: var(--vs-button-background);
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+/* Column 3: Date */
+.col-date {
+    font-size: 0.75rem;
+    color: var(--vs-descriptionForeground);
+    min-width: 70px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+
+#model-dropdown-menu.com-dropdown {
+    bottom: 35px;
+    left: 0;
+    flex-direction: column;
+    min-width: 300px;
+}
+#chat-history-dropdown.com-dropdown {
+    top: 45px;
+    flex: 1;
+    flex-direction: column;
+    min-width: 420px;
+}
+
+codify-icon.chat-icon {
+    color: vaR(--vs-viz-surface-green-medium-color);
+}

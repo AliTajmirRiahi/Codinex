@@ -1,0 +1,484 @@
+﻿/**
+ * ComposerController
+ * Orchestrates logic for triggers (@, /, #), menu items, and context chips.
+ */
+import {
+    getState,
+    setDraftText,
+    setActiveTrigger,
+    setActiveMenu,
+    setSelectedCommand,
+    setSelectedAgent,
+    setSelectedReferences,
+    setCursorContext,
+    resetComposer,
+    subscribe,
+} from '../state/appState.js';
+export class ComposerController {
+    constructor(composerView) {
+
+        //subscribe(() => {
+        //    console.log(getState());
+        //})
+
+        this.view = composerView;
+
+        // Mock data - In production, these come from your services
+        this.data = {
+            contexts: [
+                {
+                    id: 'ref-active-document',
+                    name: 'Active Document',
+                    description: () => {
+                        var state = getState();
+                        return state.activeDocument ? `${state.activeDocument.description}` : 'No active document to attach';
+                    },
+                    action: () => {
+                        var state = getState();
+
+                        if (!state.activeDocument) return;
+
+                        this.handleSpecialDocument('references', state.activeDocument, 'Active Document');
+                    }
+                },
+                {
+                    id: 'ref-solution',
+                    name: 'Solution',
+                    description: 'Attach the entire solution',
+                    action: () => {
+                        var state = getState();
+
+                        var solutionItem = _.filter(state.composerReferences, { type: 'Solution' });
+
+                        if (!solutionItem || solutionItem.length == 0) return;
+
+                        this.handleSpecialDocument('references', solutionItem[0], 'Solution');
+                    }
+                },
+                {
+                    id: 'ref-files',
+                    name: 'Files',
+                    description: 'Browse and attach files from the solution',
+                    action: () => {
+                        this.view.insertTextAtCursor('file');
+                    }
+                },
+                {
+                    id: 'ref-classes',
+                    name: 'Classes',
+                    description: 'List classes from the project for selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('class');
+                    }
+                },
+                {
+                    id: 'ref-interfaces',
+                    name: 'Interfaces',
+                    description: 'List interfaces from the project for selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('interface');
+                    }
+                },
+                {
+                    id: 'ref-methods',
+                    name: 'Methods',
+                    description: 'List methods from the current file or selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('method');
+                    }
+                },
+                {
+                    id: 'ref-fields',
+                    name: 'Fields',
+                    description: 'List fields from the current file or selection',
+                    action: () => {
+                        this.view.insertTextAtCursor('field');
+                    }
+                },
+                {
+                    id: 'ref-output-logs',
+                    name: 'Output Window logs',
+                    description: 'Include recent messages from the Output window',
+                },
+                {
+                    id: 'ref-mcp-prompts',
+                    name: 'MCP prompts',
+                    description: 'Insert saved MCP prompts as context',
+                },
+                {
+                    id: 'ref-mcp-resources',
+                    name: 'MCP resources',
+                    description: 'Attach MCP-generated resources and artifacts',
+                },
+                {
+                    id: 'ref-upload-image',
+                    name: 'Upload Image',
+                    description: 'Upload an image to include as context',
+                },
+                {
+                    id: 'ref-auto-attach',
+                    name: 'Auto-attach active document',
+                    description: 'Automatically attach the active document when composing',
+                    isToggle: true,
+                    toggled: true
+                }
+            ],
+            commands: [
+                {
+                    id: 'cmd1',
+                    name: '/document',
+                    description: 'Generate documentation for the selected symbol or code'
+                },
+                {
+                    id: 'cmd2',
+                    name: '/describe',
+                    description: 'Describe what the selected code does'
+                },
+                {
+                    id: 'cmd3',
+                    name: '/repair',
+                    description: 'Find and repair issues in the selected code'
+                },
+                {
+                    id: 'cmd4',
+                    name: '/setupGuidelines',
+                    description: 'Create project-level AI coding guidelines'
+                },
+                {
+                    id: 'cmd5',
+                    name: '/assist',
+                    description: 'Show available Codify commands and usage tips'
+                },
+                {
+                    id: 'cmd6',
+                    name: '/improve',
+                    description: 'Improve code quality, readability, and performance'
+                },
+                {
+                    id: 'cmd7',
+                    name: '/storePrompt',
+                    description: 'Save the current prompt for later reuse'
+                },
+                {
+                    id: 'cmd8',
+                    name: '/createTests',
+                    description: 'Generate tests for the selected code'
+                }
+            ],
+            agents: [
+                {
+                    id: 'agent-python',
+                    name: '@python-expert',
+                    icon: 'hat-glasses',
+                    description: 'Best for Python'
+                },
+                {
+                    id: 'agent-web',
+                    name: '@web-dev',
+                    icon: 'monitor',
+                    description: 'Frontend specialist'
+                },
+                {
+                    id: 'agent-debugger',
+                    name: '@debugger',
+                    icon: 'bug',
+                    description: 'Diagnose and fix bugs'
+                },
+                {
+                    id: 'agent-modernize',
+                    name: '@modernize',
+                    icon: 'refresh-cw',
+                    description: 'Modernize your applications'
+                },
+                {
+                    id: 'agent-profiler',
+                    name: '@profiler',
+                    icon: 'activity',
+                    description: 'Optimize your code'
+                },
+                {
+                    id: 'agent-test',
+                    name: '@test',
+                    icon: 'test-tube-diagonal',
+                    description: 'Generate unit tests'
+                },
+                {
+                    id: 'agent-vs',
+                    name: '@vs',
+                    icon: 'Visual-Studio-Icon-Flat',
+                    description: 'Ask questions about Visual Studio'
+                }
+            ],
+            references: []
+        };
+
+        this.bindEvents();
+    }
+
+    setRefrences() {
+        var state = getState();
+
+        this.data.references = state.composerReferences;
+    }
+
+    bindEvents() {
+        // Handle menu selection from View
+        document.addEventListener('composer:menu-select', (e) => {
+            const { type, item, trigger } = e.detail;
+            this.handleSelection(type, item, trigger);
+        });
+
+        // Handle chip removal
+        document.addEventListener('composer:chip-remove', (e) => {
+            this.removeChip(e.detail);
+        });
+
+        // Handle reference removal
+        document.addEventListener('composer:ref-remove', (e) => {
+            this.removeRef(e.detail);
+        });
+    }
+
+    /**
+     * Main entry point called when input changes
+     * @param {Object} context - { text, cursor, trigger }
+     */
+    handleInput(context) {
+        setDraftText(this.view.getPlainText());
+
+        if (this.view.getPlainText() == '') {
+            setSelectedCommand(null);
+            setSelectedAgent(null);
+        }
+
+        if (!context.trigger) {
+            this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
+            return;
+        }
+
+
+        const state = getState();
+        const { type, filter } = context.trigger;
+
+        if (type != 'references' && (state.composer.selectedCommand != null || state.composer.selectedAgent != null)) return;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+
+        const options = this.filterOptions(type, filter);
+
+        if (options.length > 0) {
+            this.view.showMenu(options, type, context.trigger);
+        } else {
+            this.view.hideMenu();
+        }
+    }
+    /**
+     * Main entry point called when input changes
+     * @param {Object} context - { text, cursor, trigger }
+     */
+    handleContextInput(context) {
+        if (!context.trigger) {
+            this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
+            return;
+        }
+
+
+        const state = getState();
+        const { type, filter } = context.trigger;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+
+        const options = this.filterOptions(type, filter);
+
+        if (options.length > 0) {
+            this.view.showMenu(options, type, context.trigger);
+        } else {
+            this.view.hideMenu();
+        }
+    }
+
+    handleContextClick(context) {
+        var state = getState();
+
+        if (!context.trigger || (state.composer.activeTrigger && state.composer.activeTrigger.symbol == '+')) {
+            this.view.hideMenu();
+            setActiveTrigger(null);
+            setActiveMenu(null);
+            return;
+        }
+
+        if (state.composer.activeTrigger)
+            return;
+
+        const { type, filter } = context.trigger;
+
+        setActiveTrigger(context.trigger);
+        setActiveMenu(context.menuType);
+        setCursorContext(context);
+
+        const options = this.filterOptions(type, filter);
+
+        if (options.length > 0) {
+            this.view.showMenu(options, type, context.trigger);
+        } else {
+            this.view.hideMenu();
+        }
+    }
+
+    filterOptions(type, filter) {
+        const list = this.data[type] || [];
+        const trigger = getState().composer.activeTrigger;
+
+        return list.filter(item => {
+            const nameMatch = item.name.toLowerCase().includes(filter.toLowerCase());
+
+            // If user typed #type:filter (e.g., #folder:), strict check the ReferenceKind
+            if (trigger && trigger.typeFilter) {
+                const kindMatch = item.type && item.type.toLowerCase() === trigger.typeFilter.toLowerCase();
+                return kindMatch && nameMatch;
+            }
+
+            // Default behavior for #filter
+            return nameMatch || (item.type && item.type.toLowerCase().includes(filter.toLowerCase()));
+        });
+    }
+
+    handleSelection(type, item, trigger) {
+
+        // Hide menu and clear menu selection state
+        this.view.hideMenu();
+
+        // Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
+
+
+        // Define strategies for different item types to clean up conditional logic
+        const selectionStrategies = {
+            contexts: (item) => {
+                if (!item.action) return;
+                item.action();
+                return { shouldInsertChip: false, updateRefs: false };
+            },
+            commands: (item) => {
+                setSelectedCommand(item);
+                return { shouldInsertChip: true };
+            },
+            agents: (item) => {
+                setSelectedAgent(item);
+                return { shouldInsertChip: true };
+            },
+            references: (item) => {
+                const state = getState();
+                const newRefs = [...state.composer.selectedReferences, item];
+                setSelectedReferences(newRefs);
+                return { shouldInsertChip: false, updateRefs: true };
+            }
+        };
+
+        // Execute the strategy based on type
+        const strategy = selectionStrategies[type];
+        const result = strategy ? strategy(item) : { shouldInsertChip: false };
+
+        if (result.shouldInsertChip) {
+            // Insert chip into the view
+            this.view.insertChip({
+                id: item.id,
+                text: item.name || item.text,
+                type: type,
+                icon: item.icon,
+                trigger: trigger
+            });
+        } else if (result.updateRefs) {
+            // Update reference chips specifically
+            const state = getState();
+            this.view.updateReferenceChips(state.composer.selectedReferences);
+        }
+
+    }
+
+    handleSpecialDocument(type, item, name) {
+        const state = getState();
+
+        const newRefs = [item, ...state.composer.selectedReferences.filter(i => i.name != name)];
+
+        setSelectedReferences(newRefs);
+
+        this.view.updateReferenceChips(newRefs);
+
+        // Hide menu and clear menu selection state
+        this.view.hideMenu();
+
+        // Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
+    }
+
+    handleFileContext(type, item, name) {
+        const state = getState();
+
+        const newRefs = [item, ...state.composer.selectedReferences.filter(i => i.name != name)];
+
+        setSelectedReferences(newRefs);
+
+        this.view.updateReferenceChips(newRefs);
+
+        // Hide menu and clear menu selection state
+        this.view.hideMenu();
+
+        // Sync with AppState (we'll complete this in a later step)
+        setActiveMenu(null);
+        setActiveTrigger(null);
+    }
+
+    removeChip(item) {
+
+        // Sync the specific category with AppState
+        if (item.type === 'agents') {
+            setSelectedAgent(null);
+        }
+        else if (item.type === 'references') {
+            const state = getState();
+
+            const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
+
+            setSelectedReferences(remainingRefs);
+        }
+        else if (item.type === 'commands') {
+            setSelectedCommand(null);
+        }
+    }
+
+    removeRef(item) {
+        const state = getState();
+        // Sync the specific category with AppState
+        const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
+        setSelectedReferences(remainingRefs);
+
+        // Sync draft text if necessary (or re-parse)
+        // The view will handle the DOM removal, but if your draftText depends on
+        // these tokens, you might need to trigger a re-parse here.
+
+        this.view.removeRefNode(item.id);
+    }
+
+    resetComposer() {
+        setDraftText("");
+        setActiveTrigger(null);
+        setActiveMenu(null);
+        setSelectedCommand(null);
+        setSelectedAgent(null);
+        setSelectedReferences([]);
+        setCursorContext(null);
+
+        this.view.updateReferenceChips([]);
+    }
+}

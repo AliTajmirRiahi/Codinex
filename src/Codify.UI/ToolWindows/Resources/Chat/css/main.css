@@ -1,0 +1,28 @@
+/* main.css */
+
+
+/* 1. Base */
+@import url('./base/_variables.css');
+@import url('./base/_shared.css');
+@import url('./base/_reset.css');
+
+/* 2. Layout */
+@import url('./layout/_wrapper.css');
+@import url('./layout/_header.css');
+
+/* 3. Components */
+@import url('./components/_buttons.css');
+@import url('./components/_inputs.css');
+@import url('./components/_form.css');
+@import url('./components/_fonts.css');
+@import url('./components/_pagination.css');
+@import url('./components/_list.css');
+@import url('./components/_dropdown.css');
+@import url('./components/_modal.css');
+@import url('./components/_loading.css');
+
+/* 4. Views */
+@import url('./views/_chat.css');
+@import url('./views/_toolbar.css');
+@import url('./views/_inputArea.css');
+@import url('./views/_manageModels.css');

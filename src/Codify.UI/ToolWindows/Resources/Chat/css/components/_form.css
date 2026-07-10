@@ -1,0 +1,28 @@
+/* Form */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    margin-top: 2px;
+}
+
+    .form-group.inline {
+        flex-direction: row;
+        gap: 18px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+        color: var(--vs-foreground);
+    }
+
+    /* Inputs */
+    .form-group input,
+    .form-group select {
+        padding: 6px 8px;
+        border-radius: 4px;
+        border: 1px solid var(--vs-border);
+        background: var(--vs-input-bg);
+        color: var(--vs-foreground);
+    }

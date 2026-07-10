@@ -1,0 +1,222 @@
+﻿<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Security Policy to allow resources from the custom internal scheme -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'none';
+               img-src http://codify.resources data:;
+               script-src http://codify.resources 'unsafe-inline';
+               style-src http://codify.resources 'unsafe-inline';
+               connect-src http://codify.resources;
+               font-src 'self' codify.resources http://codify.resources;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="/Shared/components/toastify.css">
+    <!--<link rel="stylesheet" href="/Chat/chat-view.style.css">-->
+</head>
+<body>
+    <!-- Loading Screen Container -->
+    <!-- This will be visible by default until onInitData is triggered -->
+    <div id="loading-screen" class="loading-screen">
+        <codify-image name="loading.svg" class="spinner"></codify-image>
+        <h2>Loading Codify AI...</h2>
+    </div>
+    <div id="main-chat-wrapper" class="chat-wrapper hidden">
+
+        <!-- Toolbar for managing chat history and sessions -->
+        <div class="chat-toolbar">
+            <!-- Dropdown to select and switch between previous chat threads -->
+            <div class="chat-history-selector-wrapper">
+                <button id="chat-history-selector-btn" class="selector-btn" title="Select Model">
+                    <span id="chat-history-name">NAME</span>
+                    <codify-icon name="chevron-down"></codify-icon>
+                </button>
+
+                <div id="chat-history-dropdown" class="com-dropdown">
+                    <div class="menu-label">Chat List History</div>
+
+                    <div id="chat-history-dropdown-menu-container"></div>
+                </div>
+            </div>
+
+            <!-- Button to create a new chat session -->
+            <button id="new-chat-btn" class="toolbar-btn" title="New Chat">
+                <codify-icon name="message-square-plus"></codify-icon>
+            </button>
+
+            <!-- Button to delete the current active chat session -->
+            <button id="delete-chat-btn" class="toolbar-btn danger" title="Delete Chat">
+                <codify-icon name="trash-2"></codify-icon>
+            </button>
+        </div>
+
+        <!-- Initial welcome state when no messages are present -->
+        <div id="chat-welcome" class="chat-welcome-screen">
+            <!-- Main Logo -->
+            <!--<img src="../Icons/codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo">-->
+            <codify-image name="codify-AI-logo-black.svg" alt="Codify AI Logo" class="welcome-logo"></codify-image>
+            <!-- App Title -->
+            <h1 class="welcome-title">Codify AI</h1>
+
+            <!-- Welcome Message -->
+            <p class="welcome-subtitle">How can I help you code today?</p>
+        </div>
+
+        <!-- Container for displaying chat messages -->
+        <div id="chat-container" class="messages-container">
+            <div id="response-loading" class="response-loading hidden">
+                <codify-image name="linear-loading.svg"></codify-image>
+            </div>
+            <div id="error-box" class="codify-error-box hidden">
+                <div class="codify-error-box__title">Error</div>
+                <div class="codify-error-box__message">
+                    There is some problem, please check output for details
+                </div>
+            </div>
+        </div>
+
+        <!-- User input section at the bottom -->
+        <div class="input-container">
+
+            <div class="input-box-wrapper">
+                <!-- Top row: context / file selector -->
+                <div class="input-context-row">
+                    <button id="contextBtn" class="context-add-btn" title="Add Context" data-placeholder=" References">
+                        <codify-icon name="plus"></codify-icon>
+                    </button>
+                    <div id="contextInput"
+                         class="context-input content-editable hidden"
+                         contenteditable="true"
+                         role="textbox"
+                         aria-multiline="false"
+                         data-placeholder=""></div>
+                </div>
+                <!-- Main textarea -->
+                <!--<textarea id="userInput" placeholder="Ask Codify…" rows="1"></textarea>-->
+
+                <div id="userInput"
+                     class="composer-input content-editable is-empty"
+                     contenteditable="true"
+                     role="textbox"
+                     aria-multiline="true"
+                     data-placeholder="Ask Codify …"></div>
+
+                <!-- Slash / Agent / Reference menu -->
+                <div id="composer-menu" class="composer-menu hidden"></div>
+                <!-- Bottom row: agent / model selector + actions -->
+                <div class="input-footer-row">
+                    <div class="selector-group">
+                        <button id="agent-selector-btn" class="selector-btn hidden" title="Select Agent">
+                            <codify-icon name="hat-glasses"></codify-icon>
+                            <span>Agent</span>
+                            <codify-icon name="chevron-down"></codify-icon>
+                        </button>
+                        <div class="model-selector-wrapper">
+                            <button id="model-selector-btn" class="selector-btn" title="Select Model">
+                                <codify-icon name="brain"></codify-icon>
+                                <span id="current-model-name"></span>
+                                <codify-icon name="chevron-down"></codify-icon>
+                            </button>
+                            <div id="model-dropdown-menu" class="com-dropdown">
+                                <div class="menu-label">Activated Models</div>
+                                <div id="model-dropdown-menu-container"></div>
+                                <div class="menu-divider"></div>
+                                <div id="manage-models-action" class="menu-action">
+                                    <codify-icon name="wrench"></codify-icon>
+                                    <span>Manage Models</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-actions">
+                        <button id="settings-btn" title="Change Settings">
+                            <codify-icon name="wrench"></codify-icon>
+                        </button>
+                        <button id="send-btn" class="disable" title="Send">
+                            <codify-icon name="send-horizontal"></codify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add AI Model</h2>
+                <button id="close-settings">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Step 1: Provider Selection -->
+                <div class="form-group">
+                    <label>Select Provider</label>
+                    <select id="provider-select">
+                        <!-- Dynamic: Filled from C# -->
+                    </select>
+                </div>
+
+                <!-- Step 2: Model List (Checkboxes) -->
+                <!-- We keep this area as the one that expands -->
+                <div id="model-list-container" class="model-selection-area">
+                    <label>Available Models</label>
+                    <div id="models-checkbox-list" class="checkbox-list">
+                        <!-- Dynamic: Filled based on Provider -->
+                    </div>
+
+                    <div id="model-pagination" class="pagination-controls hidden">
+                        <button id="prev-page" class="pager-btn" disabled>&lt; Prev</button>
+                        <span id="page-info">Page 1 of 1</span>
+                        <button id="next-page" class="pager-btn">Next &gt;</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input id="model-api-key" type="text" placeholder="sx-...">
+                    </div>
+
+                    <button id="btn-show-add-custom" class="link-button">+ Add Custom Model</button>
+                </div>
+
+
+
+                <!-- Step 3: Custom Model Form (Hidden by default) -->
+                <div id="custom-model-form" class="hidden-form hidden">
+                    <hr>
+                    <div class="form-group">
+                        <label>Model ID</label>
+                        <input id="custom-model-id" type="text" placeholder="e.g. gpt-4-turbo">
+                    </div>
+                    <div class="form-group">
+                        <label>Token Limit</label>
+                        <input id="custom-token-limit" type="number" value="128000">
+                    </div>
+                    <div class="form-group inline">
+                        <label><input type="checkbox" id="custom-supports-images"> Images</label>
+                        <label><input type="checkbox" id="custom-supports-tools"> Tools</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer will stay at the very bottom -->
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="primary-button">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- JavaScript Bridges and logic -->
+    <script type="module" src="../../../Shared/components/toastify.js"></script>
+    <script type="module" src="../../../Shared/components/lodash.min.js"></script>
+    <script type="module" src="../js/main.js"></script>
+</body>
+</html>

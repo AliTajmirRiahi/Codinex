@@ -1,0 +1,161 @@
+/* Main input container */
+.input-container {
+    padding: 10px;
+    background: var(--vs-background);
+}
+
+/* Top row: add context + active document chip */
+.input-context-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+    .input-context-row:not(:has(.context-chip)) .context-add-btn:after {
+        content: attr(data-placeholder);
+        color: var(--vs-access-tool-tip-color);
+        cursor: text;
+        font-size: 12px;
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .input-context-row:not(:has(.context-chip)) .context-add-btn {
+        width: 100px;
+    }
+
+.context-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--vs-border);
+    background: var(--vs-background);
+    color: var(--vs-foreground);
+    box-sizing: border-box;
+}
+
+.context-chip-text {
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.context-chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 0;
+    margin-left: 2px;
+}
+
+    .context-chip-remove:hover {
+        opacity: 1;
+    }
+
+.composer-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.composer-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.08);
+    opacity: 1;
+    border: 1px solid var(--vs-access-tool-tip-border-color);
+}
+
+    .composer-chip .chip-label {
+        line-height: 1;
+    }
+
+    .composer-chip codify-icon {
+        width: 10px;
+        height: 10px;
+    }
+
+.composer-menu {
+    position: absolute;
+    bottom: 120px;
+    left: 31px;
+    width: 470px;
+    background-color: var(--vs-background);
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    box-shadow: 0 0px 13px rgba(0, 0, 0, 0.7);
+    z-index: 20;
+    max-height: 400px;
+    overflow: scroll;
+}
+
+    .composer-menu[data-section="contexts"] {
+        bottom: 165px;
+        left: 22px;
+    }
+
+.composer-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 5px 7px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+    .composer-menu-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
+
+    .composer-menu-item .item-name {
+        color: var(--vs-foreground);
+        min-width: 120px;
+        padding-left: 8px;
+        border-left: 0.0rem solid;
+        border-color: var(--vs-auto-hide-tab-mouse-over-border-color);
+    }
+
+    .composer-menu-item .item-icon {
+        width: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--vs-viz-surface-plum-medium-color);
+    }
+
+    .composer-menu-item codify-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .composer-menu-item .item-desc {
+        color: var(--vs-access-tool-tip-color);
+        font-size: 0.9em;
+        margin-left: auto;
+        text-align: right;
+    }
+
+    /* Styling for the selected item via keyboard */
+    .composer-menu-item.active {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }

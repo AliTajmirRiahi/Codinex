@@ -1,0 +1,21 @@
+
+/* Chat toolbar container */
+.chat-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background-color: var(--vs-background);
+    border-bottom: 1px solid var(--vs-border);
+}
+
+.model-selector-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.selector-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
