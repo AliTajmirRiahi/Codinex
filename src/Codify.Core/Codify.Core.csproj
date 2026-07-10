@@ -51,7 +51,7 @@
     <Compile Include="Chat\ReferenceContextFormatter.cs" />
     <Compile Include="Chat\SystemPrompts.cs" />
     <Compile Include="Interfaces\IActiveDocumentWatcher.cs" />
-    <Compile Include="Interfaces\IActiveReferenceProvider.cs" />
+    <Compile Include="Interfaces\IActiveDocumentProvider.cs" />
     <Compile Include="Interfaces\IAiProvider.cs" />
     <Compile Include="Interfaces\IChatSession.cs" />
     <Compile Include="Interfaces\IErrorHandler.cs" />
