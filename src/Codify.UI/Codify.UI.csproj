@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0BFD8BA2-DD44-48C9-82A8-5DE3FAEA95D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Codify.UI</RootNamespace>
+    <AssemblyName>Codify.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <ProjectTypeGuids>{60dc8134-EBA5-43B8-BCC9-BB4BC16C2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToolWindows\CodifyToolWindowControl.xaml.cs">
+      <DependentUpon>CodifyToolWindowControl.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ToolWindows\CodifyToolWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ToolWindows\Resources\babel.config.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\services\aiService.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\services\paginationService.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\services\validationService.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\state\appState.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\utils\debounce.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\utils\dom.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\views\manageModelsView.test.js" />
+    <Content Include="ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
+    <Content Include="ToolWindows\Resources\jest.config.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\lodash.min.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\codify-image.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\codify-icon.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\code-renderer.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\bridge\webViewTransport.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\bridge\messageDispatcher.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\bridge\errorReporter.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\bridge\bridge.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\wrench.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\visual-studio-svgrepo-com.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Visual-Studio-Icon.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Visual-Studio-Icon-Flat.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\trash-2.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\test-tube-diagonal.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbolab.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-variable.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-structure.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-string.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-snippet.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-ruler.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-property.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-parameter.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-operator.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-numeric.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-namespace.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-misc.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-method.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-method-arrow.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-keyword.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-key.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-interface.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-file.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-field.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-event.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-enum.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-enum-member.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-constant.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-color.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-color-compact.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-class.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-boolean.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-array.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\send-horizontal.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\scroll-text.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\refresh-cw.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\plus.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\monitor.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\message-square-x.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\message-square-plus.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\message-circle-check.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\loading.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\linear-loading.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\lightning.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\hat-glasses.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\hand-platter.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\folder.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\flask-conical.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\terminal-compact.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\icon-project.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\icon-build.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\folder_type_environments.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_yaml.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_xml.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_xaml.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_webpack.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_vbproj.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_vb.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_ts.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_text.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_table.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_svg.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_sql.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_sln2.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_sln.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_scss.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_sass.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_rs.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_resx.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_reactjs.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_python.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_php.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_markdown2.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_markdown.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_light_testcafe.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_less.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_json.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_js.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_jpeg.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_java.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_image.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_icon.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_html.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_hpp.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_h.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_go.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_gitignore.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_git.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_fsproj.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_fsharp2.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_exe.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_editorconfig.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_dll.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_css.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_csproj.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_csharp.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_cpp.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_config.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\file_type_c.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\default_file.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\fileTypes\debug-console.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\codify-AI-logo-black.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\circle-x.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\chevron-down.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\bug.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\brain.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\activity.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\favicon.ico" />
+    <EmbeddedResource Include="ToolWindows\Resources\CodifyToolWindowCommand.png" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\view\chat-view.html" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\messageView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\manageModelsView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\dropDownView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\composerView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\chatView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\chatListView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\dom.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\debounce.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\state\appState.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\services\validationService.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\services\paginationService.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\services\aiService.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\main.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\providerController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\manageModelsController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\composerController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\chatController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\constants\statics.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\constants\events.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_toolbar.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_manageModels.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_inputArea.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_chat.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\main.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\layout\_wrapper.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\layout\_header.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_pagination.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_modal.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_loading.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_list.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_inputs.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_form.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_fonts.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_dropdown.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\components\_buttons.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\base\_variables.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\base\_shared.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\base\_reset.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
+      <Version>9.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>8.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <Version>8.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ML">
+      <Version>1.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.ML.CpuMath">
+      <Version>1.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" NoWarn="NU1604" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2120" NoWarn="NU1604" />
+    <PackageReference Include="Microsoft.Web.WebView2">
+      <Version>1.0.3800.47</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
+    <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.13.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\fonts\iransans.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ToolWindows\Resources\package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">
+      <Project>{fab3acec-0007-48d9-99b7-cd6820fb97f2}</Project>
+      <Name>Codify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Codify.VisualStudio\Codify.VisualStudio.csproj">
+      <Project>{1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9}</Project>
+      <Name>Codify.VisualStudio</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
