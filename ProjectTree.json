@@ -202,28 +202,6 @@
         "type":  "folder",
         "children":  [
                          {
-                             "path":  "src/Codify.Contracts",
-                             "name":  "Codify.Contracts",
-                             "type":  "folder",
-                             "children":  [
-                                              {
-                                                  "path":  "src/Codify.Contracts/Properties",
-                                                  "name":  "Properties",
-                                                  "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "src/Codify.Contracts/Properties/AssemblyInfo.cs",
-                                                                   "name":  "AssemblyInfo.cs",
-                                                                   "type":  "file"
-                                                               }
-                                              },
-                                              {
-                                                  "path":  "src/Codify.Contracts/Codify.Contracts.csproj",
-                                                  "name":  "Codify.Contracts.csproj",
-                                                  "type":  "file"
-                                              }
-                                          ]
-                         },
-                         {
                              "path":  "src/Codify.Core",
                              "name":  "Codify.Core",
                              "type":  "folder",
