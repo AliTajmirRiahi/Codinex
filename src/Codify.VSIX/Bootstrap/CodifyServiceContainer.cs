@@ -65,6 +65,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IJsonSerializer, JsonSerializationService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
+            services.AddSingleton<IUiThreadDispatcher, VsThreadDispatcher>();
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IWorkspaceContext, VsWorkspaceContext>();
             services.AddSingleton<IStorageService, FileStorageService>();

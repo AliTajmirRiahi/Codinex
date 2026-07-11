@@ -12,11 +12,16 @@ using Codify.VisualStudio.Internal;
 
 namespace Codify.VisualStudio.References.Providers
 {
-    public class FileReferenceProvider(IVisualStudioServices visualStudio, IWorkspaceContext workspaceContext , IFileSystem fileSystem)
+#pragma warning disable VSTHRD010
+    public class FileReferenceProvider(IVisualStudioServices visualStudio,
+        IWorkspaceContext workspaceContext ,
+        IFileSystem fileSystem,
+        IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
         private readonly IFileSystem _fileSystem = fileSystem;
+        private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
 
         public sealed class FileIconInfo
         {
@@ -108,7 +113,7 @@ namespace Codify.VisualStudio.References.Providers
 
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _uiThreadDispatcher.SwitchToMainThreadAsync();
 
             var items = new List<ReferenceItem>();
             var dte = await GetDteAsync();
@@ -125,13 +130,12 @@ namespace Codify.VisualStudio.References.Providers
             {
                 ProcessProjectItems(project.ProjectItems, items);
             }
-
             return items;
         }
 
         public async Task<ReferenceItem> GetActiveDocumentAsync()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _uiThreadDispatcher.SwitchToMainThreadAsync();
 
             var dte = await GetDteAsync();
 
@@ -190,7 +194,8 @@ namespace Codify.VisualStudio.References.Providers
 
         private void ProcessProjectItems(ProjectItems projectItems, List<ReferenceItem> items)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            _uiThreadDispatcher.ThrowIfNotOnUIThread();
+
             if (projectItems == null) return;
 
             foreach (ProjectItem item in projectItems)
@@ -243,6 +248,7 @@ namespace Codify.VisualStudio.References.Providers
                     ProcessProjectItems(item.SubProject.ProjectItems, items);
                 }
             }
+
         }
 
         private string GetRelativePath(string fullPath, string solutionPath)
@@ -252,18 +258,20 @@ namespace Codify.VisualStudio.References.Providers
                 var solutionDir = Path.GetDirectoryName(solutionPath);
                 if (string.IsNullOrEmpty(solutionDir)) return fullPath;
 
-                Uri fullUri = new Uri(fullPath);
-                Uri solutionUri = new Uri(solutionDir + Path.DirectorySeparatorChar);
+                var fullUri = new Uri(fullPath);
+                var solutionUri = new Uri(solutionDir + Path.DirectorySeparatorChar);
                 return Uri.UnescapeDataString(solutionUri.MakeRelativeUri(fullUri).ToString().Replace('/', Path.DirectorySeparatorChar));
             }
             catch { return fullPath; }
         }
 
-        private FileIconInfo GetIconForFile(string fileName)
+        private static FileIconInfo GetIconForFile(string fileName)
         {
             var ext = Path.GetExtension(fileName); // No need for ToLower() here because we used StringComparer.OrdinalIgnoreCase
             return FileIcons.TryGetValue(ext, out var icon) ? icon : FileIcons["default"];
         }
 
     }
+#pragma warning restore VSTHRD010
+
 }

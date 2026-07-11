@@ -61,6 +61,7 @@
     <Compile Include="Interfaces\IReferenceProvider.cs" />
     <Compile Include="Interfaces\IStartupTask.cs" />
     <Compile Include="Interfaces\IThemeService.cs" />
+    <Compile Include="Interfaces\IUiThreadDispatcher.cs" />
     <Compile Include="Interfaces\IUserNotificationService.cs" />
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />

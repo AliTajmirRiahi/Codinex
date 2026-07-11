@@ -44,7 +44,7 @@
     <Reference Include="System.Drawing">
       <Private>True</Private>
     </Reference>
-	<Reference Include="PresentationFramework">
+    <Reference Include="PresentationFramework">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -76,6 +76,7 @@
     <Compile Include="References\Providers\SystemReferenceProvider.cs" />
     <Compile Include="References\ReferenceManager.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
+    <Compile Include="Services\VsThreadDispatcher.cs" />
     <Compile Include="Theme\VsThemeService.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
