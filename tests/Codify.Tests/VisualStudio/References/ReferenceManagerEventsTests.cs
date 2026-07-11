@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Tests.VisualStudio.References
 {
+    [TestFixture]
     public class ReferenceManagerEventsTests
     {
         [Test]

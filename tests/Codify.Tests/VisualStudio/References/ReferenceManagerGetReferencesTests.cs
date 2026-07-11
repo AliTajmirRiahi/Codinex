@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
-using Codify.VisualStudio.Hosting.Startup;
 using Codify.VisualStudio.References;
 
 using FluentAssertions;
