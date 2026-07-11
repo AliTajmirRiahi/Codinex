@@ -140,7 +140,7 @@ namespace Codify.VisualStudio.References.Providers
             var doc = dte?.ActiveDocument;
             var filePath = doc?.FullName;
 
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && _fileSystem.Exists(filePath))
                 return await GetActiveDocumentAsync(filePath);
 
             return null;
@@ -151,7 +151,7 @@ namespace Codify.VisualStudio.References.Providers
             var fileName = Path.GetFileName(filePath);
             var iconForFile = GetIconForFile(fileName);
 
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && _fileSystem.Exists(filePath))
             {
                 var content = string.Empty;
 
