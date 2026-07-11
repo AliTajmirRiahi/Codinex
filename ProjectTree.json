@@ -2163,9 +2163,36 @@
                                                                                         "name":  "ProviderTests",
                                                                                         "type":  "folder",
                                                                                         "children":  {
-                                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests.cs",
-                                                                                                         "name":  "FileReferenceProviderTests.cs",
-                                                                                                         "type":  "file"
+                                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests",
+                                                                                                         "name":  "FileReferenceProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests/Base/FileReferenceProviderTestBase.cs",
+                                                                                                                                               "name":  "FileReferenceProviderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests/FileReferenceProvider_ActiveDocumentByPathTests.cs",
+                                                                                                                              "name":  "FileReferenceProvider_ActiveDocumentByPathTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests/FileReferenceProvider_ActiveDocumentTests.cs",
+                                                                                                                              "name":  "FileReferenceProvider_ActiveDocumentTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests/FileReferenceProvider_ReferenceCollectionTests.cs",
+                                                                                                                              "name":  "FileReferenceProvider_ReferenceCollectionTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
                                                                                                      }
                                                                                     },
                                                                                     {
