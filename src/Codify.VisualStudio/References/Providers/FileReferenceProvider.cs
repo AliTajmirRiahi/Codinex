@@ -12,10 +12,11 @@ using Codify.VisualStudio.Internal;
 
 namespace Codify.VisualStudio.References.Providers
 {
-    public class FileReferenceProvider(IVisualStudioServices visualStudio, IWorkspaceContext workspaceContext)
+    public class FileReferenceProvider(IVisualStudioServices visualStudio, IWorkspaceContext workspaceContext , IFileSystem fileSystem)
         : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
+        private readonly IFileSystem _fileSystem = fileSystem;
 
         public sealed class FileIconInfo
         {
@@ -138,7 +139,6 @@ namespace Codify.VisualStudio.References.Providers
 
             var doc = dte?.ActiveDocument;
             var filePath = doc?.FullName;
-            var fileName = Path.GetFileName(filePath);
 
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
                 return await GetActiveDocumentAsync(filePath);
@@ -158,7 +158,7 @@ namespace Codify.VisualStudio.References.Providers
                 try
                 {
                     /* Read file content safely for metadata context */
-                    content = File.ReadAllText(filePath);
+                    content = _fileSystem.ReadAllText(filePath);
                 }
                 catch
                 {
@@ -207,7 +207,7 @@ namespace Codify.VisualStudio.References.Providers
                     try
                     {
                         /* Read file content safely for metadata context */
-                        content = File.ReadAllText(filePath);
+                        content = _fileSystem.ReadAllText(filePath);
                     }
                     catch
                     {

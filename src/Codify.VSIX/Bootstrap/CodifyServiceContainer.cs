@@ -6,6 +6,7 @@ using Codify.Core.Interfaces;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
+using Codify.Infrastructure.IO;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
@@ -52,6 +53,8 @@ namespace Codify.VSIX.Bootstrap
                 };
                 return serializer;
             });
+
+            services.AddSingleton<IFileSystem, FileSystem>();
 
             // Core Services (Singletons)
             services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
