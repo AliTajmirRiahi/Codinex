@@ -110,6 +110,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/IFileSystem.cs",
+                                                                       "name":  "IFileSystem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/IJsonSerializer.cs",
                                                                        "name":  "IJsonSerializer.cs",
                                                                        "type":  "file"
@@ -137,6 +142,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IThemeService.cs",
                                                                        "name":  "IThemeService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IUiThreadDispatcher.cs",
+                                                                       "name":  "IUiThreadDispatcher.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -339,6 +349,16 @@
                                                                        "type":  "file"
                                                                    }
                                                                ]
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/IO",
+                                                  "name":  "IO",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/IO/FileSystem.cs",
+                                                                   "name":  "FileSystem.cs",
+                                                                   "type":  "file"
+                                                               }
                                               },
                                               {
                                                   "path":  "src/Codify.Infrastructure/Properties",
@@ -1847,6 +1867,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.VisualStudio/Services/VsThreadDispatcher.cs",
+                                                                       "name":  "VsThreadDispatcher.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.VisualStudio/Services/VsWorkspaceContext.cs",
                                                                        "name":  "VsWorkspaceContext.cs",
                                                                        "type":  "file"
@@ -2138,7 +2163,9 @@
                                                                                         "name":  "ProviderTests",
                                                                                         "type":  "folder",
                                                                                         "children":  {
-
+                                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ProviderTests/FileReferenceProviderTests.cs",
+                                                                                                         "name":  "FileReferenceProviderTests.cs",
+                                                                                                         "type":  "file"
                                                                                                      }
                                                                                     },
                                                                                     {
