@@ -136,6 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ActiveDocumentByPathTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ActiveDocumentTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\Base\FileReferenceProviderTestBase.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ReferenceCollectionTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
@@ -148,7 +152,6 @@
     <Folder Include="Infrastructure\" />
     <Folder Include="Storage\" />
     <Folder Include="VisualStudio\References\BaseTests\" />
-    <Folder Include="VisualStudio\References\ProviderTests\" />
     <Folder Include="VisualStudio\References\TestDoubles\" />
   </ItemGroup>
   <ItemGroup>
