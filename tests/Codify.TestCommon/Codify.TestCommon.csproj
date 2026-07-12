@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,13 +45,24 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" NoWarn="NU1604" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
+    <PackageReference Include="NSubstitute">
+      <Version>5.3.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\VisualStudio\ActiveDocumentBuilder.cs" />
+    <Compile Include="Builders\VisualStudio\ProjectBuilder.cs" />
+    <Compile Include="Builders\VisualStudio\ProjectItemBuilder.cs" />
+    <Compile Include="Builders\VisualStudio\SolutionBuilder.cs" />
+    <Compile Include="Builders\VisualStudio\VisualStudioScenarioBuilder.cs" />
     <Compile Include="Fakes\TestExecutionPipeline.cs" />
+    <Compile Include="Fakes\VisualStudio\FakeProject.cs" />
+    <Compile Include="Fakes\VisualStudio\FakeProjectItems.cs" />
+    <Compile Include="Fakes\VisualStudio\FakeProjectItem.cs" />
+    <Compile Include="Fakes\VisualStudio\FakeProjects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Builders\" />
     <Folder Include="Extensions\" />
     <Folder Include="Fixtures\" />
     <Folder Include="Helpers\" />

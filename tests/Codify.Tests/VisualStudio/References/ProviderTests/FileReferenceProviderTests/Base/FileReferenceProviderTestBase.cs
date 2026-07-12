@@ -1,13 +1,15 @@
 ﻿using Codify.Core.Interfaces;
+using Codify.TestCommon.Fakes.VisualStudio;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.References.Providers;
+using EnvDTE;
 using EnvDTE80;
 using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
 namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
-
+#pragma warning disable VSTHRD010
 public abstract class FileReferenceProviderTestBase
 {
     protected IVisualStudioServices VisualStudioServices = null!;
@@ -49,5 +51,32 @@ public abstract class FileReferenceProviderTestBase
             WorkspaceContext,
             FileSystem,
             UiThreadDispatcher);
+    }
+
+    protected void SetActiveDocument(
+        string filePath,
+        string content)
+    {
+        var document = Substitute.For<Document>();
+
+        document.FullName.Returns(filePath);
+
+        Dte.ActiveDocument.Returns(document);
+
+        FileSystem.Exists(filePath).Returns(true);
+        FileSystem.ReadAllText(filePath).Returns(content);
+    }
+
+    protected void SetSolution(params Project[] projects)
+    {
+        var solution = Substitute.For<Solution>();
+
+        solution.IsOpen.Returns(true);
+
+        var fakeProjects = FakeProjects.Create(projects);
+
+        solution.Projects.Returns(fakeProjects);
+
+        Dte.Solution.Returns(solution);
     }
 }

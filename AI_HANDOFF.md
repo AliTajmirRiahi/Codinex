@@ -59,6 +59,7 @@
 ### Technical Design Rules
 - Composer Input: Must use `contenteditable` instead of `textarea` to enable dynamic token injection (Chips for @, /, #) and inline rich-text formatting. 
 - State Synchronization: Any manipulation of the composer content must update the underlying AppState (plain text representation) to ensure AiService receives valid input.
+- When enumerating EnvDTE COM collections (Projects, ProjectItems, etc.), prefer Cast<T>() over direct foreach (T item in collection). This approach is more testable and works consistently with mocked collections
 
 ## Reference Composer UI Rules
 - The `#` trigger should open a dedicated reference menu positioned near the current caret location.
