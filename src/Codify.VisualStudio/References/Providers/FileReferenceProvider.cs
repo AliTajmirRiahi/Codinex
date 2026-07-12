@@ -123,7 +123,10 @@ namespace Codify.VisualStudio.References.Providers
                 return items;
             }
 
-            items.Add(await GetActiveDocumentAsync());
+            var activeDocument = await GetActiveDocumentAsync();
+
+            if (activeDocument != null)
+                items.Add(activeDocument);
 
             // Traverse all projects in the solution
             foreach (var project in dte.Solution.Projects.Cast<Project>().Where(project => project != null))
@@ -198,7 +201,7 @@ namespace Codify.VisualStudio.References.Providers
 
             if (projectItems == null) return;
 
-            foreach (ProjectItem item in projectItems)
+            foreach (var item in projectItems.Cast<ProjectItem>()) //Testable loop for Enumerate COM EnvDTE.ProjectItems
             {
                 // GUID for Physical File in VS
                 if (item.Kind == "{6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C}")
@@ -249,20 +252,6 @@ namespace Codify.VisualStudio.References.Providers
                 }
             }
 
-        }
-
-        private string GetRelativePath(string fullPath, string solutionPath)
-        {
-            try
-            {
-                var solutionDir = Path.GetDirectoryName(solutionPath);
-                if (string.IsNullOrEmpty(solutionDir)) return fullPath;
-
-                var fullUri = new Uri(fullPath);
-                var solutionUri = new Uri(solutionDir + Path.DirectorySeparatorChar);
-                return Uri.UnescapeDataString(solutionUri.MakeRelativeUri(fullUri).ToString().Replace('/', Path.DirectorySeparatorChar));
-            }
-            catch { return fullPath; }
         }
 
         private static FileIconInfo GetIconForFile(string fileName)
