@@ -10,14 +10,15 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Codify.VisualStudio.References.Providers.Base
 {
-    public abstract class RoslynReferenceProviderBase(IVisualStudioServices visualStudio)
+    public abstract class RoslynReferenceProviderBase(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IReferenceProvider
     {
         private readonly IVisualStudioServices _visualStudio = visualStudio;
+        private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
 
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await _uiThreadDispatcher.SwitchToMainThreadAsync();
 
             if (await GetWorkspaceAsync() is not { } workspace || await GetDteAsync() is not { Solution: not null })
                 return Array.Empty<ReferenceItem>();
