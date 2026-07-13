@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
 using Codify.VisualStudio.Interfaces;
+using Microsoft.CodeAnalysis;
 
 namespace Codify.VisualStudio.Internal
 {
@@ -59,7 +60,7 @@ namespace Codify.VisualStudio.Internal
             return VisualStudio.GetUiShellAsync();
         }
 
-        protected Task<VisualStudioWorkspace> GetWorkspaceAsync()
+        protected Task<Workspace> GetWorkspaceAsync()
         {
             return VisualStudio.GetWorkspaceAsync();
         }

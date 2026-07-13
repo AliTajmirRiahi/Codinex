@@ -1,8 +1,8 @@
 ﻿using EnvDTE80;
-using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 
 namespace Codify.VisualStudio.Interfaces
 {
@@ -47,6 +47,6 @@ namespace Codify.VisualStudio.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        Task<VisualStudioWorkspace> GetWorkspaceAsync();
+        Task<Workspace> GetWorkspaceAsync();
     }
 }

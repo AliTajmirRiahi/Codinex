@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
 using Codify.VisualStudio.Interfaces;
+using Microsoft.CodeAnalysis;
 
 namespace Codify.VisualStudio.Internal
 {
@@ -56,7 +57,7 @@ namespace Codify.VisualStudio.Internal
             return await serviceProvider.GetServiceAsync(typeof(SVsUIShell)) as IVsUIShell;
         }
 
-        public async Task<VisualStudioWorkspace> GetWorkspaceAsync()
+        public async Task<Workspace> GetWorkspaceAsync()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -64,7 +65,7 @@ namespace Codify.VisualStudio.Internal
                 await GetServiceAsync<SComponentModel>() as IComponentModel;
 
             return componentModel?
-                .GetService<VisualStudioWorkspace>();
+                .GetService<Workspace>();
         }
     }
 }

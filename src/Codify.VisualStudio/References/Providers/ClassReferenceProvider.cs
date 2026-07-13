@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.References.Providers.Base;
@@ -14,8 +15,8 @@ using Project = Microsoft.CodeAnalysis.Project;
 
 namespace Codify.VisualStudio.References.Providers
 {
-    public sealed class ClassReferenceProvider(IVisualStudioServices visualStudio)
-        : RoslynReferenceProviderBase(visualStudio)
+    public sealed class ClassReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
+        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)
     {
         protected override Task<IReadOnlyList<ReferenceItem>> ExtractReferencesAsync(Project project, Document document)
         {

@@ -1,5 +1,7 @@
-﻿using Codify.Core.Models;
-using EnvDTE;
+﻿using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.References.Providers.Base;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -8,15 +10,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers.Base;
 using Document = Microsoft.CodeAnalysis.Document;
 using Project = Microsoft.CodeAnalysis.Project;
 
 namespace Codify.VisualStudio.References.Providers
 {
-    public sealed class MethodReferenceProvider(IVisualStudioServices visualStudio)
-        : RoslynReferenceProviderBase(visualStudio)
+    public sealed class MethodReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
+        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)
     {
         protected override Task<IReadOnlyList<ReferenceItem>> ExtractReferencesAsync(Project project, Document document)
         {
