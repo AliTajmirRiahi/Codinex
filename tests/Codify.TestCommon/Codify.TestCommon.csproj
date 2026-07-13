@@ -53,6 +53,7 @@
     <Compile Include="Builders\VisualStudio\ActiveDocumentBuilder.cs" />
     <Compile Include="Builders\VisualStudio\ProjectBuilder.cs" />
     <Compile Include="Builders\VisualStudio\ProjectItemBuilder.cs" />
+    <Compile Include="Builders\VisualStudio\RoslynScenarioBuilder.cs" />
     <Compile Include="Builders\VisualStudio\SolutionBuilder.cs" />
     <Compile Include="Builders\VisualStudio\VisualStudioScenarioBuilder.cs" />
     <Compile Include="Fakes\TestExecutionPipeline.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Fakes\VisualStudio\FakeProjectItems.cs" />
     <Compile Include="Fakes\VisualStudio\FakeProjectItem.cs" />
     <Compile Include="Fakes\VisualStudio\FakeProjects.cs" />
+    <Compile Include="Fakes\VisualStudio\TestRoslynReferenceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +74,10 @@
     <ProjectReference Include="..\..\src\Codify.Core\Codify.Core.csproj">
       <Project>{fab3acec-0007-48d9-99b7-cd6820fb97f2}</Project>
       <Name>Codify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Codify.VisualStudio\Codify.VisualStudio.csproj">
+      <Project>{1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9}</Project>
+      <Name>Codify.VisualStudio</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

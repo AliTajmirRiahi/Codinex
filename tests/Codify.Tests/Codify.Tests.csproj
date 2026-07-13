@@ -136,10 +136,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualStudio\References\BaseTests\RoslynReferenceProvider_GetReferencesAsyncTests.cs" />
     <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ActiveDocumentByPathTests.cs" />
     <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\Base\FileReferenceProviderTestBase.cs" />
     <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ReferenceCollectionTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\Base\MethodReferenceProviderTestBase.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\MethodReferenceProvider_BodyTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\MethodReferenceProvider_GetReferencesAsyncTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\MethodReferenceProvider_MetadataTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\MethodReferenceProvider_ReferenceItemTests.cs" />
+    <Compile Include="VisualStudio\References\ProviderTests\MethodReferenceProviderTests\MethodReferenceProvider_SignatureTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
@@ -151,7 +158,6 @@
     <Folder Include="Core\" />
     <Folder Include="Infrastructure\" />
     <Folder Include="Storage\" />
-    <Folder Include="VisualStudio\References\BaseTests\" />
     <Folder Include="VisualStudio\References\TestDoubles\" />
   </ItemGroup>
   <ItemGroup>
