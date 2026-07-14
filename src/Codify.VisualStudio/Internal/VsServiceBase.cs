@@ -60,7 +60,7 @@ namespace Codify.VisualStudio.Internal
             return VisualStudio.GetUiShellAsync();
         }
 
-        protected Task<Workspace> GetWorkspaceAsync()
+        protected Task<VisualStudioWorkspace> GetWorkspaceAsync()
         {
             return VisualStudio.GetWorkspaceAsync();
         }

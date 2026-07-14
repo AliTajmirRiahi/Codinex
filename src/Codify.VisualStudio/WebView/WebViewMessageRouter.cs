@@ -22,7 +22,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 {
     private readonly IWebViewClient _webViewClient;
     private readonly IJsonSerializer _serializer;
-    private readonly ExecutionPipeline _pipeline;
+    private readonly IExecutionPipeline _pipeline;
     private readonly ProviderManager _providerManager;
     private readonly IPayloadBinder _payloadBinder;
     private readonly ChatUseCaseFactory _chatUseCaseFactory;
@@ -34,7 +34,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private ISendChatMessageUseCase _sendChatMessageUseCase;
 
     public WebViewMessageRouter(
-        ExecutionPipeline pipeline,
+        IExecutionPipeline pipeline,
         ProviderManager providerManager,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,

@@ -1,7 +1,7 @@
 ﻿// Path: Codify\Infrastructure\DependencyInjection\ServiceContainer.cs
 
-using System;
 using Codify.Core.Chat;
+using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AI.Providers;
@@ -10,6 +10,7 @@ using Codify.Infrastructure.IO;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
+using Codify.Infrastructure.Conversation;
 using Codify.Storage;
 using Codify.VisualStudio;
 using Codify.VisualStudio.Diagnostics.Errors;
@@ -26,6 +27,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
+using System;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -116,6 +118,7 @@ namespace Codify.VSIX.Bootstrap
             // and add: services.AddSingleton<IAiProvider, OllamaProvider>();
 
             // Use Cases (Business Logic)
+            services.AddTransient<IConversationEngine, ConversationEngine>();
             services.AddTransient<ISendChatMessageUseCase, SendChatMessageUseCase>();
 
             // WebView Infrastructure

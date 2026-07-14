@@ -1,4 +1,5 @@
-﻿using Codify.Core.Models;
+﻿using Codify.Core.Conversation;
+using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -19,9 +20,8 @@ namespace Codify.Core.Interfaces
         /// <summary>
         /// Sends a prompt in streaming mode and reports chunks as they arrive.
         /// </summary>
-        Task SendStreamAsync(
-            IReadOnlyList<ChatMessage> prompt,
-            Func<string, Task> onChunk,
-            CancellationToken ct = default);
+        IAsyncEnumerable<ConversationEvent> SendStreamAsync(
+            IReadOnlyList<ChatMessage> messages,
+            CancellationToken cancellationToken = default);
     }
 }

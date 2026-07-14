@@ -33,6 +33,10 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Programmer\.nuget\packages\microsoft.bcl.asyncinterfaces\9.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +49,12 @@
   <ItemGroup>
     <Compile Include="Chat\ChatMessageBuilder.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
+    <Compile Include="Conversation\ConversationContext.cs" />
+    <Compile Include="Conversation\ConversationEvent.cs" />
+    <Compile Include="Conversation\ConversationEventType.cs" />
+    <Compile Include="Conversation\IConversationEngine.cs" />
+    <Compile Include="Conversation\ToolRequest.cs" />
+    <Compile Include="Conversation\ToolResult.cs" />
     <Compile Include="Interfaces\IChatMessageBuilder.cs" />
     <Compile Include="Interfaces\IExecutionPipeline.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
@@ -82,6 +92,9 @@
     <Compile Include="UseCases\SendChatMessageUseCase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
+      <Version>9.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>

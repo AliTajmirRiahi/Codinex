@@ -70,6 +70,43 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "src/Codify.Core/Conversation",
+                                                  "name":  "Conversation",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ConversationContext.cs",
+                                                                       "name":  "ConversationContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ConversationEvent.cs",
+                                                                       "name":  "ConversationEvent.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ConversationEventType.cs",
+                                                                       "name":  "ConversationEventType.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/IConversationEngine.cs",
+                                                                       "name":  "IConversationEngine.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ToolRequest.cs",
+                                                                       "name":  "ToolRequest.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ToolResult.cs",
+                                                                       "name":  "ToolResult.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Core/Interfaces",
                                                   "name":  "Interfaces",
                                                   "type":  "folder",
@@ -349,6 +386,16 @@
                                                                        "type":  "file"
                                                                    }
                                                                ]
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Conversation",
+                                                  "name":  "Conversation",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/Conversation/ConversationEngine.cs",
+                                                                   "name":  "ConversationEngine.cs",
+                                                                   "type":  "file"
+                                                               }
                                               },
                                               {
                                                   "path":  "src/Codify.Infrastructure/IO",

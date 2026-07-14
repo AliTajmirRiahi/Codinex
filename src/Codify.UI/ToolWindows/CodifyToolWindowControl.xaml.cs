@@ -62,7 +62,7 @@ namespace Codify.UI.ToolWindows
 
                 _userNotificationService = _serviceProvider.GetRequiredService<IUserNotificationService>();
 
-                var pipeline = _serviceProvider.GetRequiredService<ExecutionPipeline>();
+                var pipeline = _serviceProvider.GetRequiredService<IExecutionPipeline>();
 
                 _ = pipeline.RunAsync(
                     InitializeWebViewAsync,
@@ -233,7 +233,7 @@ namespace Codify.UI.ToolWindows
         private void OnWebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e)
         {
             var router = _serviceProvider.GetRequiredService<IWebViewMessageRouter>();
-            var pipeline = _serviceProvider.GetRequiredService<ExecutionPipeline>();
+            var pipeline = _serviceProvider.GetRequiredService<IExecutionPipeline>();
 
             _ = pipeline.RunAsync(
                 () => router.HandleMessageAsync(e.WebMessageAsJson),

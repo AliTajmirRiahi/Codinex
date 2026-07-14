@@ -28,5 +28,6 @@ public static class WebViewMessageType
     public const string SelectChatApproved = "SELECT_CHAT_APPROVED";
     public const string ChatTitleChanged = "CHAT_TITLE_CHANGED";
     public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";
-    
+    public const string StatusChanged = "STATUS_CHANGED";
+
 }

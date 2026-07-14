@@ -4,6 +4,7 @@ using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codify.Core.Conversation;
 
 namespace Codify.Core.UseCases;
 
@@ -15,7 +16,8 @@ public sealed class SendChatMessageUseCase(
     IAiProvider aiProvider,
     IChatSession chatSession,
     IErrorHandler errorHandler,
-    IChatMessageBuilder chatMessageBuilder)
+    IChatMessageBuilder chatMessageBuilder,
+    IConversationEngine conversationEngine)
     : ISendChatMessageUseCase
 {
     private readonly IAiProvider _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
@@ -93,20 +95,35 @@ public sealed class SendChatMessageUseCase(
             // Accumulate the full assistant text while chunks arrive.
             var fullText = string.Empty;
 
-            await _aiProvider.SendStreamAsync(
-                buildResult.Messages,
-                async chunk =>
+
+            await foreach (var evt in conversationEngine.ExecuteAsync(
+                               request))
+            {
+                switch (evt.Type)
                 {
-                    if (string.IsNullOrEmpty(chunk))
-                        return;
+                    case ConversationEventType.TextDelta:
 
-                    fullText += chunk;
+                        var chunk = evt.Payload.ToString();
 
-                    // Emit a chunk to the caller/UI.
-                    await onMessage(new ChatResponse(
-                        WebViewMessageType.StreamChunk,
-                        chunk));
-                });
+                        fullText += chunk;
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.StreamChunk,
+                                chunk));
+
+                        break;
+
+                    case ConversationEventType.StatusChanged:
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.StatusChanged,
+                                evt.DisplayMessage));
+
+                        break;
+                }
+            }
 
             // Persist the final assistant answer.
             chatSession.AddAssistantMessage(fullText);

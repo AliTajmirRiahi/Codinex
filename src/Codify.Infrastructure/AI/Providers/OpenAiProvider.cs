@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Codify.Core.Conversation;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 
 namespace Codify.Infrastructure.AI.Providers
 {
@@ -18,12 +19,9 @@ namespace Codify.Infrastructure.AI.Providers
             throw new NotImplementedException();
         }
 
-        public Task SendStreamAsync(
-            IReadOnlyList<ChatMessage> prompt,
-            Func<string, Task> onChunk,
-            CancellationToken ct = default)
+        public IAsyncEnumerable<ConversationEvent> SendStreamAsync(IReadOnlyList<ChatMessage> messages, CancellationToken cancellationToken = default)
         {
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
     }
 }

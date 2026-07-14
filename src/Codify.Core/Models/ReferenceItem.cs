@@ -31,7 +31,7 @@ namespace Codify.Core.Models
         public string Color { get; set; } = string.Empty;
         public string Value { get; set; } = string.Empty;
 
-        public ReferenceMetadata Metadata { get; set; }
+        public ReferenceMetadata Metadata { get; set; } = new();
     }
 
     public sealed class ReferenceMetadata
