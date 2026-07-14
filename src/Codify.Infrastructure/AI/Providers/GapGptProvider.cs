@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -138,16 +139,25 @@ namespace Codify.Infrastructure.AI.Providers
                 if (string.IsNullOrEmpty(chunk)) continue;
 
                 await Task.Delay(50, cancellationToken);
-                yield return ConversationEvent.TextDelta(chunk);
 
-                //await onChunk(new ConversationEvent
-                //{
-                //    Type = ConversationEventType.TextDelta,
-                //    Payload = JValue.CreateString(chunk)
-                //});
+                yield return ConversationEvent.TextDelta(chunk);
             }
         }
+        public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
+            IReadOnlyList<ToolResult> toolResults,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            foreach (var toolResult in toolResults)
+            {
+                yield return ConversationEvent.Status(
+                    $"Tool '{toolResult.Id}' completed.");
+            }
 
+            yield return ConversationEvent.TextDelta(
+                "Conversation continuation is not implemented yet.");
+
+            yield return ConversationEvent.Completed();
+        }
         private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts)
         {
             var messages = new List<object>();

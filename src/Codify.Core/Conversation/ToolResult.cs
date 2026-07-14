@@ -1,14 +1,16 @@
+using Newtonsoft.Json.Linq;
+
 namespace Codify.Core.Conversation;
 
 /// <summary>
-/// Represents the result of a tool execution.
+/// Represents the execution result of a tool.
 /// </summary>
 public sealed class ToolResult
 {
     /// <summary>
-    /// Tool name.
+    /// Tool call identifier.
     /// </summary>
-    public string Name { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// Indicates whether execution succeeded.
@@ -16,12 +18,12 @@ public sealed class ToolResult
     public bool Success { get; set; }
 
     /// <summary>
-    /// Result payload.
+    /// Structured result payload.
     /// </summary>
-    public object Data { get; set; }
+    public JObject Data { get; set; } = new JObject();
 
     /// <summary>
-    /// Optional error message.
+    /// Error message when execution fails.
     /// </summary>
-    public string ErrorMessage { get; set; }
+    public string Error { get; set; }
 }

@@ -1,20 +1,24 @@
-using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 namespace Codify.Core.Conversation;
 
 /// <summary>
-/// Represents a tool request generated during a conversation.
+/// Represents a tool execution request emitted by an AI provider.
 /// </summary>
 public sealed class ToolRequest
 {
     /// <summary>
-    /// Tool unique name.
+    /// Unique tool call identifier.
+    /// </summary>
+    public string Id { get; set; }
+
+    /// <summary>
+    /// Tool name.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
-    /// Tool arguments.
+    /// Provider supplied arguments.
     /// </summary>
-    public JObject Arguments { get; set; }
+    public JObject Arguments { get; set; } = new JObject();
 }

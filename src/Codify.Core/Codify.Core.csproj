@@ -88,6 +88,8 @@
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\IAiTool.cs" />
+    <Compile Include="Tools\IAiToolRegistry.cs" />
     <Compile Include="UseCases\ISendChatMessageUseCase.cs" />
     <Compile Include="UseCases\SendChatMessageUseCase.cs" />
   </ItemGroup>

@@ -7,7 +7,7 @@ namespace Codify.Core.Conversation
     public interface IConversationEngine
     {
         IAsyncEnumerable<ConversationEvent> ExecuteAsync(
-            ChatMessageBuildRequest request,
+            ChatMessageBuildResult request,
             CancellationToken cancellationToken = default);
     }
 }

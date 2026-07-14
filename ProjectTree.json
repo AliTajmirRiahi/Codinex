@@ -281,6 +281,23 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "src/Codify.Core/Tools",
+                                                  "name":  "Tools",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Tools/IAiTool.cs",
+                                                                       "name":  "IAiTool.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Tools/IAiToolRegistry.cs",
+                                                                       "name":  "IAiToolRegistry.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Core/UseCases",
                                                   "name":  "UseCases",
                                                   "type":  "folder",
@@ -435,8 +452,30 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "src/Codify.Infrastructure/Tools",
+                                                  "name":  "Tools",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/Tools/AiToolRegistry.cs",
+                                                                       "name":  "AiToolRegistry.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/Tools/PingTool.cs",
+                                                                       "name":  "PingTool.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj",
                                                   "name":  "Codify.Infrastructure.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj.user",
+                                                  "name":  "Codify.Infrastructure.csproj.user",
                                                   "type":  "file"
                                               },
                                               {

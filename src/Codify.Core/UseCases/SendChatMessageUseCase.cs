@@ -95,9 +95,8 @@ public sealed class SendChatMessageUseCase(
             // Accumulate the full assistant text while chunks arrive.
             var fullText = string.Empty;
 
-
             await foreach (var evt in conversationEngine.ExecuteAsync(
-                               request))
+                               buildResult))
             {
                 switch (evt.Type)
                 {
@@ -116,10 +115,10 @@ public sealed class SendChatMessageUseCase(
 
                     case ConversationEventType.StatusChanged:
 
-                        await onMessage(
-                            new ChatResponse(
-                                WebViewMessageType.StatusChanged,
-                                evt.DisplayMessage));
+                        //await onMessage(
+                        //    new ChatResponse(
+                        //        WebViewMessageType.StatusChanged,
+                        //        evt.DisplayMessage));
 
                         break;
                 }

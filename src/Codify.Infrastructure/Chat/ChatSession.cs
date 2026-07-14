@@ -77,7 +77,7 @@ namespace Codify.Infrastructure.Chat
             {
                 Role = "user",
                 Content = content,
-                Context = ChatMessageRequestContext.CreateChatMessageRequestContextWithoutMetaData(context),
+                Context = context,
                 CreatedAt = DateTime.UtcNow
             };
 

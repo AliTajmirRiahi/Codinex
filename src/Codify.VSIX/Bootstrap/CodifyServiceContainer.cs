@@ -3,14 +3,16 @@
 using Codify.Core.Chat;
 using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
+using Codify.Core.Tools;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
+using Codify.Infrastructure.Conversation;
 using Codify.Infrastructure.IO;
 using Codify.Infrastructure.Serialization;
+using Codify.Infrastructure.Tools;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
-using Codify.Infrastructure.Conversation;
 using Codify.Storage;
 using Codify.VisualStudio;
 using Codify.VisualStudio.Diagnostics.Errors;
@@ -124,6 +126,10 @@ namespace Codify.VSIX.Bootstrap
             // WebView Infrastructure
             services.AddSingleton<IWebViewClient, WebViewClient>();
             services.AddSingleton<IWebViewMessageRouter, WebViewMessageRouter>();
+
+            services.AddSingleton<IAiTool, PingTool>();
+
+            services.AddSingleton<IAiToolRegistry, AiToolRegistry>();
 
             Instance = services.BuildServiceProvider();
         }
