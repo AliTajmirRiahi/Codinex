@@ -3,6 +3,7 @@ using Codify.Core.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,6 +13,23 @@ namespace Codify.Infrastructure.ModelManagement.Retrievers
         IOpenAiCompatibleClient client,
         IJsonSerializer jsonSerializer) : IModelRetriever
     {
+
+        private static readonly string[] ExcludedPrefixes =
+        [
+            "whisper",
+            "tts",
+            "dall-e",
+            "gpt-image",
+            "omni-moderation",
+            "text-embedding",
+            "embedding"
+        ];
+
+        private static readonly string[] ExcludedNames =
+        [
+            "sora"
+        ];
+
         public bool CanHandle(AiProvider provider)
         {
             if (provider == null)
@@ -33,24 +51,22 @@ namespace Codify.Infrastructure.ModelManagement.Retrievers
 
             var json = jsonSerializer.Parse(response);
 
-            var models = new List<AiModel>();
-
             var items = json["data"];
 
-            if (items == null)
-                return new List<AiModel>();
+            return items == null ? [] : (from item in items select item["id"]?.ToString() into id where !string.IsNullOrWhiteSpace(id) && IsSupportedModel(id) select AiModel.CreateRemote(id)).ToList();
+        }
 
-            foreach (var item in items)
-            {
-                var id = item["id"]?.ToString();
+        private static bool IsSupportedModel(string modelId)
+        {
+            if (string.IsNullOrWhiteSpace(modelId))
+                return false;
 
-                if (string.IsNullOrWhiteSpace(id))
-                    continue;
+            modelId = modelId.ToLowerInvariant();
 
-                models.Add(AiModel.CreateRemote(id));
-            }
+            if (ExcludedNames.Contains(modelId))
+                return false;
 
-            return models;
+            return !ExcludedPrefixes.Any(modelId.StartsWith);
         }
     }
 }
