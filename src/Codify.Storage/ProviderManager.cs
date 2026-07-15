@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
+using Codify.Core.Models;
 
 namespace Codify.Storage
 {
@@ -34,12 +35,6 @@ namespace Codify.Storage
                 _providers = GetDefaultProviders();
                 await SaveAsync();
             }
-
-            //_iaProviders = new List<AiProviderInfo>()
-            //{
-            //    new(AiProviderFamily.GapGpt, new GapGptProvider(_jsonSerializer)),
-            //    new(AiProviderFamily.OpenAi, new OpenAiProvider())
-            //};
         }
         private List<AiProvider> GetDefaultProviders()
         {

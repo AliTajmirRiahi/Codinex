@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace Codify.Storage.Models
+namespace Codify.Core.Models
 {
 
     public enum AiProviderFamily

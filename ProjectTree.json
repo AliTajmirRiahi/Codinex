@@ -157,8 +157,18 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/IModelRetriever.cs",
+                                                                       "name":  "IModelRetriever.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/IPayloadBinder.cs",
                                                                        "name":  "IPayloadBinder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IProviderModelService.cs",
+                                                                       "name":  "IProviderModelService.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -206,6 +216,16 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Models/ActiveDocumentChangedEventArgs.cs",
                                                                        "name":  "ActiveDocumentChangedEventArgs.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/AiModel.cs",
+                                                                       "name":  "AiModel.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/AiProvider.cs",
+                                                                       "name":  "AiProvider.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -425,6 +445,40 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "src/Codify.Infrastructure/ModelManagement",
+                                                  "name":  "ModelManagement",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers",
+                                                                       "name":  "Retrievers",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/ChatGptModelRetriever.cs",
+                                                                                            "name":  "ChatGptModelRetriever.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/GeminiModelRetriever.cs",
+                                                                                            "name":  "GeminiModelRetriever.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/OpenAiCompatibleModelRetriever.cs",
+                                                                                            "name":  "OpenAiCompatibleModelRetriever.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/ModelManagement/ProviderModelService.cs",
+                                                                       "name":  "ProviderModelService.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Infrastructure/Properties",
                                                   "name":  "Properties",
                                                   "type":  "folder",
@@ -526,16 +580,6 @@
                                                                                             "type":  "file"
                                                                                         }
                                                                                     ]
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Storage/Models/AiModel.cs",
-                                                                       "name":  "AiModel.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Storage/Models/AiProvider.cs",
-                                                                       "name":  "AiProvider.cs",
-                                                                       "type":  "file"
                                                                    },
                                                                    {
                                                                        "path":  "src/Codify.Storage/Models/ChatSessionDocument.cs",

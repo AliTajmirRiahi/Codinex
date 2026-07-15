@@ -50,8 +50,6 @@
     <Compile Include="Commons\Statics.cs" />
     <Compile Include="FileStorageService.cs" />
     <Compile Include="IStorageService.cs" />
-    <Compile Include="Models\AiModel.cs" />
-    <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\ChatSessionDocument.cs" />
     <Compile Include="Models\CodifySettings.cs" />
     <Compile Include="Models\DTO\AiModelSelectedDto.cs" />

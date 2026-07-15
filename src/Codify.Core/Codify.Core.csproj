@@ -58,6 +58,8 @@
     <Compile Include="Interfaces\IChatMessageBuilder.cs" />
     <Compile Include="Interfaces\IExecutionPipeline.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
+    <Compile Include="Interfaces\IModelRetriever.cs" />
+    <Compile Include="Interfaces\IProviderModelService.cs" />
     <Compile Include="Interfaces\IReferenceContextFormatter.cs" />
     <Compile Include="Chat\ReferenceContextFormatter.cs" />
     <Compile Include="Chat\SystemPrompts.cs" />
@@ -75,6 +77,8 @@
     <Compile Include="Interfaces\IUserNotificationService.cs" />
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
+    <Compile Include="Models\AiModel.cs" />
+    <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ChatAgent.cs" />
     <Compile Include="Models\ChatCommand.cs" />

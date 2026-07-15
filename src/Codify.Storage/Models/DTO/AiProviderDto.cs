@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using Codify.Core.Models;
 
 namespace Codify.Storage.Models.DTO;
 
