@@ -9,6 +9,7 @@ using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
 using Codify.Infrastructure.Conversation;
 using Codify.Infrastructure.IO;
+using Codify.Infrastructure.ModelManagement;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Tools;
 using Codify.Infrastructure.VisualStudio;
@@ -30,6 +31,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
+using Codify.Infrastructure.ModelManagement.Retrievers;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -127,8 +129,10 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IWebViewClient, WebViewClient>();
             services.AddSingleton<IWebViewMessageRouter, WebViewMessageRouter>();
 
-            services.AddSingleton<IAiTool, PingTool>();
+            services.AddSingleton<IProviderModelService, ProviderModelService>();
+            services.AddSingleton<IModelRetriever, OpenAiCompatibleModelRetriever>();
 
+            services.AddSingleton<IAiTool, PingTool>();
             services.AddSingleton<IAiToolRegistry, AiToolRegistry>();
 
             Instance = services.BuildServiceProvider();
