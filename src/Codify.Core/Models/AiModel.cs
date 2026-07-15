@@ -136,6 +136,19 @@ namespace Codify.Core.Models
         {
             IsCurrent = false; 
         }
+
+
+        public static AiModel CreateRemote(string id)
+        {
+            return new AiModel(
+                id,
+                id,
+                1,
+                false,
+                false,
+                false,
+                false);
+        }
     }
 
 }

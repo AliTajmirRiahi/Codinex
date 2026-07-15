@@ -157,8 +157,18 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/IModelResourceLoader.cs",
+                                                                       "name":  "IModelResourceLoader.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/IModelRetriever.cs",
                                                                        "name":  "IModelRetriever.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IOpenAiCompatibleClient.cs",
+                                                                       "name":  "IOpenAiCompatibleClient.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -357,6 +367,16 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "src/Codify.Infrastructure/AI/Clients",
+                                                                       "name":  "Clients",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Infrastructure/AI/Clients/OpenAiCompatibleClient.cs",
+                                                                                        "name":  "OpenAiCompatibleClient.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Infrastructure/AI/Filters",
                                                                        "name":  "Filters",
                                                                        "type":  "folder",
@@ -474,6 +494,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Infrastructure/ModelManagement/ProviderModelService.cs",
                                                                        "name":  "ProviderModelService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/ModelManagement/ResourceModelLoader.cs",
+                                                                       "name":  "ResourceModelLoader.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]

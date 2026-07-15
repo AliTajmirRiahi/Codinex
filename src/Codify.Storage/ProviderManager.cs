@@ -12,7 +12,7 @@ using Codify.Core.Models;
 
 namespace Codify.Storage
 {
-    public class ProviderManager(IStorageService storage, IJsonSerializer jsonSerializer)
+    public class ProviderManager(IStorageService storage, IJsonSerializer jsonSerializer, IProviderModelService providerModelService)
     {
         private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
         private List<AiProvider> _providers = new List<AiProvider>();
@@ -28,21 +28,21 @@ namespace Codify.Storage
             if (await storage.ExistsAsync(StoragePaths.Providers))
             {
                 _providers = await storage.LoadAsync<List<AiProvider>>(StoragePaths.Providers)
-                             ?? GetDefaultProviders();
+                             ?? await GetDefaultProviders();
             }
             else
             {
-                _providers = GetDefaultProviders();
+                _providers = await GetDefaultProviders();
                 await SaveAsync();
             }
         }
-        private List<AiProvider> GetDefaultProviders()
+        private async Task<List<AiProvider>> GetDefaultProviders()
         {
-            var providers = LoadModelsFromResources<AiProvider>("providers.json");
+            var providers = LoadResourceCollection<AiProvider>("providers.json");
 
             foreach (var provider in providers)
             {
-                provider.SetModels(LoadModelsFromResources<AiModel>($"{provider.Id}_models.json"));
+                provider.SetModels(await providerModelService.GetModelsAsync(provider));
             }
 
             return providers;
@@ -52,7 +52,7 @@ namespace Codify.Storage
         /// Loads a list of models from a JSON file located inside the VSIX Resources folder.
         /// Any exception is intentionally not caught here so it can be handled by the ExecutionPipeline.
         /// </summary>
-        private List<T> LoadModelsFromResources<T>(string modelFileName)
+        private List<T> LoadResourceCollection<T>(string modelFileName)
         {
             // Get the directory of the executing assembly (Codify.dll location)
             var assemblyLocation = Assembly.GetExecutingAssembly().Location;

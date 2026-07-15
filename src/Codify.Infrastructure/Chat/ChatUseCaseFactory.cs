@@ -22,7 +22,8 @@ namespace Codify.Infrastructure.Chat
         IJsonSerializer serializer,
         IErrorHandler errorHandler,
         IChatMessageBuilder chatMessageBuilder,
-        IConversationEngine conversationEngine)
+        IConversationEngine conversationEngine,
+        IOpenAiCompatibleClient openAiCompatibleClient)
         : IChatUseCaseFactory
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -40,8 +41,8 @@ namespace Codify.Infrastructure.Chat
 
             IAiProvider aiProvider = provider.Id.ToLower() switch
             {
-                "gapgpt" => new GapGptProvider(serializer, _providerManager),
-                "chatgpt" => new OpenAiProvider(),
+                "gapgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, openAiCompatibleClient),
+                "chatgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, openAiCompatibleClient),
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 

@@ -19,6 +19,9 @@ namespace Codify.Core.Models
         // Base URL endpoint for API requests
         public string BaseUrl { get; private set; }
 
+
+        public string Protocol { get; private set; }
+
         // Indicates whether this provider is a router that delegates to other providers
         public bool IsRouter { get; set; }
 
@@ -33,9 +36,9 @@ namespace Codify.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string baseUrl) : this(id, name, "", baseUrl, false, new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, new List<AiModel>())
         {
-            
+
         }
 
         /// <summary>
@@ -45,6 +48,7 @@ namespace Codify.Core.Models
         private AiProvider(
             string id,
             string name,
+            string protocol,
             string apiKey,
             string baseUrl,
             bool isEnabled,
@@ -59,8 +63,12 @@ namespace Codify.Core.Models
             if (string.IsNullOrWhiteSpace(baseUrl))
                 throw new ArgumentException(@"BaseUrl cannot be empty.", nameof(baseUrl));
 
+            if (string.IsNullOrWhiteSpace(protocol))
+                throw new ArgumentException(@"protocol cannot be empty.", nameof(protocol));
+
             Id = id;
             Name = name;
+            Protocol = protocol;
             ApiKey = apiKey ?? "";
             BaseUrl = baseUrl ?? "";
             IsEnabled = isEnabled;

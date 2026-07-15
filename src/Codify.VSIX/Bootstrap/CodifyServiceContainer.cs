@@ -5,11 +5,13 @@ using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
 using Codify.Core.Tools;
 using Codify.Core.UseCases;
+using Codify.Infrastructure.AI.Clients;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
 using Codify.Infrastructure.Conversation;
 using Codify.Infrastructure.IO;
 using Codify.Infrastructure.ModelManagement;
+using Codify.Infrastructure.ModelManagement.Retrievers;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.Tools;
 using Codify.Infrastructure.VisualStudio;
@@ -31,7 +33,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
-using Codify.Infrastructure.ModelManagement.Retrievers;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -49,6 +50,9 @@ namespace Codify.VSIX.Bootstrap
             AsyncPackage package, IVsOutputWindowPane pane)
         {
             var services = new ServiceCollection();
+
+            services.AddHttpClient();
+
             services.AddSingleton(sp =>
             {
                 var serializer = new JsonSerializer
@@ -77,6 +81,8 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IExecutionPipeline, ExecutionPipeline>();
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
+            services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
+            services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
             services.AddSingleton<IUserNotificationService>(
@@ -116,7 +122,7 @@ namespace Codify.VSIX.Bootstrap
             // AI Providers (The Plugin System)
             // Register all available providers here
             services.AddSingleton<IAiProvider, OpenAiProvider>();
-            services.AddSingleton<IAiProvider, GapGptProvider>();
+            services.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();
 
             // Note: To add a local AI (e.g. Ollama), just create the class 
             // and add: services.AddSingleton<IAiProvider, OllamaProvider>();
