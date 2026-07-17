@@ -1,5 +1,7 @@
 ﻿using Codify.Core.Interfaces;
 using Codify.Core.Models;
+using Codify.Infrastructure.CustomeExceptions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -33,7 +35,14 @@ namespace Codify.Infrastructure.AI.Clients
                 request,
                 cancellationToken);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+
+                throw new OpenAiCompatibleException(
+                    response.StatusCode,
+                    body);
+            }
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -45,6 +54,8 @@ namespace Codify.Infrastructure.AI.Clients
             CancellationToken cancellationToken = default)
         {
             var HttpClient = httpClientFactory.CreateClient();
+
+            HttpClient.Timeout = TimeSpan.FromMinutes(5);
 
             using var request = CreateRequest(
                 HttpMethod.Post,
@@ -60,7 +71,14 @@ namespace Codify.Infrastructure.AI.Clients
                 request,
                 cancellationToken);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+
+                throw new OpenAiCompatibleException(
+                    response.StatusCode,
+                    body);
+            }
 
             return await response.Content.ReadAsStringAsync();
         }
@@ -88,7 +106,15 @@ namespace Codify.Infrastructure.AI.Clients
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+
+                throw new OpenAiCompatibleException(
+                    response.StatusCode,
+                    body);
+            }
+
             using var stream = await response.Content.ReadAsStreamAsync();
             using var reader = new StreamReader(stream);
 

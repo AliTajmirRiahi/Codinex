@@ -12,7 +12,10 @@ using Codify.Core.Models;
 
 namespace Codify.Storage
 {
-    public class ProviderManager(IStorageService storage, IJsonSerializer jsonSerializer, IProviderModelService providerModelService)
+    public class ProviderManager(IStorageService storage,
+        IJsonSerializer jsonSerializer,
+        IProviderModelService providerModelService,
+        IProviderCapabilityChecker providerCapabilityChecker)
     {
         private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
         private List<AiProvider> _providers = new List<AiProvider>();
@@ -158,6 +161,8 @@ namespace Codify.Storage
                 throw new InvalidOperationException($"Model '{payload.ModelId}' was not found.");
 
             model.MarkAsCurrent();
+
+            await providerCapabilityChecker.CheckAsync(provider, model, default);
 
             await SaveAsync();
 

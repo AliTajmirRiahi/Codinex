@@ -14,6 +14,13 @@ namespace Codify.Core.Models
         Custom = 4,
         NaN = -1
     }
+    public enum CapabilityProbeResult
+    {
+        Supported,
+        Unsupported,
+        Unknown
+    }
+
     public class AiModel
     {
         // Unique model identifier (e.g. "gpt-4o")
@@ -25,11 +32,6 @@ namespace Codify.Core.Models
         // Maximum supported token limit
         public int TokenLimit { get; private set; }
 
-        // Indicates if the model supports image input/output
-        public bool SupportsImages { get; private set; }
-
-        // Indicates if the model supports tool/function calling
-        public bool SupportsTools { get; private set; }
 
         // Indicates if the model is selected
         public bool IsSelected { get; private set; } = false;
@@ -39,6 +41,20 @@ namespace Codify.Core.Models
         [JsonConverter(typeof(StringEnumConverter))]
         public AiProviderFamily Family { get; set; }
 
+        public bool CapabilitiesChecked { get; private set; } = false;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CapabilityProbeResult SupportsStreaming { get; set; } = CapabilityProbeResult.Unknown;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CapabilityProbeResult SupportsToolCalling { get; set; } = CapabilityProbeResult.Unknown;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CapabilityProbeResult SupportsVision { get; set; } = CapabilityProbeResult.Unknown;
+
+
+        public CapabilityProbeResult SupportsReasoning { get; private set; } = CapabilityProbeResult.Unknown;
+
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
@@ -46,8 +62,6 @@ namespace Codify.Core.Models
             string id,
             string name,
             int tokenLimit,
-            bool supportsImages,
-            bool supportsTools,
             bool isSelected,
             bool isCurrent)
         {
@@ -63,8 +77,6 @@ namespace Codify.Core.Models
             Id = id;
             Name = name;
             TokenLimit = tokenLimit;
-            SupportsImages = supportsImages;
-            SupportsTools = supportsTools;
             IsSelected = isSelected;
             IsCurrent = isCurrent;
         }
@@ -91,21 +103,6 @@ namespace Codify.Core.Models
             TokenLimit = newLimit;
         }
 
-        /// <summary>
-        /// Enables or disables image capability.
-        /// </summary>
-        public void SetImageSupport(bool enabled)
-        {
-            SupportsImages = enabled;
-        }
-
-        /// <summary>
-        /// Enables or disables tool calling capability.
-        /// </summary>
-        public void SetToolSupport(bool enabled)
-        {
-            SupportsTools = enabled;
-        }
 
         /// <summary>
         /// Selects the model, making it active.
@@ -136,16 +133,73 @@ namespace Codify.Core.Models
         {
             IsCurrent = false; 
         }
+        /// <summary>
+        /// Marks the model capabilities as verified.
+        /// </summary>
+        public void MarkCapabilitiesChecked()
+        {
+            CapabilitiesChecked = true;
+        }
+        public void SetStreamingSupport(CapabilityProbeResult supported)
+        {
+            SupportsStreaming = supported;
+        }
 
+        public void SetToolCallingSupport(CapabilityProbeResult supported)
+        {
+            SupportsToolCalling = supported;
+        }
 
+        public void SetVisionSupport(CapabilityProbeResult supported)
+        {
+            SupportsVision = supported;
+        }
+
+        public void SetReasoningSupport(CapabilityProbeResult supported)
+        {
+            SupportsReasoning = supported;
+        }
+        /// <summary>
+        /// Clears all cached capability information.
+        /// </summary>
+        public void ResetCapabilities()
+        {
+            CapabilitiesChecked = false;
+
+            SupportsStreaming =  CapabilityProbeResult.Unknown;
+            SupportsToolCalling = CapabilityProbeResult.Unknown;
+            SupportsVision = CapabilityProbeResult.Unknown;
+            SupportsReasoning = CapabilityProbeResult.Unknown;
+        }
+        /// <summary>
+        /// Updates all runtime capabilities discovered by probing the model.
+        /// </summary>
+        public void UpdateCapabilities(
+           CapabilityProbeResult supportsStreaming,
+           CapabilityProbeResult supportsToolCalling,
+           CapabilityProbeResult supportsVision,
+           CapabilityProbeResult supportsReasoning)
+        {
+            SupportsStreaming = supportsStreaming;
+            SupportsToolCalling = supportsToolCalling;
+            SupportsVision = supportsVision;
+            SupportsReasoning = supportsReasoning;
+
+            CapabilitiesChecked = true;
+        }
+        /// <summary>
+        /// Invalidates all cached capability information.
+        /// </summary>
+        public void InvalidateCapabilities()
+        {
+            ResetCapabilities();
+        }
         public static AiModel CreateRemote(string id)
         {
             return new AiModel(
                 id,
                 id,
                 1,
-                false,
-                false,
                 false,
                 false);
         }
