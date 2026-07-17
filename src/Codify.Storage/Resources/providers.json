@@ -3,7 +3,7 @@
     "Id": "gapgpt",
     "Protocol": "openai",
     "Name": "GapGPT",
-    "ApiKey": "sk-MYvjAlBrAPlHInU8OJmgXGv49d2qixP19NLzoohSoNX1wFmD",
+    "ApiKey": "",
     "BaseUrl": "https://api.gapgpt.app/v1",
     "IsEnabled": false
   },
@@ -12,7 +12,7 @@
     "Protocol": "openai",
     "Name": "Chat GPT",
     "ApiKey": "",
-    "BaseUrl": "http://localhost:1234/v1",
+    "BaseUrl": "https://api.openai.com/v1",
     "IsEnabled": false
   }
 ]
