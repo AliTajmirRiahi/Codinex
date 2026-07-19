@@ -52,7 +52,7 @@ namespace Codify.Core.Models
         [JsonConverter(typeof(StringEnumConverter))]
         public CapabilityProbeResult SupportsVision { get; set; } = CapabilityProbeResult.Unknown;
 
-
+        [JsonConverter(typeof(StringEnumConverter))]
         public CapabilityProbeResult SupportsReasoning { get; private set; } = CapabilityProbeResult.Unknown;
 
         /// <summary>

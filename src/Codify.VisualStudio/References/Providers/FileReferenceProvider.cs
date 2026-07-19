@@ -15,12 +15,12 @@ namespace Codify.VisualStudio.References.Providers
 #pragma warning disable VSTHRD010
     public class FileReferenceProvider(IVisualStudioServices visualStudio,
         IWorkspaceContext workspaceContext ,
-        IFileSystem fileSystem,
+        IWorkspaceFileService workspaceFileService,
         IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
-        private readonly IFileSystem _fileSystem = fileSystem;
+        private readonly IWorkspaceFileService _workspaceFileService = workspaceFileService;
         private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
 
         public sealed class FileIconInfo
@@ -147,7 +147,7 @@ namespace Codify.VisualStudio.References.Providers
             var doc = dte?.ActiveDocument;
             var filePath = doc?.FullName;
 
-            if (!string.IsNullOrEmpty(filePath) && _fileSystem.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && _workspaceFileService.Exists(filePath))
                 return await GetActiveDocumentAsync(filePath);
 
             return null;
@@ -158,14 +158,14 @@ namespace Codify.VisualStudio.References.Providers
             var fileName = Path.GetFileName(filePath);
             var iconForFile = GetIconForFile(fileName);
 
-            if (!string.IsNullOrEmpty(filePath) && _fileSystem.Exists(filePath))
+            if (!string.IsNullOrEmpty(filePath) && _workspaceFileService.Exists(filePath))
             {
                 var content = string.Empty;
 
                 try
                 {
                     /* Read file content safely for metadata context */
-                    content = _fileSystem.ReadAllText(filePath);
+                    content = _workspaceFileService.ReadFile(filePath);
                 }
                 catch
                 {
@@ -215,7 +215,7 @@ namespace Codify.VisualStudio.References.Providers
                     try
                     {
                         /* Read file content safely for metadata context */
-                        content = _fileSystem.ReadAllText(filePath);
+                        content = _workspaceFileService.ReadFile(filePath);
                     }
                     catch
                     {

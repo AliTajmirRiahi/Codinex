@@ -58,6 +58,7 @@
     <Compile Include="Interfaces\IWebViewMessageRouter.cs" />
     <Compile Include="Interfaces\IVsOutputLogger.cs" />
     <Compile Include="Interfaces\IVisualStudioServices.cs" />
+    <Compile Include="Interfaces\IWorkspaceFileService.cs" />
     <Compile Include="Internal\VisualStudioServices.cs" />
     <Compile Include="Internal\VsServiceBase.cs" />
     <Compile Include="Logging\VsOutputLogger.cs" />
@@ -77,7 +78,17 @@
     <Compile Include="References\ReferenceManager.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
+    <Compile Include="Services\WorkspaceFileService.cs" />
     <Compile Include="Theme\VsThemeService.cs" />
+    <Compile Include="Tools\AiToolRegistry.cs" />
+    <Compile Include="Tools\BuiltIn\ApplyPatchTool.cs" />
+    <Compile Include="Tools\BuiltIn\BuildSolutionTool.cs" />
+    <Compile Include="Tools\BuiltIn\FindReferencesTool.cs" />
+    <Compile Include="Tools\BuiltIn\FindSymbolTool.cs" />
+    <Compile Include="Tools\BuiltIn\GetDiagnosticsTool.cs" />
+    <Compile Include="Tools\BuiltIn\ReadFileTool.cs" />
+    <Compile Include="Tools\BuiltIn\RunTestsTool.cs" />
+    <Compile Include="Tools\BuiltIn\SearchProjectTool.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
     <Compile Include="VsUserNotificationService.cs" />

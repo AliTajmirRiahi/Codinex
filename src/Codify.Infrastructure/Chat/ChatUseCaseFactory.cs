@@ -1,5 +1,6 @@
 ﻿using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
+using Codify.Core.Tools;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Storage;
@@ -23,6 +24,7 @@ namespace Codify.Infrastructure.Chat
         IErrorHandler errorHandler,
         IChatMessageBuilder chatMessageBuilder,
         IConversationEngine conversationEngine,
+        IAiToolRegistry toolRegistry,
         IOpenAiCompatibleClient openAiCompatibleClient)
         : IChatUseCaseFactory
     {
@@ -41,8 +43,7 @@ namespace Codify.Infrastructure.Chat
 
             IAiProvider aiProvider = provider.Id.ToLower() switch
             {
-                "gapgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, openAiCompatibleClient),
-                "chatgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, openAiCompatibleClient),
+                "gapgpt" or "chatgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient),
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 

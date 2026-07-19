@@ -26,4 +26,50 @@ public sealed class ToolResult
     /// Error message when execution fails.
     /// </summary>
     public string Error { get; set; }
+
+    /// <summary>
+    /// Creates a successful tool result.
+    /// </summary>
+    public static ToolResult Successful(
+        string id,
+        JObject data = null)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = true,
+            Data = data ?? new JObject()
+        };
+    }
+
+    /// <summary>
+    /// Creates a successful tool result.
+    /// </summary>
+    public static ToolResult Successful(
+        string id,
+        object data)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = true,
+            Data = JObject.FromObject(data)
+        };
+    }
+
+    /// <summary>
+    /// Creates a failed tool result.
+    /// </summary>
+    public static ToolResult Failed(
+        string id,
+        string error)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = false,
+            Error = error,
+            Data = new JObject()
+        };
+    }
 }

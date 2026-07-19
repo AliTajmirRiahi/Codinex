@@ -2,9 +2,6 @@
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Tools;
-using Codify.Infrastructure.Tools;
-using Codify.Storage.Models;
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -24,9 +21,24 @@ namespace Codify.Infrastructure.Conversation
         {
             yield return ConversationEvent.Status("Sending request...");
 
-            await foreach (var evt in provider.SendStreamAsync(
-                               request.Messages,
+            await foreach (var evt in ProcessEvents(
+                               provider.SendStreamAsync(
+                                   request.Messages,
+                                   cancellationToken),
                                cancellationToken))
+            {
+                yield return evt;
+            }
+        }
+
+        /// <summary>
+        /// Processes conversation events recursively.
+        /// </summary>
+        private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
+            IAsyncEnumerable<ConversationEvent> events,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            await foreach (var evt in events.WithCancellation(cancellationToken))
             {
                 switch (evt.Type)
                 {
@@ -45,11 +57,13 @@ namespace Codify.Infrastructure.Conversation
 
                         yield return ConversationEvent.ToolCompleted(result);
 
-                        await foreach (var evt2 in provider.ContinueAsync(
-                                           [result],
+                        await foreach (var continuationEvent in ProcessEvents(
+                                           provider.ContinueAsync(
+                                               new[] { result },
+                                               cancellationToken),
                                            cancellationToken))
                         {
-                            yield return evt2;
+                            yield return continuationEvent;
                         }
 
                         break;
@@ -61,8 +75,6 @@ namespace Codify.Infrastructure.Conversation
                         break;
                 }
             }
-
-            yield return ConversationEvent.Completed();
         }
     }
 }

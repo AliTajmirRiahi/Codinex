@@ -14,7 +14,6 @@ using Codify.Infrastructure.IO;
 using Codify.Infrastructure.ModelManagement;
 using Codify.Infrastructure.ModelManagement.Retrievers;
 using Codify.Infrastructure.Serialization;
-using Codify.Infrastructure.Tools;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Storage;
@@ -28,6 +27,7 @@ using Codify.VisualStudio.References;
 using Codify.VisualStudio.References.Providers;
 using Codify.VisualStudio.Services;
 using Codify.VisualStudio.Theme;
+using Codify.VisualStudio.Tools.BuiltIn;
 using Codify.VisualStudio.WebView;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
@@ -84,6 +84,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
             services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
             services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
+            services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
             services.AddSingleton<IUserNotificationService>(
@@ -139,8 +140,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IProviderModelService, ProviderModelService>();
             services.AddSingleton<IModelRetriever, OpenAiCompatibleModelRetriever>();
 
-            services.AddSingleton<IAiTool, PingTool>();
-            services.AddSingleton<IAiToolRegistry, AiToolRegistry>();
+            ServiceCollectionExtensions.AddAiTools(services, typeof(ReadFileTool).Assembly);
 
             services.AddSingleton<IProviderCapabilityChecker, ProviderCapabilityChecker>();
 

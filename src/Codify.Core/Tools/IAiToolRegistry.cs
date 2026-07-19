@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Codify.Core.Tools;
 
 /// <summary>
@@ -9,4 +11,10 @@ public interface IAiToolRegistry
     /// Resolves a tool by name.
     /// </summary>
     IAiTool Get(string toolName);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    IReadOnlyList<IAiTool> GetAll();
 }

@@ -109,6 +109,11 @@
                                                                        "path":  "src/Codify.Core/Chat/SystemPrompts.cs",
                                                                        "name":  "SystemPrompts.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Chat/ToolPromptBuilder.cs",
+                                                                       "name":  "ToolPromptBuilder.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -130,6 +135,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Conversation/ConversationEventType.cs",
                                                                        "name":  "ConversationEventType.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Conversation/ConversationExecution.cs",
+                                                                       "name":  "ConversationExecution.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -332,6 +342,16 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Models/ToolDefinition.cs",
+                                                                       "name":  "ToolDefinition.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/ToolProperty.cs",
+                                                                       "name":  "ToolProperty.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Models/WebViewMessageRequest.cs",
                                                                        "name":  "WebViewMessageRequest.cs",
                                                                        "type":  "file"
@@ -396,6 +416,11 @@
                                                   "path":  "src/Codify.Core/Codify.Core.csproj",
                                                   "name":  "Codify.Core.csproj",
                                                   "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Core/Codify.Core.csproj.user",
+                                                  "name":  "Codify.Core.csproj.user",
+                                                  "type":  "file"
                                               }
                                           ]
                          },
@@ -452,8 +477,8 @@
                                                                        "type":  "folder",
                                                                        "children":  [
                                                                                         {
-                                                                                            "path":  "src/Codify.Infrastructure/AI/Providers/GapGptProvider.cs",
-                                                                                            "name":  "GapGptProvider.cs",
+                                                                                            "path":  "src/Codify.Infrastructure/AI/Providers/OpenAiCompatibleProvider.cs",
+                                                                                            "name":  "OpenAiCompatibleProvider.cs",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
@@ -597,25 +622,13 @@
                                                                ]
                                               },
                                               {
-                                                  "path":  "src/Codify.Infrastructure/Tools",
-                                                  "name":  "Tools",
-                                                  "type":  "folder",
-                                                  "children":  [
-                                                                   {
-                                                                       "path":  "src/Codify.Infrastructure/Tools/AiToolRegistry.cs",
-                                                                       "name":  "AiToolRegistry.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Infrastructure/Tools/PingTool.cs",
-                                                                       "name":  "PingTool.cs",
-                                                                       "type":  "file"
-                                                                   }
-                                                               ]
-                                              },
-                                              {
                                                   "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj",
                                                   "name":  "Codify.Infrastructure.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj.user",
+                                                  "name":  "Codify.Infrastructure.csproj.user",
                                                   "type":  "file"
                                               },
                                               {
@@ -1946,6 +1959,11 @@
                                                                        "path":  "src/Codify.VisualStudio/Interfaces/IWebViewMessageRouter.cs",
                                                                        "name":  "IWebViewMessageRouter.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Interfaces/IWorkspaceFileService.cs",
+                                                                       "name":  "IWorkspaceFileService.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -2091,6 +2109,11 @@
                                                                        "path":  "src/Codify.VisualStudio/Services/VsWorkspaceContext.cs",
                                                                        "name":  "VsWorkspaceContext.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Services/WorkspaceFileService.cs",
+                                                                       "name":  "WorkspaceFileService.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -2103,6 +2126,65 @@
                                                                    "name":  "VsThemeService.cs",
                                                                    "type":  "file"
                                                                }
+                                              },
+                                              {
+                                                  "path":  "src/Codify.VisualStudio/Tools",
+                                                  "name":  "Tools",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Tools/BuiltIn",
+                                                                       "name":  "BuiltIn",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/ApplyPatchTool.cs",
+                                                                                            "name":  "ApplyPatchTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/BuildSolutionTool.cs",
+                                                                                            "name":  "BuildSolutionTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/FindReferencesTool.cs",
+                                                                                            "name":  "FindReferencesTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/FindSymbolTool.cs",
+                                                                                            "name":  "FindSymbolTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/GetDiagnosticsTool.cs",
+                                                                                            "name":  "GetDiagnosticsTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/ReadFileTool.cs",
+                                                                                            "name":  "ReadFileTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/RunTestsTool.cs",
+                                                                                            "name":  "RunTestsTool.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/SearchProjectTool.cs",
+                                                                                            "name":  "SearchProjectTool.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Tools/AiToolRegistry.cs",
+                                                                       "name":  "AiToolRegistry.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "src/Codify.VisualStudio/WebView",
@@ -2152,11 +2234,18 @@
                                                   "path":  "src/Codify.VSIX/Bootstrap",
                                                   "name":  "Bootstrap",
                                                   "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "src/Codify.VSIX/Bootstrap/CodifyServiceContainer.cs",
-                                                                   "name":  "CodifyServiceContainer.cs",
-                                                                   "type":  "file"
-                                                               }
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.VSIX/Bootstrap/CodifyServiceContainer.cs",
+                                                                       "name":  "CodifyServiceContainer.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VSIX/Bootstrap/ServiceCollectionExtensions.cs",
+                                                                       "name":  "ServiceCollectionExtensions.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "src/Codify.VSIX/Properties",

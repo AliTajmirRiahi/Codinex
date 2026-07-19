@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="Chat\ChatMessageBuilder.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
+    <Compile Include="Chat\ToolPromptBuilder.cs" />
     <Compile Include="Conversation\ConversationContext.cs" />
     <Compile Include="Conversation\ConversationEvent.cs" />
     <Compile Include="Conversation\ConversationEventType.cs" />
+    <Compile Include="Conversation\ConversationExecution.cs" />
     <Compile Include="Conversation\IConversationEngine.cs" />
     <Compile Include="Conversation\ToolRequest.cs" />
     <Compile Include="Conversation\ToolResult.cs" />
@@ -87,6 +89,8 @@
     <Compile Include="Models\ChatMessageRequestContext.cs" />
     <Compile Include="Models\ChatResponse.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
+    <Compile Include="Models\ToolDefinition.cs" />
+    <Compile Include="Models\ToolProperty.cs" />
     <Compile Include="Models\WebViewMessageRequest.cs" />
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />

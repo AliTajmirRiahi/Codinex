@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap\CodifyServiceContainer.cs" />
+    <Compile Include="Bootstrap\ServiceCollectionExtensions.cs" />
     <Compile Include="CodifyToolWindow.cs" />
     <Compile Include="CodifyToolWindowCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
