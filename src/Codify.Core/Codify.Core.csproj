@@ -33,10 +33,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Programmer\.nuget\packages\microsoft.bcl.asyncinterfaces\9.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -61,6 +57,7 @@
     <Compile Include="Interfaces\IModelResourceLoader.cs" />
     <Compile Include="Interfaces\IModelRetriever.cs" />
     <Compile Include="Interfaces\IOpenAiCompatibleClient.cs" />
+    <Compile Include="Interfaces\IProviderCapabilityChecker.cs" />
     <Compile Include="Interfaces\IProviderModelService.cs" />
     <Compile Include="Interfaces\IReferenceContextFormatter.cs" />
     <Compile Include="Chat\ReferenceContextFormatter.cs" />

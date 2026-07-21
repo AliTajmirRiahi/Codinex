@@ -5,6 +5,7 @@ using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
 using Codify.Core.Tools;
 using Codify.Core.UseCases;
+using Codify.Infrastructure.AI.Capabilities;
 using Codify.Infrastructure.AI.Clients;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
@@ -140,6 +141,8 @@ namespace Codify.VSIX.Bootstrap
 
             services.AddSingleton<IAiTool, PingTool>();
             services.AddSingleton<IAiToolRegistry, AiToolRegistry>();
+
+            services.AddSingleton<IProviderCapabilityChecker, ProviderCapabilityChecker>();
 
             Instance = services.BuildServiceProvider();
         }

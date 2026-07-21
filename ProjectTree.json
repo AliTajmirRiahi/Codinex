@@ -1,5 +1,18 @@
 ﻿[
     {
+        "path":  ".github",
+        "name":  ".github",
+        "type":  "folder",
+        "children":  {
+                         "path":  ".github/workflows",
+                         "name":  "workflows",
+                         "type":  "folder",
+                         "children":  {
+
+                                      }
+                     }
+    },
+    {
         "path":  "assets",
         "name":  "assets",
         "type":  "folder",
@@ -20,9 +33,39 @@
         "path":  "Codify",
         "name":  "Codify",
         "type":  "folder",
-        "children":  {
+        "children":  [
+                         {
+                             "path":  "Codify/UI",
+                             "name":  "UI",
+                             "type":  "folder",
+                             "children":  {
+                                              "path":  "Codify/UI/ToolWindows",
+                                              "name":  "ToolWindows",
+                                              "type":  "folder",
+                                              "children":  {
+                                                               "path":  "Codify/UI/ToolWindows/Resources",
+                                                               "name":  "Resources",
+                                                               "type":  "folder",
+                                                               "children":  {
 
-                     }
+                                                                            }
+                                                           }
+                                          }
+                         },
+                         {
+                             "path":  "Codify/ViewModels",
+                             "name":  "ViewModels",
+                             "type":  "folder",
+                             "children":  {
+
+                                          }
+                         },
+                         {
+                             "path":  "Codify/Codify.csproj.user",
+                             "name":  "Codify.csproj.user",
+                             "type":  "file"
+                         }
+                     ]
     },
     {
         "path":  "Codify.Tests",
@@ -174,6 +217,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IPayloadBinder.cs",
                                                                        "name":  "IPayloadBinder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IProviderCapabilityChecker.cs",
+                                                                       "name":  "IProviderCapabilityChecker.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -348,11 +396,6 @@
                                                   "path":  "src/Codify.Core/Codify.Core.csproj",
                                                   "name":  "Codify.Core.csproj",
                                                   "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "src/Codify.Core/Codify.Core.csproj.user",
-                                                  "name":  "Codify.Core.csproj.user",
-                                                  "type":  "file"
                                               }
                                           ]
                          },
@@ -366,6 +409,16 @@
                                                   "name":  "AI",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/AI/Capabilities",
+                                                                       "name":  "Capabilities",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Infrastructure/AI/Capabilities/ProviderCapabilityChecker.cs",
+                                                                                        "name":  "ProviderCapabilityChecker.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
                                                                    {
                                                                        "path":  "src/Codify.Infrastructure/AI/Clients",
                                                                        "name":  "Clients",
@@ -455,6 +508,16 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "src/Codify.Infrastructure/CustomeExceptions",
+                                                  "name":  "CustomeExceptions",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/CustomeExceptions/OpenAiCompatibleException.cs",
+                                                                   "name":  "OpenAiCompatibleException.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "src/Codify.Infrastructure/IO",
                                                   "name":  "IO",
                                                   "type":  "folder",
@@ -473,23 +536,11 @@
                                                                        "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers",
                                                                        "name":  "Retrievers",
                                                                        "type":  "folder",
-                                                                       "children":  [
-                                                                                        {
-                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/ChatGptModelRetriever.cs",
-                                                                                            "name":  "ChatGptModelRetriever.cs",
-                                                                                            "type":  "file"
-                                                                                        },
-                                                                                        {
-                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/GeminiModelRetriever.cs",
-                                                                                            "name":  "GeminiModelRetriever.cs",
-                                                                                            "type":  "file"
-                                                                                        },
-                                                                                        {
-                                                                                            "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/OpenAiCompatibleModelRetriever.cs",
-                                                                                            "name":  "OpenAiCompatibleModelRetriever.cs",
-                                                                                            "type":  "file"
-                                                                                        }
-                                                                                    ]
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Infrastructure/ModelManagement/Retrievers/OpenAiCompatibleModelRetriever.cs",
+                                                                                        "name":  "OpenAiCompatibleModelRetriever.cs",
+                                                                                        "type":  "file"
+                                                                                    }
                                                                    },
                                                                    {
                                                                        "path":  "src/Codify.Infrastructure/ModelManagement/ProviderModelService.cs",
@@ -511,6 +562,21 @@
                                                                    "path":  "src/Codify.Infrastructure/Properties/AssemblyInfo.cs",
                                                                    "name":  "AssemblyInfo.cs",
                                                                    "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Resources",
+                                                  "name":  "Resources",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/Resources/Images",
+                                                                   "name":  "Images",
+                                                                   "type":  "folder",
+                                                                   "children":  {
+                                                                                    "path":  "src/Codify.Infrastructure/Resources/Images/capability-test.png",
+                                                                                    "name":  "capability-test.png",
+                                                                                    "type":  "file"
+                                                                                }
                                                                }
                                               },
                                               {
@@ -550,11 +616,6 @@
                                               {
                                                   "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj",
                                                   "name":  "Codify.Infrastructure.csproj",
-                                                  "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj.user",
-                                                  "name":  "Codify.Infrastructure.csproj.user",
                                                   "type":  "file"
                                               },
                                               {
@@ -2228,14 +2289,6 @@
                                                                }
                                               },
                                               {
-                                                  "path":  "tests/Codify.TestCommon/Extensions",
-                                                  "name":  "Extensions",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
                                                   "path":  "tests/Codify.TestCommon/Fakes",
                                                   "name":  "Fakes",
                                                   "type":  "folder",
@@ -2280,22 +2333,6 @@
                                                                ]
                                               },
                                               {
-                                                  "path":  "tests/Codify.TestCommon/Fixtures",
-                                                  "name":  "Fixtures",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
-                                                  "path":  "tests/Codify.TestCommon/Helpers",
-                                                  "name":  "Helpers",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
                                                   "path":  "tests/Codify.TestCommon/Properties",
                                                   "name":  "Properties",
                                                   "type":  "folder",
@@ -2306,21 +2343,8 @@
                                                                }
                                               },
                                               {
-                                                  "path":  "tests/Codify.TestCommon/TestData",
-                                                  "name":  "TestData",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
                                                   "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj",
                                                   "name":  "Codify.TestCommon.csproj",
-                                                  "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj.user",
-                                                  "name":  "Codify.TestCommon.csproj.user",
                                                   "type":  "file"
                                               }
                                           ]
@@ -2331,22 +2355,6 @@
                              "type":  "folder",
                              "children":  [
                                               {
-                                                  "path":  "tests/Codify.Tests/Core",
-                                                  "name":  "Core",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
-                                                  "path":  "tests/Codify.Tests/Infrastructure",
-                                                  "name":  "Infrastructure",
-                                                  "type":  "folder",
-                                                  "children":  {
-
-                                                               }
-                                              },
-                                              {
                                                   "path":  "tests/Codify.Tests/Properties",
                                                   "name":  "Properties",
                                                   "type":  "folder",
@@ -2354,14 +2362,6 @@
                                                                    "path":  "tests/Codify.Tests/Properties/AssemblyInfo.cs",
                                                                    "name":  "AssemblyInfo.cs",
                                                                    "type":  "file"
-                                                               }
-                                              },
-                                              {
-                                                  "path":  "tests/Codify.Tests/Storage",
-                                                  "name":  "Storage",
-                                                  "type":  "folder",
-                                                  "children":  {
-
                                                                }
                                               },
                                               {
@@ -2465,14 +2465,6 @@
                                                                                                      ]
                                                                                     },
                                                                                     {
-                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/TestDoubles",
-                                                                                        "name":  "TestDoubles",
-                                                                                        "type":  "folder",
-                                                                                        "children":  {
-
-                                                                                                     }
-                                                                                    },
-                                                                                    {
                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerActiveDocumentTests.cs",
                                                                                         "name":  "ReferenceManagerActiveDocumentTests.cs",
                                                                                         "type":  "file"
@@ -2493,11 +2485,6 @@
                                               {
                                                   "path":  "tests/Codify.Tests/Codify.Tests.csproj",
                                                   "name":  "Codify.Tests.csproj",
-                                                  "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "tests/Codify.Tests/Codify.Tests.csproj.user",
-                                                  "name":  "Codify.Tests.csproj.user",
                                                   "type":  "file"
                                               },
                                               {
@@ -2530,11 +2517,6 @@
         "type":  "file"
     },
     {
-        "path":  "Codify AI.sln.DotSettings.user",
-        "name":  "Codify AI.sln.DotSettings.user",
-        "type":  "file"
-    },
-    {
         "path":  "Codify AI.slnx",
         "name":  "Codify AI.slnx",
         "type":  "file"
@@ -2547,6 +2529,11 @@
     {
         "path":  "Codify.sln.DotSettings.user",
         "name":  "Codify.sln.DotSettings.user",
+        "type":  "file"
+    },
+    {
+        "path":  "Codify.zip",
+        "name":  "Codify.zip",
         "type":  "file"
     },
     {
