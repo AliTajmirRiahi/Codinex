@@ -38,6 +38,24 @@ namespace Codify.VisualStudio.Services
             }
         }
 
+        public string SolutionDirectory
+        {
+            get
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                if (Package.GetGlobalService(typeof(SDTE)) is not DTE2 dte)
+                    return string.Empty;
+
+                var solution = dte.Solution?.FullName;
+
+                if (string.IsNullOrWhiteSpace(solution))
+                    return string.Empty;
+
+                return Path.GetDirectoryName(solution) ?? string.Empty;
+            }
+        }
+
 
         public bool IsSolutionOpen
         {

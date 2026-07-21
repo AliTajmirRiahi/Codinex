@@ -1,18 +1,5 @@
 ﻿[
     {
-        "path":  ".github",
-        "name":  ".github",
-        "type":  "folder",
-        "children":  {
-                         "path":  ".github/workflows",
-                         "name":  "workflows",
-                         "type":  "folder",
-                         "children":  {
-
-                                      }
-                     }
-    },
-    {
         "path":  "assets",
         "name":  "assets",
         "type":  "folder",
@@ -33,39 +20,9 @@
         "path":  "Codify",
         "name":  "Codify",
         "type":  "folder",
-        "children":  [
-                         {
-                             "path":  "Codify/UI",
-                             "name":  "UI",
-                             "type":  "folder",
-                             "children":  {
-                                              "path":  "Codify/UI/ToolWindows",
-                                              "name":  "ToolWindows",
-                                              "type":  "folder",
-                                              "children":  {
-                                                               "path":  "Codify/UI/ToolWindows/Resources",
-                                                               "name":  "Resources",
-                                                               "type":  "folder",
-                                                               "children":  {
+        "children":  {
 
-                                                                            }
-                                                           }
-                                          }
-                         },
-                         {
-                             "path":  "Codify/ViewModels",
-                             "name":  "ViewModels",
-                             "type":  "folder",
-                             "children":  {
-
-                                          }
-                         },
-                         {
-                             "path":  "Codify/Codify.csproj.user",
-                             "name":  "Codify.csproj.user",
-                             "type":  "file"
-                         }
-                     ]
+                     }
     },
     {
         "path":  "Codify.Tests",
@@ -349,6 +306,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Models/ToolProperty.cs",
                                                                        "name":  "ToolProperty.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/ToolRequestedPayload.cs",
+                                                                       "name":  "ToolRequestedPayload.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -1911,6 +1873,16 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "src/Codify.VisualStudio/Extensions",
+                                                  "name":  "Extensions",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.VisualStudio/Extensions/PathExtensions.cs",
+                                                                   "name":  "PathExtensions.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "src/Codify.VisualStudio/Hosting",
                                                   "name":  "Hosting",
                                                   "type":  "folder",
@@ -1961,6 +1933,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.VisualStudio/Interfaces/IWorkspaceFileLocator.cs",
+                                                                       "name":  "IWorkspaceFileLocator.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.VisualStudio/Interfaces/IWorkspaceFileService.cs",
                                                                        "name":  "IWorkspaceFileService.cs",
                                                                        "type":  "file"
@@ -1998,11 +1975,18 @@
                                                   "path":  "src/Codify.VisualStudio/Models",
                                                   "name":  "Models",
                                                   "type":  "folder",
-                                                  "children":  {
-                                                                   "path":  "src/Codify.VisualStudio/Models/OutputPaneInfo.cs",
-                                                                   "name":  "OutputPaneInfo.cs",
-                                                                   "type":  "file"
-                                                               }
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Models/OutputPaneInfo.cs",
+                                                                       "name":  "OutputPaneInfo.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Models/WorkspaceFile.cs",
+                                                                       "name":  "WorkspaceFile.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
                                               },
                                               {
                                                   "path":  "src/Codify.VisualStudio/Properties",
@@ -2111,6 +2095,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.VisualStudio/Services/WorkspaceFileLocator.cs",
+                                                                       "name":  "WorkspaceFileLocator.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.VisualStudio/Services/WorkspaceFileService.cs",
                                                                        "name":  "WorkspaceFileService.cs",
                                                                        "type":  "file"
@@ -2211,6 +2200,11 @@
                                               {
                                                   "path":  "src/Codify.VisualStudio/Codify.VisualStudio.csproj",
                                                   "name":  "Codify.VisualStudio.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codify.VisualStudio/Codify.VisualStudio.csproj.user",
+                                                  "name":  "Codify.VisualStudio.csproj.user",
                                                   "type":  "file"
                                               },
                                               {
@@ -2378,6 +2372,14 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "tests/Codify.TestCommon/Extensions",
+                                                  "name":  "Extensions",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.TestCommon/Fakes",
                                                   "name":  "Fakes",
                                                   "type":  "folder",
@@ -2422,6 +2424,22 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "tests/Codify.TestCommon/Fixtures",
+                                                  "name":  "Fixtures",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Helpers",
+                                                  "name":  "Helpers",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.TestCommon/Properties",
                                                   "name":  "Properties",
                                                   "type":  "folder",
@@ -2432,8 +2450,21 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "tests/Codify.TestCommon/TestData",
+                                                  "name":  "TestData",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj",
                                                   "name":  "Codify.TestCommon.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.TestCommon/Codify.TestCommon.csproj.user",
+                                                  "name":  "Codify.TestCommon.csproj.user",
                                                   "type":  "file"
                                               }
                                           ]
@@ -2444,6 +2475,22 @@
                              "type":  "folder",
                              "children":  [
                                               {
+                                                  "path":  "tests/Codify.Tests/Core",
+                                                  "name":  "Core",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Infrastructure",
+                                                  "name":  "Infrastructure",
+                                                  "type":  "folder",
+                                                  "children":  {
+
+                                                               }
+                                              },
+                                              {
                                                   "path":  "tests/Codify.Tests/Properties",
                                                   "name":  "Properties",
                                                   "type":  "folder",
@@ -2451,6 +2498,14 @@
                                                                    "path":  "tests/Codify.Tests/Properties/AssemblyInfo.cs",
                                                                    "name":  "AssemblyInfo.cs",
                                                                    "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Storage",
+                                                  "name":  "Storage",
+                                                  "type":  "folder",
+                                                  "children":  {
+
                                                                }
                                               },
                                               {
@@ -2554,6 +2609,14 @@
                                                                                                      ]
                                                                                     },
                                                                                     {
+                                                                                        "path":  "tests/Codify.Tests/VisualStudio/References/TestDoubles",
+                                                                                        "name":  "TestDoubles",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+
+                                                                                                     }
+                                                                                    },
+                                                                                    {
                                                                                         "path":  "tests/Codify.Tests/VisualStudio/References/ReferenceManagerActiveDocumentTests.cs",
                                                                                         "name":  "ReferenceManagerActiveDocumentTests.cs",
                                                                                         "type":  "file"
@@ -2574,6 +2637,11 @@
                                               {
                                                   "path":  "tests/Codify.Tests/Codify.Tests.csproj",
                                                   "name":  "Codify.Tests.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/Codify.Tests.csproj.user",
+                                                  "name":  "Codify.Tests.csproj.user",
                                                   "type":  "file"
                                               },
                                               {
@@ -2606,6 +2674,11 @@
         "type":  "file"
     },
     {
+        "path":  "Codify AI.sln.DotSettings.user",
+        "name":  "Codify AI.sln.DotSettings.user",
+        "type":  "file"
+    },
+    {
         "path":  "Codify AI.slnx",
         "name":  "Codify AI.slnx",
         "type":  "file"
@@ -2618,11 +2691,6 @@
     {
         "path":  "Codify.sln.DotSettings.user",
         "name":  "Codify.sln.DotSettings.user",
-        "type":  "file"
-    },
-    {
-        "path":  "Codify.zip",
-        "name":  "Codify.zip",
         "type":  "file"
     },
     {

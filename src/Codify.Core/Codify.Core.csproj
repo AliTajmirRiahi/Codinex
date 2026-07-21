@@ -91,6 +91,7 @@
     <Compile Include="Models\ReferenceItem.cs" />
     <Compile Include="Models\ToolDefinition.cs" />
     <Compile Include="Models\ToolProperty.cs" />
+    <Compile Include="Models\ToolRequestedPayload.cs" />
     <Compile Include="Models\WebViewMessageRequest.cs" />
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />

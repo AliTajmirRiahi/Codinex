@@ -3,6 +3,7 @@ using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.VisualStudio.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Codify.VisualStudio.Tools.BuiltIn;
 /// <summary>
 /// ReadFileTool
 /// </summary>
-public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService) : IAiTool
+public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWorkspaceFileLocator workspaceFileLocator) : IAiTool
 {
     public string Name => "read_file";
 
@@ -33,12 +34,42 @@ public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService) : I
         ToolRequest request,
         CancellationToken cancellationToken)
     {
-        await Task.Delay(1);
+        await Task.Yield();
 
-        var path = request.GetRequiredString("path");
+        var query = request.GetRequiredString("path");
 
-        var content = workspaceFileService.ReadFile(path);
+        var files = workspaceFileLocator.Find(query);
 
-        return ToolResult.Successful(content);
+        switch (files.Count)
+        {
+            case 0:
+                return ToolResult.Failed(
+                    request.Id,
+                    $"No file matching '{query}' was found.");
+            case > 1:
+                return ToolResult.Successful(
+                    request.Id,
+                    new
+                    {
+                        matches = files.Select(f => new
+                        {
+                            f.Name,
+                            f.RelativePath
+                        })
+                    });
+        }
+
+        var file = files[0];
+
+        var content = workspaceFileService.ReadFile(file.FullPath);
+
+        return ToolResult.Successful(
+            request.Id,
+            new
+            {
+                file.Name,
+                file.RelativePath,
+                Content = content
+            });
     }
 }

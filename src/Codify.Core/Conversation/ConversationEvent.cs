@@ -1,4 +1,5 @@
 using System;
+using Codify.Core.Models;
 using Newtonsoft.Json.Linq;
 
 namespace Codify.Core.Conversation;
@@ -91,11 +92,18 @@ public sealed class ConversationEvent
             sequence: sequence);
     }
 
-    public static ConversationEvent ToolRequested(ToolRequest request, long sequence = 0)
+    public static ConversationEvent ToolRequested(
+        ToolRequest request,
+        ChatMessage assistantMessage,
+        long sequence = 0)
     {
         return Create(
             ConversationEventType.ToolRequested,
-            JToken.FromObject(request),
+            JToken.FromObject(new ToolRequestedPayload
+            {
+                Request = request,
+                AssistantMessage = assistantMessage
+            }),
             sequence: sequence);
     }
 

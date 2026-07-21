@@ -58,11 +58,13 @@
     <Compile Include="Interfaces\IWebViewMessageRouter.cs" />
     <Compile Include="Interfaces\IVsOutputLogger.cs" />
     <Compile Include="Interfaces\IVisualStudioServices.cs" />
+    <Compile Include="Interfaces\IWorkspaceFileLocator.cs" />
     <Compile Include="Interfaces\IWorkspaceFileService.cs" />
     <Compile Include="Internal\VisualStudioServices.cs" />
     <Compile Include="Internal\VsServiceBase.cs" />
     <Compile Include="Logging\VsOutputLogger.cs" />
     <Compile Include="Models\OutputPaneInfo.cs" />
+    <Compile Include="Models\WorkspaceFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IVsOutputWindowService.cs" />
     <Compile Include="References\Providers\Base\RoslynReferenceProviderBase.cs" />
@@ -76,8 +78,10 @@
     <Compile Include="References\Providers\SolutionReferenceProvider.cs" />
     <Compile Include="References\Providers\SystemReferenceProvider.cs" />
     <Compile Include="References\ReferenceManager.cs" />
+    <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
+    <Compile Include="Services\WorkspaceFileLocator.cs" />
     <Compile Include="Services\WorkspaceFileService.cs" />
     <Compile Include="Theme\VsThemeService.cs" />
     <Compile Include="Tools\AiToolRegistry.cs" />

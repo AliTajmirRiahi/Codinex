@@ -6,10 +6,9 @@ using Codify.Storage;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
@@ -56,8 +55,8 @@ namespace Codify.Infrastructure.AI.Providers
         }
 
         public async IAsyncEnumerable<ConversationEvent> SendStreamAsync(
-    IReadOnlyList<ChatMessage> messages,
-    [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            IReadOnlyList<ChatMessage> messages,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
             var provider = _providerManager.ActiveProvider;
@@ -65,11 +64,63 @@ namespace Codify.Infrastructure.AI.Providers
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
+            await foreach (var item in StreamCompletionAsync(
+                               provider,
+                               model,
+                               messages,
+                               cancellationToken))
+            {
+                yield return item;
+            }
+        }
+
+        public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
+            IReadOnlyList<ChatMessage> messages,
+            ChatMessage assistantMessage,
+            IReadOnlyList<ToolResult> toolResults,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var model = _providerManager.ActiveModel;
+            var provider = _providerManager.ActiveProvider;
+
+            if (provider == null || model == null)
+                throw new ArgumentException("Provider or Model is not configured correctly.");
+
+            var history = messages.ToList();
+
+            history.Add(assistantMessage);
+
+            history.AddRange(toolResults.Select(toolResult => new ChatMessage
+            {
+                Role = "tool",
+                ToolCallId = toolResult.Id,
+                Content = toolResult.Success
+                    ? toolResult.Data.ToString()
+                    : toolResult.Error
+            }));
+
+            await foreach (var item in StreamCompletionAsync(
+                               provider,
+                               model,
+                               history,
+                               cancellationToken))
+            {
+                yield return item;
+            }
+        }
+        private async IAsyncEnumerable<ConversationEvent> StreamCompletionAsync(
+                AiProvider provider,
+                AiModel model,
+                IReadOnlyList<ChatMessage> messages,
+                [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
             var payload = BuildChatCompletionPayload(
                 provider,
                 model,
                 messages,
                 true);
+
+            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
 
             string toolCallId = null;
             string toolName = null;
@@ -85,13 +136,34 @@ namespace Codify.Infrastructure.AI.Providers
                 {
                     if (!string.IsNullOrWhiteSpace(toolName))
                     {
+                        var arguments = ParseArguments(toolArguments.ToString());
+
+                        var assistantMessage = new ChatMessage
+                        {
+                            Role = "assistant",
+                            ToolCalls =
+                            [
+                                new ToolCall
+                                {
+                                    Id = toolCallId,
+                                    Name = toolName,
+                                    Arguments = arguments
+                                }
+                            ]
+                        };
+
                         yield return ConversationEvent.ToolRequested(
                             new ToolRequest
                             {
                                 Id = toolCallId,
                                 Name = toolName,
-                                Arguments = ParseArguments(toolArguments.ToString())
-                            });
+                                Arguments = arguments
+                            },
+                            assistantMessage);
+                    }
+                    else
+                    {
+                        yield return ConversationEvent.Completed();
                     }
 
                     yield break;
@@ -104,24 +176,19 @@ namespace Codify.Infrastructure.AI.Providers
                 if (delta == null)
                     continue;
 
-
-                // Handle tool calls
                 var toolCall = delta["tool_calls"]?[0];
 
                 if (toolCall != null)
                 {
-                    toolCallId ??=
-                        toolCall["id"]?.ToString();
+                    toolCallId ??= toolCall["id"]?.ToString();
 
                     var function = toolCall["function"];
 
                     if (function != null)
                     {
-                        toolName ??=
-                            function["name"]?.ToString();
+                        toolName ??= function["name"]?.ToString();
 
-                        var arguments =
-                            function["arguments"]?.ToString();
+                        var arguments = function["arguments"]?.ToString();
 
                         if (!string.IsNullOrWhiteSpace(arguments))
                         {
@@ -132,10 +199,7 @@ namespace Codify.Infrastructure.AI.Providers
                     continue;
                 }
 
-
-                // Handle normal text streaming
-                var content =
-                    delta["content"]?.ToString();
+                var content = delta["content"]?.ToString();
 
                 if (!string.IsNullOrWhiteSpace(content))
                 {
@@ -143,37 +207,56 @@ namespace Codify.Infrastructure.AI.Providers
                 }
             }
         }
-        public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
-            IReadOnlyList<ToolResult> toolResults,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            foreach (var toolResult in toolResults)
-            {
-                yield return ConversationEvent.Status(
-                    $"Tool '{toolResult.Id}' completed.");
-            }
-
-            yield return ConversationEvent.TextDelta(
-                "Conversation continuation is not implemented yet.");
-
-            yield return ConversationEvent.Completed();
-        }
-
         private List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts)
         {
             var messages = new List<object>();
 
             foreach (var prompt in prompts)
             {
-                messages.Add(new
+                var role = NormalizeRole(prompt.Role);
+
+                switch (role)
                 {
-                    role = NormalizeRole(prompt.Role),
-                    content = prompt.Content
-                });
+                    case "tool":
+                        messages.Add(new
+                        {
+                            role,
+                            tool_call_id = prompt.ToolCallId,
+                            content = prompt.Content
+                        });
+
+                        continue;
+                    case "assistant" when
+                        prompt.ToolCalls is { Count: > 0 }:
+                        messages.Add(new
+                        {
+                            role,
+                            tool_calls = prompt.ToolCalls.Select(x => new
+                            {
+                                id = x.Id,
+                                type = "function",
+                                function = new
+                                {
+                                    name = x.Name,
+                                    arguments = x.Arguments.ToString()
+                                }
+                            })
+                        });
+
+                        continue;
+                    default:
+                        messages.Add(new
+                        {
+                            role,
+                            content = prompt.Content
+                        });
+                        break;
+                }
             }
 
             return messages;
         }
+
         private object BuildChatCompletionPayload(
             AiProvider provider,
             AiModel model,
@@ -212,7 +295,7 @@ namespace Codify.Infrastructure.AI.Providers
                                 p => p.Key,
                                 p => new
                                 {
-                                    type = p.Value.Type,
+                                    type = ToJsonSchemaType(p.Value.Type),
                                     description = p.Value.Description
                                 }),
 
@@ -238,6 +321,20 @@ namespace Codify.Infrastructure.AI.Providers
                 };
             }
         }
+
+        private static string ToJsonSchemaType(ToolPropertyType type)
+        {
+            return type switch
+            {
+                ToolPropertyType.String => "string",
+                ToolPropertyType.Integer => "integer",
+                ToolPropertyType.Number => "number",
+                ToolPropertyType.Boolean => "boolean",
+                ToolPropertyType.Object => "object",
+                ToolPropertyType.Array => "array",
+                _ => throw new ArgumentOutOfRangeException(nameof(type))
+            };
+        }
         private static string NormalizeRole(string role)
         {
             if (string.IsNullOrWhiteSpace(role))
@@ -247,6 +344,7 @@ namespace Codify.Infrastructure.AI.Providers
             {
                 "assistant" => "assistant",
                 "system" => "system",
+                "tool" => "tool",
                 _ => "user"
             };
         }

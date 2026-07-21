@@ -6,26 +6,19 @@ using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Services
 {
-    public sealed class WorkspaceFileService : IWorkspaceFileService
+    public sealed class WorkspaceFileService(IFileSystem fileSystem) : IWorkspaceFileService
     {
-        private readonly IFileSystem _fileSystem;
-
-        public WorkspaceFileService(IFileSystem fileSystem)
-        {
-            _fileSystem = fileSystem;
-        }
-
         public bool Exists(string filePath)
         {
-            return _fileSystem.Exists(filePath);
+            return fileSystem.Exists(filePath);
         }
 
         public string ReadFile(string filePath)
         {
-            if (!_fileSystem.Exists(filePath))
+            if (!fileSystem.Exists(filePath))
                 throw new FileNotFoundException(filePath);
 
-            return _fileSystem.ReadAllText(filePath);
+            return fileSystem.ReadAllText(filePath);
         }
     }
 }

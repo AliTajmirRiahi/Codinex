@@ -6,6 +6,8 @@ public interface IWorkspaceContext
 
     string SolutionPath { get; }
 
+    string SolutionDirectory { get; }
+
     string ActiveProjectName { get; }
 
     string ActiveDocumentPath { get; }

@@ -84,6 +84,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
             services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
             services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
+            services.AddSingleton<IWorkspaceFileLocator, WorkspaceFileLocator>();
             services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
@@ -140,7 +141,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IProviderModelService, ProviderModelService>();
             services.AddSingleton<IModelRetriever, OpenAiCompatibleModelRetriever>();
 
-            ServiceCollectionExtensions.AddAiTools(services, typeof(ReadFileTool).Assembly);
+            services.AddAiTools(typeof(ReadFileTool).Assembly);
 
             services.AddSingleton<IProviderCapabilityChecker, ProviderCapabilityChecker>();
 

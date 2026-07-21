@@ -1,8 +1,9 @@
-﻿using Codify.Core.Tools;
+﻿using Codify.Core.Conversation;
+using Codify.Core.Models;
+using Codify.Core.Tools;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Conversation;
-using Codify.Core.Models;
 
 namespace Codify.VisualStudio.Tools.BuiltIn;
 
@@ -15,8 +16,13 @@ public sealed class GetDiagnosticsTool : IAiTool
 
     public string Description => "";
 
-    public ToolDefinition Definition => throw new System.NotImplementedException();
+    public ToolDefinition Definition => new ToolDefinition(
+        new Dictionary<string, ToolProperty>
+        {
 
+        },
+        [
+        ]);
     public Task<ToolResult> ExecuteAsync(
         ToolRequest request,
         CancellationToken cancellationToken)

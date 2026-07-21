@@ -26,6 +26,8 @@ namespace Codify.Infrastructure.AI.Providers
         }
 
         public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
+            IReadOnlyList<ChatMessage> messages,
+            ChatMessage assistantMessage,
             IReadOnlyList<ToolResult> toolResults,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {

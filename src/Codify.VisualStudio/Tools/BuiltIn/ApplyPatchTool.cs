@@ -1,4 +1,5 @@
-﻿using Codify.Core.Tools;
+﻿using System.Collections.Generic;
+using Codify.Core.Tools;
 using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Conversation;
@@ -14,7 +15,13 @@ public sealed class ApplyPatchTool : IAiTool
 
     public string Description => "";
 
-    public ToolDefinition Definition => throw new System.NotImplementedException();
+    public ToolDefinition Definition => new ToolDefinition(
+        new Dictionary<string, ToolProperty>
+        {
+           
+        },
+        [
+        ]);
 
     public Task<ToolResult> ExecuteAsync(
         ToolRequest request,

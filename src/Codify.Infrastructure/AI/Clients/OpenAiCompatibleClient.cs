@@ -26,6 +26,8 @@ namespace Codify.Infrastructure.AI.Clients
         {
             var HttpClient = httpClientFactory.CreateClient();
 
+            HttpClient.Timeout = TimeSpan.FromMinutes(5);
+
             using var request = CreateRequest(
                 HttpMethod.Get,
                 provider,
@@ -90,6 +92,8 @@ namespace Codify.Infrastructure.AI.Clients
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var HttpClient = httpClientFactory.CreateClient();
+
+            HttpClient.Timeout = TimeSpan.FromMinutes(5);
 
             using var request = CreateRequest(
                 HttpMethod.Post,

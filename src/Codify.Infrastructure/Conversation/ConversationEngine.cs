@@ -22,6 +22,7 @@ namespace Codify.Infrastructure.Conversation
             yield return ConversationEvent.Status("Sending request...");
 
             await foreach (var evt in ProcessEvents(
+                               request.Messages,
                                provider.SendStreamAsync(
                                    request.Messages,
                                    cancellationToken),
@@ -35,6 +36,7 @@ namespace Codify.Infrastructure.Conversation
         /// Processes conversation events recursively.
         /// </summary>
         private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
+            IReadOnlyList<ChatMessage> messages,
             IAsyncEnumerable<ConversationEvent> events,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -44,7 +46,11 @@ namespace Codify.Infrastructure.Conversation
                 {
                     case ConversationEventType.ToolRequested:
 
-                        var toolRequest = evt.Payload.ToObject<ToolRequest>();
+                        var payload = evt.Payload.ToObject<ToolRequestedPayload>();
+
+                        var toolRequest = payload.Request;
+
+                        var assistantMessage = payload.AssistantMessage;
 
                         var tool = toolRegistry.Get(toolRequest.Name);
 
@@ -58,8 +64,11 @@ namespace Codify.Infrastructure.Conversation
                         yield return ConversationEvent.ToolCompleted(result);
 
                         await foreach (var continuationEvent in ProcessEvents(
+                                           messages,
                                            provider.ContinueAsync(
-                                               new[] { result },
+                                               messages,
+                                               assistantMessage,
+                                               [result],
                                                cancellationToken),
                                            cancellationToken))
                         {
