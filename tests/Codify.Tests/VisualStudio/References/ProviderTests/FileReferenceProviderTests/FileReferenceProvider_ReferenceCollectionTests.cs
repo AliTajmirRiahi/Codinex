@@ -116,8 +116,8 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         Dte.Solution.Returns(solution);
         solution.Projects.Returns(projects);
 
-        FileSystem.Exists(filePath).Returns(true);
-        FileSystem.ReadAllText(filePath).Returns("class Test {}");
+        WorkspaceFileService.Exists(filePath).Returns(true);
+        WorkspaceFileService.ReadFile(filePath).Returns("class Test {}");
 
         var sut = CreateSut();
 
@@ -163,7 +163,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
                         projectFilePath,
                         "Codify.Core"))));
 
-        FileSystem.ReadAllText(projectFilePath)
+        WorkspaceFileService.ReadFile(projectFilePath)
             .Returns("UserService");
 
         var sut = CreateSut();
@@ -221,8 +221,8 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         reference.Type.Should().Be(ReferenceKind.File);
         reference.Value.Should().Be(activeDocumentPath);
 
-        FileSystem.Received(1)
-            .ReadAllText(activeDocumentPath);
+        WorkspaceFileService.Received(1)
+            .ReadFile(activeDocumentPath);
     }
 
     [Test]
@@ -237,7 +237,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             activeDocumentPath,
             "Program");
 
-        FileSystem.ReadAllText(nestedFilePath)
+        WorkspaceFileService.ReadFile(nestedFilePath)
             .Returns("UserService");
 
         var childItem = FakeProjectItem.Create(
@@ -287,7 +287,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             activeDocumentPath,
             "Program");
 
-        FileSystem.ReadAllText(subProjectFilePath)
+        WorkspaceFileService.ReadFile(subProjectFilePath)
             .Returns("Logger");
 
         var subProject = FakeProject.Create(
@@ -332,8 +332,8 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             activeDocumentPath,
             "Program");
 
-        FileSystem
-            .When(x => x.ReadAllText(projectFilePath))
+        WorkspaceFileService
+            .When(x => x.ReadFile(projectFilePath))
             .Do(_ => throw new InvalidOperationException());
 
         SetSolution(
@@ -359,8 +359,8 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         reference.Metadata.Should().NotBeNull();
         reference.Metadata.Content.Should().BeEmpty();
 
-        FileSystem.Received(1)
-            .ReadAllText(projectFilePath);
+        WorkspaceFileService.Received(1)
+            .ReadFile(projectFilePath);
     }
 
     [Test]

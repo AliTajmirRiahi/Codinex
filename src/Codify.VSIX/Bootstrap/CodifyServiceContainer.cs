@@ -124,7 +124,6 @@ namespace Codify.VSIX.Bootstrap
 
             // AI Providers (The Plugin System)
             // Register all available providers here
-            services.AddSingleton<IAiProvider, OpenAiProvider>();
             services.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();
 
             // Note: To add a local AI (e.g. Ollama), just create the class 

@@ -25,8 +25,8 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
                 Path.GetTempPath(),
                 $"{Guid.NewGuid()}.cs");
 
-            FileSystem.Exists(filePath).Returns(true);
-            FileSystem.ReadAllText(filePath).Returns("class Test {}");
+            WorkspaceFileService.Exists(filePath).Returns(true);
+            WorkspaceFileService.ReadFile(filePath).Returns("class Test {}");
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -56,8 +56,8 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
                 Path.GetTempPath(),
                 $"{Guid.NewGuid()}.unknown");
 
-            FileSystem.Exists(filePath).Returns(true);
-            FileSystem.ReadAllText(filePath).Returns("test");
+            WorkspaceFileService.Exists(filePath).Returns(true);
+            WorkspaceFileService.ReadFile(filePath).Returns("test");
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -93,10 +93,10 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
 
             const string filePath = @"C:\Temp\Test.cs";
 
-            FileSystem.Exists(filePath).Returns(true);
+            WorkspaceFileService.Exists(filePath).Returns(true);
 
-            FileSystem
-                .When(x => x.ReadAllText(filePath))
+            WorkspaceFileService
+                .When(x => x.ReadFile(filePath))
                 .Do(_ => throw new IOException("Unable to read file."));
 
             // Act
@@ -106,8 +106,8 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             result.Should().NotBeNull();
             result.Metadata.Content.Should().BeEmpty();
 
-            FileSystem.Received(1).Exists(filePath);
-            FileSystem.Received(1).ReadAllText(filePath);
+            WorkspaceFileService.Received(1).Exists(filePath);
+            WorkspaceFileService.Received(1).ReadFile(filePath);
         }
 
         [Test]
@@ -119,8 +119,8 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             const string filePath = @"C:\Temp\Test.cs";
             const string expectedContent = "public class Test { }";
 
-            FileSystem.Exists(filePath).Returns(true);
-            FileSystem.ReadAllText(filePath).Returns(expectedContent);
+            WorkspaceFileService.Exists(filePath).Returns(true);
+            WorkspaceFileService.ReadFile(filePath).Returns(expectedContent);
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -129,8 +129,8 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             result.Should().NotBeNull();
             result.Metadata.Content.Should().Be(expectedContent);
 
-            FileSystem.Received(1).Exists(filePath);
-            FileSystem.Received(1).ReadAllText(filePath);
+            WorkspaceFileService.Received(1).Exists(filePath);
+            WorkspaceFileService.Received(1).ReadFile(filePath);
         }
     }
 }

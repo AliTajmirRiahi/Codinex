@@ -135,6 +135,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\CurrentDocumentContextProviderTests\Base\CurrentDocumentContextProviderTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\CurrentDocumentContextProviderTests\CurrentDocumentContextProvider_GetContextAsyncTests.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\DiagnosticsContextProviderTests\Base\DiagnosticsContextProviderTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\DiagnosticsContextProviderTests\DiagnosticsContextProvider_GetContextAsyncTests.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\GitContextProviderTests\Base\GitContextProviderTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\GitContextProviderTests\GitContextProvider_GetContextAsyncTests.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\OpenDocumentsContextProviderTests\Base\OpenDocumentsContextProviderTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\OpenDocumentsContextProviderTests\OpenDocumentsContextProvider_GetContextAsyncTests.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\PromptContextComposerTests\Base\PromptContextComposerTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\PromptContextComposerTests\PromptContextComposer_ComposeTests.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\WorkspaceContextBuilderTests\Base\WorkspaceContextBuilderTestBase.cs" />
+    <Compile Include="Infrastructure\Workspace\PromptPipeline\WorkspaceContextBuilderTests\WorkspaceContextBuilder_BuildAsyncTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VisualStudio\References\BaseTests\RoslynReferenceProvider_GetReferencesAsyncTests.cs" />
     <Compile Include="VisualStudio\References\ProviderTests\FileReferenceProviderTests\FileReferenceProvider_ActiveDocumentByPathTests.cs" />
@@ -150,13 +162,16 @@
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
+    <Compile Include="VisualStudio\Workspace\Providers\DiagnosticsProviderTests\DiagnosticsProviderTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\Providers\DiagnosticsProviderTests\GetDiagnosticsAsyncTests.cs" />
+    <Compile Include="VSIX\Bootstrap\CodifyServiceContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Infrastructure\" />
+    <Folder Include="Infrastructure\Workspace\PromptPipeline\BuildContextProviderTests\" />
     <Folder Include="Storage\" />
     <Folder Include="VisualStudio\References\TestDoubles\" />
   </ItemGroup>
@@ -164,6 +179,10 @@
     <ProjectReference Include="..\..\src\Codify.Core\Codify.Core.csproj">
       <Project>{fab3acec-0007-48d9-99b7-cd6820fb97f2}</Project>
       <Name>Codify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Codify.Infrastructure\Codify.Infrastructure.csproj">
+      <Project>{1d853c03-bfd1-42b5-a53a-15b76d1b5c0b}</Project>
+      <Name>Codify.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Codify.VisualStudio\Codify.VisualStudio.csproj">
       <Project>{1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9}</Project>

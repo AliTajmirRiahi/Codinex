@@ -137,6 +137,16 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/IBuildContextFormatter.cs",
+                                                                       "name":  "IBuildContextFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IBuildContextProvider.cs",
+                                                                       "name":  "IBuildContextProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/IChatMessageBuilder.cs",
                                                                        "name":  "IChatMessageBuilder.cs",
                                                                        "type":  "file"
@@ -144,6 +154,16 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IChatSession.cs",
                                                                        "name":  "IChatSession.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IDiagnosticsFormatter.cs",
+                                                                       "name":  "IDiagnosticsFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IDiagnosticsProvider.cs",
+                                                                       "name":  "IDiagnosticsProvider.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -159,6 +179,16 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IFileSystem.cs",
                                                                        "name":  "IFileSystem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IGitContextFormatter.cs",
+                                                                       "name":  "IGitContextFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IGitContextProvider.cs",
+                                                                       "name":  "IGitContextProvider.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -182,8 +212,28 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/IOpenDocumentsContextProvider.cs",
+                                                                       "name":  "IOpenDocumentsContextProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IOpenDocumentsFormatter.cs",
+                                                                       "name":  "IOpenDocumentsFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/IPayloadBinder.cs",
                                                                        "name":  "IPayloadBinder.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IProjectContextFormatter.cs",
+                                                                       "name":  "IProjectContextFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IProjectContextProvider.cs",
+                                                                       "name":  "IProjectContextProvider.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -230,6 +280,11 @@
                                                                        "path":  "src/Codify.Core/Interfaces/IWorkspaceContext.cs",
                                                                        "name":  "IWorkspaceContext.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IWorkspaceStateProvider.cs",
+                                                                       "name":  "IWorkspaceStateProvider.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -256,6 +311,21 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Models/Attachment.cs",
                                                                        "name":  "Attachment.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/BuildContext.cs",
+                                                                       "name":  "BuildContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/BuildMessageItem.cs",
+                                                                       "name":  "BuildMessageItem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/BuildMessageSeverity.cs",
+                                                                       "name":  "BuildMessageSeverity.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -291,6 +361,51 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Models/ChatResponse.cs",
                                                                        "name":  "ChatResponse.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/DiagnosticItem.cs",
+                                                                       "name":  "DiagnosticItem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/DiagnosticSeverity.cs",
+                                                                       "name":  "DiagnosticSeverity.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/GitContext.cs",
+                                                                       "name":  "GitContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/GitFileItem.cs",
+                                                                       "name":  "GitFileItem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/GitFileStatus.cs",
+                                                                       "name":  "GitFileStatus.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/OpenDocumentItem.cs",
+                                                                       "name":  "OpenDocumentItem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/OpenDocumentsContext.cs",
+                                                                       "name":  "OpenDocumentsContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/ProjectContext.cs",
+                                                                       "name":  "ProjectContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Models/ProjectItem.cs",
+                                                                       "name":  "ProjectItem.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -375,6 +490,127 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "src/Codify.Core/Workspace",
+                                                  "name":  "Workspace",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/Models",
+                                                                       "name":  "Models",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceBuildState.cs",
+                                                                                            "name":  "WorkspaceBuildState.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceDiagnostics.cs",
+                                                                                            "name":  "WorkspaceDiagnostics.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceFile.cs",
+                                                                                            "name":  "WorkspaceFile.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceFolder.cs",
+                                                                                            "name":  "WorkspaceFolder.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceProject.cs",
+                                                                                            "name":  "WorkspaceProject.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceSymbol.cs",
+                                                                                            "name":  "WorkspaceSymbol.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Models/WorkspaceTestState.cs",
+                                                                                            "name":  "WorkspaceTestState.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/Prompt",
+                                                                       "name":  "Prompt",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/ContextProviderResult.cs",
+                                                                                            "name":  "ContextProviderResult.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/IPromptContextComposer.cs",
+                                                                                            "name":  "IPromptContextComposer.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/IWorkspaceContextBuilder.cs",
+                                                                                            "name":  "IWorkspaceContextBuilder.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/IWorkspaceContextProvider.cs",
+                                                                                            "name":  "IWorkspaceContextProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/PromptContext.cs",
+                                                                                            "name":  "PromptContext.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/PromptContextItem.cs",
+                                                                                            "name":  "PromptContextItem.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/PromptContextKind.cs",
+                                                                                            "name":  "PromptContextKind.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/PromptContextSection.cs",
+                                                                                            "name":  "PromptContextSection.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Workspace/Prompt/WorkspaceContextRequest.cs",
+                                                                                            "name":  "WorkspaceContextRequest.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/WorkspaceContext.cs",
+                                                                       "name":  "WorkspaceContext.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/WorkspaceMemory.cs",
+                                                                       "name":  "WorkspaceMemory.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/WorkspaceSnapshot.cs",
+                                                                       "name":  "WorkspaceSnapshot.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Workspace/WorkspaceState.cs",
+                                                                       "name":  "WorkspaceState.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Core/Codify.Core.csproj",
                                                   "name":  "Codify.Core.csproj",
                                                   "type":  "file"
@@ -437,18 +673,11 @@
                                                                        "path":  "src/Codify.Infrastructure/AI/Providers",
                                                                        "name":  "Providers",
                                                                        "type":  "folder",
-                                                                       "children":  [
-                                                                                        {
-                                                                                            "path":  "src/Codify.Infrastructure/AI/Providers/OpenAiCompatibleProvider.cs",
-                                                                                            "name":  "OpenAiCompatibleProvider.cs",
-                                                                                            "type":  "file"
-                                                                                        },
-                                                                                        {
-                                                                                            "path":  "src/Codify.Infrastructure/AI/Providers/OpenAiProvider.cs",
-                                                                                            "name":  "OpenAiProvider.cs",
-                                                                                            "type":  "file"
-                                                                                        }
-                                                                                    ]
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Infrastructure/AI/Providers/OpenAiCompatibleProvider.cs",
+                                                                                        "name":  "OpenAiCompatibleProvider.cs",
+                                                                                        "type":  "file"
+                                                                                    }
                                                                    },
                                                                    {
                                                                        "path":  "src/Codify.Infrastructure/AI/AiProviderRouter.cs",
@@ -582,6 +811,43 @@
                                                                        "type":  "file"
                                                                    }
                                                                ]
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Workspace",
+                                                  "name":  "Workspace",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline",
+                                                                   "name":  "PromptPipeline",
+                                                                   "type":  "folder",
+                                                                   "children":  [
+                                                                                    {
+                                                                                        "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline/Providers",
+                                                                                        "name":  "Providers",
+                                                                                        "type":  "folder",
+                                                                                        "children":  {
+                                                                                                         "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline/Providers/MemoryContextProvider.cs",
+                                                                                                         "name":  "MemoryContextProvider.cs",
+                                                                                                         "type":  "file"
+                                                                                                     }
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline/PromptContextComposer.cs",
+                                                                                        "name":  "PromptContextComposer.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline/PromptContextItemFactory.cs",
+                                                                                        "name":  "PromptContextItemFactory.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.Infrastructure/Workspace/PromptPipeline/WorkspaceContextBuilder.cs",
+                                                                                        "name":  "WorkspaceContextBuilder.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                                ]
+                                                               }
                                               },
                                               {
                                                   "path":  "src/Codify.Infrastructure/Codify.Infrastructure.csproj",
@@ -2198,6 +2464,58 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "src/Codify.VisualStudio/Workspace",
+                                                  "name":  "Workspace",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.VisualStudio/Workspace/Providers",
+                                                                   "name":  "Providers",
+                                                                   "type":  "folder",
+                                                                   "children":  [
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/BuildContextFormatter.cs",
+                                                                                        "name":  "BuildContextFormatter.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/BuildContextOrchestrator.cs",
+                                                                                        "name":  "BuildContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/BuildContextProviderImpl.cs",
+                                                                                        "name":  "BuildContextProviderImpl.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/CurrentDocumentContextOrchestrator.cs",
+                                                                                        "name":  "CurrentDocumentContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/DiagnosticsContextOrchestrator.cs",
+                                                                                        "name":  "DiagnosticsContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/GitContextOrchestrator.cs",
+                                                                                        "name":  "GitContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/OpenDocumentsContextOrchestrator.cs",
+                                                                                        "name":  "OpenDocumentsContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    },
+                                                                                    {
+                                                                                        "path":  "src/Codify.VisualStudio/Workspace/Providers/ProjectContextOrchestrator.cs",
+                                                                                        "name":  "ProjectContextOrchestrator.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                                ]
+                                                               }
+                                              },
+                                              {
                                                   "path":  "src/Codify.VisualStudio/Codify.VisualStudio.csproj",
                                                   "name":  "Codify.VisualStudio.csproj",
                                                   "type":  "file"
@@ -2487,7 +2805,156 @@
                                                   "name":  "Infrastructure",
                                                   "type":  "folder",
                                                   "children":  {
+                                                                   "path":  "tests/Codify.Tests/Infrastructure/Workspace",
+                                                                   "name":  "Workspace",
+                                                                   "type":  "folder",
+                                                                   "children":  {
+                                                                                    "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline",
+                                                                                    "name":  "PromptPipeline",
+                                                                                    "type":  "folder",
+                                                                                    "children":  [
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/BuildContextProviderTests",
+                                                                                                         "name":  "BuildContextProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  {
 
+                                                                                                                      }
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/CurrentDocumentContextProviderTests",
+                                                                                                         "name":  "CurrentDocumentContextProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/CurrentDocumentContextProviderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/CurrentDocumentContextProviderTests/Base/CurrentDocumentContextProviderTestBase.cs",
+                                                                                                                                               "name":  "CurrentDocumentContextProviderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/CurrentDocumentContextProviderTests/CurrentDocumentContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "name":  "CurrentDocumentContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/DiagnosticsContextProviderTests",
+                                                                                                         "name":  "DiagnosticsContextProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/DiagnosticsContextProviderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/DiagnosticsContextProviderTests/Base/DiagnosticsContextProviderTestBase.cs",
+                                                                                                                                               "name":  "DiagnosticsContextProviderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/DiagnosticsContextProviderTests/DiagnosticsContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "name":  "DiagnosticsContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/GitContextProviderTests",
+                                                                                                         "name":  "GitContextProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/GitContextProviderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/GitContextProviderTests/Base/GitContextProviderTestBase.cs",
+                                                                                                                                               "name":  "GitContextProviderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/GitContextProviderTests/GitContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "name":  "GitContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/OpenDocumentsContextProviderTests",
+                                                                                                         "name":  "OpenDocumentsContextProviderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/OpenDocumentsContextProviderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/OpenDocumentsContextProviderTests/Base/OpenDocumentsContextProviderTestBase.cs",
+                                                                                                                                               "name":  "OpenDocumentsContextProviderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/OpenDocumentsContextProviderTests/OpenDocumentsContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "name":  "OpenDocumentsContextProvider_GetContextAsyncTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/PromptContextComposerTests",
+                                                                                                         "name":  "PromptContextComposerTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/PromptContextComposerTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/PromptContextComposerTests/Base/PromptContextComposerTestBase.cs",
+                                                                                                                                               "name":  "PromptContextComposerTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/PromptContextComposerTests/PromptContextComposer_ComposeTests.cs",
+                                                                                                                              "name":  "PromptContextComposer_ComposeTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     },
+                                                                                                     {
+                                                                                                         "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/WorkspaceContextBuilderTests",
+                                                                                                         "name":  "WorkspaceContextBuilderTests",
+                                                                                                         "type":  "folder",
+                                                                                                         "children":  [
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/WorkspaceContextBuilderTests/Base",
+                                                                                                                              "name":  "Base",
+                                                                                                                              "type":  "folder",
+                                                                                                                              "children":  {
+                                                                                                                                               "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/WorkspaceContextBuilderTests/Base/WorkspaceContextBuilderTestBase.cs",
+                                                                                                                                               "name":  "WorkspaceContextBuilderTestBase.cs",
+                                                                                                                                               "type":  "file"
+                                                                                                                                           }
+                                                                                                                          },
+                                                                                                                          {
+                                                                                                                              "path":  "tests/Codify.Tests/Infrastructure/Workspace/PromptPipeline/WorkspaceContextBuilderTests/WorkspaceContextBuilder_BuildAsyncTests.cs",
+                                                                                                                              "name":  "WorkspaceContextBuilder_BuildAsyncTests.cs",
+                                                                                                                              "type":  "file"
+                                                                                                                          }
+                                                                                                                      ]
+                                                                                                     }
+                                                                                                 ]
+                                                                                }
                                                                }
                                               },
                                               {
@@ -2632,6 +3099,21 @@
                                                                                         "type":  "file"
                                                                                     }
                                                                                 ]
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "tests/Codify.Tests/VSIX",
+                                                  "name":  "VSIX",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "tests/Codify.Tests/VSIX/Bootstrap",
+                                                                   "name":  "Bootstrap",
+                                                                   "type":  "folder",
+                                                                   "children":  {
+                                                                                    "path":  "tests/Codify.Tests/VSIX/Bootstrap/CodifyServiceContainerTests.cs",
+                                                                                    "name":  "CodifyServiceContainerTests.cs",
+                                                                                    "type":  "file"
+                                                                                }
                                                                }
                                               },
                                               {

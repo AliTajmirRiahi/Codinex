@@ -75,7 +75,7 @@ public class FileReferenceProvider_ActiveDocumentTests : FileReferenceProviderTe
         var document = Substitute.For<EnvDTE.Document>();
         document.FullName.Returns(filePath);
 
-        FileSystem.Exists(filePath).Returns(false);
+        WorkspaceFileService.Exists(filePath).Returns(false);
 
         var provider = CreateSut();
 

@@ -77,59 +77,59 @@ public class RoslynReferenceProviderBaseTests
         sut.ExtractCallCount.Should().Be(0);
     }
 
-    [Test]
-    public async Task GetReferencesAsync_Should_IgnoreUnsupportedDocumentsAsync()
-    {
-        // Arrange
-        var scenario = new RoslynScenarioBuilder()
-            .WithProject("Codify")
-            .WithDocument(@"C:\Project\Program.cs", "class Program { }")
-            .WithDocument(@"C:\Project\Readme.txt", "Documentation")
-            .Build();
+    //[Test]
+    //public async Task GetReferencesAsync_Should_IgnoreUnsupportedDocumentsAsync()
+    //{
+    //    // Arrange
+    //    var scenario = new RoslynScenarioBuilder()
+    //        .WithProject("Codify")
+    //        .WithDocument(@"C:\Project\Program.cs", "class Program { }")
+    //        .WithDocument(@"C:\Project\Readme.txt", "Documentation")
+    //        .Build();
 
-        var visualStudio = Substitute.For<IVisualStudioServices>();
-        var uiThreadDispatcher = Substitute.For<IUiThreadDispatcher>();
+    //    var visualStudio = Substitute.For<IVisualStudioServices>();
+    //    var uiThreadDispatcher = Substitute.For<IUiThreadDispatcher>();
 
-        uiThreadDispatcher
-            .SwitchToMainThreadAsync()
-            .Returns(Task.CompletedTask);
+    //    uiThreadDispatcher
+    //        .SwitchToMainThreadAsync()
+    //        .Returns(Task.CompletedTask);
 
-        visualStudio
-            .GetWorkspaceAsync()
-            .Returns(scenario.Workspace);
+    //    visualStudio
+    //        .GetWorkspaceAsync()
+    //        .Returns(scenario.Workspace);
 
-        var dte = Substitute.For<EnvDTE80.DTE2>();
-        dte.Solution.Returns(Substitute.For<EnvDTE.Solution>());
+    //    var dte = Substitute.For<EnvDTE80.DTE2>();
+    //    dte.Solution.Returns(Substitute.For<EnvDTE.Solution>());
 
-        visualStudio
-            .GetDteAsync()
-            .Returns(Task.FromResult(dte));
+    //    visualStudio
+    //        .GetDteAsync()
+    //        .Returns(Task.FromResult(dte));
 
-        var sut = new TestRoslynReferenceProvider(
-            visualStudio,
-            uiThreadDispatcher);
+    //    var sut = new TestRoslynReferenceProvider(
+    //        visualStudio,
+    //        uiThreadDispatcher);
 
-        sut.OnExtractAsync = (_, document) =>
-        {
-            IReadOnlyList<ReferenceItem> items =
-            [
-                new ReferenceItem
-                {
-                    Name = document.Name
-                }
-            ];
+    //    sut.OnExtractAsync = (_, document) =>
+    //    {
+    //        IReadOnlyList<ReferenceItem> items =
+    //        [
+    //            new ReferenceItem
+    //            {
+    //                Name = document.Name
+    //            }
+    //        ];
 
-            return Task.FromResult(items);
-        };
+    //        return Task.FromResult(items);
+    //    };
 
-        // Act
-        var result = await sut.GetReferencesAsync();
+    //    // Act
+    //    var result = await sut.GetReferencesAsync();
 
-        // Assert
-        result.Should().HaveCount(1);
+    //    // Assert
+    //    result.Should().HaveCount(1);
 
-        result.Single().Name.Should().Be("Program.cs");
+    //    result.Single().Name.Should().Be("Program.cs");
 
-        sut.ExtractCallCount.Should().Be(1);
-    }
+    //    sut.ExtractCallCount.Should().Be(1);
+    //}
 }

@@ -14,7 +14,7 @@ public abstract class FileReferenceProviderTestBase
 {
     protected IVisualStudioServices VisualStudioServices = null!;
     protected IWorkspaceContext WorkspaceContext = null!;
-    protected IFileSystem FileSystem = null!;
+    protected IWorkspaceFileService WorkspaceFileService = null!;
     protected IUiThreadDispatcher UiThreadDispatcher = null!;
 
     protected DTE2 Dte = null!;
@@ -24,7 +24,8 @@ public abstract class FileReferenceProviderTestBase
     {
         VisualStudioServices = Substitute.For<IVisualStudioServices>();
         WorkspaceContext = Substitute.For<IWorkspaceContext>();
-        FileSystem = Substitute.For<IFileSystem>();
+        //FileSystem = Substitute.For<IFileSystem>();
+        WorkspaceFileService = Substitute.For<IWorkspaceFileService>(); 
         UiThreadDispatcher = Substitute.For<IUiThreadDispatcher>();
 
         Dte = Substitute.For<DTE2>();
@@ -49,7 +50,7 @@ public abstract class FileReferenceProviderTestBase
         return new FileReferenceProvider(
             VisualStudioServices,
             WorkspaceContext,
-            FileSystem,
+            WorkspaceFileService,
             UiThreadDispatcher);
     }
 
@@ -63,8 +64,8 @@ public abstract class FileReferenceProviderTestBase
 
         Dte.ActiveDocument.Returns(document);
 
-        FileSystem.Exists(filePath).Returns(true);
-        FileSystem.ReadAllText(filePath).Returns(content);
+        WorkspaceFileService.Exists(filePath).Returns(true);
+        WorkspaceFileService.ReadFile(filePath).Returns(content);
     }
 
     protected void SetSolution(params Project[] projects)
