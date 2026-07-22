@@ -99,6 +99,16 @@
     <Compile Include="WebView\WebViewClient.cs" />
     <Compile Include="WebView\WebViewMessageRouter.cs" />
     <Compile Include="WebView\WebViewResourceServer.cs" />
+    <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
+    <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
+    <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
+    <Compile Include="Workspace\Providers\BuildContextProviderImpl.cs" />
+    <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\ProjectContextOrchestrator.cs" />
+    <Compile Include="Workspace\Providers\DiagnosticsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">

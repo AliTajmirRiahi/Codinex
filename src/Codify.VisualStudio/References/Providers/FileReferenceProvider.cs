@@ -1,7 +1,6 @@
 ﻿using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using EnvDTE;
-using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +12,8 @@ using Codify.VisualStudio.Internal;
 namespace Codify.VisualStudio.References.Providers
 {
 #pragma warning disable VSTHRD010
-    public class FileReferenceProvider(IVisualStudioServices visualStudio,
+    public class FileReferenceProvider(
+        IVisualStudioServices visualStudio,
         IWorkspaceContext workspaceContext ,
         IWorkspaceFileService workspaceFileService,
         IUiThreadDispatcher uiThreadDispatcher)
