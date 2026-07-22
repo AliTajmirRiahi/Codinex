@@ -19,6 +19,7 @@ namespace Codify.Core.Models
         Class = 9,
         Interface = 10,
         Field = 11,
+        OpenDocuments = 12,
     }
 
     public sealed class ReferenceItem

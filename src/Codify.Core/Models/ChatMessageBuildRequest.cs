@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Codify.Core.Workspace.Prompt;
+using System.Collections.Generic;
 
 namespace Codify.Core.Models
 {
@@ -12,6 +13,8 @@ namespace Codify.Core.Models
     public sealed class ChatMessageBuildRequest
     {
         public string DraftText { get; set; } = string.Empty;
+
+        public PromptContext PromptContext { get; set; }
 
         public ChatCommand SelectedCommand { get; set; }
 

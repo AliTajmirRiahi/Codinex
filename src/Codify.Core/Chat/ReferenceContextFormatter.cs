@@ -1,5 +1,6 @@
 ﻿using Codify.Core.Models;
 using System.Text;
+using Codify.Core.Interfaces;
 
 namespace Codify.Core.Chat
 {

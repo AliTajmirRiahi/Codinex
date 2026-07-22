@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 
 namespace Codify.Core.Chat
 {
@@ -10,7 +11,7 @@ namespace Codify.Core.Chat
     {
         private readonly IReferenceContextFormatter _referenceContextFormatter = referenceContextFormatter ?? throw new ArgumentNullException(nameof(referenceContextFormatter));
 
-        public ChatMessageBuildResult Build(ChatMessageBuildRequest request)
+        public ChatMessageBuildResult Build(ChatMessageBuildRequest request, PromptContext promptContext)
         {
             if(request == null)
                 throw new ArgumentNullException(nameof(request), "Request cannot be null.");
@@ -30,7 +31,7 @@ namespace Codify.Core.Chat
                 messages.AddRange(request.ConversationHistory);
             }
 
-            messages.Add(CreateMessage("user", BuildUserContent(request)));
+            messages.Add(CreateMessage("user", BuildUserContent(request, promptContext)));
 
             return new ChatMessageBuildResult
             {
@@ -67,7 +68,7 @@ namespace Codify.Core.Chat
             return sb.ToString().TrimEnd();
         }
 
-        private string BuildUserContent(ChatMessageBuildRequest request)
+        private string BuildUserContent(ChatMessageBuildRequest request, PromptContext promptContext)
         {
             var sb = new StringBuilder();
 
@@ -82,6 +83,29 @@ namespace Codify.Core.Chat
 
                 sb.AppendLine();
             }
+
+            if (promptContext is not null && promptContext.Sections.Count > 0)
+            {
+                sb.AppendLine("Workspace Context:");
+                sb.AppendLine();
+
+                foreach (var section in promptContext.Sections)
+                {
+                    sb.AppendLine($"## {section.Name}");
+
+                    foreach (var item in section.Items)
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.Title))
+                        {
+                            sb.AppendLine($"### {item.Title}");
+                        }
+
+                        sb.AppendLine(item.Content);
+                        sb.AppendLine();
+                    }
+                }
+            }
+
 
             if (request.SelectedReferences.Count > 0)
             {

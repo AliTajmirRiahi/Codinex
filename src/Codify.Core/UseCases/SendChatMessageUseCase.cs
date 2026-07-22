@@ -1,10 +1,12 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Chat;
+﻿using Codify.Core.Chat;
+using Codify.Core.Conversation;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Conversation;
 
 namespace Codify.Core.UseCases;
 
@@ -17,7 +19,8 @@ public sealed class SendChatMessageUseCase(
     IChatSession chatSession,
     IErrorHandler errorHandler,
     IChatMessageBuilder chatMessageBuilder,
-    IConversationEngine conversationEngine)
+    IConversationEngine conversationEngine,
+    IWorkspaceContextBuilder workspaceContextBuilder)
     : ISendChatMessageUseCase
 {
     private readonly IAiProvider _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
@@ -35,7 +38,17 @@ public sealed class SendChatMessageUseCase(
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
-            var buildResult = chatMessageBuilder.Build(request);
+            var workspaceRequest = new WorkspaceContextRequest
+            {
+                Conversation = request.ConversationHistory
+            };
+
+            var promptContext =
+                await workspaceContextBuilder.BuildAsync(
+                    workspaceRequest,
+                    CancellationToken.None);
+
+            var buildResult = chatMessageBuilder.Build(request, promptContext);
 
             // Add user message to session
             chatSession.AddUserMessage(request.DraftText, buildResult.Context);
@@ -87,7 +100,18 @@ public sealed class SendChatMessageUseCase(
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
-            var buildResult = chatMessageBuilder.Build(request);
+            var workspaceRequest = new WorkspaceContextRequest
+            {
+                Conversation = request.ConversationHistory,
+                References = request.SelectedReferences,
+            };
+
+            var promptContext =
+                await workspaceContextBuilder.BuildAsync(
+                    workspaceRequest,
+                    CancellationToken.None);
+
+            var buildResult = chatMessageBuilder.Build(request, promptContext);
 
             // Add user message to session
             chatSession.AddUserMessage(request.DraftText, buildResult.Context);
