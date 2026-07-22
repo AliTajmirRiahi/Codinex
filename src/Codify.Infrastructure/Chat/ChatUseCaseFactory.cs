@@ -5,6 +5,7 @@ using Codify.Core.UseCases;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Storage;
 using System;
+using Codify.Core.Workspace.Prompt;
 
 namespace Codify.Infrastructure.Chat
 {
@@ -25,7 +26,8 @@ namespace Codify.Infrastructure.Chat
         IChatMessageBuilder chatMessageBuilder,
         IConversationEngine conversationEngine,
         IAiToolRegistry toolRegistry,
-        IOpenAiCompatibleClient openAiCompatibleClient)
+        IOpenAiCompatibleClient openAiCompatibleClient,
+        IWorkspaceContextBuilder workspaceContextBuilder)
         : IChatUseCaseFactory
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -47,7 +49,7 @@ namespace Codify.Infrastructure.Chat
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 
-            return new SendChatMessageUseCase(aiProvider, session, errorHandler, chatMessageBuilder, conversationEngine);
+            return new SendChatMessageUseCase(aiProvider, session, errorHandler, chatMessageBuilder, conversationEngine, workspaceContextBuilder);
         }
     }
 
