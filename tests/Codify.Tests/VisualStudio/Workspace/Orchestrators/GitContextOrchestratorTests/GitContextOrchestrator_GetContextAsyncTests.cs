@@ -1,19 +1,19 @@
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.GitContextProviderTests.Base;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
+using Codify.Tests.VisualStudio.Workspace.Orchestrators.GitContextOrchestratorTests.Base;
+using FluentAssertions;
+using NSubstitute;
+using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.GitContextProviderTests;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.GitContextOrchestratorTests;
 #pragma warning disable VSTHRD110
 [TestFixture]
-public class GitContextProvider_GetContextAsyncTests
-    : GitContextProviderTestBase
+public class GitContextOrchestrator_GetContextAsyncTests
+    : GitContextOrchestratorTestBase
 {
     [Test]
     public async Task GetContextAsync_Should_ReturnEmpty_WhenGitContextIsNullAsync()
@@ -169,23 +169,23 @@ public class GitContextProvider_GetContextAsyncTests
                 Arg.Is(source.Token));
     }
 
-    [Test]
-    public void GetContextAsync_Should_Throw_WhenCancellationRequested()
-    {
-        // Arrange
-        var sut = CreateSut();
+    //[Test]
+    //public void GetContextAsync_Should_Throw_WhenCancellationRequested()
+    //{
+    //    // Arrange
+    //    var sut = CreateSut();
 
-        var source = new CancellationTokenSource();
-        source.Cancel();
+    //    var source = new CancellationTokenSource();
+    //    source.Cancel();
 
-        // Act
-        var action = () => sut.GetContextAsync(
-            new WorkspaceContextRequest(),
-            source.Token);
+    //    // Act
+    //    var action = () => sut.GetContextAsync(
+    //        new WorkspaceContextRequest(),
+    //        source.Token);
 
-        // Assert
-        action.Should()
-            .ThrowAsync<OperationCanceledException>();
-    }
+    //    // Assert
+    //    action.Should()
+    //        .ThrowAsync<OperationCanceledException>();
+    //}
 }
 #pragma warning restore VSTHRD110

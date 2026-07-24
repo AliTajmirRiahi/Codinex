@@ -1,18 +1,18 @@
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.CurrentDocumentContextProviderTests.Base;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
+using Codify.Tests.VisualStudio.Workspace.Orchestrators.CurrentDocumentContextOrchestratorTests.Base;
+using FluentAssertions;
+using NSubstitute;
+using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.CurrentDocumentContextProviderTests;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.CurrentDocumentContextOrchestratorTests;
 
 [TestFixture]
-public class CurrentDocumentContextProvider_GetContextAsyncTests
-    : CurrentDocumentContextProviderTestBase
+public class CurrentDocumentContextOrchestrator_GetContextAsyncTests
+    : CurrentDocumentContextOrchestratorTestBase
 {
     [Test]
     public async Task GetContextAsync_Should_ReturnEmpty_WhenActiveDocumentIsNullAsync()

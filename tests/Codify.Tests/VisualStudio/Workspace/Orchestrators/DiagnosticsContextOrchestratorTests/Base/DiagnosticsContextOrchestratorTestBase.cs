@@ -1,11 +1,11 @@
 using Codify.Core.Interfaces;
-using Codify.VisualStudio.Workspace.Providers;
+using Codify.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.DiagnosticsContextProviderTests.Base;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests.Base;
 
-public abstract class DiagnosticsContextProviderTestBase
+public abstract class DiagnosticsContextOrchestratorTestBase
 {
     protected IDiagnosticsProvider DiagnosticsProvider = null!;
     protected IDiagnosticsFormatter DiagnosticsFormatter = null!;

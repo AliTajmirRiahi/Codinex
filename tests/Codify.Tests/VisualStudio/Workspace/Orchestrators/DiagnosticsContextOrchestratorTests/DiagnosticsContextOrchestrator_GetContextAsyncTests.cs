@@ -4,16 +4,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.DiagnosticsContextProviderTests.Base;
+using Codify.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.DiagnosticsContextProviderTests;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests;
 #pragma warning disable VSTHRD110
 [TestFixture]
-public class DiagnosticsContextProvider_GetContextAsyncTests
-    : DiagnosticsContextProviderTestBase
+public class DiagnosticsContextOrchestrator_GetContextAsyncTests
+    : DiagnosticsContextOrchestratorTestBase
 {
     [Test]
     public async Task GetContextAsync_Should_ReturnEmpty_WhenNoDiagnosticsExistAsync()
@@ -22,7 +22,7 @@ public class DiagnosticsContextProvider_GetContextAsyncTests
         var sut = CreateSut();
 
         DiagnosticsProvider
-            .GetDiagnosticsAsync(Arg.Any<CancellationToken>())
+            .GetDiagnosticsAsync(Arg.Any<DiagnosticsScope>(), Arg.Any<CancellationToken>())
             .Returns(new List<DiagnosticItem>());
 
         // Act
@@ -55,7 +55,7 @@ public class DiagnosticsContextProvider_GetContextAsyncTests
         };
 
         DiagnosticsProvider
-            .GetDiagnosticsAsync(Arg.Any<CancellationToken>())
+            .GetDiagnosticsAsync(Arg.Any<DiagnosticsScope>(), Arg.Any<CancellationToken>())
             .Returns(diagnostics);
 
         DiagnosticsFormatter
@@ -91,7 +91,7 @@ public class DiagnosticsContextProvider_GetContextAsyncTests
         };
 
         DiagnosticsProvider
-            .GetDiagnosticsAsync(Arg.Any<CancellationToken>())
+            .GetDiagnosticsAsync(Arg.Any<DiagnosticsScope>(), Arg.Any<CancellationToken>())
             .Returns(diagnostics);
 
         DiagnosticsFormatter
@@ -118,7 +118,7 @@ public class DiagnosticsContextProvider_GetContextAsyncTests
         using var source = new CancellationTokenSource();
 
         DiagnosticsProvider
-            .GetDiagnosticsAsync(Arg.Any<CancellationToken>())
+            .GetDiagnosticsAsync(Arg.Any<DiagnosticsScope>(), Arg.Any<CancellationToken>())
             .Returns(new List<DiagnosticItem>());
 
         // Act
@@ -130,6 +130,7 @@ public class DiagnosticsContextProvider_GetContextAsyncTests
         await DiagnosticsProvider
             .Received(1)
             .GetDiagnosticsAsync(
+                Arg.Any<DiagnosticsScope>(),
                 Arg.Is(source.Token));
     }
 

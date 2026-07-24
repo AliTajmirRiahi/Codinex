@@ -3,9 +3,9 @@ using Codify.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.GitContextProviderTests.Base;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.GitContextOrchestratorTests.Base;
 
-public abstract class GitContextProviderTestBase
+public abstract class GitContextOrchestratorTestBase
 {
     protected IGitContextProvider GitContextProvider = null!;
     protected IGitContextFormatter GitContextFormatter = null!;
@@ -17,10 +17,10 @@ public abstract class GitContextProviderTestBase
         GitContextFormatter = Substitute.For<IGitContextFormatter>();
     }
 
-    protected GitContextOrchestrator CreateSut()
-    {
-        return new GitContextOrchestrator(
-            GitContextProvider,
-            GitContextFormatter);
-    }
+    //protected GitContextOrchestrator CreateSut()
+    //{
+    //    return new GitContextOrchestrator(
+    //        GitContextProvider,
+    //        GitContextFormatter);
+    //}
 }

@@ -1,26 +1,26 @@
 using Codify.Core.Interfaces;
-using Codify.VisualStudio.Workspace.Providers;
+using Codify.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.OpenDocumentsContextProviderTests.Base;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.OpenDocumentsContextOrchestratorTests.Base;
 
-public abstract class OpenDocumentsContextProviderTestBase
+public abstract class OpenDocumentsContextOrchestratorTestBase
 {
-    protected IOpenDocumentsContextProvider OpenDocumentsContextProvider = null!;
+    protected IOpenDocumentsProvider OpenDocumentsProvider = null!;
     protected IOpenDocumentsFormatter OpenDocumentsFormatter = null!;
 
     [SetUp]
     public virtual void SetUp()
     {
-        OpenDocumentsContextProvider = Substitute.For<IOpenDocumentsContextProvider>();
+        OpenDocumentsProvider = Substitute.For<IOpenDocumentsProvider>();
         OpenDocumentsFormatter = Substitute.For<IOpenDocumentsFormatter>();
     }
 
     protected OpenDocumentsContextOrchestrator CreateSut()
     {
         return new OpenDocumentsContextOrchestrator(
-            OpenDocumentsContextProvider,
+            OpenDocumentsProvider,
             OpenDocumentsFormatter);
     }
 }

@@ -1,19 +1,20 @@
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.OpenDocumentsContextProviderTests.Base;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
+using Codify.Tests.VisualStudio.Workspace.Orchestrators.OpenDocumentsContextOrchestratorTests.Base;
+using FluentAssertions;
+using NSubstitute;
+using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.OpenDocumentsContextProviderTests;
+namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.OpenDocumentsContextOrchestratorTests;
+#pragma warning disable VSTHRD110
 
 [TestFixture]
-public class OpenDocumentsContextProvider_GetContextAsyncTests
-    : OpenDocumentsContextProviderTestBase
+public class OpenDocumentsContextOrchestrator_GetContextAsyncTests
+    : OpenDocumentsContextOrchestratorTestBase
 {
     [Test]
     public async Task GetContextAsync_Should_ReturnEmpty_WhenContextIsNullAsync()
@@ -21,9 +22,9 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
         // Arrange
         var sut = CreateSut();
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
-            .Returns((OpenDocumentsContext)null!);
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
+            .Returns((List<ReferenceItem>)null!);
 
         // Act
         var result = await sut.GetContextAsync(
@@ -36,7 +37,7 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
 
         OpenDocumentsFormatter
             .DidNotReceive()
-            .Format(Arg.Any<OpenDocumentsContext>());
+            .Format(Arg.Any<List<ReferenceItem>>());
     }
 
     [Test]
@@ -45,12 +46,9 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
         // Arrange
         var sut = CreateSut();
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
-            .Returns(new OpenDocumentsContext
-            {
-                Documents = new List<OpenDocumentItem>()
-            });
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ReferenceItem>());
 
         // Act
         var result = await sut.GetContextAsync(
@@ -62,7 +60,7 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
 
         OpenDocumentsFormatter
             .DidNotReceive()
-            .Format(Arg.Any<OpenDocumentsContext>());
+            .Format(Arg.Any<List<ReferenceItem>>());
     }
 
     [Test]
@@ -82,15 +80,9 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
             }
         };
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
-            .Returns(new OpenDocumentsContext
-            {
-                Documents = new List<OpenDocumentItem>
-                {
-                    new()
-                }
-            });
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ReferenceItem>());
 
         // Act
         var result = await sut.GetContextAsync(
@@ -102,7 +94,7 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
 
         OpenDocumentsFormatter
             .DidNotReceive()
-            .Format(Arg.Any<OpenDocumentsContext>());
+            .Format(Arg.Any<List<ReferenceItem>>());
     }
 
     [Test]
@@ -111,16 +103,16 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
         // Arrange
         var sut = CreateSut();
 
-        var context = new OpenDocumentsContext
-        {
-            Documents = new List<OpenDocumentItem>
+        IReadOnlyList<ReferenceItem> context =
+        [
+            new()
             {
-                new()
+                Name = "Program.cs"
             }
-        };
+        ];
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
             .Returns(context);
 
         OpenDocumentsFormatter
@@ -149,16 +141,16 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
         // Arrange
         var sut = CreateSut();
 
-        var context = new OpenDocumentsContext
-        {
-            Documents = new List<OpenDocumentItem>
+        IReadOnlyList<ReferenceItem> context =
+        [
+            new()
             {
-                new()
+                Name = "Program.cs"
             }
-        };
+        ];
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
             .Returns(context);
 
         OpenDocumentsFormatter
@@ -184,12 +176,9 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
 
         using var source = new CancellationTokenSource();
 
-        OpenDocumentsContextProvider
-            .GetContextAsync(Arg.Any<CancellationToken>())
-            .Returns(new OpenDocumentsContext
-            {
-                Documents = new List<OpenDocumentItem>()
-            });
+        OpenDocumentsProvider
+            .GetOpenDocumentsAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<ReferenceItem>());
 
         // Act
         await sut.GetContextAsync(
@@ -197,9 +186,9 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
             source.Token);
 
         // Assert
-        await OpenDocumentsContextProvider
+        await OpenDocumentsProvider
             .Received(1)
-            .GetContextAsync(
+            .GetOpenDocumentsAsync(
                 Arg.Is(source.Token));
     }
 
@@ -209,7 +198,7 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
         // Arrange
         var sut = CreateSut();
 
-        using var source = new CancellationTokenSource();
+        var source = new CancellationTokenSource();
         source.Cancel();
 
         // Act
@@ -222,3 +211,4 @@ public class OpenDocumentsContextProvider_GetContextAsyncTests
             .ThrowAsync<OperationCanceledException>();
     }
 }
+#pragma warning restore VSTHRD110

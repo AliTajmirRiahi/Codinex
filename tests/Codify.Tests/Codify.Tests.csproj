@@ -135,14 +135,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\CurrentDocumentContextProviderTests\Base\CurrentDocumentContextProviderTestBase.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\CurrentDocumentContextProviderTests\CurrentDocumentContextProvider_GetContextAsyncTests.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\DiagnosticsContextProviderTests\Base\DiagnosticsContextProviderTestBase.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\DiagnosticsContextProviderTests\DiagnosticsContextProvider_GetContextAsyncTests.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\GitContextProviderTests\Base\GitContextProviderTestBase.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\GitContextProviderTests\GitContextProvider_GetContextAsyncTests.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\OpenDocumentsContextProviderTests\Base\OpenDocumentsContextProviderTestBase.cs" />
-    <Compile Include="Infrastructure\Workspace\PromptPipeline\OpenDocumentsContextProviderTests\OpenDocumentsContextProvider_GetContextAsyncTests.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\CurrentDocumentContextOrchestratorTests\Base\CurrentDocumentContextOrchestratorTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\CurrentDocumentContextOrchestratorTests\CurrentDocumentContextOrchestrator_GetContextAsyncTests.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\DiagnosticsContextOrchestratorTests\Base\DiagnosticsContextOrchestratorTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\DiagnosticsContextOrchestratorTests\DiagnosticsContextOrchestrator_GetContextAsyncTests.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\GitContextOrchestratorTests\Base\GitContextOrchestratorTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\GitContextOrchestratorTests\GitContextOrchestrator_GetContextAsyncTests.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\OpenDocumentsContextOrchestratorTests\Base\OpenDocumentsContextOrchestratorTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\Orchestrators\OpenDocumentsContextOrchestratorTests\OpenDocumentsContextOrchestrator_GetContextAsyncTests.cs" />
     <Compile Include="Infrastructure\Workspace\PromptPipeline\PromptContextComposerTests\Base\PromptContextComposerTestBase.cs" />
     <Compile Include="Infrastructure\Workspace\PromptPipeline\PromptContextComposerTests\PromptContextComposer_ComposeTests.cs" />
     <Compile Include="Infrastructure\Workspace\PromptPipeline\WorkspaceContextBuilderTests\Base\WorkspaceContextBuilderTestBase.cs" />
@@ -162,8 +162,12 @@
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
-    <Compile Include="VisualStudio\Workspace\Providers\DiagnosticsProviderTests\DiagnosticsProviderTestBase.cs" />
-    <Compile Include="VisualStudio\Workspace\Providers\DiagnosticsProviderTests\GetDiagnosticsAsyncTests.cs" />
+    <Compile Include="VisualStudio\Workspace\FormatterTests\DiagnosticsFormatterTest\Base\DiagnosticsFormatterTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\FormatterTests\DiagnosticsFormatterTest\DiagnosticsFormatter_FormatTests.cs" />
+    <Compile Include="VisualStudio\Workspace\FormatterTests\OpenDocumentsFormatterTest\Base\OpenDocumentsFormatterTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\FormatterTests\OpenDocumentsFormatterTest\OpenDocumentsFormatter_FormatTests.cs" />
+    <Compile Include="VisualStudio\Workspace\ProviderTests\DiagnosticsProviderTests\Base\DiagnosticsProviderTestBase.cs" />
+    <Compile Include="VisualStudio\Workspace\ProviderTests\DiagnosticsProviderTests\DiagnosticsProvider_GetDiagnosticsAsyncTests.cs" />
     <Compile Include="VSIX\Bootstrap\CodifyServiceContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +175,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Core\" />
-    <Folder Include="Infrastructure\Workspace\PromptPipeline\BuildContextProviderTests\" />
     <Folder Include="Storage\" />
     <Folder Include="VisualStudio\References\TestDoubles\" />
+    <Folder Include="VisualStudio\Workspace\Orchestrators\BuildContextOrchestratorTests\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Codify.Core\Codify.Core.csproj">
