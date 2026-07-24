@@ -49,9 +49,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Events\Build\BuildEventsListener.cs" />
     <Compile Include="Diagnostics\Errors\ErrorHandler.cs" />
     <Compile Include="Diagnostics\Errors\ErrorInfo.cs" />
     <Compile Include="Diagnostics\Errors\ErrorMessages.cs" />
+    <Compile Include="Events\Build\IBuildEvents.cs" />
     <Compile Include="Hosting\Startup\ExecutionPipeline.cs" />
     <Compile Include="Interfaces\IResourceServer.cs" />
     <Compile Include="Interfaces\IWebViewClient.cs" />
@@ -101,14 +103,16 @@
     <Compile Include="WebView\WebViewResourceServer.cs" />
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
+    <Compile Include="Workspace\Formatters\OpenDocumentsFormatter.cs" />
     <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
-    <Compile Include="Workspace\Providers\BuildContextProviderImpl.cs" />
+    <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
     <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\ProjectContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\DiagnosticsProvider.cs" />
+    <Compile Include="Workspace\Providers\OpenDocumentsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">

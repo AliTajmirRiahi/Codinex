@@ -1,21 +1,25 @@
-﻿using EnvDTE;
+﻿using Codify.Core.Interfaces;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Internal;
+using Codify.VisualStudio.Models;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
-using Codify.VisualStudio.Models;
 
+
+#pragma warning disable VSTHRD010
 namespace Codify.VisualStudio.Services
 {
     /// <summary>
     /// Reads information from the Visual Studio Output window.
     /// </summary>
-    public sealed class VsOutputWindowService(IVisualStudioServices visualStudio)
+    public sealed class VsOutputWindowService(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IVsOutputWindowService
     {
         public async Task<IReadOnlyList<OutputPaneInfo>> GetOutputPanesAsync()
@@ -34,28 +38,49 @@ namespace Codify.VisualStudio.Services
             return result;
         }
 
-        public async Task<string> ReadOutputAsync(string paneName)
+        public async Task<string> ReadOutputAsync(string paneName, CancellationToken cancellationToken)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            if (await GetDteAsync() is not { } dte)
-                return string.Empty;
+            await uiThreadDispatcher.SwitchToMainThreadAsync();
 
-            var pane = dte.ToolWindows.OutputWindow.OutputWindowPanes.Cast<OutputWindowPane>().FirstOrDefault(item => String.Equals(item.Name, paneName, StringComparison.OrdinalIgnoreCase));
+            var dte = await GetDteAsync();
+
+            var outputWindow =
+                (OutputWindow)dte.Windows
+                    .Item(EnvDTE.Constants.vsWindowKindOutput)
+                    .Object;
+
+            var pane =
+                outputWindow.OutputWindowPanes
+                    .Cast<OutputWindowPane>()
+                    .FirstOrDefault(x =>
+                        string.Equals(
+                            x.Name,
+                            paneName,
+                            StringComparison.OrdinalIgnoreCase));
 
             if (pane == null)
+            {
                 return string.Empty;
+            }
 
-            //
-            // TODO:
-            // EnvDTE does NOT expose the existing text inside an OutputWindowPane.
-            //
-            // We need another implementation (TextView / IVsTextLines /
-            // Output interception / logger) to retrieve the current contents.
-            //
+            try
+            {
+                dynamic dynamicPane = pane;
 
-            throw new NotSupportedException(
-                "Visual Studio OutputWindowPane does not expose existing text.");
+                var textDocument = dynamicPane.TextDocument;
+
+                var start =
+                    textDocument.StartPoint.CreateEditPoint();
+
+                return start.GetText(textDocument.EndPoint);
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }
+#pragma warning restore VSTHRD010

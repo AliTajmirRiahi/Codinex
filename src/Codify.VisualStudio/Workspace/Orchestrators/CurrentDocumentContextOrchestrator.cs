@@ -1,12 +1,12 @@
-using Codify.Core.Interfaces;
-using Codify.Core.Workspace.Prompt;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces;
+using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.Workspace.PromptPipeline;
 
-namespace Codify.VisualStudio.Workspace.Providers
+namespace Codify.VisualStudio.Workspace.Orchestrators
 {
     /// <summary>
     /// Provides the active document as workspace context.

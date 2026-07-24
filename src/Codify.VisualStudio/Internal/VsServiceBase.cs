@@ -64,5 +64,10 @@ namespace Codify.VisualStudio.Internal
         {
             return VisualStudio.GetWorkspaceAsync();
         }
+
+        protected Task<IVsSolutionBuildManager> GetSolutionBuildManagerAsync()
+        {
+            return VisualStudio.GetSolutionBuildManagerAsync();
+        }
     }
 }

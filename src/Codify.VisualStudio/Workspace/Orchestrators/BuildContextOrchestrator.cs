@@ -24,13 +24,7 @@ public sealed class BuildContextOrchestrator(
             return new ContextProviderResult();
         }
 
-        var context =
-            await buildContextProvider.GetContextAsync(cancellationToken);
-
-        if (context.Messages.Count == 0)
-        {
-            return new ContextProviderResult();
-        }
+        var context = await buildContextProvider.GetContextAsync(cancellationToken);
 
         var result = new ContextProviderResult();
 

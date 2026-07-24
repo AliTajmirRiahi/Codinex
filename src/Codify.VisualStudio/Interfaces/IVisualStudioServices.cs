@@ -48,5 +48,7 @@ namespace Codify.VisualStudio.Interfaces
         /// </summary>
         /// <returns></returns>
         Task<VisualStudioWorkspace> GetWorkspaceAsync();
+
+        Task<IVsSolutionBuildManager> GetSolutionBuildManagerAsync();
     }
 }

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Codify.VisualStudio.Models;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Models;
 
 namespace Codify.VisualStudio.Interfaces
 {
@@ -20,8 +21,9 @@ namespace Codify.VisualStudio.Interfaces
         /// <remarks>Ensure that the specified pane exists and is currently accessible. An exception may
         /// be thrown if the pane is not found or if an error occurs while reading the output.</remarks>
         /// <param name="paneName">The name of the output window pane to read. This must be a valid and accessible pane identifier.</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>A task that represents the asynchronous read operation. The task result contains the output from the
         /// specified pane as a string.</returns>
-        Task<string> ReadOutputAsync(string paneName);
+        Task<string> ReadOutputAsync(string paneName, CancellationToken cancellationToken);
     }
 }

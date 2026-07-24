@@ -12,7 +12,7 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
     /// Provides information about the currently open documents.
     /// </summary>
     public sealed class OpenDocumentsContextOrchestrator(
-        IOpenDocumentsContextProvider openDocumentsContextProvider,
+        IOpenDocumentsProvider openDocumentsProvider,
         IOpenDocumentsFormatter openDocumentsFormatter)
         : IWorkspaceContextOrchestrator
     {
@@ -22,12 +22,11 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var context = await openDocumentsContextProvider
-                .GetContextAsync(cancellationToken);
+            var documents = await openDocumentsProvider
+                .GetOpenDocumentsAsync(cancellationToken);
 
-            if (context == null ||
-                context.Documents == null ||
-                context.Documents.Count == 0)
+            if (documents == null ||
+                documents.Count == 0)
             {
                 return new ContextProviderResult();
             }
@@ -44,7 +43,7 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
                 PromptContextItemFactory.Create(
                     PromptContextKind.OpenDocuments,
                     "Open Documents",
-                    openDocumentsFormatter.Format(context)));
+                    openDocumentsFormatter.Format(documents)));
 
             return result;
         }

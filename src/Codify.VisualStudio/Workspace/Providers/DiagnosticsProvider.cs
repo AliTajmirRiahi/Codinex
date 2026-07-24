@@ -17,6 +17,10 @@ namespace Codify.VisualStudio.Workspace.Providers
     /// <summary>
     /// Provides diagnostics from the current workspace.
     /// </summary>
+    // TODO:
+    // Covered by integration tests because this class depends on
+    // VisualStudioWorkspace and Roslyn services that cannot be
+    // faithfully unit tested outside Visual Studio.
     public sealed class DiagnosticsProvider(
         IVisualStudioServices visualStudio,
         IActiveDocumentProvider activeDocumentProvider)

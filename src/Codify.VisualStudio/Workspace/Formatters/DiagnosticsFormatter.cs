@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -30,9 +31,17 @@ namespace Codify.VisualStudio.Workspace.Formatters
             {
                 builder.AppendLine(
                     $"{diagnostic.Severity} {diagnostic.Id}: {diagnostic.Message}");
+
+                builder.AppendLine(
+                    $"File: {Path.GetFileName(diagnostic.FilePath)}({diagnostic.Line},{diagnostic.Column})");
+
+                builder.AppendLine(
+                    $"Project: {diagnostic.ProjectName}");
+
+                builder.AppendLine();
             }
 
-            return builder.ToString();
+            return builder.ToString().TrimEnd();
         }
     }
 }
