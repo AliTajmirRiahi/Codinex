@@ -5,6 +5,7 @@ using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
 using Codify.Core.Tools;
 using Codify.Core.UseCases;
+using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.AI.Capabilities;
 using Codify.Infrastructure.AI.Clients;
 using Codify.Infrastructure.AI.Providers;
@@ -16,6 +17,7 @@ using Codify.Infrastructure.ModelManagement.Retrievers;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
+using Codify.Infrastructure.Workspace.PromptPipeline;
 using Codify.Storage;
 using Codify.VisualStudio;
 using Codify.VisualStudio.Diagnostics.Errors;
@@ -29,11 +31,14 @@ using Codify.VisualStudio.Services;
 using Codify.VisualStudio.Theme;
 using Codify.VisualStudio.Tools.BuiltIn;
 using Codify.VisualStudio.WebView;
+using Codify.VisualStudio.Workspace.Orchestrators;
+using Codify.VisualStudio.Workspace.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
+using Codify.VisualStudio.Events.Build;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -68,15 +73,15 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IFileSystem, FileSystem>();
 
             // Core Services (Singletons)
+            services.AddSingleton<IUiThreadDispatcher, VsThreadDispatcher>();
             services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
                 typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources"));
-            services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package));
+            services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package, sp.GetRequiredService<IUiThreadDispatcher>()));
             //services.AddSingleton<IIntentClassifier, IntentClassifier>();
             services.AddSingleton<IJsonSerializer, JsonSerializationService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
-            services.AddSingleton<IUiThreadDispatcher, VsThreadDispatcher>();
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IWorkspaceContext, VsWorkspaceContext>();
             services.AddSingleton<IStorageService, FileStorageService>();
@@ -107,6 +112,16 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IReferenceProvider, InterfaceReferenceProvider>();
             services.AddSingleton<IReferenceProvider, FieldReferenceProvider>();
             services.AddSingleton<IReferenceProvider, FolderReferenceProvider>();
+
+            services.AddSingleton<IWorkspaceContextBuilder, WorkspaceContextBuilder>();
+            services.AddSingleton<IPromptContextComposer, PromptContextComposer>();
+            services
+                .AddAiTools(typeof(ReadFileTool).Assembly)
+                .AddWorkspaceServices(typeof(DiagnosticsProvider).Assembly);
+
+            services.AddSingleton<BuildEventsListener>();
+            services.AddSingleton<IBuildEvents>(sp =>
+                sp.GetRequiredService<BuildEventsListener>());
 
             // Reference Context Services
             services.AddSingleton<IReferenceContextFormatter, ReferenceContextFormatter>();
@@ -140,7 +155,6 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IProviderModelService, ProviderModelService>();
             services.AddSingleton<IModelRetriever, OpenAiCompatibleModelRetriever>();
 
-            services.AddAiTools(typeof(ReadFileTool).Assembly);
 
             services.AddSingleton<IProviderCapabilityChecker, ProviderCapabilityChecker>();
 

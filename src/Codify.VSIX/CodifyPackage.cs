@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Codify.Core.Interfaces;
+using Codify.VisualStudio.Events.Build;
 using Codify.VSIX.Bootstrap;
 using Microsoft.Extensions.DependencyInjection;
 using Task = System.Threading.Tasks.Task;
@@ -253,6 +254,9 @@ namespace Codify.VSIX
             {
                 startupTask.Start();
             }
+
+            var buildListener = CodifyServiceContainer.Get<BuildEventsListener>();
+            await buildListener.InitializeAsync();
         }
 
         #endregion
