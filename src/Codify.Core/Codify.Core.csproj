@@ -59,7 +59,7 @@
     <Compile Include="Interfaces\IDiagnosticsProvider.cs" />
     <Compile Include="Interfaces\IGitContextFormatter.cs" />
     <Compile Include="Interfaces\IGitContextProvider.cs" />
-    <Compile Include="Interfaces\IOpenDocumentsContextProvider.cs" />
+    <Compile Include="Interfaces\IOpenDocumentsProvider.cs" />
     <Compile Include="Interfaces\IOpenDocumentsFormatter.cs" />
     <Compile Include="Interfaces\IProjectContextFormatter.cs" />
     <Compile Include="Interfaces\IProjectContextProvider.cs" />
@@ -93,8 +93,6 @@
     <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\BuildContext.cs" />
-    <Compile Include="Models\BuildMessageItem.cs" />
-    <Compile Include="Models\BuildMessageSeverity.cs" />
     <Compile Include="Models\ChatAgent.cs" />
     <Compile Include="Models\ChatCommand.cs" />
     <Compile Include="Models\ChatMessage.cs" />
@@ -109,7 +107,6 @@
     <Compile Include="Models\GitFileItem.cs" />
     <Compile Include="Models\GitFileStatus.cs" />
     <Compile Include="Models\OpenDocumentItem.cs" />
-    <Compile Include="Models\OpenDocumentsContext.cs" />
     <Compile Include="Models\ProjectContext.cs" />
     <Compile Include="Models\ProjectItem.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
@@ -153,6 +150,8 @@
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Models\Build\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

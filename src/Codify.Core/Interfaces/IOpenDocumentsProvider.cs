@@ -1,15 +1,16 @@
+using Codify.Core.Models;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
 
 namespace Codify.Core.Interfaces
 {
     /// <summary>
     /// Provides information about the currently open documents.
     /// </summary>
-    public interface IOpenDocumentsContextProvider
+    public interface IOpenDocumentsProvider
     {
-        Task<OpenDocumentsContext> GetContextAsync(
+        Task<IReadOnlyList<ReferenceItem>> GetOpenDocumentsAsync(
             CancellationToken cancellationToken);
     }
 }

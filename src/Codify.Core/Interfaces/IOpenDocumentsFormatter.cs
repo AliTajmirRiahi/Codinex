@@ -1,4 +1,5 @@
 using Codify.Core.Models;
+using System.Collections.Generic;
 
 namespace Codify.Core.Interfaces
 {
@@ -7,6 +8,7 @@ namespace Codify.Core.Interfaces
     /// </summary>
     public interface IOpenDocumentsFormatter
     {
-        string Format(OpenDocumentsContext context);
+        string Format(
+            IReadOnlyList<ReferenceItem> documents);
     }
 }

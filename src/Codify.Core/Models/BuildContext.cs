@@ -7,7 +7,6 @@ namespace Codify.Core.Models
     /// </summary>
     public sealed class BuildContext
     {
-        public IList<BuildMessageItem> Messages { get; set; }
-            = new List<BuildMessageItem>();
+        public string Output { get; set; }
     }
 }
