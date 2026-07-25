@@ -18,11 +18,10 @@ namespace Codify.Storage
         IProviderCapabilityChecker providerCapabilityChecker)
     {
         private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
-        private List<AiProvider> _providers = new List<AiProvider>();
 
-        public List<AiProvider> AllProviders => _providers;
+        public List<AiProvider> Providers { get; private set; } = [];
 
-        public AiProvider ActiveProvider => _providers.FirstOrDefault(p => p.IsEnabled);
+        public AiProvider ActiveProvider => Providers.FirstOrDefault(p => p.IsEnabled);
 
         public AiModel ActiveModel => ActiveProvider.Models.FirstOrDefault(p => p.IsCurrent);
 
@@ -30,12 +29,12 @@ namespace Codify.Storage
         {
             if (await storage.ExistsAsync(StoragePaths.Providers))
             {
-                _providers = await storage.LoadAsync<List<AiProvider>>(StoragePaths.Providers)
+                Providers = await storage.LoadAsync<List<AiProvider>>(StoragePaths.Providers)
                              ?? await GetDefaultProviders();
             }
             else
             {
-                _providers = await GetDefaultProviders();
+                Providers = await GetDefaultProviders();
                 await SaveAsync();
             }
         }
@@ -82,12 +81,12 @@ namespace Codify.Storage
 
         public async Task SaveAsync()
         {
-            await storage.SaveAsync(StoragePaths.Providers, _providers);
+            await storage.SaveAsync(StoragePaths.Providers, Providers);
         }
 
         public async Task AddModelToProviderAsync(string providerId, AiModel newModel)
         {
-            var provider = _providers.FirstOrDefault(p => p.Id == providerId);
+            var provider = Providers.FirstOrDefault(p => p.Id == providerId);
             if (provider != null)
             {
                 provider.AddModel(newModel);
@@ -103,7 +102,7 @@ namespace Codify.Storage
             if (string.IsNullOrWhiteSpace(selectedProvider.ProviderId))
                 throw new ArgumentException(@"ProviderId is required.", nameof(selectedProvider));
 
-            var provider = _providers.FirstOrDefault(p =>
+            var provider = Providers.FirstOrDefault(p =>
                 string.Equals(p.Id, selectedProvider.ProviderId, StringComparison.OrdinalIgnoreCase));
 
             if (provider == null)
@@ -112,7 +111,7 @@ namespace Codify.Storage
             if (selectedProvider.SelectedModels.Count == 0)
                 throw new ArgumentException(@"At least one model must be selected.", nameof(selectedProvider));
 
-            foreach (var prov in _providers)
+            foreach (var prov in Providers)
                 prov.Disable();
 
             provider.SetApiKey(selectedProvider.ApiKey);
@@ -149,7 +148,7 @@ namespace Codify.Storage
             if (string.IsNullOrWhiteSpace(payload.ModelId))
                 throw new ArgumentException(@"ModelId is required.", nameof(payload));
 
-            var provider = _providers.FirstOrDefault(p => p.Id == payload.ProviderId);
+            var provider = Providers.FirstOrDefault(p => p.Id == payload.ProviderId);
             if (provider == null)
                 throw new InvalidOperationException($"Provider '{payload.ProviderId}' was not found.");
 

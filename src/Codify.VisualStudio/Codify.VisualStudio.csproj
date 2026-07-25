@@ -104,15 +104,18 @@
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
     <Compile Include="Workspace\Formatters\OpenDocumentsFormatter.cs" />
+    <Compile Include="Workspace\Formatters\ProjectContextFormatter.cs" />
     <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
-    <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
     <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
+    <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
     <Compile Include="Workspace\Orchestrators\ProjectContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\DiagnosticsProvider.cs" />
+    <Compile Include="Workspace\Providers\MemoryContextProvider.cs" />
     <Compile Include="Workspace\Providers\OpenDocumentsProvider.cs" />
+    <Compile Include="Workspace\Providers\ProjectContextProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Codify.Core\Codify.Core.csproj">

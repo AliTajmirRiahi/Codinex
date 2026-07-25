@@ -1,6 +1,9 @@
 ﻿
+using Codify.Core.Interfaces;
 using Codify.Storage;
-using Codify.UI.ToolWindows;
+using Codify.VisualStudio.Events.Build;
+using Codify.VSIX.Bootstrap;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -9,10 +12,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Events.Build;
-using Codify.VSIX.Bootstrap;
-using Microsoft.Extensions.DependencyInjection;
+using Codify.Storage.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify.VSIX
@@ -89,8 +89,6 @@ namespace Codify.VSIX
             // Initialize UI Commands
             await CodifyToolWindowCommand.InitializeAsync(this);
 
-            StoragePaths.EnsureCreated();
-
             var pane = await CreateVsOutputWindowPaneAsync();
 
             // 2. Initialize the Dependency Injection Container
@@ -100,7 +98,6 @@ namespace Codify.VSIX
             // 3. Perform Async Initializations
             // Since some services need to load files from disk, we do it here.
             await InitializeCoreServicesAsync();
-
 
             Debug.WriteLine("[Codify] DI Container & Package Initialized.");
         }
@@ -243,12 +240,18 @@ namespace Codify.VSIX
         private async Task InitializeCoreServicesAsync()
         {
             // We get the services from the container and call their init methods.
+            var workspaceInitializer = CodifyServiceContainer.Get<IWorkspaceInitializer>();
+            await workspaceInitializer.InitializeAsync();
 
             var settings = CodifyServiceContainer.Get<SettingsManager>();
             await settings.InitializeAsync();
 
             var providers = CodifyServiceContainer.Get<ProviderManager>();
             await providers.InitializeAsync();
+
+            var groups = CodifyServiceContainer.Get<IConversationGroupManager>();
+            await groups.InitializeAsync();
+            await groups.CreateDefaultGroupAsync();
 
             foreach (var startupTask in CodifyServiceContainer.Instance.GetServices<IStartupTask>())
             {

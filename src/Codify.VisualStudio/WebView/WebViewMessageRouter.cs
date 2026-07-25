@@ -244,7 +244,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     public async Task SendInitialDataAsync(bool includeChats = false)
     {
         // Get all configured providers
-        var providers = _providerManager.AllProviders;
+        var providers = _providerManager.Providers;
 
         Task<List<ChatSessionDocument>> chatListTask = null;
         Task<ChatSessionDocument> currentChatTask = null;
@@ -297,7 +297,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     public async Task SendSelectedProviderDataAsync()
     {
         // Get all configured providers and their models from ProviderManager
-        var provider = _providerManager.AllProviders.FirstOrDefault(p => p.IsEnabled);
+        var provider = _providerManager.Providers.FirstOrDefault(p => p.IsEnabled);
 
         var message = new WebViewMessageResponse()
         {

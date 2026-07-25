@@ -87,6 +87,7 @@
     <Compile Include="Interfaces\IUiThreadDispatcher.cs" />
     <Compile Include="Interfaces\IUserNotificationService.cs" />
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
+    <Compile Include="Interfaces\IWorkspaceInitializer.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
     <Compile Include="Models\AiModel.cs" />
     <Compile Include="Models\AiProvider.cs" />

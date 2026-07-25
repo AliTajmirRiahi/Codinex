@@ -1,22 +1,24 @@
-﻿using Codify.Storage.Models;
+﻿using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.Storage.Interfaces;
+using Codify.Storage.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.Core.Models;
 
 namespace Codify.Storage
 {
     /// <summary>
     /// Manages chat sessions persistence and lifecycle.
     /// </summary>
-    public class ChatManager(IStorageService storage)
+    public class ChatManager(IStorageService storage,IFileSystem fileSystem, IWorkspaceContext workspaceContext, IConversationGroupManager conversationGroupManager)
     {
         /// <summary>
         /// Creates a new chat session
         /// </summary>
-        public async Task<ChatSessionDocument> CreateChatAsync(string providerId,string modelId)
+        public async Task<ChatSessionDocument> CreateChatAsync(string providerId, string modelId)
         {
             var id = Guid.NewGuid().ToString();
 
@@ -39,7 +41,7 @@ namespace Codify.Storage
         /// </summary>
         private string GetChatPath(string chatId)
         {
-            return Path.Combine(StoragePaths.Chats, $"chat-{chatId}.json");
+            return StoragePaths.GetChatPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId(), chatId);
         }
 
         /// <summary>
@@ -83,10 +85,10 @@ namespace Codify.Storage
         /// </summary>
         public async Task<List<ChatSessionDocument>> GetAllChatsAsync()
         {
-            if (!Directory.Exists(StoragePaths.Chats))
-                return new List<ChatSessionDocument>();
+            if (!fileSystem.Exists(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId())))
+                return [];
 
-            var files = Directory.GetFiles(StoragePaths.Chats, "chat-*.json");
+            var files = fileSystem.GetFiles(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId()), "chat-*.json");
 
             var chats = new List<ChatSessionDocument>();
 
@@ -110,7 +112,7 @@ namespace Codify.Storage
             var chat = await LoadChatAsync(chatId);
 
             if (chat == null)
-                return new List<ChatMessage>();
+                return [];
 
             return chat.Messages
                 .Take(count)

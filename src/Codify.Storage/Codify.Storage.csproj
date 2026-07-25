@@ -49,9 +49,12 @@
     <Compile Include="ChatManager.cs" />
     <Compile Include="Commons\Statics.cs" />
     <Compile Include="FileStorageService.cs" />
+    <Compile Include="Interfaces\IConversationGroupManager.cs" />
     <Compile Include="IStorageService.cs" />
+    <Compile Include="Managers\ConversationGroupManager.cs" />
     <Compile Include="Models\ChatSessionDocument.cs" />
     <Compile Include="Models\CodifySettings.cs" />
+    <Compile Include="Models\ConversationGroup.cs" />
     <Compile Include="Models\DTO\AiModelSelectedDto.cs" />
     <Compile Include="Models\DTO\AiProviderDto.cs" />
     <Compile Include="Models\DTO\ChatSelectedDto.cs" />
@@ -60,6 +63,7 @@
     <Compile Include="ProviderManager.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="StoragePaths.cs" />
+    <Compile Include="WorkspaceInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\gapgpt_models.json">
@@ -85,5 +89,6 @@
       <Name>Codify.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

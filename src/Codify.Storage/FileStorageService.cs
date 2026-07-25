@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.IO;
+﻿using Codify.Core.Interfaces;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Codify.Storage
@@ -7,7 +9,7 @@ namespace Codify.Storage
     /// <summary>
     /// File-based JSON storage implementation.
     /// </summary>
-    public class FileStorageService : IStorageService
+    public class FileStorageService(IFileSystem fileSystem) : IStorageService
     {
         private readonly JsonSerializerSettings _settings = new()
         {
@@ -20,34 +22,65 @@ namespace Codify.Storage
             var json = JsonConvert.SerializeObject(data, _settings);
 
             // Run synchronous File.WriteAllText in a background thread
-            await Task.Run(() => File.WriteAllText(path, json));
+            await Task.Run(() => fileSystem.WriteAllText(path, json));
         }
 
         public async Task<T> LoadAsync<T>(string path)
         {
-            if (!File.Exists(path))
+            await Task.Yield();
+
+            if (!fileSystem.Exists(path))
                 return default;
 
-            string json;
-            using (var reader = new StreamReader(path))
-            {
-                json = await reader.ReadToEndAsync();
-            }
+            var json = fileSystem.ReadAllText(path);
 
             return JsonConvert.DeserializeObject<T>(json);
         }
 
         public Task<bool> ExistsAsync(string path)
         {
-            return Task.FromResult(File.Exists(path));
+            return Task.FromResult(fileSystem.Exists(path));
         }
 
-        public Task DeleteAsync(string path)
+        public async Task DeleteAsync(string path)
         {
-            if (File.Exists(path))
-                File.Delete(path);
+            await Task.Run(() =>
+            {
+                if (fileSystem.FileExists(path))
+                {
+                    fileSystem.DeleteFile(path);
+                }
+            });
+        }
 
-            return Task.CompletedTask;
+        public async Task DeleteDirectoryAsync(string path)
+        {
+            await Task.Run(() =>
+            {
+                fileSystem.DeleteDirectory(path, recursive: true);
+            });
+        }
+
+        public async Task<IReadOnlyList<string>> GetDirectoriesAsync(string path)
+        {
+            return await Task.Run<IReadOnlyList<string>>(() => fileSystem
+                .GetDirectories(path)
+                .ToList());
+        }
+
+        public async Task<IReadOnlyList<string>> GetFilesAsync(string path)
+        {
+            return await Task.Run<IReadOnlyList<string>>(() => fileSystem
+                .GetFiles(path)
+                .ToList());
+        }
+
+        public async Task CreateDirectoryAsync(string path)
+        {
+            await Task.Run(() =>
+            {
+                fileSystem.CreateDirectory(path);
+            });
         }
     }
 }

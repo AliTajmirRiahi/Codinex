@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Codify.Storage
 {
@@ -14,5 +15,13 @@ namespace Codify.Storage
         Task<bool> ExistsAsync(string path);
 
         Task DeleteAsync(string path);
+
+        Task DeleteDirectoryAsync(string path);
+
+        Task<IReadOnlyList<string>> GetDirectoriesAsync(string path);
+
+        Task<IReadOnlyList<string>> GetFilesAsync(string path);
+
+        Task CreateDirectoryAsync(string path);
     }
 }
