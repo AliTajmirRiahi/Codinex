@@ -63,7 +63,6 @@
     <Compile Include="Interfaces\IOpenDocumentsFormatter.cs" />
     <Compile Include="Interfaces\IProjectContextFormatter.cs" />
     <Compile Include="Interfaces\IProjectContextProvider.cs" />
-    <Compile Include="Interfaces\IWorkspaceStateProvider.cs" />
     <Compile Include="Interfaces\IChatMessageBuilder.cs" />
     <Compile Include="Interfaces\IExecutionPipeline.cs" />
     <Compile Include="Interfaces\IFileSystem.cs" />
@@ -108,7 +107,7 @@
     <Compile Include="Models\GitFileStatus.cs" />
     <Compile Include="Models\OpenDocumentItem.cs" />
     <Compile Include="Models\ProjectContext.cs" />
-    <Compile Include="Models\ProjectItem.cs" />
+    <Compile Include="Models\ProjectContextItem.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
     <Compile Include="Models\ToolDefinition.cs" />
     <Compile Include="Models\ToolProperty.cs" />
@@ -121,7 +120,6 @@
     <Compile Include="Tools\IAiToolRegistry.cs" />
     <Compile Include="UseCases\ISendChatMessageUseCase.cs" />
     <Compile Include="UseCases\SendChatMessageUseCase.cs" />
-    <Compile Include="Workspace\Models\WorkspaceBuildState.cs" />
     <Compile Include="Workspace\Prompt\IPromptContextComposer.cs" />
     <Compile Include="Workspace\Prompt\IWorkspaceContextBuilder.cs" />
     <Compile Include="Workspace\Prompt\IWorkspaceContextProvider.cs" />
@@ -129,18 +127,9 @@
     <Compile Include="Workspace\Prompt\PromptContextItem.cs" />
     <Compile Include="Workspace\Prompt\PromptContextKind.cs" />
     <Compile Include="Workspace\Prompt\PromptContextSection.cs" />
-    <Compile Include="Workspace\Prompt\WorkspaceContextRequest.cs" />
+    <Compile Include="Models\WorkspaceContextRequest.cs" />
     <Compile Include="Workspace\Prompt\ContextProviderResult.cs" />
-    <Compile Include="Workspace\WorkspaceContext.cs" />
-    <Compile Include="Workspace\Models\WorkspaceDiagnostics.cs" />
-    <Compile Include="Workspace\Models\WorkspaceFile.cs" />
-    <Compile Include="Workspace\Models\WorkspaceFolder.cs" />
-    <Compile Include="Workspace\WorkspaceMemory.cs" />
-    <Compile Include="Workspace\Models\WorkspaceProject.cs" />
-    <Compile Include="Workspace\Models\WorkspaceSymbol.cs" />
-    <Compile Include="Workspace\Models\WorkspaceTestState.cs" />
-    <Compile Include="Workspace\WorkspaceSnapshot.cs" />
-    <Compile Include="Workspace\WorkspaceState.cs" />
+    <Compile Include="Models\MemoryContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
@@ -150,8 +139,6 @@
       <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Build\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
-namespace Codify.Core.Workspace
+namespace Codify.Core.Models
 {
     /// <summary>
     /// Represents the information learned during the conversation.
     /// </summary>
-    public sealed class WorkspaceMemory
+    public sealed class MemoryContext
     {
         // Future:
         // KnownFiles
