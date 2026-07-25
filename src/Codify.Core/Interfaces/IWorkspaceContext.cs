@@ -1,4 +1,6 @@
-﻿namespace Codify.Core.Interfaces;
+﻿using System.Collections.Generic;
+
+namespace Codify.Core.Interfaces;
 
 public interface IWorkspaceContext
 {
@@ -13,4 +15,8 @@ public interface IWorkspaceContext
     string ActiveDocumentPath { get; }
 
     bool IsSolutionOpen { get; }
+
+    IReadOnlyList<string> StartupProjects { get; }
+
+    string ActiveConfiguration { get; }
 }

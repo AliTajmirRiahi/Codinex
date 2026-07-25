@@ -7,10 +7,16 @@ namespace Codify.Core.Models
     {
         public string Name { get; set; }
 
+        public string FullPath { get; set; }
+
+        public string RelativePath { get; set; }
+
         public string TargetFramework { get; set; }
 
-        public string Language { get; set; }
-
         public string OutputType { get; set; }
+
+        public string AssemblyName { get; set; }
+
+        public string RootNamespace { get; set; }
     }
 }

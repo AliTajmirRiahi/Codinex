@@ -2,6 +2,7 @@
 using Codify.Core.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models;
 
 namespace Codify.Core.Workspace.Prompt
 {
