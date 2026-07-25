@@ -4,44 +4,74 @@ using System.IO;
 namespace Codify.Storage
 {
     /// <summary>
-    /// Central place for all Codify storage directories.
+    /// Provides centralized access to all Codify storage paths.
     /// </summary>
     public static class StoragePaths
     {
-        public static string ProjectName { get; set; }
+        #region Root
 
-        public static readonly string Root =
+        public static string Root =>
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Codify"
-            );
+                "Codify");
 
-        public static readonly string Chats =
-            Path.Combine(Root, $"chats/{ProjectName}");
+        #endregion
 
-        public static readonly string Cache =
+        #region Global
+
+        public static string Cache =>
             Path.Combine(Root, "cache");
 
-        public static readonly string Sessions =
+        public static string Sessions =>
             Path.Combine(Root, "sessions");
 
-        public static readonly string Settings =
-            Path.Combine(Root, "settings.json");
-
-        public static readonly string Providers =
+        public static string Providers =>
             Path.Combine(Root, "providers.json");
 
-        /// <summary>
-        /// Ensure all required directories exist.
-        /// </summary>
-        public static void EnsureCreated()
-        {
-            Directory.CreateDirectory(Root);
-            Directory.CreateDirectory(Chats);
-            Directory.CreateDirectory(Cache);
-            Directory.CreateDirectory(Sessions);
-        }
+        public static string Settings =>
+            Path.Combine(Root, "settings.json");
 
+        #endregion
 
+        #region Workspaces
+
+        public static string Workspaces =>
+            Path.Combine(Root, "workspaces");
+
+        public static string GetWorkspacePath(string workspaceName) =>
+            Path.Combine(Workspaces, workspaceName);
+
+        public static string GetWorkspaceMemoryPath(string workspaceName) =>
+            Path.Combine(GetWorkspacePath(workspaceName), "memory.json");
+
+        public static string GetWorkspaceSettingsPath(string workspaceName) =>
+            Path.Combine(GetWorkspacePath(workspaceName), "settings.json");
+
+        #endregion
+
+        #region Groups
+
+        public static string GetGroupsPath(string workspaceName) =>
+            Path.Combine(GetWorkspacePath(workspaceName), "groups");
+
+        public static string GetGroupPath(
+            string workspaceName,
+            string groupId) =>
+            Path.Combine(GetGroupsPath(workspaceName), groupId);
+
+        public static string GetGroupJsonPath(
+            string workspaceName,
+            string groupId) =>
+            Path.Combine(GetGroupPath(workspaceName,groupId), "group.json");
+
+        public static string GetChatPath(
+            string workspaceName,
+            string groupId,
+            string chatId) =>
+            Path.Combine(
+                GetGroupPath(workspaceName, groupId),
+                $"{chatId}.json");
+
+        #endregion
     }
 }

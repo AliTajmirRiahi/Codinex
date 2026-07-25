@@ -3,7 +3,6 @@
 using Codify.Core.Chat;
 using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
-using Codify.Core.Tools;
 using Codify.Core.UseCases;
 using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.AI.Capabilities;
@@ -19,8 +18,10 @@ using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Infrastructure.Workspace.PromptPipeline;
 using Codify.Storage;
+using Codify.Storage.Managers;
 using Codify.VisualStudio;
 using Codify.VisualStudio.Diagnostics.Errors;
+using Codify.VisualStudio.Events.Build;
 using Codify.VisualStudio.Hosting.Startup;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
@@ -31,14 +32,13 @@ using Codify.VisualStudio.Services;
 using Codify.VisualStudio.Theme;
 using Codify.VisualStudio.Tools.BuiltIn;
 using Codify.VisualStudio.WebView;
-using Codify.VisualStudio.Workspace.Orchestrators;
 using Codify.VisualStudio.Workspace.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
-using Codify.VisualStudio.Events.Build;
+using Codify.Storage.Interfaces;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -84,13 +84,15 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
             services.AddSingleton<IThemeService, VsThemeService>();
             services.AddSingleton<IWorkspaceContext, VsWorkspaceContext>();
-            services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IExecutionPipeline, ExecutionPipeline>();
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
             services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
             services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
             services.AddSingleton<IWorkspaceFileLocator, WorkspaceFileLocator>();
             services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
+            services.AddSingleton<IWorkspaceInitializer, WorkspaceInitializer>();
+            services.AddSingleton<IConversationGroupManager, ConversationGroupManager>();
+
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
             services.AddSingleton<IUserNotificationService>(

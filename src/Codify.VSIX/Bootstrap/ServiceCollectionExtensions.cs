@@ -64,8 +64,8 @@ public static class ServiceCollectionExtensions
         typeof(IOpenDocumentsProvider),
         typeof(IOpenDocumentsFormatter),
 
-        //typeof(IProjectProvider),
-        //typeof(IProjectFormatter)
+        typeof(IProjectContextProvider),
+        typeof(IProjectContextFormatter)
 
     ];
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
+using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.Workspace.PromptPipeline;
 

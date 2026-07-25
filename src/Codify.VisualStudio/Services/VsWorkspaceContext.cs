@@ -1,8 +1,13 @@
 ﻿using Codify.Core.Interfaces;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace Codify.VisualStudio.Services
 {
@@ -95,5 +100,37 @@ namespace Codify.VisualStudio.Services
                 return dte.ActiveDocument?.FullName ?? string.Empty;
             }
         }
+
+        public IReadOnlyList<string> StartupProjects
+        {
+            get
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                if (Package.GetGlobalService(typeof(SDTE)) is not DTE2 dte || dte.Solution?.SolutionBuild?.StartupProjects is not Array startupProjects || startupProjects.Length == 0)
+                    return [];
+
+                return startupProjects
+                    .Cast<object>()
+                    .Select(x => x?.ToString())
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .ToList();
+            }
+        }
+
+        public string ActiveConfiguration
+        {
+            get
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                if (Package.GetGlobalService(typeof(SDTE)) is not DTE2 dte)
+                    return string.Empty;
+
+                return dte.Solution?.SolutionBuild?.ActiveConfiguration?.Name
+                       ?? string.Empty;
+            }
+        }
+
     }
 }
