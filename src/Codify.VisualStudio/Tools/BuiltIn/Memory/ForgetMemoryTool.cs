@@ -1,12 +1,12 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Codify.Core.Conversation;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.Storage.Interfaces;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Codify.VisualStudio.Tools.BuiltIn;
+namespace Codify.VisualStudio.Tools.BuiltIn.Memory;
 
 /// <summary>
 /// Removes a long-term workspace memory.
@@ -17,6 +17,8 @@ public sealed class ForgetMemoryTool(IMemoryManager memoryManager) : IAiTool
 
     public string Description =>
         "Removes a previously stored workspace memory.";
+
+    public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
     public ToolDefinition Definition { get; } =
         new ToolDefinition(

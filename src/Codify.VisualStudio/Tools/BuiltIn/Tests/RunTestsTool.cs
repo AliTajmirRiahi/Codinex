@@ -1,20 +1,22 @@
-﻿using Codify.Core.Conversation;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Conversation;
+using Codify.Core.Models;
+using Codify.Core.Tools;
 
-namespace Codify.VisualStudio.Tools.BuiltIn;
+namespace Codify.VisualStudio.Tools.BuiltIn.Tests;
 
 /// <summary>
-/// GetDiagnosticsTool
+/// RunTestsTool
 /// </summary>
-public sealed class GetDiagnosticsTool : IAiTool
+public sealed class RunTestsTool : IAiTool
 {
-    public string Name => "get_diagnostics";
+    public string Name => "run_tests";
 
     public string Description => "";
+
+    public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
     public ToolDefinition Definition => new ToolDefinition(
         new Dictionary<string, ToolProperty>
@@ -23,6 +25,7 @@ public sealed class GetDiagnosticsTool : IAiTool
         },
         [
         ]);
+
     public Task<ToolResult> ExecuteAsync(
         ToolRequest request,
         CancellationToken cancellationToken)

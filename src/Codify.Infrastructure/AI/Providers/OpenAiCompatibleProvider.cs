@@ -172,10 +172,19 @@ namespace Codify.Infrastructure.AI.Providers
 
                 var obj = jsonSerializer.Parse(json);
 
-                var delta = obj["choices"]?[0]?["delta"];
+                var choices = obj["choices"];
+
+                if (choices is not JArray array || array.Count == 0)
+                {
+                    continue;
+                }
+
+                var delta = array[0]?["delta"];
 
                 if (delta == null)
+                {
                     continue;
+                }
 
                 var toolCall = delta["tool_calls"]?[0];
 
@@ -278,6 +287,7 @@ namespace Codify.Infrastructure.AI.Providers
         {
             return [.. toolRegistry
                 .GetAll()
+                .Where(p=> p.Visibility == ToolVisibility.Model)
                 .Select(tool => new
                 {
                     type = "function",

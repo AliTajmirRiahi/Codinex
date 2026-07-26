@@ -5,6 +5,17 @@ using Codify.Core.Models;
 
 namespace Codify.Core.Tools;
 
+
+public enum ToolVisibility
+{
+    Model = 0,
+
+    Internal = 1,
+
+    Debug = 2,
+
+    Experimental = 3,
+}
 /// <summary>
 /// Represents an executable AI tool.
 /// </summary>
@@ -18,6 +29,8 @@ public interface IAiTool
     string Description { get; }
 
     ToolDefinition Definition { get; }
+
+    ToolVisibility Visibility { get; }
 
     /// <summary>
     /// Executes the tool.
