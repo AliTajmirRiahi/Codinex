@@ -1,4 +1,5 @@
 using Codify.Core.Interfaces;
+using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
 using Codify.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
