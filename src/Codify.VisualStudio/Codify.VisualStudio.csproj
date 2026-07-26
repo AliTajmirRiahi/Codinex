@@ -91,8 +91,10 @@
     <Compile Include="Tools\BuiltIn\BuildSolutionTool.cs" />
     <Compile Include="Tools\BuiltIn\FindReferencesTool.cs" />
     <Compile Include="Tools\BuiltIn\FindSymbolTool.cs" />
+    <Compile Include="Tools\BuiltIn\ForgetMemoryTool.cs" />
     <Compile Include="Tools\BuiltIn\GetDiagnosticsTool.cs" />
     <Compile Include="Tools\BuiltIn\ReadFileTool.cs" />
+    <Compile Include="Tools\BuiltIn\RememberMemoryTool.cs" />
     <Compile Include="Tools\BuiltIn\RunTestsTool.cs" />
     <Compile Include="Tools\BuiltIn\SearchProjectTool.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
@@ -103,12 +105,14 @@
     <Compile Include="WebView\WebViewResourceServer.cs" />
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
+    <Compile Include="Workspace\Formatters\MemoryFormatter.cs" />
     <Compile Include="Workspace\Formatters\OpenDocumentsFormatter.cs" />
     <Compile Include="Workspace\Formatters\ProjectContextFormatter.cs" />
     <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\MemoryContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
     <Compile Include="Workspace\Orchestrators\ProjectContextOrchestrator.cs" />

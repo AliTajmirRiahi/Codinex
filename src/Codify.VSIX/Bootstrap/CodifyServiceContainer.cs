@@ -18,7 +18,9 @@ using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Infrastructure.Workspace.PromptPipeline;
 using Codify.Storage;
+using Codify.Storage.Interfaces;
 using Codify.Storage.Managers;
+using Codify.Storage.Services;
 using Codify.VisualStudio;
 using Codify.VisualStudio.Diagnostics.Errors;
 using Codify.VisualStudio.Events.Build;
@@ -32,13 +34,13 @@ using Codify.VisualStudio.Services;
 using Codify.VisualStudio.Theme;
 using Codify.VisualStudio.Tools.BuiltIn;
 using Codify.VisualStudio.WebView;
+using Codify.VisualStudio.Workspace.Formatters;
 using Codify.VisualStudio.Workspace.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
-using Codify.Storage.Interfaces;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -91,7 +93,7 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IWorkspaceFileLocator, WorkspaceFileLocator>();
             services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
             services.AddSingleton<IWorkspaceInitializer, WorkspaceInitializer>();
-            services.AddSingleton<IConversationGroupManager, ConversationGroupManager>();
+
 
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
@@ -104,6 +106,9 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<SettingsManager>();
             services.AddSingleton<ProviderManager>();
             services.AddSingleton<ChatManager>();
+            services.AddSingleton<IConversationGroupManager, ConversationGroupManager>();
+            services.AddSingleton<IMemoryManager, MemoryManager>();
+
             services.AddSingleton<FileReferenceProvider>();
             services.AddSingleton<IReferenceProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
             services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
@@ -117,6 +122,10 @@ namespace Codify.VSIX.Bootstrap
 
             services.AddSingleton<IWorkspaceContextBuilder, WorkspaceContextBuilder>();
             services.AddSingleton<IPromptContextComposer, PromptContextComposer>();
+
+            //services.AddSingleton<IMemoryContextProvider, MemoryContextProvider>();
+            //services.AddSingleton<IMemoryContextFormatter, MemoryContextFormatter>();
+
             services
                 .AddAiTools(typeof(ReadFileTool).Assembly)
                 .AddWorkspaceServices(typeof(DiagnosticsProvider).Assembly);

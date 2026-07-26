@@ -58,8 +58,8 @@ public static class ServiceCollectionExtensions
         typeof(IBuildContextProvider),
         typeof(IBuildContextFormatter),
 
-        //typeof(IGitProvider),
-        //typeof(IGitFormatter),
+        typeof(IMemoryContextProvider),
+        typeof(IMemoryContextFormatter),
 
         typeof(IOpenDocumentsProvider),
         typeof(IOpenDocumentsFormatter),

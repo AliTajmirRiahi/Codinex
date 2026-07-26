@@ -1,14 +1,15 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.Storage.Interfaces;
+using Codify.Storage.Models;
+using Codify.Storage.Services;
 
-namespace Codify.Storage
+namespace Codify.Storage.Managers
 {
     /// <summary>
     /// Manages chat sessions persistence and lifecycle.

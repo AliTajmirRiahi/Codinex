@@ -7,6 +7,7 @@ using Codify.Core.Models;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.Chat;
 using Codify.Storage;
+using Codify.Storage.Managers;
 using Codify.Storage.Models;
 using Codify.Storage.Models.DTO;
 using Codify.VisualStudio.Hosting.Startup;

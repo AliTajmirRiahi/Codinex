@@ -59,6 +59,8 @@
     <Compile Include="Interfaces\IDiagnosticsProvider.cs" />
     <Compile Include="Interfaces\IGitContextFormatter.cs" />
     <Compile Include="Interfaces\IGitContextProvider.cs" />
+    <Compile Include="Interfaces\IMemoryContextFormatter.cs" />
+    <Compile Include="Interfaces\IMemoryContextProvider.cs" />
     <Compile Include="Interfaces\IOpenDocumentsProvider.cs" />
     <Compile Include="Interfaces\IOpenDocumentsFormatter.cs" />
     <Compile Include="Interfaces\IProjectContextFormatter.cs" />
@@ -106,6 +108,8 @@
     <Compile Include="Models\GitContext.cs" />
     <Compile Include="Models\GitFileItem.cs" />
     <Compile Include="Models\GitFileStatus.cs" />
+    <Compile Include="Models\MemoryDocument.cs" />
+    <Compile Include="Models\MemoryFact.cs" />
     <Compile Include="Models\OpenDocumentItem.cs" />
     <Compile Include="Models\ProjectContext.cs" />
     <Compile Include="Models\ProjectContextItem.cs" />

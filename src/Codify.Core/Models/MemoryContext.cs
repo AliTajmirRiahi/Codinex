@@ -5,11 +5,6 @@ namespace Codify.Core.Models
     /// </summary>
     public sealed class MemoryContext
     {
-        // Future:
-        // KnownFiles
-        // KnownSymbols
-        // Diagnostics
-        // BuildState
-        // TestState
+        public MemoryDocument MemoryDocument { get; set; }
     }
 }

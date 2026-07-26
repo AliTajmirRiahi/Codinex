@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Codify.Core.Interfaces;
 using Codify.Storage.Interfaces;
 using Codify.Storage.Models;
+using Codify.Storage.Services;
 
 namespace Codify.Storage.Managers;
 
@@ -95,7 +96,10 @@ public sealed class ConversationGroupManager(
         var group = _groups.FirstOrDefault(g => g.IsDefault);
 
         if (group != null)
+        {
+            CurrentGroup = group;
             return group;
+        }
 
         group = await CreateGroupAsync(
             "Default Project",

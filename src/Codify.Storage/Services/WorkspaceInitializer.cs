@@ -1,9 +1,7 @@
-using System.IO;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
-using Codify.Storage;
 
-namespace Codify.Storage;
+namespace Codify.Storage.Services;
 
 public sealed class WorkspaceInitializer(
     IFileSystem fileSystem,

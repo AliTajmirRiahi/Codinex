@@ -3,6 +3,7 @@ using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Codify.Infrastructure.Conversation
             ChatMessageBuildResult request,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
+            Debug.WriteLine("ExecuteAsync Start");
+
             yield return ConversationEvent.Status("Sending request...");
 
             await foreach (var evt in ProcessEvents(
@@ -28,8 +31,12 @@ namespace Codify.Infrastructure.Conversation
                                    cancellationToken),
                                cancellationToken))
             {
+                Debug.WriteLine("Yield " + evt.Type);
+
                 yield return evt;
             }
+
+            Debug.WriteLine("ExecuteAsync End");
         }
 
         /// <summary>
@@ -42,6 +49,8 @@ namespace Codify.Infrastructure.Conversation
         {
             await foreach (var evt in events.WithCancellation(cancellationToken))
             {
+                Debug.WriteLine(evt.Type);
+
                 switch (evt.Type)
                 {
                     case ConversationEventType.ToolRequested:

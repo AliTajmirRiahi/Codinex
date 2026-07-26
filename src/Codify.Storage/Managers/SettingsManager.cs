@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Codify.Storage.Interfaces;
 using Codify.Storage.Models;
+using Codify.Storage.Services;
 
-namespace Codify.Storage
+namespace Codify.Storage.Managers
 {
     public class SettingsManager(IStorageService storage)
     {

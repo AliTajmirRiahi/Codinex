@@ -6,6 +6,7 @@ using Codify.Infrastructure.AI.Providers;
 using Codify.Storage;
 using System;
 using Codify.Core.Workspace.Prompt;
+using Codify.Storage.Managers;
 
 namespace Codify.Infrastructure.Chat
 {
