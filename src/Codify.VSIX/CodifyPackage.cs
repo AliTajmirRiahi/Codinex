@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Codify.Storage.Interfaces;
+using Codify.Storage.Managers;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codify.VSIX
@@ -252,6 +253,9 @@ namespace Codify.VSIX
             var groups = CodifyServiceContainer.Get<IConversationGroupManager>();
             await groups.InitializeAsync();
             await groups.CreateDefaultGroupAsync();
+
+            var memories = CodifyServiceContainer.Get<IMemoryManager>();
+            await memories.InitializeAsync();
 
             foreach (var startupTask in CodifyServiceContainer.Instance.GetServices<IStartupTask>())
             {

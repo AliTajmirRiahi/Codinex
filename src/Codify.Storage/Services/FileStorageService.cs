@@ -1,10 +1,11 @@
-﻿using Codify.Core.Interfaces;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces;
+using Codify.Storage.Interfaces;
+using Newtonsoft.Json;
 
-namespace Codify.Storage
+namespace Codify.Storage.Services
 {
     /// <summary>
     /// File-based JSON storage implementation.

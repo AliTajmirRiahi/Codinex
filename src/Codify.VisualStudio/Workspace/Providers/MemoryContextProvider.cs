@@ -1,21 +1,26 @@
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
+using Codify.Storage.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Workspace.Providers;
 
 /// <summary>
 /// Provides long-term workspace memory.
 /// </summary>
-public sealed class MemoryContextProvider : IWorkspaceContextOrchestrator
+public sealed class MemoryContextProvider(IMemoryManager memoryManager) : IMemoryContextProvider
 {
-    public Task<ContextProviderResult> GetContextAsync(
-        WorkspaceContextRequest request,
-        CancellationToken cancellationToken)
+    public MemoryContext GetContext()
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.FromResult(new ContextProviderResult());
+        return new MemoryContext
+        {
+            MemoryDocument = new MemoryDocument()
+            {
+                Facts = memoryManager.GetAll().ToList(),
+            }
+        };
     }
 }

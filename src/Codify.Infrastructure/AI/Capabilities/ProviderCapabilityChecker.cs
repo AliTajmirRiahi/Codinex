@@ -12,22 +12,15 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.AI.Capabilities
 {
-    sealed class ChatCapabilityResult
+    public sealed class ChatCapabilityResult
     {
         public CapabilityProbeResult SupportsStreaming { get; set; } = CapabilityProbeResult.Unsupported;
 
         public CapabilityProbeResult SupportsToolCalling { get; set; } = CapabilityProbeResult.Unsupported;
     }
 
-    public sealed class ProviderCapabilityChecker : IProviderCapabilityChecker
+    public sealed class ProviderCapabilityChecker(IOpenAiCompatibleClient client) : IProviderCapabilityChecker
     {
-        private readonly IOpenAiCompatibleClient _client;
-
-        public ProviderCapabilityChecker(IOpenAiCompatibleClient client)
-        {
-            _client = client;
-        }
-
         public async Task CheckAsync(
             AiProvider provider,
             AiModel model,
@@ -100,7 +93,7 @@ namespace Codify.Infrastructure.AI.Capabilities
                     }
                 };
 
-                await foreach (var chunk in _client.StreamPostAsync(
+                await foreach (var chunk in client.StreamPostAsync(
                                    provider,
                                    "/chat/completions",
                                    payload,
@@ -176,7 +169,7 @@ namespace Codify.Infrastructure.AI.Capabilities
                     max_tokens = 10
                 };
 
-                await _client.PostAsync(
+                await client.PostAsync(
                     provider,
                     "/chat/completions",
                     payload,

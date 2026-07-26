@@ -113,67 +113,67 @@ public sealed class SendChatMessageUseCase(
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
 
-            // Add user message to session
-            //chatSession.AddUserMessage(request.DraftText, buildResult.Context);
+            //Add user message to session
+            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
 
-            //// Accumulate the full assistant text while chunks arrive.
-            //var fullText = string.Empty;
+            // Accumulate the full assistant text while chunks arrive.
+            var fullText = string.Empty;
 
-            //await foreach (var evt in conversationEngine.ExecuteAsync(
-            //                   buildResult))
-            //{
-            //    switch (evt.Type)
-            //    {
-            //        case ConversationEventType.TextDelta:
+            await foreach (var evt in conversationEngine.ExecuteAsync(
+                               buildResult))
+            {
+                switch (evt.Type)
+                {
+                    case ConversationEventType.TextDelta:
 
-            //            var chunk = evt.Payload.ToString();
+                        var chunk = evt.Payload.ToString();
 
-            //            fullText += chunk;
+                        fullText += chunk;
 
-            //            await onMessage(
-            //                new ChatResponse(
-            //                    WebViewMessageType.StreamChunk,
-            //                    chunk));
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.StreamChunk,
+                                chunk));
 
-            //            break;
+                        continue;
 
-            //        case ConversationEventType.StatusChanged:
+                    case ConversationEventType.StatusChanged:
 
-            //            //await onMessage(
-            //            //    new ChatResponse(
-            //            //        WebViewMessageType.StatusChanged,
-            //            //        evt.DisplayMessage));
+                        //await onMessage(
+                        //    new ChatResponse(
+                        //        WebViewMessageType.StatusChanged,
+                        //        evt.DisplayMessage));
 
-            //            break;
-            //    }
-            //}
+                        continue;
+                }
+            }
 
-            //// Persist the final assistant answer.
-            //chatSession.AddAssistantMessage(fullText);
+            // Persist the final assistant answer.
+            chatSession.AddAssistantMessage(fullText);
 
-            //await chatSession.SaveAsync();
+            await chatSession.SaveAsync();
 
-            //// Save session
-            //var titleChanged = await chatSession.SaveAsync();
+            // Save session
+            var titleChanged = await chatSession.SaveAsync();
 
-            //if (!titleChanged)
-            //{
-            //    // Emit the final completed response.
-            //    await onMessage(new ChatResponse(
-            //        WebViewMessageType.AiResponse,
-            //        fullText));
-            //    return;
-            //}
+            if (!titleChanged)
+            {
+                // Emit the final completed response.
+                await onMessage(new ChatResponse(
+                    WebViewMessageType.AiResponse,
+                    fullText));
+                return;
+            }
 
-            //var meta = new Dictionary<string, object>
-            //{
-            //    ["titleChanged"] = true
-            //};
+            var meta = new Dictionary<string, object>
+            {
+                ["titleChanged"] = true
+            };
 
-            //// Emit the final completed response.
-            //await onMessage(new ChatResponse(
-            //    WebViewMessageType.AiResponse,
-            //    fullText, meta));
+            // Emit the final completed response.
+            await onMessage(new ChatResponse(
+                WebViewMessageType.AiResponse,
+                fullText, meta));
         }
         catch (Exception ex)
         {

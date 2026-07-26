@@ -1,16 +1,18 @@
-﻿using Codify.Storage.Models;
-using Codify.Storage.Models.DTO;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
+using Codify.Storage.Interfaces;
+using Codify.Storage.Models.DTO;
+using Codify.Storage.Services;
+using Newtonsoft.Json;
 
-namespace Codify.Storage
+namespace Codify.Storage.Managers
 {
     public class ProviderManager(IStorageService storage,
         IJsonSerializer jsonSerializer,
@@ -161,7 +163,7 @@ namespace Codify.Storage
 
             model.MarkAsCurrent();
 
-            await providerCapabilityChecker.CheckAsync(provider, model, default);
+            await providerCapabilityChecker.CheckAsync(provider, model, CancellationToken.None);
 
             await SaveAsync();
 

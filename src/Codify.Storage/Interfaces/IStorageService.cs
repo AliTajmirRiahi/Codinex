@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Codify.Storage
+namespace Codify.Storage.Interfaces
 {
     /// <summary>
     /// Generic storage abstraction used by Codify managers.

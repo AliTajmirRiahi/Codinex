@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Codify.Storage.Commons;
+using Codify.Storage.Managers;
 using Codify.Storage.Models;
 
 namespace Codify.Infrastructure.Chat
@@ -71,7 +72,7 @@ namespace Codify.Infrastructure.Chat
         public ChatMessage AddUserMessage(string content, ChatMessageRequestContext context)
         {
             if (string.IsNullOrWhiteSpace(content))
-                throw new Exception();
+                throw new Exception("");
 
             var msg = new ChatMessage
             {
@@ -92,7 +93,7 @@ namespace Codify.Infrastructure.Chat
         public ChatMessage AddAssistantMessage(string content)
         {
             if (string.IsNullOrWhiteSpace(content))
-                throw new Exception();
+                throw new Exception("Ai message respones is null");
 
             var msg = new ChatMessage
             {

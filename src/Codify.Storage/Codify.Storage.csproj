@@ -46,11 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatManager.cs" />
+    <Compile Include="Interfaces\IMemoryManager.cs" />
+    <Compile Include="Managers\ChatManager.cs" />
     <Compile Include="Commons\Statics.cs" />
-    <Compile Include="FileStorageService.cs" />
+    <Compile Include="Managers\MemoryManager.cs" />
+    <Compile Include="Services\FileStorageService.cs" />
     <Compile Include="Interfaces\IConversationGroupManager.cs" />
-    <Compile Include="IStorageService.cs" />
+    <Compile Include="Interfaces\IStorageService.cs" />
     <Compile Include="Managers\ConversationGroupManager.cs" />
     <Compile Include="Models\ChatSessionDocument.cs" />
     <Compile Include="Models\CodifySettings.cs" />
@@ -60,10 +62,10 @@
     <Compile Include="Models\DTO\ChatSelectedDto.cs" />
     <Compile Include="Models\UiErrorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderManager.cs" />
-    <Compile Include="SettingsManager.cs" />
-    <Compile Include="StoragePaths.cs" />
-    <Compile Include="WorkspaceInitializer.cs" />
+    <Compile Include="Managers\ProviderManager.cs" />
+    <Compile Include="Managers\SettingsManager.cs" />
+    <Compile Include="Services\StoragePaths.cs" />
+    <Compile Include="Services\WorkspaceInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\gapgpt_models.json">
