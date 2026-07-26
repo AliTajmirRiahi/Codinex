@@ -3,6 +3,7 @@ using Codify.Core.Models;
 using Codify.Infrastructure.CustomeExceptions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -132,6 +133,8 @@ namespace Codify.Infrastructure.AI.Clients
 
                 if (!line.StartsWith("data:"))
                     continue;
+
+                Debug.WriteLine(line);
 
                 yield return line.Substring(5).Trim();
             }

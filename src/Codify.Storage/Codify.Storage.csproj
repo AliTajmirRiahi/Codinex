@@ -91,6 +91,11 @@
       <Name>Codify.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+	<PackageReference Include="System.IO.Abstractions">
+		<Version>20.0.15</Version>
+	</PackageReference>
+  </ItemGroup>
+  <ItemGroup/>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
