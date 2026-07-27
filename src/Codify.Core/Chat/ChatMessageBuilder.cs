@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
 using System;
@@ -7,6 +9,7 @@ using System.Text;
 
 namespace Codify.Core.Chat
 {
+    [AutoDiRegister(Modules.Chat, RegistrationOrder.Platform)]
     public sealed class ChatMessageBuilder(IReferenceContextFormatter referenceContextFormatter) : IChatMessageBuilder
     {
         private readonly IReferenceContextFormatter _referenceContextFormatter = referenceContextFormatter ?? throw new ArgumentNullException(nameof(referenceContextFormatter));

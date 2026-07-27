@@ -1,6 +1,7 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.ModelManagement.Retrievers
 {
+    [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Infrastructure)]
     public class OpenAiCompatibleModelRetriever(
         IOpenAiCompatibleClient client,
         IJsonSerializer jsonSerializer) : IModelRetriever

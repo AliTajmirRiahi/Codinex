@@ -1,4 +1,6 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.VisualStudio.Interfaces;
@@ -12,7 +14,11 @@ namespace Codify.VisualStudio.Tools.BuiltIn.Files;
 /// <summary>
 /// ReadFileTool
 /// </summary>
-public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWorkspaceSearchService workspaceSearchService) : IAiTool
+[AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
+public sealed class ReadFileTool(
+    IWorkspaceFileService workspaceFileService, 
+    IWorkspaceSearchService workspaceSearchService) 
+    : IAiTool
 {
     public string Name => "read_file";
 

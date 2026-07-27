@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
@@ -11,6 +13,7 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
     /// <summary>
     /// Provides information about the currently open documents.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Features)]
     public sealed class OpenDocumentsContextOrchestrator(
         IOpenDocumentsProvider openDocumentsProvider,
         IOpenDocumentsFormatter openDocumentsFormatter)

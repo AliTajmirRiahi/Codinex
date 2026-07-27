@@ -1,15 +1,17 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
+using Codify.Core.Models;
 using Codify.Storage.Interfaces;
-using Codify.Storage.Models;
 using Codify.Storage.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.Core.Models;
 
 namespace Codify.Storage.Managers
 {
+    [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public sealed class MemoryManager(
         IStorageService storage,
         IWorkspaceContext workspaceContext) : IMemoryManager

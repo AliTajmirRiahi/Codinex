@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Storage.Interfaces;
 using Newtonsoft.Json;
 
@@ -11,6 +11,7 @@ namespace Codify.Storage.Services
     /// <summary>
     /// File-based JSON storage implementation.
     /// </summary>
+    [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation, ServiceLifetimeWrapper.Singleton)]
     public class FileStorageService(IFileSystem fileSystem) : IStorageService
     {
         private readonly JsonSerializerSettings _settings = new()

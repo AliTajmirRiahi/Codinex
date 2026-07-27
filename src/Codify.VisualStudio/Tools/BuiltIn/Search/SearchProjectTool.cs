@@ -1,22 +1,25 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.Core.Workspace;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Models;
+using Codify.VisualStudio.Models.Tools.SearchProject;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Models.Tools.SearchProject;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Search;
 
 /// <summary>
 /// Searches files and source code within the current workspace.
 /// </summary>
+[AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchService) : IAiTool
 {
     private const int DefaultMaxResults = 20;

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Storage;
 using Codify.Storage.Managers;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.Chat
 {
+    [AutoDiRegister(Modules.Chat, RegistrationOrder.Infrastructure)]
     public class ChatSessionService(ChatManager chatManager, ProviderManager providerManager)
     {
         /// <summary>

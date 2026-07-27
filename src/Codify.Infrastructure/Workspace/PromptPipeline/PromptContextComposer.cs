@@ -1,12 +1,15 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
 using System.Linq;
-using Codify.Core.Workspace.Prompt;
 
 namespace Codify.Infrastructure.Workspace.PromptPipeline
 {
     /// <summary>
     /// Composes the final prompt context from provider results.
     /// </summary>
+    [AutoDiRegister(Modules.Prompt, RegistrationOrder.Infrastructure)]
     public sealed class PromptContextComposer : IPromptContextComposer
     {
         public PromptContext Compose(

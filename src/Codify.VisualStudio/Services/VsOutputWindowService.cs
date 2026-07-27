@@ -1,11 +1,11 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
 using Codify.VisualStudio.Models;
 using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +19,7 @@ namespace Codify.VisualStudio.Services
     /// <summary>
     /// Reads information from the Visual Studio Output window.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class VsOutputWindowService(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IVsOutputWindowService
     {

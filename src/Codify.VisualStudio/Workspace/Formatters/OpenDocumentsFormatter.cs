@@ -1,14 +1,17 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 
 namespace Codify.VisualStudio.Workspace.Formatters
 {
     /// <summary>
     /// Formats open documents into prompt text.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class OpenDocumentsFormatter
         : IOpenDocumentsFormatter
     {

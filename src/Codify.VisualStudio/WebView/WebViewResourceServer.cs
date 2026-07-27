@@ -1,28 +1,19 @@
-﻿using Microsoft.Web.WebView2.Core;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using Codify.VisualStudio.Interfaces;
+using Microsoft.Web.WebView2.Core;
 
-namespace Codify.Infrastructure.WebView
+namespace Codify.VisualStudio.WebView
 {
     /// <summary>
     /// Serves all embedded files under the Resources folder
     /// through the virtual host: http://codify.resources/*
     /// </summary>
-    public class WebViewResourceServer : IResourceServer
+    public class WebViewResourceServer(Assembly assembly, string resourceRoot) : IResourceServer
 
     {
-        private readonly Assembly _assembly;
-        private readonly string _resourceRoot;
-
-        public WebViewResourceServer(Assembly assembly, string resourceRoot)
-        {
-            _assembly = assembly;
-            _resourceRoot = resourceRoot;
-        }
-
         public void Attach(CoreWebView2 webview)
         {
             webview.AddWebResourceRequestedFilter(
@@ -45,9 +36,9 @@ namespace Codify.Infrastructure.WebView
             // convert url path → embedded resource name
             string relativePath = uri.AbsolutePath.TrimStart('/').Replace("/", ".");
 
-            string resourceName = $"{_resourceRoot}.{relativePath}";
+            string resourceName = $"{resourceRoot}.{relativePath}";
 
-            var stream = _assembly.GetManifestResourceStream(resourceName);
+            var stream = assembly.GetManifestResourceStream(resourceName);
 
             if (stream == null)
             {

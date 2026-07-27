@@ -1,17 +1,18 @@
 ﻿// Infrastructure/References/Providers/SolutionReferenceProvider.cs
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
+using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.References.Providers
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public class SolutionReferenceProvider(IVisualStudioServices visualStudio, IWorkspaceContext workspaceContext)
         : VsServiceBase(visualStudio), IReferenceProvider
     {

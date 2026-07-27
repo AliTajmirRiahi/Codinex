@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Storage.Interfaces;
 using Codify.Storage.Models;
 using Codify.Storage.Services;
+using System.Threading.Tasks;
 
 namespace Codify.Storage.Managers
 {
+    [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class SettingsManager(IStorageService storage)
     {
         private CodifySettings _currentSettings = new(); // Default values

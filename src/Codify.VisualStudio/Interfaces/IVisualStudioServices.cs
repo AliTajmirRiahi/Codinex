@@ -1,5 +1,6 @@
 ﻿using EnvDTE80;
 using Microsoft.VisualStudio.LanguageServices;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace Codify.VisualStudio.Interfaces
     /// </summary>
     public interface IVisualStudioServices
     {
+        IAsyncServiceProvider Provider { get; }
+
         /// <summary>
         /// Gets any Visual Studio service.
         /// </summary>
@@ -49,6 +52,8 @@ namespace Codify.VisualStudio.Interfaces
         /// <returns></returns>
         Task<VisualStudioWorkspace> GetWorkspaceAsync();
 
+
+        
         Task<IVsSolutionBuildManager> GetSolutionBuildManagerAsync();
     }
 }

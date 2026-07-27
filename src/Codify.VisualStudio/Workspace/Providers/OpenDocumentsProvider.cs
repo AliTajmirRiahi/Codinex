@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.VisualStudio.Interfaces;
@@ -17,6 +19,7 @@ namespace Codify.VisualStudio.Workspace.Providers
     /// <summary>
     /// Provides information about currently open documents.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class OpenDocumentsProvider(
         IVisualStudioServices visualStudio,
         IWorkspaceContext workspaceContext,

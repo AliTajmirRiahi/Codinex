@@ -1,16 +1,19 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Models.Tools.ListDirectory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Models.Tools.ListDirectory;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Workspace
 {
+    [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
     public class ListDirectoryTool(IWorkspaceFileService workspaceFileService) : IAiTool
     {
         public string Name => "list_directory";

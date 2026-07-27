@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.VisualStudio.Interfaces;
+using System;
 
 namespace Codify.VisualStudio.Diagnostics.Errors
 {
@@ -8,6 +10,7 @@ namespace Codify.VisualStudio.Diagnostics.Errors
     /// Centralized error handler that logs full details to Visual Studio output
     /// and returns only a safe generic message to the user.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class ErrorHandler(IVsOutputLogger logger, IJsonSerializer jsonSerializer) : IErrorHandler
     {
         private readonly IVsOutputLogger _logger = logger ?? throw new ArgumentNullException(nameof(logger));

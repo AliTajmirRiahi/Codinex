@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.VisualStudio.Interfaces;
@@ -16,6 +18,7 @@ namespace Codify.VisualStudio.Services;
 /// <summary>
 /// Provides Visual Studio solution build operations.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class BuildService(IVisualStudioServices visualStudioServices, IBuildContextProvider buildContextProvider, IDiagnosticsProvider diagnosticsProvider) : IBuildService
 {
     public async Task<BuildResult> BuildSolutionAsync(

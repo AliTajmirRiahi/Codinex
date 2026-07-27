@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Storage.Interfaces;
 using Codify.Storage.Models;
 using Codify.Storage.Services;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Abstractions;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Codify.Storage.Managers
 {
     /// <summary>
     /// Manages chat sessions persistence and lifecycle.
     /// </summary>
+    [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class ChatManager(IStorageService storage, IFileSystem fileSystem, IWorkspaceContext workspaceContext, IConversationGroupManager conversationGroupManager)
     {
         /// <summary>

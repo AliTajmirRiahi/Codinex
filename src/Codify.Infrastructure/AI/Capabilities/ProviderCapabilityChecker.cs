@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Infrastructure.CustomeExceptions;
 using Newtonsoft.Json.Linq;
@@ -19,6 +21,7 @@ namespace Codify.Infrastructure.AI.Capabilities
         public CapabilityProbeResult SupportsToolCalling { get; set; } = CapabilityProbeResult.Unsupported;
     }
 
+    [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
     public sealed class ProviderCapabilityChecker(IOpenAiCompatibleClient client) : IProviderCapabilityChecker
     {
         public async Task CheckAsync(

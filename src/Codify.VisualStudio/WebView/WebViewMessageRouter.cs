@@ -1,24 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.Chat;
-using Codify.Storage;
 using Codify.Storage.Managers;
 using Codify.Storage.Models;
 using Codify.Storage.Models.DTO;
-using Codify.VisualStudio.Hosting.Startup;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.References;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.WebView;
 
 /// <summary>
 /// Routes messages from WebView UI to application use cases.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]
 public sealed class WebViewMessageRouter : IWebViewMessageRouter
 {
     private readonly IWebViewClient _webViewClient;
@@ -26,7 +27,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IExecutionPipeline _pipeline;
     private readonly ProviderManager _providerManager;
     private readonly IPayloadBinder _payloadBinder;
-    private readonly ChatUseCaseFactory _chatUseCaseFactory;
+    private readonly IChatUseCaseFactory _chatUseCaseFactory;
     private readonly ChatSessionService _sessionService;
     private readonly ChatManager _chatManager;
     private readonly IErrorHandler _errorHandler;
@@ -40,7 +41,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
         IPayloadBinder payloadBinder,
-        ChatUseCaseFactory chatUseCaseFactory,
+        IChatUseCaseFactory chatUseCaseFactory,
         ChatSessionService sessionService,
         ChatManager chatManager,
         IErrorHandler errorHandler,

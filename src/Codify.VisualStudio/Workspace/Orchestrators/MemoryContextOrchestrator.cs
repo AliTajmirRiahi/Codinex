@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
@@ -10,6 +12,7 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
     /// <summary>
     /// Provides workspace memory as prompt context.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Features)]
     public sealed class MemoryContextOrchestrator(
         IMemoryContextProvider memoryContextProvider,
         IMemoryContextFormatter memoryFormatter)

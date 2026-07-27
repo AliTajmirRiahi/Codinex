@@ -1,8 +1,10 @@
-﻿using Codify.Core.Interfaces;
-using System;
-using System.Threading.Tasks;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.VisualStudio.Diagnostics.Errors;
 using Microsoft.VisualStudio.Shell;
+using System;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Hosting.Startup
 {
@@ -10,6 +12,7 @@ namespace Codify.VisualStudio.Hosting.Startup
     /// Central execution boundary for async operations.
     /// All unhandled exceptions should pass through this pipeline.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class ExecutionPipeline : IExecutionPipeline
     {
         private readonly IErrorHandler _errorHandler;

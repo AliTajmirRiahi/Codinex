@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using System;
@@ -8,6 +10,7 @@ namespace Codify.VisualStudio.Workspace.Formatters
     /// <summary>
     /// Formats workspace memory into prompt text.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class MemoryFormatter : IMemoryContextFormatter
     {
         public string Format(MemoryContext context)

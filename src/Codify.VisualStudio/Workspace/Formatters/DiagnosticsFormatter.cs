@@ -1,15 +1,18 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 
 namespace Codify.VisualStudio.Workspace.Formatters
 {
     /// <summary>
     /// Formats diagnostics into prompt text.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class DiagnosticsFormatter : IDiagnosticsFormatter
     {
         public string Format(

@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.ModelManagement
 {
+    [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Infrastructure)]
     public class ProviderModelService(
         IModelResourceLoader resourceLoader,
         IEnumerable<IModelRetriever> retrievers)
