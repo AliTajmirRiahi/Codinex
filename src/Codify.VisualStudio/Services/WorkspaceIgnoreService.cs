@@ -1,15 +1,15 @@
+using Codify.VisualStudio.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using Codify.VisualStudio.Interfaces;
 
 namespace Codify.VisualStudio.Services;
 
 /// <summary>
 /// Filters generated and non-source files from workspace operations.
 /// </summary>
-public sealed class WorkspaceIgnoreService : IWorkspaceIgnoreService
+public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceIgnoreService
 {
     private static readonly HashSet<string> IgnoredDirectories =
     [
@@ -52,12 +52,12 @@ public sealed class WorkspaceIgnoreService : IWorkspaceIgnoreService
         if (string.IsNullOrWhiteSpace(filePath))
             return true;
 
-        var fileName = Path.GetFileName(filePath);
+        var fileName = fileSystem.Path.GetFileName(filePath);
 
         if (IgnoredFiles.Contains(fileName))
             return true;
 
-        var extension = Path.GetExtension(fileName);
+        var extension = fileSystem.Path.GetExtension(fileName);
 
         if (IgnoredExtensions.Contains(extension))
             return true;
@@ -69,15 +69,16 @@ public sealed class WorkspaceIgnoreService : IWorkspaceIgnoreService
             return true;
         }
 
-        var directory = new DirectoryInfo(
-            Path.GetDirectoryName(filePath)!);
+        var current = fileSystem.Directory.Exists(filePath)
+            ? fileSystem.DirectoryInfo.New(filePath)
+            : fileSystem.DirectoryInfo.New(fileSystem.Path.GetDirectoryName(filePath)!);
 
-        while (directory != null)
+        while (current != null)
         {
-            if (IgnoredDirectories.Contains(directory.Name))
+            if (IgnoredDirectories.Contains(current.Name))
                 return true;
 
-            directory = directory.Parent;
+            current = current.Parent;
         }
 
         return false;
