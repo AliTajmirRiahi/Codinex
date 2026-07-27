@@ -66,6 +66,8 @@
     <Compile Include="AI\Filters\IntentClassifier.cs" />
     <Compile Include="Conversation\ConversationEngine.cs" />
     <Compile Include="CustomeExceptions\OpenAiCompatibleException.cs" />
+    <Compile Include="DependencyInjection\Attributes\AutoRegisterAttribute.cs" />
+    <Compile Include="DependencyInjection\Attributes\ModuleType.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />
