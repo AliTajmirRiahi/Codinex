@@ -1,4 +1,6 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Tools;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.Conversation
 {
+    [AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
     public sealed class ConversationEngine(
         IChatMessageBuilder chatMessageBuilder,
         IAiProvider provider,

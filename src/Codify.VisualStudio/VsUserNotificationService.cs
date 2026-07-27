@@ -1,25 +1,22 @@
-﻿using System;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Internal;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Threading.Tasks;
 
-namespace Codify.Infrastructure.VisualStudio
+namespace Codify.VisualStudio
 {
     /// <summary>
     /// Displays Visual Studio native message boxes.
     /// This class is intended for startup/bootstrap errors only.
     /// </summary>
-    public sealed class VsUserNotificationService : IUserNotificationService
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]
+    public sealed class VsUserNotificationService(IVisualStudioServices visualStudioServices, IUiThreadDispatcher uiThreadDispatcher) : VsServiceBase(visualStudioServices), IUserNotificationService
     {
-        private readonly AsyncPackage _package;
-
-        /// <summary>
-        /// Creates a Visual Studio user notification service.
-        /// </summary>
-        public VsUserNotificationService(AsyncPackage package)
-        {
-            _package = package ?? throw new ArgumentNullException(nameof(package));
-        }
 
         /// <summary>
         /// Shows a safe error message to the user.
@@ -27,10 +24,15 @@ namespace Codify.Infrastructure.VisualStudio
         /// </summary>
         public void ShowError(string message)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            _ = ShowErrorAsync(message);
+        }
+
+        public async Task ShowErrorAsync(string message)
+        {
+            await uiThreadDispatcher.SwitchToMainThreadAsync();
 
             VsShellUtilities.ShowMessageBox(
-                _package,
+                VisualStudio.Provider as IServiceProvider ?? throw new InvalidOperationException("VisualStudio => Provider is null"),
                 message,
                 "Codify AI",
                 OLEMSGICON.OLEMSGICON_CRITICAL,

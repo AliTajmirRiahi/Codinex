@@ -1,4 +1,7 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.VisualStudio.Extensions;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Models;
 using Codify.VisualStudio.Models.Tools.ListDirectory;
@@ -10,10 +13,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Extensions;
 
 namespace Codify.VisualStudio.Services;
 
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class WorkspaceFileService(IFileSystem fileSystem,
     IWorkspaceContext workspaceContext,
     IWorkspaceIgnoreService workspaceIgnoreService) : IWorkspaceFileService

@@ -1,16 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Codify.Core.Conversation;
+﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.VisualStudio.Interfaces;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Build;
 
 /// <summary>
 /// Builds the current Visual Studio solution.
 /// </summary>
+[AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class BuildSolutionTool(
     IBuildService buildService)
     : IAiTool

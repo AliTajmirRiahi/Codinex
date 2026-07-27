@@ -1,16 +1,17 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Internal;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Internal;
-using Codify.VisualStudio.Interfaces;
-using EnvDTE;
 
 namespace Codify.VisualStudio.Workspace.Providers;
 #pragma warning disable VSTHRD010
@@ -18,6 +19,7 @@ namespace Codify.VisualStudio.Workspace.Providers;
 /// <summary>
 /// Provides information about the current solution and its projects.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
 public sealed class ProjectContextProvider(
     IVisualStudioServices visualStudio,
     IWorkspaceContext workspaceContext,

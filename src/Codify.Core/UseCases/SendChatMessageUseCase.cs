@@ -1,5 +1,7 @@
 ﻿using Codify.Core.Chat;
 using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
@@ -14,6 +16,7 @@ namespace Codify.Core.UseCases;
 /// Orchestrates the flow of sending a message to AI. 
 /// Located in Core because it represents the "Business Logic" of the extension.
 /// </summary>
+[AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
 public sealed class SendChatMessageUseCase(
     IAiProvider aiProvider,
     IChatSession chatSession,

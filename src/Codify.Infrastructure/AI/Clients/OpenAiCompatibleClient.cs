@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Infrastructure.CustomeExceptions;
 using System;
@@ -14,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.AI.Clients
 {
+    [AutoDiRegister(Modules.AI, RegistrationOrder.Features)]
     public class OpenAiCompatibleClient(
         IHttpClientFactory httpClientFactory,
         IJsonSerializer jsonSerializer)

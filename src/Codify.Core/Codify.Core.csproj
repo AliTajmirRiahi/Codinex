@@ -53,6 +53,14 @@
     <Compile Include="Conversation\IConversationEngine.cs" />
     <Compile Include="Conversation\ToolRequest.cs" />
     <Compile Include="Conversation\ToolResult.cs" />
+    <Compile Include="DependencyInjection\Attributes\AutoRegisterAttribute.cs" />
+    <Compile Include="DependencyInjection\Models\ModuleType.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationItem.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationOrder.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationReport.cs" />
+    <Compile Include="DependencyInjection\Models\ServiceLifetimeWrapper.cs" />
+    <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
+    <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
     <Compile Include="Interfaces\IBuildContextProvider.cs" />
     <Compile Include="Interfaces\IDiagnosticsFormatter.cs" />
@@ -141,6 +149,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>9.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

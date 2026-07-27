@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Newtonsoft.Json;
 using System;
@@ -10,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.ModelManagement
 {
+    [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Foundation)]
     public class ResourceModelLoader : IModelResourceLoader
     {
         public async Task<List<AiModel>> LoadAsync(

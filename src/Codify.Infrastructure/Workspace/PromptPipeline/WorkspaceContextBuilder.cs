@@ -1,14 +1,17 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Models;
+using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
 
 namespace Codify.Infrastructure.Workspace.PromptPipeline
 {
     /// <summary>
     /// Coordinates all workspace context providers and builds the final prompt context.
     /// </summary>
+    [AutoDiRegister(Modules.Prompt, RegistrationOrder.Infrastructure)]
     public sealed class WorkspaceContextBuilder(
         IEnumerable<IWorkspaceContextOrchestrator> providers,
         IPromptContextComposer composer)

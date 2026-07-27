@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using System;
@@ -9,6 +11,7 @@ namespace Codify.VisualStudio.Workspace.Formatters;
 /// <summary>
 /// Formats project context into a prompt-friendly markdown document.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Features)]
 public sealed class ProjectContextFormatter : IProjectContextFormatter
 {
     public string Format(ProjectContext context)

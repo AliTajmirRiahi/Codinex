@@ -117,6 +117,65 @@
                                                                ]
                                               },
                                               {
+                                                  "path":  "src/Codify.Core/DependencyInjection",
+                                                  "name":  "DependencyInjection",
+                                                  "type":  "folder",
+                                                  "children":  [
+                                                                   {
+                                                                       "path":  "src/Codify.Core/DependencyInjection/Attributes",
+                                                                       "name":  "Attributes",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Core/DependencyInjection/Attributes/AutoRegisterAttribute.cs",
+                                                                                        "name":  "AutoRegisterAttribute.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/DependencyInjection/Models",
+                                                                       "name":  "Models",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/DependencyInjection/Models/ModuleType.cs",
+                                                                                            "name":  "ModuleType.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/DependencyInjection/Models/RegistrationItem.cs",
+                                                                                            "name":  "RegistrationItem.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/DependencyInjection/Models/RegistrationOrder.cs",
+                                                                                            "name":  "RegistrationOrder.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/DependencyInjection/Models/RegistrationReport.cs",
+                                                                                            "name":  "RegistrationReport.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/DependencyInjection/Models/ServiceLifetimeWrapper.cs",
+                                                                                            "name":  "ServiceLifetimeWrapper.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/DependencyInjection/RegistrationReportFormatter.cs",
+                                                                       "name":  "RegistrationReportFormatter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/DependencyInjection/ServiceRegistrar.cs",
+                                                                       "name":  "ServiceRegistrar.cs",
+                                                                       "type":  "file"
+                                                                   }
+                                                               ]
+                                              },
+                                              {
                                                   "path":  "src/Codify.Core/Interfaces",
                                                   "name":  "Interfaces",
                                                   "type":  "folder",

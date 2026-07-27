@@ -1,16 +1,17 @@
-﻿using Codify.Core.Interfaces;
-using EnvDTE;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace Codify.VisualStudio.Services
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class VsWorkspaceContext : IWorkspaceContext
     {
         private const string DefaultSolutionName = "DefaultSolution";

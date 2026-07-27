@@ -8,6 +8,6 @@ namespace Codify.Core.Interfaces
 {
     public interface IStartupTask
     {
-        void Start();
+        Task StartAsync();
     }
 }

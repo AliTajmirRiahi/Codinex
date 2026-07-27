@@ -1,12 +1,15 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
+using Codify.VisualStudio.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Interfaces;
 
 namespace Codify.VisualStudio.References.Providers
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public class SystemReferenceProvider(IVsOutputWindowService outputWindowService) : IReferenceProvider
     {
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()

@@ -1,8 +1,11 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.Storage;
+using Codify.Storage.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,7 +16,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Storage.Managers;
 
 namespace Codify.Infrastructure.AI.Providers
 {
@@ -30,6 +32,7 @@ namespace Codify.Infrastructure.AI.Providers
     }
     /// <summary>
     /// </summary>
+    [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
     public class OpenAiCompatibleProvider(IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,

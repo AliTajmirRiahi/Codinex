@@ -1,14 +1,16 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Internal;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
-using Microsoft.CodeAnalysis;
 using DiagnosticSeverity = Codify.Core.Models.DiagnosticSeverity;
 using MicrosoftDiagnosticSeverity = Microsoft.CodeAnalysis.DiagnosticSeverity;
 
@@ -21,6 +23,7 @@ namespace Codify.VisualStudio.Workspace.Providers
     // Covered by integration tests because this class depends on
     // VisualStudioWorkspace and Roslyn services that cannot be
     // faithfully unit tested outside Visual Studio.
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class DiagnosticsProvider(
         IVisualStudioServices visualStudio,
         IActiveDocumentProvider activeDocumentProvider)

@@ -1,14 +1,17 @@
-﻿using Codify.Core.Models;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Models;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.References.Providers.Base;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers.Base;
-using Microsoft.CodeAnalysis;
 
 namespace Codify.VisualStudio.References.Providers
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class FolderReferenceProvider(IVisualStudioServices visualStudio)
         : WorkspaceReferenceProviderBase(visualStudio)
     {

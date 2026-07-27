@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.References.Providers.Base;
@@ -15,6 +17,7 @@ using Project = Microsoft.CodeAnalysis.Project;
 
 namespace Codify.VisualStudio.References.Providers
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class MethodReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
         : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)
     {

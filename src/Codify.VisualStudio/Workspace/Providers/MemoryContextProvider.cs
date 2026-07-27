@@ -1,16 +1,16 @@
-using System.Linq;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
 using Codify.Storage.Interfaces;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Codify.VisualStudio.Workspace.Providers;
 
 /// <summary>
 /// Provides long-term workspace memory.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
 public sealed class MemoryContextProvider(IMemoryManager memoryManager) : IMemoryContextProvider
 {
     public MemoryContext GetContext()

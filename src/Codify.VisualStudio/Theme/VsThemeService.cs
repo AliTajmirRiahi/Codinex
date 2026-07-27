@@ -1,14 +1,17 @@
-﻿using System;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Text;
-using Codify.Core.Interfaces;
-using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Shell;
 
 namespace Codify.VisualStudio.Theme
 {
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public class VsThemeService : IThemeService, IDisposable
     {
         public event EventHandler ThemeChanged;

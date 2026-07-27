@@ -1,10 +1,12 @@
-using System;
-using System.Threading.Tasks;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.Threading.Tasks;
 
 #pragma warning disable VSTHRD010
 
@@ -13,6 +15,7 @@ namespace Codify.VisualStudio.Events.Build
     /// <summary>
     /// Bridges Visual Studio build events to the application event model.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]
     public sealed class BuildEventsListener(
         IVisualStudioServices visualStudio,
         IUiThreadDispatcher uiThreadDispatcher)

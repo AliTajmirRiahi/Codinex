@@ -2,13 +2,13 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 
 namespace Codify.Infrastructure.Serialization
 {
+
+    [AutoDiRegister(Modules.JSON, RegistrationOrder.Foundation)]
     public sealed class NewtonsoftPayloadBinder(JsonSerializer serializer) : IPayloadBinder
     {
         public T Bind<T>(JObject payload)

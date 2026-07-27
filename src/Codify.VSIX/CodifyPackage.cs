@@ -259,7 +259,7 @@ namespace Codify.VSIX
 
             foreach (var startupTask in CodifyServiceContainer.Instance.GetServices<IStartupTask>())
             {
-                startupTask.Start();
+                await startupTask.StartAsync();
             }
 
             var buildListener = CodifyServiceContainer.Get<BuildEventsListener>();

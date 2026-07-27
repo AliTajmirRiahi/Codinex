@@ -1,13 +1,16 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codify.Core.Tools;
 
 namespace Codify.VisualStudio.Tools;
 
 /// <summary>
 /// Default AI tool registry.
 /// </summary>
+[AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class AiToolRegistry : IAiToolRegistry
 {
     private readonly IReadOnlyDictionary<string, IAiTool> _tools;

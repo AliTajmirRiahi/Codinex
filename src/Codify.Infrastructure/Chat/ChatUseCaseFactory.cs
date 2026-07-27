@@ -1,12 +1,13 @@
 ﻿using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Tools;
 using Codify.Core.UseCases;
-using Codify.Infrastructure.AI.Providers;
-using Codify.Storage;
-using System;
 using Codify.Core.Workspace.Prompt;
+using Codify.Infrastructure.AI.Providers;
 using Codify.Storage.Managers;
+using System;
 
 namespace Codify.Infrastructure.Chat
 {
@@ -19,6 +20,7 @@ namespace Codify.Infrastructure.Chat
     /// providers, such as GapGpt and ChatGpt, and will throw a NotSupportedException if an unsupported provider is
     /// selected. This class is intended to centralize the creation logic for chat message use cases, ensuring that all
     /// necessary dependencies are present and correctly configured.</remarks>
+    [AutoDiRegister(Modules.Chat, RegistrationOrder.Infrastructure)]
     public class ChatUseCaseFactory(
         ProviderManager providerManager,
         ChatSessionService sessionService,

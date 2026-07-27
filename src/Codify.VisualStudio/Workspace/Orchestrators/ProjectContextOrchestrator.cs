@@ -1,15 +1,18 @@
-using System.Threading;
-using System.Threading.Tasks;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.Workspace.PromptPipeline;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Workspace.Orchestrators
 {
     /// <summary>
     /// Provides project information as workspace context.
     /// </summary>
+    [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Features)]
     public sealed class ProjectContextOrchestrator(
         IProjectContextProvider projectContextProvider,
         IProjectContextFormatter projectContextFormatter)

@@ -1,4 +1,6 @@
-﻿using Codify.Core.Interfaces;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using Codify.VisualStudio.Extensions;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Models;
@@ -11,6 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace Codify.VisualStudio.Services
 {
+    [AutoDiRegister(Modules.Workspace, RegistrationOrder.Foundation)]
     public sealed class WorkspaceSearchService(
         IWorkspaceContext workspaceContext,
         IWorkspaceFileService workspaceFileService,

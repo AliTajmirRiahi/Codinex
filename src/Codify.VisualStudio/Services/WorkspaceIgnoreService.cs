@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 
 namespace Codify.VisualStudio.Services;
 
 /// <summary>
 /// Filters generated and non-source files from workspace operations.
 /// </summary>
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceIgnoreService
 {
     private static readonly HashSet<string> IgnoredDirectories =

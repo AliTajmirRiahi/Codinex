@@ -4,32 +4,18 @@ using Codify.Core.Chat;
 using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
 using Codify.Core.UseCases;
-using Codify.Core.Workspace.Prompt;
 using Codify.Infrastructure.AI.Capabilities;
-using Codify.Infrastructure.AI.Clients;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
 using Codify.Infrastructure.Conversation;
 using Codify.Infrastructure.ModelManagement;
 using Codify.Infrastructure.ModelManagement.Retrievers;
-using Codify.Infrastructure.Serialization;
-using Codify.Infrastructure.VisualStudio;
-using Codify.Infrastructure.WebView;
-using Codify.Infrastructure.Workspace.PromptPipeline;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Managers;
-using Codify.Storage.Services;
 using Codify.VisualStudio;
-using Codify.VisualStudio.Diagnostics.Errors;
 using Codify.VisualStudio.Events.Build;
-using Codify.VisualStudio.Hosting.Startup;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
 using Codify.VisualStudio.Logging;
 using Codify.VisualStudio.References;
-using Codify.VisualStudio.References.Providers;
-using Codify.VisualStudio.Services;
-using Codify.VisualStudio.Theme;
 using Codify.VisualStudio.WebView;
 using Codify.VisualStudio.Workspace.Providers;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +24,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
 using System.IO.Abstractions;
-using Codify.VisualStudio.Tools.BuiltIn.Files;
+using Codify.Core.DependencyInjection;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -72,110 +58,22 @@ namespace Codify.VSIX.Bootstrap
 
             services.AddSingleton<IFileSystem, FileSystem>();
 
-            // Core Services (Singletons)
-            services.AddSingleton<IUiThreadDispatcher, VsThreadDispatcher>();
-            services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(
-                typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
-                "Codify.UI.ToolWindows.Resources"));
+            services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly, "Codify.UI.ToolWindows.Resources"));
             services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package, sp.GetRequiredService<IUiThreadDispatcher>()));
-            services.AddSingleton<IWorkspaceIgnoreService, WorkspaceIgnoreService>();
-            services.AddSingleton<IJsonSerializer, JsonSerializationService>();
-            services.AddSingleton<IStorageService, FileStorageService>();
-            services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
-            services.AddSingleton<IThemeService, VsThemeService>();
-            services.AddSingleton<IWorkspaceContext, VsWorkspaceContext>();
-            services.AddSingleton<IExecutionPipeline, ExecutionPipeline>();
-            services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
-            services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
-            services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
-            services.AddSingleton<IWorkspaceSearchService, WorkspaceSearchService>();
-            services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
-            services.AddSingleton<IWorkspaceInitializer, WorkspaceInitializer>();
-            services.AddSingleton<IBuildService, BuildService>();
-
-
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
-            services.AddSingleton<IUserNotificationService>(
-                _ => new VsUserNotificationService(package));
-            services.AddSingleton<IErrorHandler, ErrorHandler>();
 
+            var report = ServiceRegistrar.Register(services, typeof(CodifyServiceContainer).Assembly);
 
-            // Storage & Configuration Managers
-            services.AddSingleton<SettingsManager>();
-            services.AddSingleton<ProviderManager>();
-            services.AddSingleton<ChatManager>();
-            services.AddSingleton<IConversationGroupManager, ConversationGroupManager>();
-            services.AddSingleton<IMemoryManager, MemoryManager>();
+            var text = RegistrationReportFormatter.Format(report);
 
-            services.AddSingleton<FileReferenceProvider>();
-            services.AddSingleton<IReferenceProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
-            services.AddSingleton<IActiveDocumentProvider>(sp => sp.GetRequiredService<FileReferenceProvider>());
-            services.AddSingleton<IReferenceProvider, SystemReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, SolutionReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, MethodReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, ClassReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, InterfaceReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, FieldReferenceProvider>();
-            services.AddSingleton<IReferenceProvider, FolderReferenceProvider>();
-
-            services.AddSingleton<IWorkspaceContextBuilder, WorkspaceContextBuilder>();
-            services.AddSingleton<IPromptContextComposer, PromptContextComposer>();
-
-            //services.AddSingleton<IMemoryContextProvider, MemoryContextProvider>();
-            //services.AddSingleton<IMemoryContextFormatter, MemoryContextFormatter>();
-
-            services
-                .AddAiTools(typeof(ReadFileTool).Assembly)
-                .AddWorkspaceServices(typeof(DiagnosticsProvider).Assembly);
-
-            services.AddSingleton<BuildEventsListener>();
-            services.AddSingleton<IBuildEvents>(sp =>
-                sp.GetRequiredService<BuildEventsListener>());
-
-            // Reference Context Services
-            services.AddSingleton<IReferenceContextFormatter, ReferenceContextFormatter>();
-            services.AddSingleton<IChatMessageBuilder, ChatMessageBuilder>();
-
-            // Register Manager
-            services.AddSingleton(sp => new VsActiveDocumentWatcher(package));
-            services.AddSingleton<IActiveDocumentWatcher>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
-            services.AddSingleton<IStartupTask>(sp => sp.GetRequiredService<VsActiveDocumentWatcher>());
-            services.AddSingleton<ReferenceManager>();
-
-            // Chat Logic
-            services.AddSingleton<ChatSessionService>();
-            services.AddSingleton<ChatUseCaseFactory>();
-
-            // AI Providers (The Plugin System)
-            // Register all available providers here
-            services.AddSingleton<IAiProvider, OpenAiCompatibleProvider>();
-
-            // Note: To add a local AI (e.g. Ollama), just create the class 
-            // and add: services.AddSingleton<IAiProvider, OllamaProvider>();
-
-            // Use Cases (Business Logic)
-            services.AddTransient<IConversationEngine, ConversationEngine>();
-            services.AddTransient<ISendChatMessageUseCase, SendChatMessageUseCase>();
-
-            // WebView Infrastructure
-            services.AddSingleton<IWebViewClient, WebViewClient>();
-            services.AddSingleton<IWebViewMessageRouter, WebViewMessageRouter>();
-
-            services.AddSingleton<IProviderModelService, ProviderModelService>();
-            services.AddSingleton<IModelRetriever, OpenAiCompatibleModelRetriever>();
-
-
-            services.AddSingleton<IProviderCapabilityChecker, ProviderCapabilityChecker>();
+            System.Diagnostics.Debug.WriteLine(text);
 
             Instance = services.BuildServiceProvider();
         }
 
         public static T Get<T>() where T : notnull
         {
-            if (Instance == null)
-                throw new InvalidOperationException("Codify service container has not been initialized.");
-
-            return Instance.GetRequiredService<T>();
+            return Instance == null ? throw new InvalidOperationException("Codify service container has not been initialized.") : Instance.GetRequiredService<T>();
         }
     }
 }

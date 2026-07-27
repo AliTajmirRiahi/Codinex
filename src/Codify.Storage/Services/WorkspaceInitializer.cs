@@ -1,9 +1,12 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
 
 namespace Codify.Storage.Services;
 
+[AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class WorkspaceInitializer(
     IFileSystem fileSystem,
     IWorkspaceContext workspaceContext)

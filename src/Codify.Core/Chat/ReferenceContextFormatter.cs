@@ -1,9 +1,12 @@
-﻿using Codify.Core.Models;
-using System.Text;
+﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
+using Codify.Core.Models;
+using System.Text;
 
 namespace Codify.Core.Chat
 {
+    [AutoDiRegister(Modules.Chat, RegistrationOrder.Platform)]
     public sealed class ReferenceContextFormatter : IReferenceContextFormatter
     {
         public string Format(ReferenceItem reference)
