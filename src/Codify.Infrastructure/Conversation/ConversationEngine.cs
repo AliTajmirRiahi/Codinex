@@ -20,8 +20,6 @@ namespace Codify.Infrastructure.Conversation
             ChatMessageBuildResult request,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            Debug.WriteLine("ExecuteAsync Start");
-
             yield return ConversationEvent.Status("Sending request...");
 
             await foreach (var evt in ProcessEvents(
@@ -31,12 +29,8 @@ namespace Codify.Infrastructure.Conversation
                                    cancellationToken),
                                cancellationToken))
             {
-                Debug.WriteLine("Yield " + evt.Type);
-
                 yield return evt;
             }
-
-            Debug.WriteLine("ExecuteAsync End");
         }
 
         /// <summary>
@@ -49,35 +43,38 @@ namespace Codify.Infrastructure.Conversation
         {
             await foreach (var evt in events.WithCancellation(cancellationToken))
             {
-                Debug.WriteLine(evt.Type);
-
                 switch (evt.Type)
                 {
                     case ConversationEventType.ToolRequested:
 
                         var payload = evt.Payload.ToObject<ToolRequestedPayload>();
 
-                        var toolRequest = payload.Request;
-
                         var assistantMessage = payload.AssistantMessage;
 
-                        var tool = toolRegistry.Get(toolRequest.Name);
+                        var results = new List<ToolResult>();
 
-                        yield return ConversationEvent.Status(
-                            $"Executing tool '{tool.Name}'...");
+                        foreach (var toolRequest in payload.Requests)
+                        {
+                            var tool = toolRegistry.Get(toolRequest.Name);
 
-                        var result = await tool.ExecuteAsync(
-                            toolRequest,
-                            cancellationToken);
+                            yield return ConversationEvent.Status(
+                                $"Executing tool '{tool.Name}'...");
 
-                        yield return ConversationEvent.ToolCompleted(result);
+                            var result = await tool.ExecuteAsync(
+                                toolRequest,
+                                cancellationToken);
+
+                            results.Add(result);
+
+                            yield return ConversationEvent.ToolCompleted(result);
+                        }
 
                         await foreach (var continuationEvent in ProcessEvents(
                                            messages,
                                            provider.ContinueAsync(
                                                messages,
                                                assistantMessage,
-                                               [result],
+                                               results,
                                                cancellationToken),
                                            cancellationToken))
                         {
@@ -86,6 +83,16 @@ namespace Codify.Infrastructure.Conversation
 
                         break;
 
+                    case ConversationEventType.Unknown:
+                    case ConversationEventType.TextDelta:
+                    case ConversationEventType.ThinkingStarted:
+                    case ConversationEventType.ThinkingUpdated:
+                    case ConversationEventType.ThinkingCompleted:
+                    case ConversationEventType.ToolCompleted:
+                    case ConversationEventType.ConversationCompleted:
+                    case ConversationEventType.ConversationCancelled:
+                    case ConversationEventType.ConversationFailed:
+                    case ConversationEventType.StatusChanged:
                     default:
 
                         yield return evt;

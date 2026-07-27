@@ -66,7 +66,6 @@
     <Compile Include="AI\Filters\IntentClassifier.cs" />
     <Compile Include="Conversation\ConversationEngine.cs" />
     <Compile Include="CustomeExceptions\OpenAiCompatibleException.cs" />
-    <Compile Include="IO\FileSystem.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />
@@ -94,6 +93,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Images\capability-test.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="IO\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

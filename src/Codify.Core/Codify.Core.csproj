@@ -67,7 +67,6 @@
     <Compile Include="Interfaces\IProjectContextProvider.cs" />
     <Compile Include="Interfaces\IChatMessageBuilder.cs" />
     <Compile Include="Interfaces\IExecutionPipeline.cs" />
-    <Compile Include="Interfaces\IFileSystem.cs" />
     <Compile Include="Interfaces\IModelResourceLoader.cs" />
     <Compile Include="Interfaces\IModelRetriever.cs" />
     <Compile Include="Interfaces\IOpenAiCompatibleClient.cs" />

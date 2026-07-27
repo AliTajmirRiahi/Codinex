@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
 
@@ -34,9 +35,9 @@ public sealed class WorkspaceInitializer(
     /// </summary>
     private void EnsureDirectory(string path)
     {
-        if (!fileSystem.DirectoryExists(path))
+        if (!fileSystem.Directory.Exists(path))
         {
-            fileSystem.CreateDirectory(path);
+            fileSystem.Directory.CreateDirectory(path);
         }
     }
 
@@ -56,8 +57,8 @@ public sealed class WorkspaceInitializer(
 
     public void EnsureFile(string path, string defaultContent)
     {
-        if (!fileSystem.FileExists(path))
-            fileSystem.WriteAllText(path, defaultContent);
+        if (!fileSystem.File.Exists(path))
+            fileSystem.File.WriteAllText(path, defaultContent);
     }
 
 }

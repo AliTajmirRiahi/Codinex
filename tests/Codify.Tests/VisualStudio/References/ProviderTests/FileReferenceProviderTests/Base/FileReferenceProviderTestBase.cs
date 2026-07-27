@@ -65,7 +65,7 @@ public abstract class FileReferenceProviderTestBase
         Dte.ActiveDocument.Returns(document);
 
         WorkspaceFileService.Exists(filePath).Returns(true);
-        WorkspaceFileService.ReadFile(filePath).Returns(content);
+        WorkspaceFileService.Read(filePath).Returns(content);
     }
 
     protected void SetSolution(params Project[] projects)

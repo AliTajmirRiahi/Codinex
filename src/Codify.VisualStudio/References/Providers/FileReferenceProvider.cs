@@ -165,7 +165,7 @@ namespace Codify.VisualStudio.References.Providers
                 try
                 {
                     /* Read file content safely for metadata context */
-                    content = _workspaceFileService.ReadFile(filePath);
+                    content = _workspaceFileService.Read(filePath);
                 }
                 catch
                 {
@@ -215,7 +215,7 @@ namespace Codify.VisualStudio.References.Providers
                     try
                     {
                         /* Read file content safely for metadata context */
-                        content = _workspaceFileService.ReadFile(filePath);
+                        content = _workspaceFileService.Read(filePath);
                     }
                     catch
                     {
