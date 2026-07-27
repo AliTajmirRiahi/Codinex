@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Codify.Core.Models;
 using Newtonsoft.Json.Linq;
 
@@ -93,7 +94,7 @@ public sealed class ConversationEvent
     }
 
     public static ConversationEvent ToolRequested(
-        ToolRequest request,
+        IReadOnlyList<ToolRequest> requests,
         ChatMessage assistantMessage,
         long sequence = 0)
     {
@@ -101,7 +102,7 @@ public sealed class ConversationEvent
             ConversationEventType.ToolRequested,
             JToken.FromObject(new ToolRequestedPayload
             {
-                Request = request,
+                Requests = requests,
                 AssistantMessage = assistantMessage
             }),
             sequence: sequence);

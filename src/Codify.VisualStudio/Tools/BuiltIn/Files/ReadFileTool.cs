@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Codify.Core.Conversation;
+﻿using Codify.Core.Conversation;
 using Codify.Core.Models;
 using Codify.Core.Tools;
 using Codify.VisualStudio.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Files;
 
 /// <summary>
 /// ReadFileTool
 /// </summary>
-public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWorkspaceFileLocator workspaceFileLocator) : IAiTool
+public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWorkspaceSearchService workspaceSearchService) : IAiTool
 {
     public string Name => "read_file";
 
@@ -40,7 +40,7 @@ public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWo
 
         var query = request.GetRequiredString("path");
 
-        var files = workspaceFileLocator.Find(query);
+        var files = workspaceSearchService.FindFiles(query);
 
         switch (files.Count)
         {
@@ -63,7 +63,7 @@ public sealed class ReadFileTool(IWorkspaceFileService workspaceFileService, IWo
 
         var file = files[0];
 
-        var content = workspaceFileService.ReadFile(file.FullPath);
+        var content = await workspaceFileService.ReadAsync(file.FullPath, cancellationToken);
 
         return ToolResult.Successful(
             request.Id,

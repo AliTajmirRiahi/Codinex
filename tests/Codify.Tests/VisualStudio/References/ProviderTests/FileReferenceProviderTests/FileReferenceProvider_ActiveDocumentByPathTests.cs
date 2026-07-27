@@ -26,7 +26,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
                 $"{Guid.NewGuid()}.cs");
 
             WorkspaceFileService.Exists(filePath).Returns(true);
-            WorkspaceFileService.ReadFile(filePath).Returns("class Test {}");
+            WorkspaceFileService.Read(filePath).Returns("class Test {}");
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -57,7 +57,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
                 $"{Guid.NewGuid()}.unknown");
 
             WorkspaceFileService.Exists(filePath).Returns(true);
-            WorkspaceFileService.ReadFile(filePath).Returns("test");
+            WorkspaceFileService.Read(filePath).Returns("test");
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -96,7 +96,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             WorkspaceFileService.Exists(filePath).Returns(true);
 
             WorkspaceFileService
-                .When(x => x.ReadFile(filePath))
+                .When(x => x.Read(filePath))
                 .Do(_ => throw new IOException("Unable to read file."));
 
             // Act
@@ -107,7 +107,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             result.Metadata.Content.Should().BeEmpty();
 
             WorkspaceFileService.Received(1).Exists(filePath);
-            WorkspaceFileService.Received(1).ReadFile(filePath);
+            WorkspaceFileService.Received(1).Read(filePath);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             const string expectedContent = "public class Test { }";
 
             WorkspaceFileService.Exists(filePath).Returns(true);
-            WorkspaceFileService.ReadFile(filePath).Returns(expectedContent);
+            WorkspaceFileService.Read(filePath).Returns(expectedContent);
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -130,7 +130,7 @@ namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProvid
             result.Metadata.Content.Should().Be(expectedContent);
 
             WorkspaceFileService.Received(1).Exists(filePath);
-            WorkspaceFileService.Received(1).ReadFile(filePath);
+            WorkspaceFileService.Received(1).Read(filePath);
         }
     }
 }

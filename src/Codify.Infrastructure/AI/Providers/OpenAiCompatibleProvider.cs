@@ -17,6 +17,17 @@ using Codify.Storage.Managers;
 
 namespace Codify.Infrastructure.AI.Providers
 {
+    public sealed class ToolCallBuilder
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public int Index { get; set; }
+
+        public StringBuilder Arguments { get; } = new();
+
+    }
     /// <summary>
     /// </summary>
     public class OpenAiCompatibleProvider(IJsonSerializer jsonSerializer,
@@ -123,8 +134,7 @@ namespace Codify.Infrastructure.AI.Providers
 
             var tt = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
 
-            string toolCallId = null;
-            string toolName = null;
+            Dictionary<int, ToolCallBuilder> toolCalls = [];
             var toolArguments = new StringBuilder();
 
             await foreach (var json in client.StreamPostAsync(
@@ -135,31 +145,38 @@ namespace Codify.Infrastructure.AI.Providers
             {
                 if (json == "[DONE]")
                 {
-                    if (!string.IsNullOrWhiteSpace(toolName))
+                    if (toolCalls.Count > 0)
                     {
-                        var arguments = ParseArguments(toolArguments.ToString());
+                        var requests = new List<ToolRequest>();
+                        var assistantToolCalls = new List<ToolCall>();
+
+                        foreach (var builder in toolCalls.Values.OrderBy(x => x.Index))
+                        {
+                            var arguments = ParseArguments(builder.Arguments.ToString());
+
+                            assistantToolCalls.Add(new ToolCall
+                            {
+                                Id = builder.Id,
+                                Name = builder.Name,
+                                Arguments = arguments
+                            });
+
+                            requests.Add(new ToolRequest
+                            {
+                                Id = builder.Id,
+                                Name = builder.Name,
+                                Arguments = arguments
+                            });
+                        }
 
                         var assistantMessage = new ChatMessage
                         {
                             Role = "assistant",
-                            ToolCalls =
-                            [
-                                new ToolCall
-                                {
-                                    Id = toolCallId,
-                                    Name = toolName,
-                                    Arguments = arguments
-                                }
-                            ]
+                            ToolCalls = assistantToolCalls
                         };
 
                         yield return ConversationEvent.ToolRequested(
-                            new ToolRequest
-                            {
-                                Id = toolCallId,
-                                Name = toolName,
-                                Arguments = arguments
-                            },
+                            requests,
                             assistantMessage);
                     }
                     else
@@ -186,23 +203,32 @@ namespace Codify.Infrastructure.AI.Providers
                     continue;
                 }
 
-                var toolCall = delta["tool_calls"]?[0];
-
-                if (toolCall != null)
+                if (delta["tool_calls"] is JArray toolCallsArray)
                 {
-                    toolCallId ??= toolCall["id"]?.ToString();
-
-                    var function = toolCall["function"];
-
-                    if (function != null)
+                    foreach (var toolCall in toolCallsArray)
                     {
-                        toolName ??= function["name"]?.ToString();
+                        var index = toolCall.Value<int>("index");
+
+                        if (!toolCalls.TryGetValue(index, out var builder))
+                        {
+                            builder = new ToolCallBuilder() { Index = index };
+
+                            toolCalls[index] = builder;
+                        }
+
+                        builder.Id ??= toolCall["id"]?.ToString();
+
+                        var function = toolCall["function"];
+
+                        if (function == null) continue;
+
+                        builder.Name ??= function["name"]?.ToString();
 
                         var arguments = function["arguments"]?.ToString();
 
-                        if (!string.IsNullOrWhiteSpace(arguments))
+                        if (!string.IsNullOrEmpty(arguments))
                         {
-                            toolArguments.Append(arguments);
+                            builder.Arguments.Append(arguments);
                         }
                     }
 

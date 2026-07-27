@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
@@ -14,7 +15,7 @@ namespace Codify.Storage.Managers
     /// <summary>
     /// Manages chat sessions persistence and lifecycle.
     /// </summary>
-    public class ChatManager(IStorageService storage,IFileSystem fileSystem, IWorkspaceContext workspaceContext, IConversationGroupManager conversationGroupManager)
+    public class ChatManager(IStorageService storage, IFileSystem fileSystem, IWorkspaceContext workspaceContext, IConversationGroupManager conversationGroupManager)
     {
         /// <summary>
         /// Creates a new chat session
@@ -86,10 +87,10 @@ namespace Codify.Storage.Managers
         /// </summary>
         public async Task<List<ChatSessionDocument>> GetAllChatsAsync()
         {
-            if (!fileSystem.Exists(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId())))
+            if (!fileSystem.Directory.Exists(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId())))
                 return [];
 
-            var files = fileSystem.GetFiles(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId()), "chat-*.json");
+            var files = fileSystem.Directory.GetFiles(StoragePaths.GetGroupPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId()), "chat-*.json");
 
             var chats = new List<ChatSessionDocument>();
 

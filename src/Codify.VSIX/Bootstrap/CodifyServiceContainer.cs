@@ -10,14 +10,12 @@ using Codify.Infrastructure.AI.Clients;
 using Codify.Infrastructure.AI.Providers;
 using Codify.Infrastructure.Chat;
 using Codify.Infrastructure.Conversation;
-using Codify.Infrastructure.IO;
 using Codify.Infrastructure.ModelManagement;
 using Codify.Infrastructure.ModelManagement.Retrievers;
 using Codify.Infrastructure.Serialization;
 using Codify.Infrastructure.VisualStudio;
 using Codify.Infrastructure.WebView;
 using Codify.Infrastructure.Workspace.PromptPipeline;
-using Codify.Storage;
 using Codify.Storage.Interfaces;
 using Codify.Storage.Managers;
 using Codify.Storage.Services;
@@ -32,15 +30,15 @@ using Codify.VisualStudio.References;
 using Codify.VisualStudio.References.Providers;
 using Codify.VisualStudio.Services;
 using Codify.VisualStudio.Theme;
-using Codify.VisualStudio.Tools.BuiltIn;
 using Codify.VisualStudio.WebView;
-using Codify.VisualStudio.Workspace.Formatters;
 using Codify.VisualStudio.Workspace.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
+using System.IO.Abstractions;
+using Codify.VisualStudio.Tools.BuiltIn.Files;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -80,7 +78,7 @@ namespace Codify.VSIX.Bootstrap
                 typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly,
                 "Codify.UI.ToolWindows.Resources"));
             services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package, sp.GetRequiredService<IUiThreadDispatcher>()));
-            //services.AddSingleton<IIntentClassifier, IntentClassifier>();
+            services.AddSingleton<IWorkspaceIgnoreService, WorkspaceIgnoreService>();
             services.AddSingleton<IJsonSerializer, JsonSerializationService>();
             services.AddSingleton<IStorageService, FileStorageService>();
             services.AddSingleton<IPayloadBinder, NewtonsoftPayloadBinder>();
@@ -90,10 +88,10 @@ namespace Codify.VSIX.Bootstrap
             services.AddSingleton<IVsOutputWindowService, VsOutputWindowService>();
             services.AddSingleton<IModelResourceLoader, ResourceModelLoader>();
             services.AddSingleton<IOpenAiCompatibleClient, OpenAiCompatibleClient>();
-            services.AddSingleton<IWorkspaceFileLocator, WorkspaceFileLocator>();
+            services.AddSingleton<IWorkspaceSearchService, WorkspaceSearchService>();
             services.AddSingleton<IWorkspaceFileService, WorkspaceFileService>();
             services.AddSingleton<IWorkspaceInitializer, WorkspaceInitializer>();
-
+            services.AddSingleton<IBuildService, BuildService>();
 
 
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
