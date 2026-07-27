@@ -1,4 +1,7 @@
-﻿using Codify.VisualStudio.Interfaces;
+﻿using Codify.Core.Interfaces;
+using Codify.VisualStudio.Interfaces;
+using Codify.VisualStudio.Models;
+using Codify.VisualStudio.Models.Tools.ListDirectory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,10 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.VisualStudio.Extensions;
 
 namespace Codify.VisualStudio.Services;
 
-public sealed class WorkspaceFileService(IFileSystem fileSystem) : IWorkspaceFileService
+public sealed class WorkspaceFileService(IFileSystem fileSystem,
+    IWorkspaceContext workspaceContext,
+    IWorkspaceIgnoreService workspaceIgnoreService) : IWorkspaceFileService
 {
     public bool Exists(string filePath)
     {
@@ -174,5 +180,46 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem) : IWorkspaceFil
         }
 
         return (controlCount * 100.0 / buffer.Length) > 10;
+    }
+
+    public async Task<IReadOnlyList<WorkspaceEntry>> ListDirectoryAsync(
+        string relativePath,
+        CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var directoryPath = string.IsNullOrWhiteSpace(relativePath)
+            ? workspaceContext.SolutionDirectory
+            : Path.Combine(workspaceContext.SolutionDirectory, relativePath);
+
+        if (!fileSystem.Directory.Exists(directoryPath))
+        {
+            return [];
+        }
+
+        var entries = fileSystem.Directory
+            .EnumerateFileSystemEntries(directoryPath)
+            .Where(path => !workspaceIgnoreService.ShouldIgnore(path))
+            .Select(path => new WorkspaceEntry
+            {
+                Name = fileSystem.Path.GetFileName(path),
+                FullPath = path,
+                RelativePath = GetRelativePath(workspaceContext.SolutionDirectory, path),
+                Type = fileSystem.Directory.Exists(path)
+                    ? WorkspaceEntryType.Directory
+                    : WorkspaceEntryType.File
+            })
+            .OrderByDescending(e => e.Type == WorkspaceEntryType.Directory)
+            .ThenBy(e => e.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return entries;
+    }
+
+    public string GetRelativePath(string basePath, string path)
+    {
+        return PathExtensions.GetRelativePath(basePath, path);
     }
 }

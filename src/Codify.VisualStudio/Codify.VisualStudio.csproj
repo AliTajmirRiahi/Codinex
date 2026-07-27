@@ -69,9 +69,14 @@
     <Compile Include="Logging\VsOutputLogger.cs" />
     <Compile Include="Models\BuildResult.cs" />
     <Compile Include="Models\OutputPaneInfo.cs" />
+    <Compile Include="Models\Tools\ListDirectory\DirectoryEntry.cs" />
+    <Compile Include="Models\Tools\ListDirectory\ListDirectoryRequest.cs" />
+    <Compile Include="Models\Tools\ListDirectory\ListDirectoryResponse.cs" />
+    <Compile Include="Models\Tools\ListDirectory\WorkspaceEntryType.cs" />
     <Compile Include="Models\Tools\SearchProject\SearchProjectRequest.cs" />
     <Compile Include="Models\Tools\SearchProject\SearchProjectResponse.cs" />
     <Compile Include="Models\Tools\SearchProject\SearchProjectType.cs" />
+    <Compile Include="Models\WorkspaceEntry.cs" />
     <Compile Include="Models\WorkspaceFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IVsOutputWindowService.cs" />
@@ -105,6 +110,7 @@
     <Compile Include="Tools\BuiltIn\Memory\RememberMemoryTool.cs" />
     <Compile Include="Tools\BuiltIn\Tests\RunTestsTool.cs" />
     <Compile Include="Tools\BuiltIn\Search\SearchProjectTool.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\ListDirectoryTool.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
     <Compile Include="VsUserNotificationService.cs" />
@@ -172,7 +178,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\BuiltIn\Git\" />
-    <Folder Include="Tools\BuiltIn\Workspace\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

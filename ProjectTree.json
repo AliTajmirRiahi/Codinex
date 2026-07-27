@@ -2260,28 +2260,57 @@
                                                                        "path":  "src/Codify.VisualStudio/Models/Tools",
                                                                        "name":  "Tools",
                                                                        "type":  "folder",
-                                                                       "children":  {
-                                                                                        "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject",
-                                                                                        "name":  "SearchProject",
-                                                                                        "type":  "folder",
-                                                                                        "children":  [
-                                                                                                         {
-                                                                                                             "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectRequest.cs",
-                                                                                                             "name":  "SearchProjectRequest.cs",
-                                                                                                             "type":  "file"
-                                                                                                         },
-                                                                                                         {
-                                                                                                             "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectResponse.cs",
-                                                                                                             "name":  "SearchProjectResponse.cs",
-                                                                                                             "type":  "file"
-                                                                                                         },
-                                                                                                         {
-                                                                                                             "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectType.cs",
-                                                                                                             "name":  "SearchProjectType.cs",
-                                                                                                             "type":  "file"
-                                                                                                         }
-                                                                                                     ]
-                                                                                    }
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Models/Tools/ListDirectory",
+                                                                                            "name":  "ListDirectory",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/ListDirectory/DirectoryEntry.cs",
+                                                                                                                 "name":  "DirectoryEntry.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/ListDirectory/ListDirectoryRequest.cs",
+                                                                                                                 "name":  "ListDirectoryRequest.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/ListDirectory/ListDirectoryResponse.cs",
+                                                                                                                 "name":  "ListDirectoryResponse.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/ListDirectory/WorkspaceEntryType.cs",
+                                                                                                                 "name":  "WorkspaceEntryType.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject",
+                                                                                            "name":  "SearchProject",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectRequest.cs",
+                                                                                                                 "name":  "SearchProjectRequest.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectResponse.cs",
+                                                                                                                 "name":  "SearchProjectResponse.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Models/Tools/SearchProject/SearchProjectType.cs",
+                                                                                                                 "name":  "SearchProjectType.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        }
+                                                                                    ]
                                                                    },
                                                                    {
                                                                        "path":  "src/Codify.VisualStudio/Models/BuildResult.cs",
@@ -2291,6 +2320,11 @@
                                                                    {
                                                                        "path":  "src/Codify.VisualStudio/Models/OutputPaneInfo.cs",
                                                                        "name":  "OutputPaneInfo.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.VisualStudio/Models/WorkspaceEntry.cs",
+                                                                       "name":  "WorkspaceEntry.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -2550,7 +2584,9 @@
                                                                                             "name":  "Workspace",
                                                                                             "type":  "folder",
                                                                                             "children":  {
-
+                                                                                                             "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/ListDirectoryTool.cs",
+                                                                                                             "name":  "ListDirectoryTool.cs",
+                                                                                                             "type":  "file"
                                                                                                          }
                                                                                         }
                                                                                     ]

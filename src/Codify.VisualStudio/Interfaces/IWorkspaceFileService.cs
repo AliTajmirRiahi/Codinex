@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Codify.VisualStudio.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -65,5 +66,9 @@ namespace Codify.VisualStudio.Interfaces
         Stream OpenRead(string filePath);
 
         bool IsBinary(string filePath);
+
+        Task<IReadOnlyList<WorkspaceEntry>> ListDirectoryAsync(
+            string path,
+            CancellationToken cancellationToken);
     }
 }
