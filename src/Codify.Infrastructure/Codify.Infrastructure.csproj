@@ -68,6 +68,7 @@
     <Compile Include="CustomeExceptions\OpenAiCompatibleException.cs" />
     <Compile Include="DependencyInjection\Attributes\AutoRegisterAttribute.cs" />
     <Compile Include="DependencyInjection\Attributes\ModuleType.cs" />
+    <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />
