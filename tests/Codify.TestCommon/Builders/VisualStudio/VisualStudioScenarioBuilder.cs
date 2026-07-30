@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using Codify.Core.Interfaces;
 using NSubstitute;
 
@@ -25,8 +26,8 @@ public sealed class VisualStudioScenario
 
         foreach (var file in Files)
         {
-            fileSystem.Exists(file.Key).Returns(true);
-            fileSystem.ReadAllText(file.Key).Returns(file.Value);
+            fileSystem.File.Exists(file.Key).Returns(true);
+            fileSystem.File.ReadAllText(file.Key).Returns(file.Value);
         }
     }
 }
