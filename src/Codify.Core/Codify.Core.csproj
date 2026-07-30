@@ -96,7 +96,17 @@
     <Compile Include="Interfaces\IUiThreadDispatcher.cs" />
     <Compile Include="Interfaces\IUserNotificationService.cs" />
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
+    <Compile Include="Interfaces\IWorkspaceFileService.cs" />
     <Compile Include="Interfaces\IWorkspaceInitializer.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\ITextChangeMatcher.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeApplier.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeErrorFactory.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeParser.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandler.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandlerInvoker.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandlerResolver.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidationRule.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidator.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
     <Compile Include="Models\AiModel.cs" />
     <Compile Include="Models\AiProvider.cs" />
@@ -127,6 +137,29 @@
     <Compile Include="Models\WebViewMessageRequest.cs" />
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />
+    <Compile Include="Models\WorkspaceChanges\CreateDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\CreateFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\DeleteDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\DeleteFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\MoveDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\MoveFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\RenameDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\RenameFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextChangeMatchResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeKind.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeSet.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeValidationError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeValidationResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\EditFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationCategory.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationResult.cs" />
+    <Compile Include="Models\WorkspaceEntry.cs" />
+    <Compile Include="Models\WorkspaceEntryType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\IAiTool.cs" />
     <Compile Include="Tools\IAiToolRegistry.cs" />
@@ -154,6 +187,8 @@
       <Version>9.0.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="WorkspaceChanges\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

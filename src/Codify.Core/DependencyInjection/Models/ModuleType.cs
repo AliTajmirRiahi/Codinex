@@ -26,4 +26,6 @@ public static class Modules
     public const string ModelManagement = "Model Management";
 
     public const string JSON = "JSON";
+
+    public const string MissionEngine = "Mission Engine";
 }
