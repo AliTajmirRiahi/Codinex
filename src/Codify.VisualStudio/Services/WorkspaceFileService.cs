@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models;
 
 namespace Codify.VisualStudio.Services;
 
@@ -21,9 +22,19 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
     IWorkspaceContext workspaceContext,
     IWorkspaceIgnoreService workspaceIgnoreService) : IWorkspaceFileService
 {
-    public bool Exists(string filePath)
+    public bool Exists(string path)
     {
-        return fileSystem.File.Exists(filePath);
+        return fileSystem.File.Exists(path) || fileSystem.Directory.Exists(path);
+    }
+
+    public bool FileExists(string path)
+    {
+        return fileSystem.File.Exists(path);
+    }
+
+    public bool DirectoryExists(string path)
+    {
+        return fileSystem.Directory.Exists(path);
     }
 
     public string Read(string filePath)
@@ -53,7 +64,7 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        Write(filePath, content, encoding);
+        Write(filePath, content, encoding ?? new UTF8Encoding(false));
 
         return Task.CompletedTask;
     }
@@ -219,6 +230,91 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
             .ToList();
 
         return entries;
+    }
+
+
+    public Task CopyAsync(
+        string sourcePath,
+        string destinationPath,
+        bool overwrite = false,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return Task.Run(() =>
+        {
+            Copy(sourcePath, destinationPath, overwrite);
+        }, cancellationToken);
+    }
+
+    public Task RenameAsync(
+        string filePath,
+        string newFileName,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            throw new ArgumentException("File path cannot be null or empty.", nameof(filePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(newFileName))
+        {
+            throw new ArgumentException("New file name cannot be null or empty.", nameof(newFileName));
+        }
+
+        if (!fileSystem.File.Exists(filePath))
+        {
+            throw new FileNotFoundException("The source file was not found.", filePath);
+        }
+
+        var directory = fileSystem.Path.GetDirectoryName(filePath)!;
+        var destinationPath = fileSystem.Path.Combine(directory, newFileName);
+
+        if (fileSystem.File.Exists(destinationPath))
+        {
+            throw new IOException($"The destination file '{destinationPath}' already exists.");
+        }
+
+        fileSystem.File.Move(filePath, destinationPath);
+
+        return Task.CompletedTask;
+    }
+
+    public Task MoveAsync(
+        string sourcePath,
+        string destinationPath,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sourcePath))
+        {
+            throw new ArgumentException("Source path cannot be null or empty.", nameof(sourcePath));
+        }
+
+        if (string.IsNullOrWhiteSpace(destinationPath))
+        {
+            throw new ArgumentException("Destination path cannot be null or empty.", nameof(destinationPath));
+        }
+
+        if (!fileSystem.File.Exists(sourcePath))
+        {
+            throw new FileNotFoundException("The source file was not found.", sourcePath);
+        }
+
+        if (fileSystem.File.Exists(destinationPath))
+        {
+            throw new IOException($"The destination file '{destinationPath}' already exists.");
+        }
+
+        var destinationDirectory = fileSystem.Path.GetDirectoryName(destinationPath)!;
+
+        if (!fileSystem.Directory.Exists(destinationDirectory))
+        {
+            fileSystem.Directory.CreateDirectory(destinationDirectory);
+        }
+
+        fileSystem.File.Move(sourcePath, destinationPath);
+
+        return Task.CompletedTask;
     }
 
     public string GetRelativePath(string basePath, string path)

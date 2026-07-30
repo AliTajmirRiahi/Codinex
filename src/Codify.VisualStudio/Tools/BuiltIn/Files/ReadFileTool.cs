@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Files;
 
