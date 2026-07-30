@@ -1,3 +1,5 @@
+using Codify.Core.Models;
+
 namespace Codify.VisualStudio.Models.Tools.ListDirectory;
 
 public sealed class DirectoryEntry
