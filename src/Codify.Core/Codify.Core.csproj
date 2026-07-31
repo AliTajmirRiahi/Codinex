@@ -61,6 +61,7 @@
     <Compile Include="DependencyInjection\Models\ServiceLifetimeWrapper.cs" />
     <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
+    <Compile Include="Interfaces\Helper\IStringHelper.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
     <Compile Include="Interfaces\IBuildContextProvider.cs" />
     <Compile Include="Interfaces\IDiagnosticsFormatter.cs" />
@@ -131,9 +132,10 @@
     <Compile Include="Models\ProjectContext.cs" />
     <Compile Include="Models\ProjectContextItem.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
-    <Compile Include="Models\ToolDefinition.cs" />
-    <Compile Include="Models\ToolProperty.cs" />
-    <Compile Include="Models\ToolRequestedPayload.cs" />
+    <Compile Include="Models\Tools\ChangeSetCreatorToolResult.cs" />
+    <Compile Include="Models\Tools\ToolDefinition.cs" />
+    <Compile Include="Models\Tools\ToolProperty.cs" />
+    <Compile Include="Models\Tools\ToolRequestedPayload.cs" />
     <Compile Include="Models\WebViewMessageRequest.cs" />
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />

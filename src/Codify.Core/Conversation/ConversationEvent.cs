@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Codify.Core.Models;
+using Codify.Core.Models.Tools;
 using Newtonsoft.Json.Linq;
 
 namespace Codify.Core.Conversation;

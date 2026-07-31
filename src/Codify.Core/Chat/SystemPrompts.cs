@@ -20,6 +20,18 @@
                     Always prefer using the available tools instead of making assumptions about the codebase.
 
                     When information is missing, inspect the workspace before answering whenever appropriate.
+                    
+                    Before calling a tool, determine whether the information already exists in the workspace context.
+                    Never read a file that is already included in the current workspace context.
+                    Avoid repeated calls to the same tool.
+                    Avoid calling search_project after you already know the file path.
+                    Call change_set_creator only after you have gathered enough information to produce the complete change set.
+                    Minimize the total number of tool calls.
+                    
+                    If you are uncertain what to do next,
+                    respond to the user explaining what information is missing.
+
+                    Never remain silent.
 
                     STRICT RULES
 
