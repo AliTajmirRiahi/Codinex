@@ -7,6 +7,7 @@ using Codify.VisualStudio.Interfaces;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Build;
 
