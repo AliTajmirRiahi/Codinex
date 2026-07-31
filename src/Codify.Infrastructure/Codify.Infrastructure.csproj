@@ -67,6 +67,7 @@
     <Compile Include="Conversation\ConversationEngine.cs" />
     <Compile Include="CustomeExceptions\OpenAiCompatibleException.cs" />
     <Compile Include="Extensions\TextChangeMatchStatusExtensions.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="WorkspaceChanges\WorkspaceChangeApplier.cs" />
     <Compile Include="WorkspaceChanges\WorkspaceChangeErrorFactory.cs" />
     <Compile Include="WorkspaceChanges\WorkspaceChangeHandlerInvoker.cs" />
+    <Compile Include="WorkspaceChanges\WorkspaceChangeHandlerResolver.cs" />
     <Compile Include="Workspace\PromptPipeline\PromptContextComposer.cs" />
     <Compile Include="Workspace\PromptPipeline\PromptContextItemFactory.cs" />
     <Compile Include="Workspace\PromptPipeline\WorkspaceContextBuilder.cs" />

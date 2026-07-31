@@ -7,7 +7,7 @@ namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 /// </summary>
 public sealed class EditFileChangeDto : WorkspaceChangeDto
 {
-    public string Path { get; set; } = string.Empty;
+    public string FilePath { get; set; } = string.Empty;
 
-    public List<TextFileChangeDto> Changes { get; set; } = [];
+    public List<TextFileChangeDto> TextChanges { get; set; } = [];
 }

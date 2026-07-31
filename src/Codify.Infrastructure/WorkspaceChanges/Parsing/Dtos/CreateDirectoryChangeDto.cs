@@ -5,5 +5,5 @@ namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 /// </summary>
 public sealed class CreateDirectoryChangeDto : WorkspaceChangeDto
 {
-    public string Path { get; set; } = string.Empty;
+    public string DirectoryPath { get; set; } = string.Empty;
 }

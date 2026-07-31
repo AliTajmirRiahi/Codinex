@@ -5,7 +5,7 @@ namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 /// </summary>
 public sealed class RenameFileChangeDto : WorkspaceChangeDto
 {
-    public string Path { get; set; } = string.Empty;
+    public string FilePath { get; set; } = string.Empty;
 
-    public string NewName { get; set; } = string.Empty;
+    public string NewFileName { get; set; } = string.Empty;
 }
