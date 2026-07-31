@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
 
 namespace Codify.Infrastructure.AI.Providers
 {
@@ -109,9 +110,8 @@ namespace Codify.Infrastructure.AI.Providers
             {
                 Role = "tool",
                 ToolCallId = toolResult.Id,
-                Content = toolResult.Success
-                    ? toolResult.Data.ToString()
-                    : toolResult.Error
+                Content = toolResult.Success ? "" : toolResult.Error,
+                Data = toolResult.Data,
             }));
 
             await foreach (var item in StreamCompletionAsync(
@@ -314,35 +314,81 @@ namespace Codify.Infrastructure.AI.Providers
 
         private object[] BuildTools()
         {
-            return [.. toolRegistry
-                .GetAll()
-                .Where(p=> p.Visibility == ToolVisibility.Model)
-                .Select(tool => new
-                {
-                    type = "function",
-
-                    function = new
+            return
+            [
+                .. toolRegistry
+                    .GetAll()
+                    .Where(x => x.Visibility == ToolVisibility.Model)
+                    .Select(tool => new
                     {
-                        name = tool.Name,
+                        type = "function",
 
-                        description = tool.Description,
-
-                        parameters = new
+                        function = new
                         {
-                            type = "object",
+                            name = tool.Name,
 
-                            properties = tool.Definition.Properties.ToDictionary(
-                                p => p.Key,
-                                p => new
-                                {
-                                    type = ToJsonSchemaType(p.Value.Type),
-                                    description = p.Value.Description
-                                }),
+                            description = tool.Description,
 
-                            required = tool.Definition.Required
+                            parameters = new
+                            {
+                                type = "object",
+
+                                properties = tool.Definition.Properties.ToDictionary(
+                                    p => p.Key,
+                                    p => p.Value.ToJsonSchema()),
+
+                                required = tool.Definition.Required
+                            }
                         }
-                    }
-                })];
+                    })
+            ];
+        }
+
+        private object BuildSchema(ToolProperty property)
+        {
+            var schema = new Dictionary<string, object>
+            {
+                ["type"] = ToJsonSchemaType(property.Type),
+                ["description"] = property.Description
+            };
+
+            if (property.Properties?.Count > 0)
+            {
+                schema["properties"] = property.Properties.ToDictionary(
+                    p => p.Key,
+                    p => BuildSchema(p.Value));
+            }
+
+            if (property.Required?.Count > 0)
+            {
+                schema["required"] = property.Required;
+            }
+
+            if (property.Items != null)
+            {
+                schema["items"] = BuildSchema(property.Items);
+            }
+
+            if (property.Enum?.Count > 0)
+            {
+                schema["enum"] = property.Enum;
+            }
+
+            if (property.OneOf?.Count > 0)
+            {
+                schema["oneOf"] = property.OneOf
+                    .Select(BuildSchema)
+                    .ToArray();
+            }
+
+            if (property.AnyOf?.Count > 0)
+            {
+                schema["anyOf"] = property.AnyOf
+                    .Select(BuildSchema)
+                    .ToArray();
+            }
+
+            return schema;
         }
         private static JObject ParseArguments(string arguments)
         {

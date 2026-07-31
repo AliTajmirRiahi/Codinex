@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using Codify.Core.DependencyInjection.Attributes;
+﻿using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces.Helper;
 using Codify.Core.Models.WorkspaceChanges;
 using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using System;
+using System.Linq;
 
 namespace Codify.Infrastructure.WorkspaceChanges.Mapping;
 
@@ -11,8 +12,10 @@ namespace Codify.Infrastructure.WorkspaceChanges.Mapping;
 /// Maps workspace change DTOs to domain models.
 /// </summary>
 [AutoDiRegister(Modules.JSON, RegistrationOrder.Foundation)]
-internal sealed class WorkspaceChangeMapper : IWorkspaceChangeMapper
+internal sealed class WorkspaceChangeMapper(IStringHelper stringHelper) : IWorkspaceChangeMapper
 {
+    private readonly IStringHelper _stringHelper = stringHelper;
+
     public WorkspaceChangeSet Map(WorkspaceChangeSetDto dto)
     {
         if (dto == null)
@@ -26,7 +29,7 @@ internal sealed class WorkspaceChangeMapper : IWorkspaceChangeMapper
         };
     }
 
-    private static WorkspaceChange Map(WorkspaceChangeDto dto)
+    private WorkspaceChange Map(WorkspaceChangeDto dto)
     {
         return dto switch
         {
@@ -46,96 +49,96 @@ internal sealed class WorkspaceChangeMapper : IWorkspaceChangeMapper
         };
     }
 
-    private static CreateFileChange Map(CreateFileChangeDto dto)
+    private CreateFileChange Map(CreateFileChangeDto dto)
     {
         return new CreateFileChange
         {
-            FilePath = dto.Path,
+            FilePath = dto.FilePath,
             Content = dto.Content
         };
     }
 
-    private static EditFileChange Map(EditFileChangeDto dto)
+    private EditFileChange Map(EditFileChangeDto dto)
     {
         return new EditFileChange
         {
-            FilePath = dto.Path,
-            TextChanges = dto.Changes
+            FilePath = dto.FilePath,
+            TextChanges = dto.TextChanges
                 .Select(Map)
                 .ToList()
         };
     }
 
-    private static DeleteFileChange Map(DeleteFileChangeDto dto)
+    private DeleteFileChange Map(DeleteFileChangeDto dto)
     {
         return new DeleteFileChange
         {
-            FilePath = dto.Path
+            FilePath = dto.FilePath
         };
     }
 
-    private static RenameFileChange Map(RenameFileChangeDto dto)
+    private RenameFileChange Map(RenameFileChangeDto dto)
     {
         return new RenameFileChange
         {
-            FilePath = dto.Path,
-            NewFileName = dto.NewName
+            FilePath = dto.FilePath,
+            NewFileName = dto.NewFileName
         };
     }
 
-    private static MoveFileChange Map(MoveFileChangeDto dto)
+    private MoveFileChange Map(MoveFileChangeDto dto)
     {
         return new MoveFileChange
         {
-            SourcePath = dto.Source,
-            DestinationPath = dto.Destination
+            SourcePath = dto.SourcePath,
+            DestinationPath = dto.DestinationPath
         };
     }
 
-    private static CreateDirectoryChange Map(CreateDirectoryChangeDto dto)
+    private CreateDirectoryChange Map(CreateDirectoryChangeDto dto)
     {
         return new CreateDirectoryChange
         {
-            DirectoryPath = dto.Path
+            DirectoryPath = dto.DirectoryPath
         };
     }
 
-    private static DeleteDirectoryChange Map(DeleteDirectoryChangeDto dto)
+    private DeleteDirectoryChange Map(DeleteDirectoryChangeDto dto)
     {
         return new DeleteDirectoryChange
         {
-            DirectoryPath = dto.Path
+            DirectoryPath = dto.DirectoryPath
         };
     }
 
-    private static RenameDirectoryChange Map(RenameDirectoryChangeDto dto)
+    private RenameDirectoryChange Map(RenameDirectoryChangeDto dto)
     {
         return new RenameDirectoryChange
         {
-            OldPath = dto.Path,
-            NewPath = dto.NewName
+            OldPath = dto.OldPath,
+            NewPath = dto.NewPath
         };
     }
 
-    private static MoveDirectoryChange Map(MoveDirectoryChangeDto dto)
+    private MoveDirectoryChange Map(MoveDirectoryChangeDto dto)
     {
         return new MoveDirectoryChange
         {
-            SourcePath = dto.Source,
-            DestinationPath = dto.Destination
+            SourcePath = dto.SourcePath,
+            DestinationPath = dto.DestinationPath
         };
     }
 
-    private static TextFileChange Map(TextFileChangeDto dto)
+    private TextFileChange Map(TextFileChangeDto dto)
     {
         return new TextFileChange
         {
             Id = dto.Id,
             Order = dto.Order,
-            Before = dto.Before,
-            Search = dto.Search,
-            Replace = dto.Replace,
-            After = dto.After
+            Before = _stringHelper.Normalize(dto.Before),
+            Search = _stringHelper.Normalize(dto.Search),
+            Replace = _stringHelper.Normalize(dto.Replace),
+            After = _stringHelper.Normalize(dto.After)
         };
     }
 }

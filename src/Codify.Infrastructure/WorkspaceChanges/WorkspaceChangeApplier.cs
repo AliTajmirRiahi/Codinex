@@ -3,9 +3,12 @@ using Codify.Core.Models.WorkspaceChanges;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 
 namespace Codify.Infrastructure.WorkspaceChanges;
 
+[AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Workspace)]
 public sealed class WorkspaceChangeApplier(
     IWorkspaceChangeHandlerInvoker workspaceChangeHandlerInvoker)
     : IWorkspaceChangeApplier
@@ -24,8 +27,12 @@ public sealed class WorkspaceChangeApplier(
                     workspaceChange,
                     cancellationToken);
 
+            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(workspaceChange);
+
             if (!result.Success)
                 return result;
+
+            
         }
 
         return WorkspaceChangeResult.Successful();

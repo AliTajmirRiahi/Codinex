@@ -8,6 +8,7 @@ using Codify.Core.Interfaces.WorkspaceChanges;
 using Codify.Core.Models.WorkspaceChanges;
 using Codify.Infrastructure.WorkspaceChanges.Mapping;
 using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using Newtonsoft.Json.Linq;
 
 namespace Codify.Infrastructure.WorkspaceChanges.Parsing;
 
@@ -21,19 +22,19 @@ public sealed class WorkspaceChangeParser(
     : IWorkspaceChangeParser
 {
     public Task<WorkspaceChangeSet> ParseAsync(
-        string response,
+        JObject response,
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (string.IsNullOrWhiteSpace(response))
+        if (response == null)
         {
             throw new ArgumentException(
                 "Response cannot be null or empty.",
                 nameof(response));
         }
 
-        var dto = jsonSerializer.Deserialize<WorkspaceChangeSetDto>(response);
+        var dto = response.ToObject<WorkspaceChangeSetDto>();
 
         if (dto is null)
         {

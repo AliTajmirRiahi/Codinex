@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Interfaces.Helper;
 
 namespace Codify.Infrastructure.WorkspaceChanges.Handlers;
 
@@ -18,7 +19,8 @@ namespace Codify.Infrastructure.WorkspaceChanges.Handlers;
 public sealed class EditFileChangeHandler(
     IWorkspaceFileService workspaceFileService,
     ITextChangeMatcher textChangeMatcher,
-    IWorkspaceChangeErrorFactory workspaceChangeErrorFactory)
+    IWorkspaceChangeErrorFactory workspaceChangeErrorFactory,
+    IStringHelper stringHelper)
     : IWorkspaceChangeHandler<EditFileChange>
 {
 
@@ -34,6 +36,8 @@ public sealed class EditFileChangeHandler(
         var content = await workspaceFileService.ReadAsync(
             change.FilePath,
             cancellationToken);
+
+        content = stringHelper.Normalize(content);
 
         foreach (var textChange in change.TextChanges.OrderBy(x => x.Order))
         {

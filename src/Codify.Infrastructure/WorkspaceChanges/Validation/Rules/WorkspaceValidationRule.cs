@@ -1,13 +1,16 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces;
+using Codify.Core.Interfaces.WorkspaceChanges;
+using Codify.Core.Models.WorkspaceChanges;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
 
 namespace Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
 
+[AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class WorkspaceStateValidationRule(
     IWorkspaceContext workspaceContext)
     : IWorkspaceChangeValidationRule

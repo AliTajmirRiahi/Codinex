@@ -1,3 +1,5 @@
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces.WorkspaceChanges;
 using Codify.Core.Models.WorkspaceChanges;
 using Microsoft.CSharp.RuntimeBinder;
@@ -8,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Codify.Infrastructure.WorkspaceChanges;
 
+[AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class WorkspaceChangeHandlerInvoker(
     IWorkspaceChangeHandlerResolver workspaceChangeHandlerResolver)
     : IWorkspaceChangeHandlerInvoker
