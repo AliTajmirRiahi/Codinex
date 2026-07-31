@@ -1,4 +1,7 @@
+using Codify.Core.Models.WorkspaceChanges;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Codify.Core.Conversation;
 
@@ -70,6 +73,46 @@ public sealed class ToolResult
             Success = false,
             Error = error,
             Data = new JObject()
+        };
+    }
+    /// <summary>
+    /// Creates a failed tool result.
+    /// </summary>
+    public static ToolResult Failed(
+        string id,
+        string error,
+        object data)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = false,
+            Error = error,
+            Data = JObject.FromObject(data)
+        };
+    }
+    /// <summary>
+    /// Creates a failed tool result.
+    /// </summary>
+    public static ToolResult Failed(
+        string id,
+        IReadOnlyList<WorkspaceValidationError> errors)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = false,
+            Error = "Workspace validation failed.",
+            Data = JObject.FromObject(new
+            {
+                errors = errors.Select(x => new
+                {
+                    changeId = x.ChangeId,
+                    code = x.Code.ToString(),
+                    category = x.Category.ToString(),
+                    message = x.Message
+                })
+            })
         };
     }
 }

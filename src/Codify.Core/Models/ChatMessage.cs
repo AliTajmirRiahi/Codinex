@@ -17,6 +17,8 @@ namespace Codify.Core.Models
 
         public string Content { get; set; }
 
+        public JObject Data { get; set; }
+
         public IReadOnlyList<ToolCall> ToolCalls { get; set; }
 
         public string ToolCallId { get; set; }

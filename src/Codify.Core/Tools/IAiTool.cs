@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Conversation;
 using Codify.Core.Models;
+using Codify.Core.Models.Tools;
 
 namespace Codify.Core.Tools;
 

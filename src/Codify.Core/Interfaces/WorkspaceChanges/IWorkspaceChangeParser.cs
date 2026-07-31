@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Models.WorkspaceChanges;
+using Newtonsoft.Json.Linq;
 
 namespace Codify.Core.Interfaces.WorkspaceChanges;
 
@@ -10,6 +11,6 @@ namespace Codify.Core.Interfaces.WorkspaceChanges;
 public interface IWorkspaceChangeParser
 {
     Task<WorkspaceChangeSet> ParseAsync(
-        string response,
+        JObject response,
         CancellationToken cancellationToken);
 }
