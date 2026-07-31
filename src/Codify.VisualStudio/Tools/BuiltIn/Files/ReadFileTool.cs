@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codify.Core.Interfaces;
+using Codify.Core.Models.Tools;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Files;
 
@@ -23,7 +24,7 @@ public sealed class ReadFileTool(
 {
     public string Name => "read_file";
 
-    public string Description => "Reads the contents of a file from the workspace.";
+    public string Description => "Use only when the requested information cannot be obtained from the current workspace context.";
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
 
