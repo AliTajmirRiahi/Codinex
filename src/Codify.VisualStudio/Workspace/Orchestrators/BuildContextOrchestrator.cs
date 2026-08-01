@@ -16,6 +16,8 @@ public sealed class BuildContextOrchestrator(
     IBuildContextFormatter buildContextFormatter)
     : IWorkspaceContextOrchestrator
 {
+    public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug; 
+
     public async Task<ContextProviderResult> GetContextAsync(
         WorkspaceContextRequest request,
         CancellationToken cancellationToken)

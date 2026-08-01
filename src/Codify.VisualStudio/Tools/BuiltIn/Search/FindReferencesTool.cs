@@ -6,6 +6,7 @@ using Codify.Core.Tools;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Search;
 
@@ -19,7 +20,7 @@ public sealed class FindReferencesTool : IAiTool
 
     public string Description => "";
 
-    public ToolVisibility Visibility { get; } = ToolVisibility.Model;
+    public ToolVisibility Visibility { get; } = ToolVisibility.Debug;
     public ToolDefinition Definition => new ToolDefinition(
         new Dictionary<string, ToolProperty>
         {
