@@ -68,6 +68,7 @@
     <Compile Include="CustomeExceptions\OpenAiCompatibleException.cs" />
     <Compile Include="Extensions\TextChangeMatchStatusExtensions.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Http\HttpService.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />

@@ -3,6 +3,7 @@ using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,9 @@ namespace Codify.Infrastructure.Workspace.PromptPipeline
         {
             var results = new List<ContextProviderResult>();
 
-            foreach (var provider in providers)
+            foreach (var provider in providers.Where(
+                         p => p.Visibility == WorkspaceContextVisibility.Model)
+                     )
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

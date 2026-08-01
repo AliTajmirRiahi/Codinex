@@ -5,8 +5,8 @@ using Codify.Core.Models;
 using Codify.Infrastructure.CustomeExceptions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -18,8 +18,9 @@ namespace Codify.Infrastructure.AI.Clients
 {
     [AutoDiRegister(Modules.AI, RegistrationOrder.Features)]
     public class OpenAiCompatibleClient(
-        IHttpClientFactory httpClientFactory,
-        IJsonSerializer jsonSerializer)
+        IHttpService httpService,
+        IJsonSerializer jsonSerializer,
+        IWorkspaceFileService workspaceFileService)
         : IOpenAiCompatibleClient
     {
 
@@ -28,29 +29,23 @@ namespace Codify.Infrastructure.AI.Clients
             string endpoint,
             CancellationToken cancellationToken = default)
         {
-            var HttpClient = httpClientFactory.CreateClient();
-
-            HttpClient.Timeout = TimeSpan.FromMinutes(5);
-
             using var request = CreateRequest(
                 HttpMethod.Get,
                 provider,
                 endpoint);
 
-            using var response = await HttpClient.SendAsync(
+            using var response = await httpService.SendAsync(
                 request,
                 cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
 
-                throw new OpenAiCompatibleException(
-                    response.StatusCode,
-                    body);
-            }
+            var body = await response.Content.ReadAsStringAsync();
 
-            return await response.Content.ReadAsStringAsync();
+            throw new OpenAiCompatibleException(
+                response.StatusCode,
+                body);
+
         }
 
         public async Task<string> PostAsync(
@@ -59,10 +54,6 @@ namespace Codify.Infrastructure.AI.Clients
             object payload,
             CancellationToken cancellationToken = default)
         {
-            var HttpClient = httpClientFactory.CreateClient();
-
-            HttpClient.Timeout = TimeSpan.FromMinutes(5);
-
             using var request = CreateRequest(
                 HttpMethod.Post,
                 provider,
@@ -73,20 +64,18 @@ namespace Codify.Infrastructure.AI.Clients
                 Encoding.UTF8,
                 "application/json");
 
-            using var response = await HttpClient.SendAsync(
+            using var response = await httpService.SendAsync(
                 request,
                 cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var body = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode) return await response.Content.ReadAsStringAsync();
 
-                throw new OpenAiCompatibleException(
-                    response.StatusCode,
-                    body);
-            }
+            var body = await response.Content.ReadAsStringAsync();
 
-            return await response.Content.ReadAsStringAsync();
+            throw new OpenAiCompatibleException(
+                response.StatusCode,
+                body);
+
         }
 
         public async IAsyncEnumerable<string> StreamPostAsync(
@@ -95,10 +84,6 @@ namespace Codify.Infrastructure.AI.Clients
             object payload,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var HttpClient = httpClientFactory.CreateClient();
-
-            HttpClient.Timeout = TimeSpan.FromMinutes(5);
-
             using var request = CreateRequest(
                 HttpMethod.Post,
                 provider,
@@ -109,9 +94,8 @@ namespace Codify.Infrastructure.AI.Clients
                 Encoding.UTF8,
                 "application/json");
 
-            using var response = await HttpClient.SendAsync(
+            using var response = await httpService.SendAsync(
                 request,
-                HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken);
 
             if (!response.IsSuccessStatusCode)
@@ -126,18 +110,30 @@ namespace Codify.Infrastructure.AI.Clients
             using var stream = await response.Content.ReadAsStreamAsync();
             using var reader = new StreamReader(stream);
 
-            while (!reader.EndOfStream &&
-                   !cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                var line = await reader.ReadLineAsync();
+                var readTask = reader.ReadLineAsync();
+
+                var completed = await Task.WhenAny(
+                    readTask,
+                    Task.Delay(TimeSpan.FromSeconds(60), cancellationToken));
+
+                if (completed != readTask)
+                {
+                    throw new TimeoutException(
+                        "No SSE event received for 60 seconds.");
+                }
+
+                var line = await readTask;
+
+                if (line == null)
+                    yield break;
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
                 if (!line.StartsWith("data:"))
                     continue;
-
-                Debug.WriteLine(line);
 
                 yield return line.Substring(5).Trim();
             }
@@ -163,6 +159,9 @@ namespace Codify.Infrastructure.AI.Clients
                     new AuthenticationHeaderValue(
                         "Bearer",
                         provider.ApiKey);
+
+                request.Headers.ConnectionClose = true;
+                request.Headers.Connection.Add("close");
             }
 
             return request;

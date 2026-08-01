@@ -3,13 +3,15 @@ using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
+using Codify.Core.Models.Tools;
 using Codify.Core.Tools;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
 
 namespace Codify.Infrastructure.Conversation
 {
@@ -17,7 +19,8 @@ namespace Codify.Infrastructure.Conversation
     public sealed class ConversationEngine(
         IChatMessageBuilder chatMessageBuilder,
         IAiProvider provider,
-        IAiToolRegistry toolRegistry)
+        IAiToolRegistry toolRegistry,
+        IJsonSerializer jsonSerializer)
         : IConversationEngine
     {
         public async IAsyncEnumerable<ConversationEvent> ExecuteAsync(
@@ -26,10 +29,12 @@ namespace Codify.Infrastructure.Conversation
         {
             yield return ConversationEvent.Status("Sending request...");
 
+            var history = request.Messages.ToList();
+
             await foreach (var evt in ProcessEvents(
-                               request.Messages,
+                               history,
                                provider.SendStreamAsync(
-                                   request.Messages,
+                                   history,
                                    cancellationToken),
                                cancellationToken))
             {
@@ -41,7 +46,7 @@ namespace Codify.Infrastructure.Conversation
         /// Processes conversation events recursively.
         /// </summary>
         private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
-            IReadOnlyList<ChatMessage> messages,
+            List<ChatMessage> history,
             IAsyncEnumerable<ConversationEvent> events,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -54,6 +59,8 @@ namespace Codify.Infrastructure.Conversation
                         var payload = evt.Payload.ToObject<ToolRequestedPayload>();
 
                         var assistantMessage = payload.AssistantMessage;
+
+                        history.Add(assistantMessage);
 
                         var results = new List<ToolResult>();
 
@@ -70,15 +77,20 @@ namespace Codify.Infrastructure.Conversation
 
                             results.Add(result);
 
+                            history.Add(new ChatMessage
+                            {
+                                Role = "tool",
+                                ToolCallId = result.Id,
+                                Content = jsonSerializer.Serialize(result.Data),
+                            });
+
                             yield return ConversationEvent.ToolCompleted(result);
                         }
 
                         await foreach (var continuationEvent in ProcessEvents(
-                                           messages,
+                                           history,
                                            provider.ContinueAsync(
-                                               messages,
-                                               assistantMessage,
-                                               results,
+                                               history,
                                                cancellationToken),
                                            cancellationToken))
                         {

@@ -30,7 +30,8 @@ namespace Codify.Infrastructure.Chat
         IConversationEngine conversationEngine,
         IAiToolRegistry toolRegistry,
         IOpenAiCompatibleClient openAiCompatibleClient,
-        IWorkspaceContextBuilder workspaceContextBuilder)
+        IWorkspaceContextBuilder workspaceContextBuilder,
+        IWorkspaceFileService workspaceFileService)
         : IChatUseCaseFactory
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -48,7 +49,7 @@ namespace Codify.Infrastructure.Chat
 
             IAiProvider aiProvider = provider.Id.ToLower() switch
             {
-                "gapgpt" or "chatgpt" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient),
+                "gapgpt" or "openai" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient, workspaceFileService),
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 
