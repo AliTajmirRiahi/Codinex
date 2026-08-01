@@ -28,10 +28,17 @@
                     Call change_set_creator only after you have gathered enough information to produce the complete change set.
                     Minimize the total number of tool calls.
                     
-                    If you are uncertain what to do next,
-                    respond to the user explaining what information is missing.
+                    Every assistant turn must end with exactly one of the following:
+
+                    1. A final response to the user.
+                    2. One or more tool calls.
+
+                    An empty assistant response is never allowed.
 
                     Never remain silent.
+                    
+                    When a tool returns "completed": true, the operation has already been successfully executed. 
+                    Do not call the same tool again unless the user explicitly requests additional changes. Instead, produce a final response summarizing the completed work
 
                     STRICT RULES
 

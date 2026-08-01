@@ -68,6 +68,7 @@
     <Compile Include="Interfaces\IDiagnosticsProvider.cs" />
     <Compile Include="Interfaces\IGitContextFormatter.cs" />
     <Compile Include="Interfaces\IGitContextProvider.cs" />
+    <Compile Include="Interfaces\IHttpService.cs" />
     <Compile Include="Interfaces\IMemoryContextFormatter.cs" />
     <Compile Include="Interfaces\IMemoryContextProvider.cs" />
     <Compile Include="Interfaces\IOpenDocumentsProvider.cs" />

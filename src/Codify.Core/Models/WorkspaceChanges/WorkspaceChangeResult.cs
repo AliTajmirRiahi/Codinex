@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
 
 namespace Codify.Core.Models.WorkspaceChanges;
 
@@ -12,11 +13,14 @@ public sealed class WorkspaceChangeResult
 
     public WorkspaceChangeError Error { get; set; }
 
-    public static WorkspaceChangeResult Successful()
+    public WorkspaceChangeSuccess ChangeSuccess { get; set; }
+
+    public static WorkspaceChangeResult Successful(WorkspaceChangeSuccess success = null)
     {
         return new WorkspaceChangeResult
         {
-            Success = true
+            Success = true,
+            ChangeSuccess = success,
         };
     }
 
