@@ -1,30 +1,17 @@
 ﻿// Path: Codify\Infrastructure\DependencyInjection\ServiceContainer.cs
 
-using Codify.Core.Chat;
-using Codify.Core.Conversation;
 using Codify.Core.Interfaces;
-using Codify.Core.UseCases;
-using Codify.Infrastructure.AI.Capabilities;
-using Codify.Infrastructure.AI.Providers;
-using Codify.Infrastructure.Chat;
-using Codify.Infrastructure.Conversation;
-using Codify.Infrastructure.ModelManagement;
-using Codify.Infrastructure.ModelManagement.Retrievers;
-using Codify.VisualStudio;
-using Codify.VisualStudio.Events.Build;
 using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.Internal;
 using Codify.VisualStudio.Logging;
-using Codify.VisualStudio.References;
 using Codify.VisualStudio.WebView;
-using Codify.VisualStudio.Workspace.Providers;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
 using System.IO.Abstractions;
 using Codify.Core.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Codify.VSIX.Bootstrap
 {
@@ -42,8 +29,6 @@ namespace Codify.VSIX.Bootstrap
             AsyncPackage package, IVsOutputWindowPane pane)
         {
             var services = new ServiceCollection();
-
-            services.AddHttpClient();
 
             services.AddSingleton(sp =>
             {
@@ -69,6 +54,7 @@ namespace Codify.VSIX.Bootstrap
             System.Diagnostics.Debug.WriteLine(text);
 
             Instance = services.BuildServiceProvider();
+
         }
 
         public static T Get<T>() where T : notnull
