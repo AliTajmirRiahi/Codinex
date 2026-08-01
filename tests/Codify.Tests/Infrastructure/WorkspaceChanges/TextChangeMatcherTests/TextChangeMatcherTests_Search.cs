@@ -1,3 +1,5 @@
+using System.IO;
+using System.Linq;
 using Codify.Core.Models.WorkspaceChanges;
 using Codify.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests.Base;
 using FluentAssertions;
@@ -166,4 +168,20 @@ public sealed class TextChangeMatcherTests_Search : TextChangeMatcherTestBase
         result.Status.Should().Be(TextChangeMatchStatus.SearchNotFound);
         result.MatchCount.Should().Be(0);
     }
+
+    //[Test]
+    //public void Match_Should_Find_Search_Text()
+    //{
+    //    var sut = CreateSut();
+
+    //    var content = File.ReadAllText(@"P:\03 ARTA PROJECTS\01 - Self Update\PixelForge\PixelForge\src\PixelForge.Api\Program.cs");
+
+    //    var change = Newtonsoft.Json.JsonConvert.DeserializeObject<EditFileChange>(
+    //        "{\"FilePath\":\"src\\\\PixelForge.Api\\\\Program.cs\",\"TextChanges\":[{\"Id\":\"00000000-0000-0000-0000-000000000000\",\"Order\":1,\"Before\":\"\",\"Search\":\"        options.SwaggerEndpoint(\\\"/swagger/v1/swagger.json\\\", \\\"PixelForge V1 Docs\\\"\\n        //options.SwaggerEndpoint(\\\"/swagger/v2/swagger.json\\\", \\\"V2 Docs\\\");\",\"Replace\":\"        options.SwaggerEndpoint(\\\"/swagger/v1/swagger.json\\\", \\\"PixelForge V1 Docs\\\");\\n        //options.SwaggerEndpoint(\\\"/swagger/v2/swagger.json\\\", \\\"V2 Docs\\\");\",\"After\":\"\"}],\"Kind\":0,\"Id\":\"43ad6af3-de69-48ed-806f-6578b8194422\"}");
+
+    //    var result = sut.Match(content, change.TextChanges.ElementAt(0));
+
+    //    result.Status.Should().Be(TextChangeMatchStatus.Success);
+    //    result.MatchCount.Should().Be(1);
+    //}
 }

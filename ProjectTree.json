@@ -181,6 +181,16 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "src/Codify.Core/Interfaces/Helper",
+                                                                       "name":  "Helper",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "src/Codify.Core/Interfaces/Helper/IStringHelper.cs",
+                                                                                        "name":  "IStringHelper.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Interfaces/WorkspaceChanges",
                                                                        "name":  "WorkspaceChanges",
                                                                        "type":  "folder",
@@ -201,11 +211,6 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
-                                                                                            "path":  "src/Codify.Core/Interfaces/WorkspaceChanges/IWorkspaceChangeGenerator.cs",
-                                                                                            "name":  "IWorkspaceChangeGenerator.cs",
-                                                                                            "type":  "file"
-                                                                                        },
-                                                                                        {
                                                                                             "path":  "src/Codify.Core/Interfaces/WorkspaceChanges/IWorkspaceChangeHandler.cs",
                                                                                             "name":  "IWorkspaceChangeHandler.cs",
                                                                                             "type":  "file"
@@ -218,6 +223,16 @@
                                                                                         {
                                                                                             "path":  "src/Codify.Core/Interfaces/WorkspaceChanges/IWorkspaceChangeHandlerResolver.cs",
                                                                                             "name":  "IWorkspaceChangeHandlerResolver.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Interfaces/WorkspaceChanges/IWorkspaceChangeParser.cs",
+                                                                                            "name":  "IWorkspaceChangeParser.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Interfaces/WorkspaceChanges/IWorkspaceChangeValidationRule.cs",
+                                                                                            "name":  "IWorkspaceChangeValidationRule.cs",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
@@ -290,6 +305,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Interfaces/IGitContextProvider.cs",
                                                                        "name":  "IGitContextProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Core/Interfaces/IHttpService.cs",
+                                                                       "name":  "IHttpService.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -410,6 +430,33 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
+                                                                       "path":  "src/Codify.Core/Models/Tools",
+                                                                       "name":  "Tools",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/Tools/ChangeSetCreatorToolResult.cs",
+                                                                                            "name":  "ChangeSetCreatorToolResult.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/Tools/ToolDefinition.cs",
+                                                                                            "name":  "ToolDefinition.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/Tools/ToolProperty.cs",
+                                                                                            "name":  "ToolProperty.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/Tools/ToolRequestedPayload.cs",
+                                                                                            "name":  "ToolRequestedPayload.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Core/Models/WorkspaceChanges",
                                                                        "name":  "WorkspaceChanges",
                                                                        "type":  "folder",
@@ -502,6 +549,21 @@
                                                                                         {
                                                                                             "path":  "src/Codify.Core/Models/WorkspaceChanges/WorkspaceChangeValidationResult.cs",
                                                                                             "name":  "WorkspaceChangeValidationResult.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/WorkspaceChanges/WorkspaceValidationCategory.cs",
+                                                                                            "name":  "WorkspaceValidationCategory.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/WorkspaceChanges/WorkspaceValidationError.cs",
+                                                                                            "name":  "WorkspaceValidationError.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Core/Models/WorkspaceChanges/WorkspaceValidationResult.cs",
+                                                                                            "name":  "WorkspaceValidationResult.cs",
                                                                                             "type":  "file"
                                                                                         }
                                                                                     ]
@@ -629,21 +691,6 @@
                                                                    {
                                                                        "path":  "src/Codify.Core/Models/ReferenceItem.cs",
                                                                        "name":  "ReferenceItem.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Core/Models/ToolDefinition.cs",
-                                                                       "name":  "ToolDefinition.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Core/Models/ToolProperty.cs",
-                                                                       "name":  "ToolProperty.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codify.Core/Models/ToolRequestedPayload.cs",
-                                                                       "name":  "ToolRequestedPayload.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -916,6 +963,26 @@
                                                                }
                                               },
                                               {
+                                                  "path":  "src/Codify.Infrastructure/Helpers",
+                                                  "name":  "Helpers",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/Helpers/StringHelper.cs",
+                                                                   "name":  "StringHelper.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "src/Codify.Infrastructure/Http",
+                                                  "name":  "Http",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codify.Infrastructure/Http/HttpService.cs",
+                                                                   "name":  "HttpService.cs",
+                                                                   "type":  "file"
+                                                               }
+                                              },
+                                              {
                                                   "path":  "src/Codify.Infrastructure/ModelManagement",
                                                   "name":  "ModelManagement",
                                                   "type":  "folder",
@@ -1044,6 +1111,161 @@
                                                                                     ]
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codify.Infrastructure/WorkspaceChanges/Mapping",
+                                                                       "name":  "Mapping",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Mapping/IWorkspaceChangeMapper.cs",
+                                                                                            "name":  "IWorkspaceChangeMapper.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Mapping/WorkspaceChangeMapper.cs",
+                                                                                            "name":  "WorkspaceChangeMapper.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing",
+                                                                       "name":  "Parsing",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Converters",
+                                                                                            "name":  "Converters",
+                                                                                            "type":  "folder",
+                                                                                            "children":  {
+                                                                                                             "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Converters/WorkspaceChangeDtoConverter.cs",
+                                                                                                             "name":  "WorkspaceChangeDtoConverter.cs",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos",
+                                                                                            "name":  "Dtos",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/CreateDirectoryChangeDto.cs",
+                                                                                                                 "name":  "CreateDirectoryChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/CreateFileChangeDto.cs",
+                                                                                                                 "name":  "CreateFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/DeleteDirectoryChangeDto.cs",
+                                                                                                                 "name":  "DeleteDirectoryChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/DeleteFileChangeDto.cs",
+                                                                                                                 "name":  "DeleteFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/EditFileChangeDto.cs",
+                                                                                                                 "name":  "EditFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/MoveDirectoryChangeDto.cs",
+                                                                                                                 "name":  "MoveDirectoryChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/MoveFileChangeDto.cs",
+                                                                                                                 "name":  "MoveFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/RenameDirectoryChangeDto.cs",
+                                                                                                                 "name":  "RenameDirectoryChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/RenameFileChangeDto.cs",
+                                                                                                                 "name":  "RenameFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/TextFileChangeDto.cs",
+                                                                                                                 "name":  "TextFileChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/WorkspaceChangeDto.cs",
+                                                                                                                 "name":  "WorkspaceChangeDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Dtos/WorkspaceChangeSetDto.cs",
+                                                                                                                 "name":  "WorkspaceChangeSetDto.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Factories",
+                                                                                            "name":  "Factories",
+                                                                                            "type":  "folder",
+                                                                                            "children":  {
+                                                                                                             "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/Factories/WorkspaceChangeDtoFactory.cs",
+                                                                                                             "name":  "WorkspaceChangeDtoFactory.cs",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Parsing/WorkspaceChangeParser.cs",
+                                                                                            "name":  "WorkspaceChangeParser.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation",
+                                                                       "name":  "Validation",
+                                                                       "type":  "folder",
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/Rules",
+                                                                                            "name":  "Rules",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/Rules/ConflictValidationRule.cs",
+                                                                                                                 "name":  "ConflictValidationRule.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/Rules/FileSystemValidationRule.cs",
+                                                                                                                 "name":  "FileSystemValidationRule.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/Rules/StructuralValidationRule.cs",
+                                                                                                                 "name":  "StructuralValidationRule.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceValidationRule.cs",
+                                                                                                                 "name":  "WorkspaceValidationRule.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Validation/WorkspaceChangeValidator.cs",
+                                                                                            "name":  "WorkspaceChangeValidator.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codify.Infrastructure/WorkspaceChanges/TextChangeMatcher.cs",
                                                                        "name":  "TextChangeMatcher.cs",
                                                                        "type":  "file"
@@ -1061,6 +1283,11 @@
                                                                    {
                                                                        "path":  "src/Codify.Infrastructure/WorkspaceChanges/WorkspaceChangeHandlerInvoker.cs",
                                                                        "name":  "WorkspaceChangeHandlerInvoker.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codify.Infrastructure/WorkspaceChanges/WorkspaceChangeHandlerResolver.cs",
+                                                                       "name":  "WorkspaceChangeHandlerResolver.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -2813,16 +3040,6 @@
                                                                                                          ]
                                                                                         },
                                                                                         {
-                                                                                            "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Patches",
-                                                                                            "name":  "Patches",
-                                                                                            "type":  "folder",
-                                                                                            "children":  {
-                                                                                                             "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Patches/ApplyPatchTool.cs",
-                                                                                                             "name":  "ApplyPatchTool.cs",
-                                                                                                             "type":  "file"
-                                                                                                         }
-                                                                                        },
-                                                                                        {
                                                                                             "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Search",
                                                                                             "name":  "Search",
                                                                                             "type":  "folder",
@@ -2858,11 +3075,55 @@
                                                                                             "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace",
                                                                                             "name":  "Workspace",
                                                                                             "type":  "folder",
-                                                                                            "children":  {
-                                                                                                             "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/ListDirectoryTool.cs",
-                                                                                                             "name":  "ListDirectoryTool.cs",
-                                                                                                             "type":  "file"
-                                                                                                         }
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/Schemas",
+                                                                                                                 "name":  "Schemas",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  [
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/Schemas/WorkspaceToolSchemas.cs",
+                                                                                                                                      "name":  "WorkspaceToolSchemas.cs",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  },
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/Schemas/WorkspaceToolSchemasFlat.cs",
+                                                                                                                                      "name":  "WorkspaceToolSchemasFlat.cs",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  }
+                                                                                                                              ]
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/ChangeSetCreatorTool.cs",
+                                                                                                                 "name":  "ChangeSetCreatorTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/IWorkspaceApprovalService.cs",
+                                                                                                                 "name":  "IWorkspaceApprovalService.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/IWorkspacePreviewService.cs",
+                                                                                                                 "name":  "IWorkspacePreviewService.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/ListDirectoryTool.cs",
+                                                                                                                 "name":  "ListDirectoryTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/WorkspacePreviewModel.cs",
+                                                                                                                 "name":  "WorkspacePreviewModel.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.VisualStudio/Tools/BuiltIn/Workspace/WorkspacePreviewService.cs",
+                                                                                                                 "name":  "WorkspacePreviewService.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
                                                                                         }
                                                                                     ]
                                                                    },
@@ -3532,6 +3793,117 @@
                                                                                                              {
                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/TextChangeMatcherTests/TextChangeMatcherTests_Search.cs",
                                                                                                                  "name":  "TextChangeMatcherTests_Search.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation",
+                                                                                            "name":  "Validation",
+                                                                                            "type":  "folder",
+                                                                                            "children":  {
+                                                                                                             "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules",
+                                                                                                             "name":  "Rules",
+                                                                                                             "type":  "folder",
+                                                                                                             "children":  [
+                                                                                                                              {
+                                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests",
+                                                                                                                                  "name":  "WorkspaceStateValidationTests",
+                                                                                                                                  "type":  "folder",
+                                                                                                                                  "children":  [
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/Base",
+                                                                                                                                                       "name":  "Base",
+                                                                                                                                                       "type":  "folder",
+                                                                                                                                                       "children":  {
+                                                                                                                                                                        "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/Base/WorkspaceStateValidationRuleBaseTests.cs",
+                                                                                                                                                                        "name":  "WorkspaceStateValidationRuleBaseTests.cs",
+                                                                                                                                                                        "type":  "file"
+                                                                                                                                                                    }
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_AbsolutePath.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_AbsolutePath.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_Cancellation.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_Cancellation.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_GuardClauses.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_GuardClauses.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_InvalidPath.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_InvalidPath.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_PathOutsideWorkspace.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_PathOutsideWorkspace.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   },
+                                                                                                                                                   {
+                                                                                                                                                       "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/WorkspaceStateValidationTests/WorkspaceStateValidationRuleTests_Success.cs",
+                                                                                                                                                       "name":  "WorkspaceStateValidationRuleTests_Success.cs",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                               ]
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/ConflictValidationRuleTests.cs",
+                                                                                                                                  "name":  "ConflictValidationRuleTests.cs",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/FileSystemValidationRuleTests.cs",
+                                                                                                                                  "name":  "FileSystemValidationRuleTests.cs",
+                                                                                                                                  "type":  "file"
+                                                                                                                              },
+                                                                                                                              {
+                                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/Validation/Rules/StructuralValidationRuleTests.cs",
+                                                                                                                                  "name":  "StructuralValidationRuleTests.cs",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                                          ]
+                                                                                                         }
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests",
+                                                                                            "name":  "WorkspaceChangeApplierTests",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/Base",
+                                                                                                                 "name":  "Base",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  {
+                                                                                                                                  "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/Base/WorkspaceChangeApplierBaseTests.cs",
+                                                                                                                                  "name":  "WorkspaceChangeApplierBaseTests.cs",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/WorkspaceChangeApplierTests_Empty.cs",
+                                                                                                                 "name":  "WorkspaceChangeApplierTests_Empty.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/WorkspaceChangeApplierTests_Failure.cs",
+                                                                                                                 "name":  "WorkspaceChangeApplierTests_Failure.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/WorkspaceChangeApplierTests_GuardClauses.cs",
+                                                                                                                 "name":  "WorkspaceChangeApplierTests_GuardClauses.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "tests/Codify.Tests/Infrastructure/WorkspaceChanges/WorkspaceChangeApplierTests/WorkspaceChangeApplierTests_Success.cs",
+                                                                                                                 "name":  "WorkspaceChangeApplierTests_Success.cs",
                                                                                                                  "type":  "file"
                                                                                                              }
                                                                                                          ]
