@@ -124,7 +124,7 @@ namespace Codify.Infrastructure.AI.Providers
 
             var path = @$"C:\Users\Programmer\AppData\Local\Codify\prompts\prompt_{Guid.NewGuid()}.json";
 
-            await workspaceFileService.CreateAsync(path, cancellationToken);
+            await workspaceFileService.CreateFileAsync(path, cancellationToken);
 
             await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: cancellationToken);
 #endif

@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.VisualStudio.Extensions;
@@ -98,18 +98,32 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
         return Task.CompletedTask;
     }
 
-    public void Create(string filePath)
+    public void CreateFile(string filePath)
     {
         using (fileSystem.File.Create(filePath))
         {
         }
     }
 
-    public Task CreateAsync(string filePath, CancellationToken cancellationToken = default)
+    public Task CreateFileAsync(string filePath, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        Create(filePath);
+        CreateFile(filePath);
+
+        return Task.CompletedTask;
+    }
+
+    public void CreateDirectory(string filePath)
+    {
+        fileSystem.Directory.CreateDirectory(filePath);
+    }
+
+    public Task CreateDirectoryAsync(string filePath, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        CreateDirectory(filePath);
 
         return Task.CompletedTask;
     }
