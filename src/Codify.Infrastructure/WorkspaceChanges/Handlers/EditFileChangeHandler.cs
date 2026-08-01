@@ -1,14 +1,16 @@
 ﻿using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
+using Codify.Core.Interfaces.Helper;
 using Codify.Core.Interfaces.WorkspaceChanges;
+using Codify.Core.Models.Tools;
 using Codify.Core.Models.WorkspaceChanges;
 using Codify.Infrastructure.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces.Helper;
 
 namespace Codify.Infrastructure.WorkspaceChanges.Handlers;
 
@@ -39,6 +41,8 @@ public sealed class EditFileChangeHandler(
 
         content = stringHelper.Normalize(content);
 
+        List<ChangedFileResult> changedFileResults = [];
+
         foreach (var textChange in change.TextChanges.OrderBy(x => x.Order))
         {
             var match = textChangeMatcher.Match(
@@ -66,7 +70,16 @@ public sealed class EditFileChangeHandler(
             content,
             cancellationToken: cancellationToken);
 
-        return WorkspaceChangeResult.Successful();
+        changedFileResults.Add(new ChangedFileResult()
+        {
+            Operation = "EditFile",
+            Path = change.FilePath,
+        });
+
+        return WorkspaceChangeResult.Successful(new WorkspaceChangeSuccess()
+        {
+            Files = changedFileResults
+        });
     }
 
     private static string ApplyReplacement(

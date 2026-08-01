@@ -4,12 +4,10 @@ using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Tools;
-using Codify.Storage;
 using Codify.Storage.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -37,7 +35,8 @@ namespace Codify.Infrastructure.AI.Providers
     public class OpenAiCompatibleProvider(IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,
-        IOpenAiCompatibleClient client)
+        IOpenAiCompatibleClient client,
+        IWorkspaceFileService workspaceFileService)
         : IAiProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -91,9 +90,7 @@ namespace Codify.Infrastructure.AI.Providers
         }
 
         public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
-            IReadOnlyList<ChatMessage> messages,
-            ChatMessage assistantMessage,
-            IReadOnlyList<ToolResult> toolResults,
+            IReadOnlyList<ChatMessage> history,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
@@ -101,18 +98,6 @@ namespace Codify.Infrastructure.AI.Providers
 
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
-
-            var history = messages.ToList();
-
-            history.Add(assistantMessage);
-
-            history.AddRange(toolResults.Select(toolResult => new ChatMessage
-            {
-                Role = "tool",
-                ToolCallId = toolResult.Id,
-                Content = toolResult.Success ? "" : toolResult.Error,
-                Data = toolResult.Data,
-            }));
 
             await foreach (var item in StreamCompletionAsync(
                                provider,
@@ -134,9 +119,15 @@ namespace Codify.Infrastructure.AI.Providers
                 model,
                 messages,
                 true);
+#if DEBUG
+            var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
 
-            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+            var path = @$"C:\Users\Programmer\AppData\Local\Codify\prompts\prompt_{Guid.NewGuid()}.json";
 
+            await workspaceFileService.CreateAsync(path, cancellationToken);
+
+            await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: cancellationToken);
+#endif
             Dictionary<int, ToolCallBuilder> toolCalls = [];
             var toolArguments = new StringBuilder();
 
@@ -342,53 +333,6 @@ namespace Codify.Infrastructure.AI.Providers
                         }
                     })
             ];
-        }
-
-        private object BuildSchema(ToolProperty property)
-        {
-            var schema = new Dictionary<string, object>
-            {
-                ["type"] = ToJsonSchemaType(property.Type),
-                ["description"] = property.Description
-            };
-
-            if (property.Properties?.Count > 0)
-            {
-                schema["properties"] = property.Properties.ToDictionary(
-                    p => p.Key,
-                    p => BuildSchema(p.Value));
-            }
-
-            if (property.Required?.Count > 0)
-            {
-                schema["required"] = property.Required;
-            }
-
-            if (property.Items != null)
-            {
-                schema["items"] = BuildSchema(property.Items);
-            }
-
-            if (property.Enum?.Count > 0)
-            {
-                schema["enum"] = property.Enum;
-            }
-
-            if (property.OneOf?.Count > 0)
-            {
-                schema["oneOf"] = property.OneOf
-                    .Select(BuildSchema)
-                    .ToArray();
-            }
-
-            if (property.AnyOf?.Count > 0)
-            {
-                schema["anyOf"] = property.AnyOf
-                    .Select(BuildSchema)
-                    .ToArray();
-            }
-
-            return schema;
         }
         private static JObject ParseArguments(string arguments)
         {

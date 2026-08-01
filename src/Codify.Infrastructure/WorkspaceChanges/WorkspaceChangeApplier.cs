@@ -20,9 +20,11 @@ public sealed class WorkspaceChangeApplier(
         if (workspaceChangeSet == null)
             throw new ArgumentNullException(nameof(workspaceChangeSet));
 
+        WorkspaceChangeResult result = null;
+
         foreach (var workspaceChange in workspaceChangeSet.Changes)
         {
-            var result =
+            result =
                 await workspaceChangeHandlerInvoker.InvokeAsync(
                     workspaceChange,
                     cancellationToken);
@@ -31,10 +33,8 @@ public sealed class WorkspaceChangeApplier(
 
             if (!result.Success)
                 return result;
-
-            
         }
 
-        return WorkspaceChangeResult.Successful();
+        return result;
     }
 }

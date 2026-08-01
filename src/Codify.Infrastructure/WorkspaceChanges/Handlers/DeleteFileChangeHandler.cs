@@ -2,6 +2,7 @@ using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Interfaces.WorkspaceChanges;
+using Codify.Core.Models.Tools;
 using Codify.Core.Models.WorkspaceChanges;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,13 @@ public sealed class DeleteFileChangeHandler(
             change.FilePath,
             cancellationToken);
 
-        return WorkspaceChangeResult.Successful();
+        return WorkspaceChangeResult.Successful(new WorkspaceChangeSuccess()
+        {
+            Files = [new ChangedFileResult()
+            {
+                Operation = "DeleteFile",
+                Path = change.FilePath,
+            }]
+        });
     }
 }
