@@ -25,9 +25,7 @@ namespace Codify.Core.Interfaces
             CancellationToken cancellationToken = default);
 
         IAsyncEnumerable<ConversationEvent> ContinueAsync(
-            IReadOnlyList<ChatMessage> messages,
-            ChatMessage assistantMessage,
-            IReadOnlyList<ToolResult> toolResults,
+            IReadOnlyList<ChatMessage> history,
             CancellationToken cancellationToken);
     }
 }

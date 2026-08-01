@@ -6,11 +6,50 @@ using System.Threading.Tasks;
 
 namespace Codify.Core.Models.Tools
 {
-    public class ChangeSetCreatorToolResult
+    public sealed class WorkspaceChangeSuccess
     {
-        public string Status { get; set; } = "Completed";
+        /// <summary>
+        /// Indicates whether the tool completed successfully.
+        /// </summary>
+        public string Status { get; set; } = "success";
 
-        public string Rule { get; set; } = "The tool results above are authoritative.\n\nrequested changes were successfully applied, do not call change_set_creator again.\n\nInstead, produce a final response to the user summarizing the completed work";
+        /// <summary>
+        /// Indicates that the requested operation has been completed.
+        /// </summary>
+        public bool Completed { get; set; } = true;
 
+        /// <summary>
+        /// Indicates that the workspace was modified.
+        /// </summary>
+        public bool WorkspaceModified { get; set; } = true;
+
+        /// <summary>
+        /// Human-readable summary of the completed operation.
+        /// </summary>
+        public string Message { get; set; } =
+            "All requested workspace changes have been successfully applied.";
+
+        /// <summary>
+        /// List of affected files.
+        /// </summary>
+        public List<ChangedFileResult> Files { get; set; } = [];
+    }
+
+    public sealed class ChangedFileResult
+    {
+        /// <summary>
+        /// Workspace-relative file path.
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// CreateFile, EditFile, DeleteFile, RenameFile, ...
+        /// </summary>
+        public string Operation { get; set; }
+
+        /// <summary>
+        /// success / failed
+        /// </summary>
+        public string Status { get; set; } = "success";
     }
 }

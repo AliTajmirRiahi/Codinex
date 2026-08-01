@@ -26,6 +26,20 @@ namespace Codify.Core.Interfaces
             Encoding encoding = null,
             CancellationToken cancellationToken = default);
 
+
+        // Append
+
+        void AppendText(
+            string filePath,
+            string content,
+            Encoding encoding = null);
+
+        Task AppendTextAsync(
+            string filePath,
+            string content,
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default);
+
         // Create
 
         void Create(string filePath);
