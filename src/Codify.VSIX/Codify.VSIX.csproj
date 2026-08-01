@@ -151,9 +151,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
     <PackageReference Include="Microsoft.VisualStudio.LanguageServices" Version="4.13.0" />
-	<PackageReference Include="System.IO.Abstractions">
-		<Version>20.0.15</Version>
-	</PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>20.0.15</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

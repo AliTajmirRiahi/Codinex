@@ -42,9 +42,13 @@ namespace Codify.Core.Interfaces
 
         // Create
 
-        void Create(string filePath);
+        void CreateFile(string filePath);
 
-        Task CreateAsync(string filePath, CancellationToken cancellationToken = default);
+        Task CreateFileAsync(string filePath, CancellationToken cancellationToken = default);
+
+        void CreateDirectory(string filePath);
+
+        Task CreateDirectoryAsync(string filePath, CancellationToken cancellationToken = default);
 
         // Delete
 
