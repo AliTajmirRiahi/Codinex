@@ -69,6 +69,35 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
         return Task.CompletedTask;
     }
 
+    public void AppendText(
+        string filePath,
+        string content,
+        Encoding encoding = null)
+    {
+        encoding ??= Encoding.UTF8;
+
+        fileSystem.File.AppendAllText(
+            filePath,
+            content,
+            encoding);
+    }
+
+    public Task AppendTextAsync(
+        string filePath,
+        string content,
+        Encoding encoding = null,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        AppendText(
+            filePath,
+            content,
+            encoding ?? new UTF8Encoding(false));
+
+        return Task.CompletedTask;
+    }
+
     public void Create(string filePath)
     {
         using (fileSystem.File.Create(filePath))

@@ -18,6 +18,8 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
         IProjectContextFormatter projectContextFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
+
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,
             CancellationToken cancellationToken)

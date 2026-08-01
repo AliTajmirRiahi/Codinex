@@ -19,6 +19,7 @@ namespace Codify.VisualStudio.Workspace.Orchestrators
         IOpenDocumentsFormatter openDocumentsFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,
             CancellationToken cancellationToken)

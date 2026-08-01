@@ -1,0 +1,74 @@
+using Codify.Core.Conversation;
+using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Models;
+using Codify.Core.Interfaces.WorkspaceChanges;
+using Codify.Core.Models;
+using Codify.Core.Tools;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
+using Codify.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
+
+namespace Codify.VisualStudio.Tools.BuiltIn.Workspace;
+
+[AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
+public sealed class ChangeSetCreatorTool(
+    IWorkspaceChangeParser parser,
+    IWorkspaceChangeValidator validator,
+    //IWorkspacePreviewService previewService,
+    //IWorkspaceApprovalService approvalService,
+    IWorkspaceChangeApplier applier)
+    : IAiTool
+{
+
+    public string Name => "change_set_creator";
+
+    public string Description =>
+        "Create a workspace change set describing all file and directory modifications.\n\n" +
+        "Return every requested modification in a single change set. " +
+        "Do not explain the changes. Return only the structured change data." +
+        @"The Search text must be copied exactly from the source file. Do not append \n, \r, or trailing whitespace unless they are intentionally part of the selected text" +
+        "If a tool returns status = completed, treat the user's request as completed unless additional tool calls are required for a different task";
+
+    public ToolVisibility Visibility => ToolVisibility.Model;
+
+    public ToolDefinition Definition => new(
+        new Dictionary<string, ToolProperty>
+        {
+            ["changes"] = WorkspaceToolSchemasFlat.WorkspaceChangeSetProp
+        },
+        ["changes"],
+        true);
+
+
+    public async Task<ToolResult> ExecuteAsync(
+        ToolRequest request,
+        CancellationToken cancellationToken)
+    {
+        var changeSet = await parser.ParseAsync(request.Arguments, cancellationToken);
+
+        var validationResult = await validator.ValidateAsync(
+            changeSet,
+            cancellationToken);
+
+        if (!validationResult.Success)
+        {
+            return ToolResult.Failed(request.Id, validationResult.Errors);
+        }
+
+        // await previewService.ShowAsync(changeSet, cancellationToken);
+
+        // if (!await approvalService.WaitForApprovalAsync(cancellationToken))
+        // {
+        //     return ToolResult.Fail("Workspace changes were rejected.");
+        // }
+
+        var result = await applier.ApplyAsync(
+             changeSet,
+             cancellationToken);
+
+        return result.Success ? ToolResult.Successful(request.Id, result.ChangeSuccess) : ToolResult.Failed(request.Id, result.Error.Message, result.Error);
+    }
+}

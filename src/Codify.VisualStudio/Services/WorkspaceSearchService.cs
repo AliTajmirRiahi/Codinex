@@ -29,17 +29,30 @@ namespace Codify.VisualStudio.Services
 
             var files = EnumerateWorkspaceFiles();
 
-            var exact = files
+            // 1. Exact relative path
+            var exactPath = files
+                .Where(f => f.RelativePath
+                    .Replace('\\', '/')
+                    .Equals(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (exactPath.Count > 0)
+                return exactPath;
+
+            // 2. Exact file name
+            var exactName = files
                 .Where(f => f.Name.Equals(
                     Path.GetFileName(query),
                     StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-            if (exact.Count > 0)
-                return exact;
+            if (exactName.Count > 0)
+                return exactName;
 
+            // 3. Partial relative path
             return files
-                .Where(f => f.RelativePath.Replace('\\', '/')
+                .Where(f => f.RelativePath
+                    .Replace('\\', '/')
                     .Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }

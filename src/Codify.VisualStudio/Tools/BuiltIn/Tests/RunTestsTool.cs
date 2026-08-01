@@ -6,6 +6,7 @@ using Codify.Core.Tools;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codify.Core.Models.Tools;
 
 namespace Codify.VisualStudio.Tools.BuiltIn.Tests;
 
