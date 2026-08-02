@@ -13,6 +13,7 @@ using Codify.VisualStudio.References;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Codify.VisualStudio.WebView;
@@ -36,6 +37,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly ReferenceManager _referenceManager;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
+    private CancellationTokenSource _generationCancellation;
 
     public WebViewMessageRouter(
         IExecutionPipeline pipeline,
@@ -111,8 +113,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             case WebViewMessageType.CancelGeneration:
                 {
-                    // Future: cancel streaming AI response
-                    // Example: _generationCancellation.Cancel();
+                    _generationCancellation?.Cancel();
 
                     return;
                 }
@@ -229,21 +230,40 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
     private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {
+        _generationCancellation?.Cancel();
+        _generationCancellation?.Dispose();
+        _generationCancellation = new CancellationTokenSource();
+
+        var cancellationToken = _generationCancellation.Token;
+
         _sendChatMessageUseCase = _chatUseCaseFactory.Create();
 
         var payload = _payloadBinder.Bind<ChatMessageBuildRequest>(request.Payload);
 
         payload.ProjectInstruction = _conversationGroupManager.CurrentGroup?.Description ?? string.Empty;
 
-        await _sendChatMessageUseCase.ExecuteStreamingAsync(
-            payload,
-            false,
-            async response =>
-            {
-                await CheckIfTitleChangedAsync(response);
+        try
+        {
+            await _sendChatMessageUseCase.ExecuteStreamingAsync(
+                payload,
+                false,
+                async response =>
+                {
+                    await CheckIfTitleChangedAsync(response);
 
-                await _webViewClient.PostMessageAsync(response);
-            });
+                    await _webViewClient.PostMessageAsync(response);
+                },
+                cancellationToken);
+        }
+        finally
+        {
+            if (_generationCancellation != null)
+            {
+                _generationCancellation.Dispose();
+                _generationCancellation = null;
+            }
+        }
+
 
         //if (payload?.Stream == true)
         //if (true)

@@ -53,6 +53,15 @@
             opacity: 1;
         }
 
+        .input-actions button.streaming-stop {
+            background: #d13438;
+            color: #ffffff;
+        }
+
+            .input-actions button.streaming-stop:hover {
+                background: #b92c30;
+            }
+
 .selector-group {
     display: flex;
     align-items: center;

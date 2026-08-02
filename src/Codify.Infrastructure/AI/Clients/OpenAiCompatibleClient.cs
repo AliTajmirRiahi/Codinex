@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -120,6 +120,8 @@ namespace Codify.Infrastructure.AI.Clients
 
                 if (completed != readTask)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     throw new TimeoutException(
                         "No SSE event received for 60 seconds.");
                 }

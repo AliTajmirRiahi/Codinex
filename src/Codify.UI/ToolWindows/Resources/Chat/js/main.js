@@ -116,8 +116,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatController.navigateToProject();
         },
 
-        onAIResponse: (payload) => {
-            chatController.handleAIResponse(payload);
+        onAIResponse: (payload, meta) => {
+            chatController.handleAIResponse(payload, meta);
         },
         onHandleStreamChunk: (payload) => {
             chatController.handleStreamChunk(payload);
