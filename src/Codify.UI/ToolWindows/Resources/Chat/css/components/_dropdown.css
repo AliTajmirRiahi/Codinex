@@ -251,10 +251,11 @@
     overflow: visible;
 }
 #chat-history-dropdown.com-dropdown {
-    top: 45px;
-    flex: 1;
+    top: 35px;
+    left: 0;
+    right: 0;
     flex-direction: column;
-    min-width: 420px;
+    min-width: 260px;
 }
 #project-dropdown.com-dropdown {
     top: 35px;
