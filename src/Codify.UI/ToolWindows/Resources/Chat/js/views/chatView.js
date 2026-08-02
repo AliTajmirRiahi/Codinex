@@ -14,13 +14,15 @@ import { ComposerView } from './composerView.js';
 
 export const chatView = {
 
-    initialize(handleSend, onModelSelected) {
+    initialize(handleSend, onModelSelected, handleCancel) {
         this.handleSend = handleSend;
+        this.handleCancel = handleCancel;
 
         this.initializeModelDropdown(onModelSelected);
 
         this.composer = new ComposerView({
             onSend: () => this.handleSendMessage(),
+            onCancel: () => this.handleCancelGeneration(),
         });
 
         this.bindLoadingState();
@@ -62,12 +64,8 @@ export const chatView = {
         subscribe((state) => {
             togglePanelHidden('#response-loading', state.isLoading);
 
-            if (this.input) {
-                this.input.disabled = state.isLoading;
-            }
-
-            if (this.sendBtn) {
-                this.sendBtn.disabled = state.isLoading || !this.getInputText();
+            if (this.composer) {
+                this.composer.setStreaming(state.isLoading);
             }
         });
     },
@@ -189,6 +187,11 @@ export const chatView = {
     handleSendMessage() {
         togglePanelHidden('#chat-welcome', false);
         this.handleSend();
+    },
+    handleCancelGeneration() {
+        if (this.handleCancel) {
+            this.handleCancel();
+        }
     },
     renderMessages(messages) {
         togglePanelHidden('#chat-welcome', false);

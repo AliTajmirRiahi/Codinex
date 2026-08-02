@@ -2230,6 +2230,11 @@
                                                                                                                                       "type":  "file"
                                                                                                                                   },
                                                                                                                                   {
+                                                                                                                                      "path":  "src/Codify.UI/ToolWindows/Resources/Icons/symbols/stop-circle.svg",
+                                                                                                                                      "name":  "stop-circle.svg",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  },
+                                                                                                                                  {
                                                                                                                                       "path":  "src/Codify.UI/ToolWindows/Resources/Icons/symbols/symbol-array.svg",
                                                                                                                                       "name":  "symbol-array.svg",
                                                                                                                                       "type":  "file"

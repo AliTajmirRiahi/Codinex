@@ -72,6 +72,7 @@
     <Content Include="ToolWindows\Resources\Chat\tests\views\manageModelsView.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\copy.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\stop-circle.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />

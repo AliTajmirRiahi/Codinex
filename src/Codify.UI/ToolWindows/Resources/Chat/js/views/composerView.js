@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ComposerView
  * Handles message input, triggers, chips and command menus.
  * No AI logic should exist here.
@@ -15,10 +15,12 @@ const TRIGGERS = {
 
 export class ComposerView {
 
-    constructor({ onSend, onChange }) {
+    constructor({ onSend, onChange, onCancel }) {
 
         this.onSend = onSend;
         this.onChange = onChange;
+        this.onCancel = onCancel;
+        this.isStreaming = false;
 
         this.input = $('#userInput');
         this.sendBtn = $('#send-btn');
@@ -60,6 +62,10 @@ export class ComposerView {
      */
     setOnSend(callback) {
         this.onSend = typeof callback === 'function' ? callback : null;
+    }
+
+    setOnCancel(callback) {
+        this.onCancel = typeof callback === 'function' ? callback : null;
     }
 
     bindEvents() {
@@ -175,6 +181,13 @@ export class ComposerView {
     }
 
     send() {
+        if (this.isStreaming) {
+            if (this.onCancel)
+                this.onCancel();
+
+            return;
+        }
+
         this.clear();
 
         if (this.onSend)
@@ -275,7 +288,26 @@ export class ComposerView {
     }
 
     updateSendState() {
+        if (this.isStreaming) {
+            togglePanelDisable('#send-btn', true);
+            return;
+        }
+
         togglePanelDisable('#send-btn', this.input.innerText.trim() !== '');
+    }
+
+    setStreaming(isStreaming) {
+        this.isStreaming = !!isStreaming;
+
+        if (!this.sendBtn) return;
+
+        this.sendBtn.classList.toggle('streaming-stop', this.isStreaming);
+        this.sendBtn.title = this.isStreaming ? 'Stop' : 'Send';
+        this.sendBtn.innerHTML = this.isStreaming
+            ? '<codify-icon name="symbols/stop-circle"></codify-icon>'
+            : '<codify-icon name="send-horizontal"></codify-icon>';
+
+        this.updateSendState();
     }
 
     setText(text) {

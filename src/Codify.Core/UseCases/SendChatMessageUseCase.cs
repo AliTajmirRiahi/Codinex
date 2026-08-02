@@ -90,13 +90,19 @@ public sealed class SendChatMessageUseCase(
         }
     }
 
-    public async Task ExecuteStreamingAsync(ChatMessageBuildRequest request, bool includeSelectedCode, Func<ChatResponse, Task> onMessage)
+    public async Task ExecuteStreamingAsync(
+        ChatMessageBuildRequest request,
+        bool includeSelectedCode,
+        Func<ChatResponse, Task> onMessage,
+        CancellationToken cancellationToken = default)
     {
         if (request == null)
             throw new InvalidOperationException("Request cannot be empty.");
 
         if (onMessage == null)
             throw new ArgumentNullException(nameof(onMessage));
+
+        var fullText = string.Empty;
 
         try
         {
@@ -112,7 +118,7 @@ public sealed class SendChatMessageUseCase(
             var promptContext =
                 await workspaceContextBuilder.BuildAsync(
                     workspaceRequest,
-                    CancellationToken.None);
+                    cancellationToken);
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
 
@@ -120,10 +126,9 @@ public sealed class SendChatMessageUseCase(
             chatSession.AddUserMessage(request.DraftText, buildResult.Context);
 
             // Accumulate the full assistant text while chunks arrive.
-            var fullText = string.Empty;
-
             await foreach (var evt in conversationEngine.ExecuteAsync(
-                               buildResult))
+                               buildResult,
+                               cancellationToken))
             {
                 switch (evt.Type)
                 {
@@ -151,10 +156,10 @@ public sealed class SendChatMessageUseCase(
                 }
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Persist the final assistant answer.
             chatSession.AddAssistantMessage(fullText);
-
-            await chatSession.SaveAsync();
 
             // Save session
             var titleChanged = await chatSession.SaveAsync();
@@ -177,6 +182,31 @@ public sealed class SendChatMessageUseCase(
             await onMessage(new ChatResponse(
                 WebViewMessageType.AiResponse,
                 fullText, meta));
+        }
+        catch (OperationCanceledException)
+        {
+            var titleChanged = false;
+
+            if (!string.IsNullOrWhiteSpace(fullText))
+            {
+                chatSession.AddAssistantMessage(fullText);
+                titleChanged = await chatSession.SaveAsync();
+            }
+
+            var meta = new Dictionary<string, object>
+            {
+                ["cancelled"] = true
+            };
+
+            if (titleChanged)
+            {
+                meta["titleChanged"] = true;
+            }
+
+            await onMessage(new ChatResponse(
+                WebViewMessageType.AiResponse,
+                fullText,
+                meta));
         }
         catch (Exception ex)
         {

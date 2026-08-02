@@ -23,7 +23,7 @@ let accumulatedText = '';
  */
 export function initChatController(transport) {
 
-    chatView.initialize(handleSend, onModelSelected);
+    chatView.initialize(handleSend, onModelSelected, handleCancel);
 
     const composerController = new ComposerController(chatView.composer);
 
@@ -100,6 +100,15 @@ export function initChatController(transport) {
 
             chatView.appendErrorMessage(STATICS.GENERIC_CHAT_ERROR);
         }
+    }
+
+    function handleCancel() {
+        const state = getState();
+
+        if (!state.isLoading) return;
+
+        chatView.setStatus('Stopping...');
+        transport.send(EVENTS.CANCEL_GENERATION);
     }
 
     async function handleNewChat() {
@@ -193,9 +202,25 @@ export function initChatController(transport) {
             composerController.setRefrences();
         },
 
-        handleAIResponse: (payload) => {
+        handleAIResponse: (payload, meta) => {
             setLoading(false);
             chatView.clearStatus();
+
+            const wasCancelled = !!(meta && (meta.cancelled || meta.Cancelled));
+
+            if (wasCancelled) {
+                if (activeStreamMessage) {
+                    const finalText = payload || accumulatedText;
+
+                    chatView.finalizeMessage(activeStreamMessage, finalText);
+
+                    activeStreamMessage = null;
+                    accumulatedText = '';
+                }
+
+                chatView.setStatus(STATICS.RESPONSE_STOPPED_BY_USER);
+                return;
+            }
 
             // If streaming was active → finalize it
             if (activeStreamMessage) {
@@ -210,6 +235,8 @@ export function initChatController(transport) {
 
                 return;
             }
+
+            if (!payload) return;
 
             // Non-stream fallback
             chatView.appendMessage(payload, 'assistant');

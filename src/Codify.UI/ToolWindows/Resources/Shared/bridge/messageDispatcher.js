@@ -37,7 +37,7 @@ export function createMessageDispatcher(handlers) {
                 break;
 
             case EVENTS.AI_RESPONSE:
-                if (handlers.onAIResponse) handlers.onAIResponse(payload);
+                if (handlers.onAIResponse) handlers.onAIResponse(payload, message.meta || message.Meta);
                 break;
 
             case EVENTS.STREAM_CHUNK:
