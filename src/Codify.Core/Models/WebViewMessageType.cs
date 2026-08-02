@@ -19,6 +19,7 @@ public static class WebViewMessageType
     public const string NewChat = "NEW_CHAT";
     public const string DeleteChat = "DELETE_CHAT";
     public const string NewGroup = "NEW_GROUP";
+    public const string UpdateGroup = "UPDATE_GROUP";
     public const string DeleteGroup = "DELETE_GROUP";
     public const string OpenExternalLink = "OPEN_EXTERNAL_LINK";
     public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";

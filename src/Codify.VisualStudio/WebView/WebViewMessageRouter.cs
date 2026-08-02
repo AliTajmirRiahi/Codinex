@@ -199,6 +199,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.UpdateGroup:
+                {
+                    var payload = _payloadBinder.Bind<ConversationGroupUpdateDto>(request.Payload);
+
+                    await UpdateConversationGroupAsync(payload);
+
+                    return;
+                }
             case WebViewMessageType.DeleteGroup:
                 {
                     var payload = _payloadBinder.Bind<ConversationGroupSelectedDto>(request.Payload);
@@ -488,6 +496,29 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await _conversationGroupManager.CreateGroupAsync(name, description);
         await _sessionService.InitializeAsync();
+
+        await SendSelectedGroupApprovedAsync();
+    }
+
+    public async Task UpdateConversationGroupAsync(ConversationGroupUpdateDto payload)
+    {
+        if (payload.GroupId == Guid.Empty)
+        {
+            throw new InvalidOperationException("Conversation group id is required.");
+        }
+
+        var name = string.IsNullOrWhiteSpace(payload.Name)
+            ? "New Project"
+            : payload.Name.Trim();
+
+        var description = payload.Description ?? string.Empty;
+
+        await _conversationGroupManager.UpdateGroupAsync(new ConversationGroup
+        {
+            Id = payload.GroupId,
+            Name = name,
+            Description = description,
+        });
 
         await SendSelectedGroupApprovedAsync();
     }

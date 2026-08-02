@@ -1422,6 +1422,11 @@
                                                                                             "path":  "src/Codify.Storage/Models/DTO/ConversationGroupSelectedDto.cs",
                                                                                             "name":  "ConversationGroupSelectedDto.cs",
                                                                                             "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Storage/Models/DTO/ConversationGroupUpdateDto.cs",
+                                                                                            "name":  "ConversationGroupUpdateDto.cs",
+                                                                                            "type":  "file"
                                                                                         }
                                                                                     ]
                                                                    },
