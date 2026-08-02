@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -97,6 +97,38 @@ namespace Codify.Storage.Managers
                 provider.AddModel(newModel);
                 await SaveAsync();
             }
+        }
+
+        public async Task RefreshModelsAsync(string providerId)
+        {
+            if (string.IsNullOrWhiteSpace(providerId))
+                throw new ArgumentException(@"ProviderId is required.", nameof(providerId));
+
+            var provider = Providers.FirstOrDefault(p =>
+                string.Equals(p.Id, providerId, StringComparison.OrdinalIgnoreCase));
+
+            if (provider == null)
+                throw new InvalidOperationException($"Provider '{providerId}' was not found.");
+
+            var selectedModelIds = provider.Models
+                .Where(m => m.IsSelected)
+                .Select(m => m.Id)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var currentModelId = provider.Models.FirstOrDefault(m => m.IsCurrent)?.Id;
+            var refreshedModels = await providerModelService.GetModelsAsync(provider);
+
+            provider.SetModels(refreshedModels);
+
+            foreach (var model in provider.Models.Where(m => selectedModelIds.Contains(m.Id)))
+                model.Select();
+
+            var currentModel = provider.Models.FirstOrDefault(m =>
+                string.Equals(m.Id, currentModelId, StringComparison.OrdinalIgnoreCase));
+
+            currentModel?.MarkAsCurrent();
+
+            await SaveAsync();
         }
 
         public async Task UpdateSettingsAsync(AiProviderDto selectedProvider)

@@ -13,11 +13,12 @@ export const manageModelsView = {
     // Internal state to manage models across pages
     state: {
         selectedModels: new Map(), // Stores full model objects to maintain 
+        providers: [],
     },
     // We now store a pagination instance instead of raw pagination values
     pagination: new PaginationService([], 5),
 
-    initEventHandlers(saveCallBack) {
+    initEventHandlers(saveCallBack, refreshModelsCallBack) {
         // Event Listeners for Pager Buttons
         $('#prev-page').onclick = () => {
             if (this.pagination.currentPage > 1) {
@@ -32,6 +33,18 @@ export const manageModelsView = {
                 this.pagination.nextPage();
                 this.renderModelPage();
             }
+        };
+
+        $('#refresh-models-btn').onclick = () => {
+            const provider = this.getSelectedProvider();
+
+            if (!provider || !provider.apiKey) return;
+
+            // Show loading overlay while refreshing provider models
+            this.setLoading(true);
+
+            if (refreshModelsCallBack)
+                refreshModelsCallBack({ providerId: provider.id });
         };
 
         $('#save-settings-btn').onclick = () => {
@@ -57,6 +70,9 @@ export const manageModelsView = {
                 saveCallBack(data);
         };
     },
+    setLoading(isLoading) {
+        togglePanelHidden('#models-loading-screen', !!isLoading);
+    },
     /**
      * Renders the provider dropdown and attaches selection logic.
      */
@@ -64,22 +80,14 @@ export const manageModelsView = {
         const select = $('#provider-select');
         if (!select) return;
 
+        this.state.providers = providers || [];
+
         // Handle provider change to load respective models
         select.addEventListener('change', (e) => {
             const selectedId = e.target.value;
             const provider = providers.find(p => p.id === selectedId);
 
-            // Reset state for the new provider
-            this.pagination.goToPage(1);
-            this.pagination.setItems((provider && provider.models) ? provider.models : []);
-            $('#model-api-key').value = provider.apiKey;
-
-            this.state.selectedModels = new Map(
-                _.filter(provider.models, { isSelected: true })
-                    .map(model => [model.id, model])
-            );
-
-            this.renderModelPage();
+            this.renderProviderModels(provider);
 
             if (provider && provider.models) {
                 togglePanelHidden('#model-pagination', true);
@@ -111,6 +119,27 @@ export const manageModelsView = {
             this.show()
         }
 
+    },
+
+    renderProviderModels(provider) {
+        // Reset state for the selected provider
+        this.pagination.goToPage(1);
+        this.pagination.setItems((provider && provider.models) ? provider.models : []);
+        $('#model-api-key').value = provider ? provider.apiKey : '';
+        togglePanelHidden('#refresh-models-btn', !!(provider && provider.apiKey));
+
+        this.state.selectedModels = new Map(
+            _.filter((provider && provider.models) ? provider.models : [], { isSelected: true })
+                .map(model => [model.id, model])
+        );
+
+        this.renderModelPage();
+    },
+
+    getSelectedProvider() {
+        const providerId = $('#provider-select').value;
+
+        return this.state.providers.find(p => p.id === providerId);
     },
 
     /**

@@ -28,6 +28,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onSelectModel) handlers.onSelectModel(payload);
                 break;
 
+            case EVENTS.PROVIDER_MODELS_REFRESHED:
+                if (handlers.onProviderModelsRefreshed) handlers.onProviderModelsRefreshed(payload);
+                break;
+
             case EVENTS.SELECT_CHAT_APPROVED:
                 if (handlers.onSelectChat) handlers.onSelectChat(payload);
                 break;

@@ -20,13 +20,23 @@ export const initManageModelsController = (transport) => {
 
     return {
         updateUI(settings) {
-            manageModelsView.initEventHandlers((updatedSettings) => {
-                this.sendUpdatedSettings(updatedSettings);
-            }); // Ensure event handlers are set up
+            manageModelsView.initEventHandlers(
+                (updatedSettings) => {
+                    this.sendUpdatedSettings(updatedSettings);
+                },
+                (payload) => {
+                    this.refreshProviderModels(payload);
+                }); // Ensure event handlers are set up
             manageModelsView.renderProviders(settings.availableProviders, (settings.current != null ? settings.current.id : -1));
+
+            // Ensure loading overlay is hidden after any UI update (e.g., after refresh completes)
+            manageModelsView.setLoading(false);
         },
         sendUpdatedSettings(updatedSettings) {
             transport.send(EVENTS.UPDATE_SETTINGS, updatedSettings);
+        },
+        refreshProviderModels(payload) {
+            transport.send(EVENTS.REFRESH_PROVIDER_MODELS, payload);
         },
         closeProviderSettings() {
             manageModelsView.hide();
