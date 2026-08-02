@@ -44,6 +44,55 @@ function createModelFooter() {
     return footerEl;
 }
 
+function createUserMessageCopyButton(text) {
+    const buttonEl = document.createElement('button');
+    buttonEl.type = 'button';
+    buttonEl.className = 'message-copy-btn';
+    buttonEl.title = 'Copy message';
+    buttonEl.setAttribute('aria-label', 'Copy message');
+    buttonEl.innerHTML = '<codify-icon name="copy" aria-hidden="true"></codify-icon>';
+
+    buttonEl.addEventListener('click', async () => {
+        const originalTitle = buttonEl.title;
+        const originalLabel = buttonEl.getAttribute('aria-label');
+
+        try {
+            await CodeRenderer.copyToClipboard(text || '');
+
+            buttonEl.title = 'Copied';
+            buttonEl.setAttribute('aria-label', 'Copied');
+            buttonEl.classList.add('copied');
+        } catch {
+            buttonEl.title = 'Copy failed';
+            buttonEl.setAttribute('aria-label', 'Copy failed');
+        }
+
+        setTimeout(() => {
+            buttonEl.title = originalTitle;
+
+            if (originalLabel) {
+                buttonEl.setAttribute('aria-label', originalLabel);
+            } else {
+                buttonEl.removeAttribute('aria-label');
+            }
+
+            buttonEl.classList.remove('copied');
+        }, 1500);
+    });
+
+    return buttonEl;
+}
+
+function createUserMessageElement(messageDiv, text) {
+    const messageGroupEl = document.createElement('div');
+    messageGroupEl.className = 'chat-message-group user-message-group';
+
+    messageGroupEl.appendChild(messageDiv);
+    messageGroupEl.appendChild(createUserMessageCopyButton(text));
+
+    return messageGroupEl;
+}
+
 /**
  * Specifically handles message rendering logic.
  */
@@ -68,6 +117,10 @@ export const messageView = {
             if (footerEl) {
                 messageDiv.appendChild(footerEl);
             }
+        }
+
+        if (sender === 'user') {
+            return createUserMessageElement(messageDiv, text);
         }
 
         return messageDiv;

@@ -125,6 +125,21 @@
     position: relative;
 }
 
+.chat-message-group {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+}
+
+.user-message-group {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.user-message-group .chat-message.user {
+    max-width: 100%;
+}
+
     /* User Message - Aligned to right */
     .chat-message.user {
         align-self: flex-end;
@@ -140,6 +155,43 @@
         color: var(--vs-foreground);
         border-bottom-left-radius: 2px;
         width:100%;
+    }
+
+.message-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+    padding: 3px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    opacity: 0.65;
+    transition: all 0.2s ease;
+}
+
+.message-copy-btn codify-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.message-copy-btn codify-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+}
+
+    .message-copy-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
+
+    .message-copy-btn.copied {
+        color: #89d185;
+        opacity: 1;
     }
 
 /* Message header */
