@@ -116,14 +116,14 @@ namespace Codify.Infrastructure.AI.Clients
 
                 var completed = await Task.WhenAny(
                     readTask,
-                    Task.Delay(TimeSpan.FromSeconds(60), cancellationToken));
+                    Task.Delay(TimeSpan.FromSeconds(300), cancellationToken));
 
                 if (completed != readTask)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     throw new TimeoutException(
-                        "No SSE event received for 60 seconds.");
+                        "No SSE event received for 300 seconds.");
                 }
 
                 var line = await readTask;

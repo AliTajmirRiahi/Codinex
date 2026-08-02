@@ -42,6 +42,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const manageModelsController = initManageModelsController(webViewTransport);
     initAboutController();
 
+    function getChatsPayload(payload) {
+        const chats = payload?.chats || payload?.Chats;
+
+        if (!chats) return null;
+
+        return {
+            chatList: chats.chatList || chats.ChatList,
+            current: chats.current || chats.Current
+        };
+    }
+
+    function applyChatsPayload(payload) {
+        const chats = getChatsPayload(payload);
+
+        if (!chats) return;
+
+        if (chats.chatList) setChatList(chats.chatList);
+        if (chats.current) setCurrentChat(chats.current);
+
+        chatController.renderChatList();
+    }
+
     /**
      * Setup message dispatcher
      * Routes incoming messages from .NET to handlers
@@ -131,6 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         onAIResponse: (payload, meta) => {
             chatController.handleAIResponse(payload, meta);
+
+            if (meta && (meta.titleChanged || meta.TitleChanged)) {
+                applyChatsPayload(meta);
+            }
         },
         onHandleStreamChunk: (payload) => {
             chatController.handleStreamChunk(payload);
@@ -140,9 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         onChatTitleChanged: (payload) => {
-            setChatList(payload.chats.chatList);
-            setCurrentChat(payload.chats.current);
-            chatController.renderChatList();
+            applyChatsPayload(payload);
         },
         onNewChat: (payload) => {
             setChatList(payload.chats.chatList);

@@ -306,27 +306,34 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
     private async Task CheckIfTitleChangedAsync(ChatResponse response)
     {
-        if (response.Meta != null && response.Meta.TryGetValue("titleChanged", out var changed) && (bool)changed)
+        if (response.Meta == null ||
+            !response.Meta.TryGetValue("titleChanged", out var changed) ||
+            changed is not bool titleChanged ||
+            !titleChanged)
+            return;
+
+        var chatListTask = _chatManager.GetAllChatsAsync();
+        var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+
+        await Task.WhenAll(chatListTask, currentChatTask);
+
+        var chats = new
         {
-            var chatListTask = _chatManager.GetAllChatsAsync();
-            var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+            ChatList = chatListTask.Result,
+            Current = currentChatTask.Result,
+        };
 
-            await Task.WhenAll(chatListTask, currentChatTask);
+        response.Meta["chats"] = chats;
 
-            await _webViewClient.PostMessageAsync(new WebViewMessageResponse()
+        await _webViewClient.PostMessageAsync(new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ChatTitleChanged,
+            Payload = new
             {
-                Type = WebViewMessageType.ChatTitleChanged,
-                Payload = new
-                {
-                    Chats = new
-                    {
-                        ChatList = chatListTask?.Result,
-                        Current = currentChatTask?.Result,
-                    }
-                },
-                Timestamp = DateTime.Now
-            });
-        }
+                Chats = chats
+            },
+            Timestamp = DateTime.Now
+        });
     }
 
     public async Task SendInitialDataAsync(bool includeChats = false)
