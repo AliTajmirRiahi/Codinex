@@ -1,9 +1,10 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.UseCases;
 using Codify.Infrastructure.Chat;
+using Codify.Storage.Interfaces;
 using Codify.Storage.Managers;
 using Codify.Storage.Models;
 using Codify.Storage.Models.DTO;
@@ -30,6 +31,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IChatUseCaseFactory _chatUseCaseFactory;
     private readonly ChatSessionService _sessionService;
     private readonly ChatManager _chatManager;
+    private readonly IConversationGroupManager _conversationGroupManager;
     private readonly IErrorHandler _errorHandler;
     private readonly ReferenceManager _referenceManager;
 
@@ -44,6 +46,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IChatUseCaseFactory chatUseCaseFactory,
         ChatSessionService sessionService,
         ChatManager chatManager,
+        IConversationGroupManager conversationGroupManager,
         IErrorHandler errorHandler,
         ReferenceManager referenceManager)
     {
@@ -55,6 +58,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _chatUseCaseFactory = chatUseCaseFactory;
         _sessionService = sessionService;
         _chatManager = chatManager;
+        _conversationGroupManager = conversationGroupManager;
         _errorHandler = errorHandler;
         _referenceManager = referenceManager;
 
@@ -142,6 +146,18 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     return;
                 }
 
+            case WebViewMessageType.SelectGroup:
+                {
+                    var payload = _payloadBinder.Bind<ConversationGroupSelectedDto>(request.Payload);
+
+                    await _conversationGroupManager.SelectGroupAsync(payload.GroupId);
+                    await _sessionService.InitializeAsync();
+
+                    await SendSelectedGroupApprovedAsync();
+
+                    return;
+                }
+
             case WebViewMessageType.UpdateSettings:
                 {
                     // Future: update provider settings
@@ -161,6 +177,22 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             case WebViewMessageType.DeleteChat:
                 {
                     await DeleteChatSessionAsync();
+                    return;
+                }
+            case WebViewMessageType.NewGroup:
+                {
+                    var payload = _payloadBinder.Bind<ConversationGroupCreateDto>(request.Payload);
+
+                    await CreateConversationGroupAsync(payload);
+
+                    return;
+                }
+            case WebViewMessageType.DeleteGroup:
+                {
+                    var payload = _payloadBinder.Bind<ConversationGroupSelectedDto>(request.Payload);
+
+                    await DeleteConversationGroupAsync(payload.GroupId);
+
                     return;
                 }
             case WebViewMessageType.UiError:
@@ -258,6 +290,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         Task<List<ChatSessionDocument>> chatListTask = null;
         Task<ChatSessionDocument> currentChatTask = null;
+        var groupsTask = _conversationGroupManager.GetAllGroupsAsync();
 
         if (includeChats && _sessionService?.ActiveSession != null)
         {
@@ -269,7 +302,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         var activeDocumentTask = _referenceManager.GetActiveDocumentAsync();
 
         // Wait for all tasks that exist
-        var tasks = new List<Task> { referencesTask, activeDocumentTask };
+        var tasks = new List<Task> { groupsTask, referencesTask, activeDocumentTask };
         if (chatListTask != null) tasks.Add(chatListTask);
         if (currentChatTask != null) tasks.Add(currentChatTask);
 
@@ -289,6 +322,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     Current = currentChatTask?.Result
                 }
                 : null,
+            Groups = new
+            {
+                GroupList = groupsTask.Result,
+                Current = _conversationGroupManager.CurrentGroup
+            },
             References = referencesTask?.Result,
             ActiveDocument = activeDocumentTask?.Result,
             Timestamp = DateTime.Now
@@ -346,6 +384,58 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Chat = chat,
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task CreateConversationGroupAsync(ConversationGroupCreateDto payload)
+    {
+        var name = string.IsNullOrWhiteSpace(payload.Name)
+            ? "New Project"
+            : payload.Name.Trim();
+
+        var description = payload.Description ?? string.Empty;
+
+        await _conversationGroupManager.CreateGroupAsync(name, description);
+        await _sessionService.InitializeAsync();
+
+        await SendSelectedGroupApprovedAsync();
+    }
+
+    public async Task DeleteConversationGroupAsync(Guid groupId)
+    {
+        await _conversationGroupManager.DeleteGroupAsync(groupId);
+        await _sessionService.InitializeAsync();
+
+        await SendSelectedGroupApprovedAsync();
+    }
+
+    public async Task SendSelectedGroupApprovedAsync()
+    {
+        var chatListTask = _chatManager.GetAllChatsAsync();
+        var currentChatTask = _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+        var groupsTask = _conversationGroupManager.GetAllGroupsAsync();
+
+        await Task.WhenAll(chatListTask, currentChatTask, groupsTask);
+
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.SelectGroupApproved,
+            Payload = new
+            {
+                Groups = new
+                {
+                    GroupList = groupsTask.Result,
+                    Current = _conversationGroupManager.CurrentGroup,
+                },
+                Chats = new
+                {
+                    ChatList = chatListTask.Result,
+                    Current = currentChatTask.Result,
+                },
                 Timestamp = DateTime.Now
             }
         };

@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Models;
+namespace Codify.Core.Models;
 
 /// <summary>
 /// Represents message types exchanged between WebView UI and the host application.
@@ -15,8 +15,11 @@ public static class WebViewMessageType
     public const string UpdateSettings = "UPDATE_SETTINGS";
     public const string UiError = "UI_ERROR";
     public const string SelectChat = "SELECT_CHAT";
+    public const string SelectGroup = "SELECT_GROUP";
     public const string NewChat = "NEW_CHAT";
     public const string DeleteChat = "DELETE_CHAT";
+    public const string NewGroup = "NEW_GROUP";
+    public const string DeleteGroup = "DELETE_GROUP";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -27,6 +30,7 @@ public static class WebViewMessageType
     public const string SetLoading = "SET_LOADING";
     public const string SelectModelApproved = "SELECT_MODEL_APPROVED";
     public const string SelectChatApproved = "SELECT_CHAT_APPROVED";
+    public const string SelectGroupApproved = "SELECT_GROUP_APPROVED";
     public const string ChangeModelSettingApproved = "CHANGE_MODEL_SETTING_APPROVED";
     public const string ChatTitleChanged = "CHAT_TITLE_CHANGED";
     public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";

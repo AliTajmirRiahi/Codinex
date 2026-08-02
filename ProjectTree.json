@@ -1412,6 +1412,16 @@
                                                                                             "path":  "src/Codify.Storage/Models/DTO/ChatSelectedDto.cs",
                                                                                             "name":  "ChatSelectedDto.cs",
                                                                                             "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Storage/Models/DTO/ConversationGroupCreateDto.cs",
+                                                                                            "name":  "ConversationGroupCreateDto.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Storage/Models/DTO/ConversationGroupSelectedDto.cs",
+                                                                                            "name":  "ConversationGroupSelectedDto.cs",
+                                                                                            "type":  "file"
                                                                                         }
                                                                                     ]
                                                                    },
@@ -1810,6 +1820,11 @@
                                                                                                                                                            "path":  "src/Codify.UI/ToolWindows/Resources/Chat/js/views/messageView.js",
                                                                                                                                                            "name":  "messageView.js",
                                                                                                                                                            "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codify.UI/ToolWindows/Resources/Chat/js/views/projectListView.js",
+                                                                                                                                                           "name":  "projectListView.js",
+                                                                                                                                                           "type":  "file"
                                                                                                                                                        }
                                                                                                                                                    ]
                                                                                                                                   },
@@ -1924,11 +1939,6 @@
                                                                                                                                   "name":  "chat-view.html",
                                                                                                                                   "type":  "file"
                                                                                                                               }
-                                                                                                             },
-                                                                                                             {
-                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Chat/chat-view.script.js",
-                                                                                                                 "name":  "chat-view.script.js",
-                                                                                                                 "type":  "file"
                                                                                                              }
                                                                                                          ]
                                                                                         },
@@ -2611,6 +2621,11 @@
                                               {
                                                   "path":  "src/Codify.UI/Codify.UI.csproj",
                                                   "name":  "Codify.UI.csproj",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codify.UI/Codify.UI.csproj.user",
+                                                  "name":  "Codify.UI.csproj.user",
                                                   "type":  "file"
                                               }
                                           ]

@@ -178,6 +178,13 @@
     flex-direction: column;
     min-width: 420px;
 }
+#project-dropdown.com-dropdown {
+    top: 35px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    min-width: 260px;
+}
 
 codify-icon.chat-icon {
     color: vaR(--vs-viz-surface-green-medium-color);

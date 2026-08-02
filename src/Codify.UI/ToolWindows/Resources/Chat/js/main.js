@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setChatList, setCurrentChat, setComposerController, setActiveDocument } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -57,10 +57,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatController.renderCurrentProvider();
             }
 
+            if (data.groups != null && data.groups.groupList) {
+                setGroupList(data.groups.groupList);
+                setCurrentGroup(data.groups.current);
+                chatController.renderProjectList();
+            }
+
             if (data.chats != null && data.chats.chatList) {
                 setChatList(data.chats.chatList);
                 setCurrentChat(data.chats.current)
                 chatController.renderChatList();
+                chatController.navigateToChat();
             }
 
             if (data.references) {
@@ -98,6 +105,15 @@ document.addEventListener('DOMContentLoaded', () => {
         onSelectChat: (payload) => {
             setCurrentChat(payload.chat);
             chatController.navigateToChat();
+        },
+        onSelectGroup: (payload) => {
+            setGroupList(payload.groups.groupList);
+            setCurrentGroup(payload.groups.current);
+            setChatList(payload.chats.chatList);
+            setCurrentChat(payload.chats.current);
+            chatController.renderProjectList();
+            chatController.renderChatList();
+            chatController.navigateToProject();
         },
 
         onAIResponse: (payload) => {
