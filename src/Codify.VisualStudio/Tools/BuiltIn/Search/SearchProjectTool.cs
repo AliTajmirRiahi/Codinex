@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
@@ -37,6 +37,8 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
         "- regular expression search";
 
     public ToolVisibility Visibility => ToolVisibility.Model;
+
+    public string StatusMessage => "Searching project...";
 
     public ToolDefinition Definition => new(
         new Dictionary<string, ToolProperty>

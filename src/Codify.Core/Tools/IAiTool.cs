@@ -29,6 +29,8 @@ public interface IAiTool
 
     string Description { get; }
 
+    string StatusMessage { get; }
+
     ToolDefinition Definition { get; }
 
     ToolVisibility Visibility { get; }
