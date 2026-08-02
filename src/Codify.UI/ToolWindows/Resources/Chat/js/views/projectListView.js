@@ -99,10 +99,13 @@ export const projectListView = {
                 return;
             }
 
+            const isEditMode = this._isEditMode;
+            const editingProjectId = this._editingProjectId;
+
             this.hideProjectModal();
 
-            if (this._isEditMode && this.handleEditProject) {
-                this.handleEditProject({ id: this._editingProjectId, name, description });
+            if (isEditMode && this.handleEditProject) {
+                this.handleEditProject({ id: editingProjectId, name, description });
             } else {
                 this.handleNewProject({ name, description });
             }
