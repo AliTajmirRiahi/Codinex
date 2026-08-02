@@ -414,6 +414,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 ActiveModel = _providerManager.ActiveModel,
+                Providers = new
+                {
+                    AvailableProviders = _providerManager.Providers,
+                    Current = _providerManager.ActiveProvider
+                },
                 Timestamp = DateTime.Now
             }
         };

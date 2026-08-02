@@ -75,6 +75,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\stop-circle.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\donate.png" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\chevron-up.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\eye.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
