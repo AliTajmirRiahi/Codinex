@@ -20,6 +20,7 @@ public static class WebViewMessageType
     public const string DeleteChat = "DELETE_CHAT";
     public const string NewGroup = "NEW_GROUP";
     public const string DeleteGroup = "DELETE_GROUP";
+    public const string OpenExternalLink = "OPEN_EXTERNAL_LINK";
 
     // To JS
     public const string InitData = "INIT_DATA";

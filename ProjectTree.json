@@ -1660,6 +1660,11 @@
                                                                                                                                       "type":  "folder",
                                                                                                                                       "children":  [
                                                                                                                                                        {
+                                                                                                                                                           "path":  "src/Codify.UI/ToolWindows/Resources/Chat/css/views/_about.css",
+                                                                                                                                                           "name":  "_about.css",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
                                                                                                                                                            "path":  "src/Codify.UI/ToolWindows/Resources/Chat/css/views/_chat.css",
                                                                                                                                                            "name":  "_chat.css",
                                                                                                                                                            "type":  "file"
@@ -1715,6 +1720,11 @@
                                                                                                                                       "name":  "controllers",
                                                                                                                                       "type":  "folder",
                                                                                                                                       "children":  [
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codify.UI/ToolWindows/Resources/Chat/js/controllers/aboutController.js",
+                                                                                                                                                           "name":  "aboutController.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
                                                                                                                                                        {
                                                                                                                                                            "path":  "src/Codify.UI/ToolWindows/Resources/Chat/js/controllers/chatController.js",
                                                                                                                                                            "name":  "chatController.js",
@@ -2397,6 +2407,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/chevron-up.svg",
+                                                                                                                 "name":  "chevron-up.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codify.UI/ToolWindows/Resources/Icons/circle-x.svg",
                                                                                                                  "name":  "circle-x.svg",
                                                                                                                  "type":  "file"
@@ -2404,6 +2419,11 @@
                                                                                                              {
                                                                                                                  "path":  "src/Codify.UI/ToolWindows/Resources/Icons/codify-AI-logo-black.svg",
                                                                                                                  "name":  "codify-AI-logo-black.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/donate.png",
+                                                                                                                 "name":  "donate.png",
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {

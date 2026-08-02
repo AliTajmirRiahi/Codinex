@@ -12,6 +12,7 @@ using Codify.VisualStudio.Interfaces;
 using Codify.VisualStudio.References;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -202,6 +203,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     _errorHandler.HandleUiError(payload.Source, payload.Type, payload.Message, payload.Stack);
                     return;
                 }
+            case WebViewMessageType.OpenExternalLink:
+                {
+                    OpenExternalLink(request);
+                    return;
+                }
             default:
                 {
                     await _webViewClient.PostMessageAsync(new WebViewMessageResponse(
@@ -226,7 +232,25 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         };
     }
 
+    private void OpenExternalLink(WebViewMessageRequest request)
+    {
+        var url = request.Payload?["url"]?.ToString();
+        if (string.IsNullOrWhiteSpace(url))
+            return;
 
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return;
+
+        if (uri.Scheme != Uri.UriSchemeHttp &&
+            uri.Scheme != Uri.UriSchemeHttps &&
+            uri.Scheme != Uri.UriSchemeMailto)
+            return;
+
+        Process.Start(new ProcessStartInfo(uri.AbsoluteUri)
+        {
+            UseShellExecute = true
+        });
+    }
 
     private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {
