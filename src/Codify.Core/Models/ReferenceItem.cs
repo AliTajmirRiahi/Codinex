@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +20,7 @@ namespace Codify.Core.Models
         Interface = 10,
         Field = 11,
         OpenDocuments = 12,
+        Image = 13,
     }
 
     public sealed class ReferenceItem

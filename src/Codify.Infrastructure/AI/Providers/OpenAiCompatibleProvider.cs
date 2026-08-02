@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
@@ -278,13 +278,53 @@ namespace Codify.Infrastructure.AI.Providers
                         messages.Add(new
                         {
                             role,
-                            content = prompt.Content
+                            content = BuildMessageContent(prompt)
                         });
                         break;
                 }
             }
 
             return messages;
+        }
+
+        private static object BuildMessageContent(ChatMessage prompt)
+        {
+            if (prompt.Data?["images"] is not JArray images || images.Count == 0)
+            {
+                return prompt.Content;
+            }
+
+            var content = new List<object>
+            {
+                new
+                {
+                    type = "text",
+                    text = prompt.Content ?? string.Empty
+                }
+            };
+
+            foreach (var image in images)
+            {
+                var base64 = image["base64"]?.ToString();
+
+                if (string.IsNullOrWhiteSpace(base64)) continue;
+
+                var mimeType = image["mimeType"]?.ToString();
+                var imageUrl = base64.StartsWith("data:", StringComparison.OrdinalIgnoreCase)
+                    ? base64
+                    : $"data:{(string.IsNullOrWhiteSpace(mimeType) ? "image/png" : mimeType)};base64,{base64}";
+
+                content.Add(new
+                {
+                    type = "image_url",
+                    image_url = new
+                    {
+                        url = imageUrl
+                    }
+                });
+            }
+
+            return content;
         }
 
         private object BuildChatCompletionPayload(
