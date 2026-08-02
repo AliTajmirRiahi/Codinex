@@ -36,7 +36,7 @@ export function initChatController(transport) {
     });
 
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat);
-    projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject);
+    projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject);
 
     function onModelSelected(model) {
         var appState = getState();
@@ -140,6 +140,19 @@ export function initChatController(transport) {
         chatView.clearMessages();
         transport.send(EVENTS.DELETE_GROUP, {
             groupId: currentGroup.id
+        });
+    }
+
+    async function handleEditProject(project) {
+        const state = getState();
+        const currentGroup = state.currentGroup;
+        if (!project || !project.name) return;
+        const groupId = project.id || (currentGroup && currentGroup.id);
+        if (!groupId) return;
+        transport.send(EVENTS.UPDATE_GROUP, {
+            groupId: groupId,
+            name: project.name,
+            description: project.description || ''
         });
     }
     /**

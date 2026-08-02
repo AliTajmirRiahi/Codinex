@@ -20,7 +20,7 @@
                 .Replace("\r", " ")
                 .Trim();
 
-            const int maxLength = 50;
+            const int maxLength = 25;
 
             if (cleaned.Length <= maxLength)
                 return cleaned;

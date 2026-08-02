@@ -106,7 +106,7 @@ namespace Codify.Storage.Managers
             }
 
             return chats
-                .OrderByDescending(x => x.UpdatedAt)
+                .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
         /// <summary>
