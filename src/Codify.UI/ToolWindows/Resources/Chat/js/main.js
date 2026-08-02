@@ -123,6 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
             manageModelsController.closeProviderSettings();
             chatController.renderCurrentProvider();
         },
+        onProviderModelsRefreshed: (payload) => {
+            const providers = payload.providers || payload.Providers;
+
+            if (providers != null && providers.current)
+                setProvider(providers.current);
+
+            manageModelsController.updateUI(providers);
+            chatController.renderCurrentProvider();
+            setInputLoading(false);
+        },
         onSelectModel: (payload) => {
             const providers = payload.providers || payload.Providers;
             const currentProvider = providers?.current || providers?.Current;

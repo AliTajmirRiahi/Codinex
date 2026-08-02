@@ -171,6 +171,16 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.RefreshProviderModels:
+                {
+                    var providerId = request.Payload?["providerId"]?.ToString();
+
+                    await _providerManager.RefreshModelsAsync(providerId);
+
+                    await SendProviderModelsRefreshedAsync();
+
+                    return;
+                }
             case WebViewMessageType.NewChat:
                 {
                     await EnsureActiveChatSessionAsync();
@@ -400,6 +410,25 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.ChangeModelSettingApproved,
+            Payload = new
+            {
+                Providers = new
+                {
+                    AvailableProviders = _providerManager.Providers,
+                    Current = _providerManager.ActiveProvider
+                },
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendProviderModelsRefreshedAsync()
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ProviderModelsRefreshed,
             Payload = new
             {
                 Providers = new

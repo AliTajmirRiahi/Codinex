@@ -277,6 +277,9 @@
     <!-- AI Model Management Modal -->
     <div id="model-management-modal" class="modal hidden">
         <div class="modal-content">
+            <div id="models-loading-screen" class="modal-loading-screen hidden">
+                <codify-image name="loading.svg" class="spinner"></codify-image>
+            </div>
             <div class="modal-header">
                 <h2 id="modal-title">Add AI Model</h2>
                 <button id="close-settings">✕</button>
@@ -294,7 +297,12 @@
                 <!-- Step 2: Model List (Checkboxes) -->
                 <!-- We keep this area as the one that expands -->
                 <div id="model-list-container" class="model-selection-area">
-                    <label>Available Models</label>
+                    <div class="model-list-header">
+                        <label>Available Models</label>
+                        <button id="refresh-models-btn" class="link-button hidden" type="button" title="Refresh available models">
+                            <span>Refresh</span>
+                        </button>
+                    </div>
                     <div id="models-checkbox-list" class="checkbox-list">
                         <!-- Dynamic: Filled based on Provider -->
                     </div>

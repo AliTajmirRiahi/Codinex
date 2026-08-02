@@ -16,20 +16,69 @@ namespace Codify.Infrastructure.ModelManagement.Retrievers
         IJsonSerializer jsonSerializer) : IModelRetriever
     {
 
-        private static readonly string[] ExcludedPrefixes =
+        private static readonly string[] SupportedModelKeywords =
         [
-            "whisper",
-            "tts",
-            "dall-e",
-            "gpt-image",
-            "omni-moderation",
-            "text-embedding",
-            "embedding"
+            "chatgpt",
+            "gpt",
+            "claude",
+            "gemini",
+            "llama",
+            "mistral",
+            "mixtral",
+            "codestral",
+            "codellama",
+            "code",
+            "coder",
+            "starcoder",
+            "deepseek",
+            "qwen",
+            "yi",
+            "phi",
+            "grok",
+            "command",
+            "sonar",
+            "nemotron",
+            "gemma",
+            "glm",
+            "kimi",
+            "wizard",
+            "devstral",
+            "hermes",
+            "ernie"
         ];
 
-        private static readonly string[] ExcludedNames =
+        private static readonly string[] SupportedModelPrefixes =
         [
-            "sora"
+            "o1",
+            "o3",
+            "o4"
+        ];
+
+        private static readonly string[] SupportedInstructionKeywords =
+        [
+            "chat",
+            "instruct",
+            "reasoning"
+        ];
+
+        private static readonly string[] ExcludedKeywords =
+        [
+            "audio",
+            "babbage",
+            "curie",
+            "dall-e",
+            "davinci",
+            "edit",
+            "embedding",
+            "image",
+            "moderation",
+            "realtime",
+            "sora",
+            "speech",
+            "tts",
+            "transcribe",
+            "translate",
+            "whisper"
         ];
 
         public bool CanHandle(AiProvider provider)
@@ -63,12 +112,21 @@ namespace Codify.Infrastructure.ModelManagement.Retrievers
             if (string.IsNullOrWhiteSpace(modelId))
                 return false;
 
-            modelId = modelId.ToLowerInvariant();
+            modelId = modelId.Trim().ToLowerInvariant();
 
-            if (ExcludedNames.Contains(modelId))
+            if (ExcludedKeywords.Any(modelId.Contains))
                 return false;
 
-            return !ExcludedPrefixes.Any(modelId.StartsWith);
+            if (SupportedModelPrefixes.Any(prefix =>
+                    modelId.Equals(prefix, StringComparison.OrdinalIgnoreCase)
+                    || modelId.StartsWith(prefix + "-", StringComparison.OrdinalIgnoreCase)
+                    || modelId.Contains("/" + prefix + "-")))
+                return true;
+
+            if (SupportedModelKeywords.Any(modelId.Contains))
+                return true;
+
+            return SupportedInstructionKeywords.Any(modelId.Contains);
         }
     }
 }
