@@ -106,6 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
         onHandleStreamChunk: (payload) => {
             chatController.handleStreamChunk(payload);
         },
+        onStatusChanged: (payload) => {
+            chatController.handleStatusChanged(payload);
+        },
 
         onChatTitleChanged: (payload) => {
             setChatList(payload.chats.chatList);

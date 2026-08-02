@@ -94,15 +94,41 @@ export const chatView = {
         currentModelName.innerHTML = appState.currentModel.name;
     },
 
+    setModelDropdownProviderName() {
+        const providerNameElement = $('#model-provider-name');
+        const appState = getState();
+        const providerName = appState.provider?.name || appState.provider?.Name || '';
+
+        if (!providerNameElement) return;
+
+        providerNameElement.textContent = providerName;
+        togglePanelHidden('#model-provider-name', !!providerName);
+    },
+
     renderModelMenu(items, selectedValue) {
         if (!this.modelDropDown) return;
 
         this.modelDropDown.render(items || [], selectedValue);
         this.setCurrentModelName();
+        this.setModelDropdownProviderName();
     },
 
     dispatchComposerEvent(name, detail) {
         document.dispatchEvent(new CustomEvent(name, { detail }));
+    },
+
+    setStatus(message) {
+        const statusElement = $('#response-status');
+
+        if (!statusElement) return;
+
+        statusElement.textContent = message || '';
+        togglePanelHidden('#response-status', !!message);
+        scrollToBottom();
+    },
+
+    clearStatus() {
+        this.setStatus('');
     },
 
     /**
@@ -113,17 +139,20 @@ export const chatView = {
     appendMessage(text, sender) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
+        const statusElement = document.getElementById('response-status');
 
         if (!container || !element) return null;
 
         const parent = element.parentElement;
 
+        if (statusElement) parent.removeChild(statusElement);
         parent.removeChild(element);
 
         const messageDiv = messageView.createMessageElement(text, sender);
 
         container.appendChild(messageDiv);
 
+        if (statusElement) parent.appendChild(statusElement);
         parent.appendChild(element);
 
         // Auto-scroll to bottom
@@ -135,8 +164,10 @@ export const chatView = {
     appendErrorMessage(text) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
+        const statusElement = document.getElementById('response-status');
         const parent = element.parentElement;
 
+        if (statusElement) parent.removeChild(statusElement);
         parent.removeChild(element);
 
         const errorBox = $('#error-box').cloneNode(true);
@@ -149,6 +180,7 @@ export const chatView = {
 
         container.appendChild(errorBox);
 
+        if (statusElement) parent.appendChild(statusElement);
         parent.appendChild(element);
         // Auto-scroll to bottom
         container.scrollTop = container.scrollHeight;
@@ -213,12 +245,15 @@ export function createStreamingMessage() {
     const container = document.getElementById('chat-container');
 
     const element = document.getElementById('response-loading');
+    const statusElement = document.getElementById('response-status');
     const parent = element.parentElement;
 
+    if (statusElement) parent.removeChild(statusElement);
     parent.removeChild(element);
 
     const contentEl = messageView.createStreamingMessage();
 
+    if (statusElement) parent.appendChild(statusElement);
     parent.appendChild(element);
 
     scrollToBottom();

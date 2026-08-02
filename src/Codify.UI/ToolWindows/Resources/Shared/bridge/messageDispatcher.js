@@ -40,6 +40,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onHandleStreamChunk) handlers.onHandleStreamChunk(payload);
                 break;
 
+            case EVENTS.STATUS_CHANGED:
+                if (handlers.onStatusChanged) handlers.onStatusChanged(payload);
+                break;
+
             case EVENTS.CHAT_TITLE_CHANGED:
                 if (handlers.onChatTitleChanged) handlers.onChatTitleChanged(payload);
                 break;
