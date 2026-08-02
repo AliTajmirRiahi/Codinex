@@ -14,6 +14,57 @@ import { ComposerView } from './composerView.js';
 
 export const chatView = {
 
+    normalizeCapabilityProbeResult(value) {
+        if (value === true) return 'supported';
+        if (value === false) return 'unsupported';
+
+        if (typeof value === 'number') {
+            if (value === 0) return 'supported';
+            if (value === 1) return 'unsupported';
+
+            return 'unknown';
+        }
+
+        if (typeof value === 'string') {
+            const normalized = value.toLowerCase();
+
+            if (normalized === 'supported') return 'supported';
+            if (normalized === 'unsupported') return 'unsupported';
+        }
+
+        return 'unknown';
+    },
+
+    getModelCapability(item, camelCaseName, pascalCaseName) {
+        return item?.[camelCaseName] ?? item?.[pascalCaseName];
+    },
+
+    renderModelCapabilityIcon(item, camelCaseName, pascalCaseName, iconName, label) {
+        const state = this.normalizeCapabilityProbeResult(
+            this.getModelCapability(item, camelCaseName, pascalCaseName)
+        );
+
+        if (state === 'unknown') return '';
+
+        const titleState = state === 'supported' ? 'Supported' : 'Not supported';
+        const tooltip = `${label}: ${titleState}`;
+
+        return `<span class="model-capability-tooltip" data-tooltip="${tooltip}" aria-label="${tooltip}"><codify-icon name="${iconName}" class="model-capability-icon ${state}"></codify-icon></span>`;
+    },
+
+    renderModelCapabilityIcons(item) {
+        const icons = [
+            this.renderModelCapabilityIcon(item, 'supportsStreaming', 'SupportsStreaming', 'lightning', 'Streaming'),
+            this.renderModelCapabilityIcon(item, 'supportsToolCalling', 'SupportsToolCalling', 'wrench', 'Tool calling'),
+            this.renderModelCapabilityIcon(item, 'supportsVision', 'SupportsVision', 'eye', 'Vision'),
+            this.renderModelCapabilityIcon(item, 'supportsReasoning', 'SupportsReasoning', 'brain', 'Reasoning'),
+        ].filter(Boolean);
+
+        if (icons.length === 0) return '';
+
+        return `<div class="model-capabilities">${icons.join('')}</div>`;
+    },
+
     initialize(handleSend, onModelSelected, handleCancel) {
         this.handleSend = handleSend;
         this.handleCancel = handleCancel;
@@ -43,7 +94,7 @@ export const chatView = {
                         <codify-icon name="lightning" class="low-vis"></codify-icon>
                         <span>${item.name}</span>
                     </div>
-                    <span class="multiplier">${item.multiplier || '1x'}</span>`;
+                    ${this.renderModelCapabilityIcons(item)}`;
 
                 return option;
             },

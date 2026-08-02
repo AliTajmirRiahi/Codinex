@@ -2427,6 +2427,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/eye.svg",
+                                                                                                                 "name":  "eye.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codify.UI/ToolWindows/Resources/Icons/flask-conical.svg",
                                                                                                                  "name":  "flask-conical.svg",
                                                                                                                  "type":  "file"

@@ -95,7 +95,13 @@ export function setCurrentModel(model) {
         throw new Error('Model cannot be null or empty.');
     }
 
+    const modelId = model.id || model.Id;
+    const selectedModels = _state.selectedModels
+        ? _state.selectedModels.map(item => (item.id || item.Id) === modelId ? model : item)
+        : _state.selectedModels;
+
     updateState({
+        selectedModels: selectedModels,
         currentModel: model
     });
 }
