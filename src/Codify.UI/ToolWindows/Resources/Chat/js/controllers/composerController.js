@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ComposerController
  * Orchestrates logic for triggers (@, /, #), menu items, and context chips.
  */
@@ -113,7 +113,15 @@ export class ComposerController {
                 {
                     id: 'ref-upload-image',
                     name: 'Upload Image',
-                    description: 'Upload an image to include as context',
+                    description: () => this.currentModelSupportsVision()
+                        ? 'Upload an image to include as context'
+                        : 'Select a vision-capable model to include image context',
+                    supportsVisionRequired: true,
+                    action: () => {
+                        if (!this.currentModelSupportsVision()) return;
+
+                        this.uploadImageContext();
+                    }
                 },
                 {
                     id: 'ref-auto-attach',
@@ -338,6 +346,8 @@ export class ComposerController {
         const trigger = getState().composer.activeTrigger;
 
         return list.filter(item => {
+            if (item.supportsVisionRequired && !this.currentModelSupportsVision()) return false;
+
             const nameMatch = item.name.toLowerCase().includes(filter.toLowerCase());
 
             // If user typed #type:filter (e.g., #folder:), strict check the ReferenceKind
@@ -349,6 +359,13 @@ export class ComposerController {
             // Default behavior for #filter
             return nameMatch || (item.type && item.type.toLowerCase().includes(filter.toLowerCase()));
         });
+    }
+
+    currentModelSupportsVision() {
+        const state = getState();
+        const support = state.currentModel?.supportsVision ?? state.currentModel?.SupportsVision;
+
+        return support === 'Supported' || support === 0;
     }
 
     handleSelection(type, item, trigger) {
@@ -437,6 +454,72 @@ export class ComposerController {
         // Sync with AppState (we'll complete this in a later step)
         setActiveMenu(null);
         setActiveTrigger(null);
+    }
+
+    uploadImageContext() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.multiple = true;
+        input.style.display = 'none';
+
+        input.addEventListener('change', async () => {
+            const files = Array.from(input.files || []);
+
+            for (const file of files) {
+                await this.addImageReference(file);
+            }
+
+            input.remove();
+        });
+
+        document.body.appendChild(input);
+        input.click();
+    }
+
+    async addImageReference(file) {
+        if (!file || !file.type || !file.type.startsWith('image/')) return;
+
+        const dataUrl = await this.readFileAsDataUrl(file);
+        const separatorIndex = dataUrl.indexOf(',');
+        const base64Content = separatorIndex >= 0 ? dataUrl.substring(separatorIndex + 1) : dataUrl;
+
+        const imageRef = {
+            id: `image-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            name: file.name,
+            description: 'Uploaded image context',
+            type: 'Image',
+            icon: 'fileTypes/file_type_image',
+            color: '--vscode-charts-blue',
+            value: file.name,
+            metadata: {
+                filePath: file.name,
+                signature: file.type,
+                body: dataUrl,
+                content: base64Content
+            }
+        };
+
+        const state = getState();
+        const newRefs = [...state.composer.selectedReferences, imageRef];
+
+        setSelectedReferences(newRefs);
+        this.view.updateReferenceChips(newRefs);
+
+        this.view.hideMenu();
+        setActiveMenu(null);
+        setActiveTrigger(null);
+    }
+
+    readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+
+            reader.readAsDataURL(file);
+        });
     }
 
     removeChip(item) {

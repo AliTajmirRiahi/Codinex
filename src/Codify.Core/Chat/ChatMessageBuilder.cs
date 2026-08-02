@@ -3,8 +3,10 @@ using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
 using Codify.Core.Workspace.Prompt;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Codify.Core.Chat
@@ -39,7 +41,10 @@ namespace Codify.Core.Chat
                 messages.AddRange(request.ConversationHistory);
             }
 
-            messages.Add(CreateMessage("user", BuildUserContent(request, promptContext)));
+            var userMessage = CreateMessage("user", BuildUserContent(request, promptContext));
+            AddImageData(userMessage, request.SelectedReferences);
+
+            messages.Add(userMessage);
 
             return new ChatMessageBuildResult
             {
@@ -79,6 +84,26 @@ namespace Codify.Core.Chat
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        private static void AddImageData(ChatMessage message, IReadOnlyList<ReferenceItem> references)
+        {
+            var images = references?
+                .Where(x => x.Type == ReferenceKind.Image && !string.IsNullOrWhiteSpace(x.Metadata?.Content))
+                .Select(x => new JObject
+                {
+                    ["name"] = x.Name,
+                    ["mimeType"] = string.IsNullOrWhiteSpace(x.Metadata.Signature) ? "image/png" : x.Metadata.Signature,
+                    ["base64"] = x.Metadata.Content
+                })
+                .ToArray();
+
+            if (images is not { Length: > 0 }) return;
+
+            message.Data = new JObject
+            {
+                ["images"] = new JArray(images)
+            };
         }
 
         private string BuildUserContent(ChatMessageBuildRequest request, PromptContext promptContext)

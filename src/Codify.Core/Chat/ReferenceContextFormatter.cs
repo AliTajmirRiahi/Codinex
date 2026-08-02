@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -24,6 +24,7 @@ namespace Codify.Core.Chat
                 ReferenceKind.Output => FormatContentBlock(reference, "Output"),
                 ReferenceKind.Log => FormatContentBlock(reference, "Log"),
                 ReferenceKind.Git => FormatContentBlock(reference, "Git"),
+                ReferenceKind.Image => FormatImage(reference),
                 _ => FormatGeneric(reference)
             };
         }
@@ -117,6 +118,28 @@ namespace Codify.Core.Chat
                 sb.AppendLine("Content:");
                 sb.AppendLine(reference.Metadata.Content);
             }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        private static string FormatImage(ReferenceItem reference)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("[Image]");
+            sb.AppendLine($"Name: {reference.Name}");
+
+            if (!string.IsNullOrWhiteSpace(reference.Value))
+            {
+                sb.AppendLine($"Path: {reference.Value}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(reference.Metadata.Signature))
+            {
+                sb.AppendLine($"Mime Type: {reference.Metadata.Signature}");
+            }
+
+            sb.AppendLine("Content: Uploaded image attached as image input.");
 
             return sb.ToString().TrimEnd();
         }
