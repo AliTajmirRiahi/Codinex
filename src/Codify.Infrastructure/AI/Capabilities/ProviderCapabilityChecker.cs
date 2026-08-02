@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -133,81 +133,164 @@ namespace Codify.Infrastructure.AI.Capabilities
             AiModel model,
             CancellationToken cancellationToken)
         {
+            var imageBase64 = LoadProbeImage();
+
             try
             {
-                var imageBase64 = LoadProbeImage();
-
-                var payload = new
-                {
-                    model = model.Id,
-
-                    messages = new object[]
-                            {
-                                new
-                                {
-                                    role = "user",
-
-                                    content = new object[]
-                                    {
-                                        new
-                                        {
-                                            type = "text",
-
-                                            text = "Describe this image."
-                                        },
-
-                                        new
-                                        {
-                                            type = "image_url",
-
-                                            image_url = new
-                                            {
-                                                url = $"data:image/png;base64,{imageBase64}"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-
-                    max_tokens = 10
-                };
-
-                await client.PostAsync(
+                await PostVisionProbeAsync(
                     provider,
-                    "/chat/completions",
-                    payload,
+                    model,
+                    imageBase64,
+                    useMaxCompletionTokens: false,
                     cancellationToken);
 
                 return CapabilityProbeResult.Supported;
             }
             catch (OpenAiCompatibleException ex)
+                when (ex.StatusCode == HttpStatusCode.BadRequest && IsMaxTokensUnsupported(ex.ResponseBody))
             {
-                switch (ex.StatusCode)
+                try
                 {
-                    case HttpStatusCode.BadRequest:
+                    await PostVisionProbeAsync(
+                        provider,
+                        model,
+                        imageBase64,
+                        useMaxCompletionTokens: true,
+                        cancellationToken);
 
-                        if (ex.ResponseBody.Contains(
-                                "image",
-                                StringComparison.OrdinalIgnoreCase))
-                        {
-                            return CapabilityProbeResult.Unsupported;
-                        }
-
-                        return CapabilityProbeResult.Unknown;
-
-
-                    case HttpStatusCode.GatewayTimeout:
-                    case HttpStatusCode.ServiceUnavailable:
-                    case HttpStatusCode.InternalServerError:
-
-                        return CapabilityProbeResult.Unknown;
-
-
-                    default:
-                        return CapabilityProbeResult.Unknown;
+                    return CapabilityProbeResult.Supported;
+                }
+                catch (OpenAiCompatibleException retryEx)
+                {
+                    return MapVisionProbeException(retryEx);
                 }
             }
+            catch (OpenAiCompatibleException ex)
+            {
+                return MapVisionProbeException(ex);
+            }
         }
+
+        private async Task PostVisionProbeAsync(
+            AiProvider provider,
+            AiModel model,
+            string imageBase64,
+            bool useMaxCompletionTokens,
+            CancellationToken cancellationToken)
+        {
+            object payload;
+
+            if (useMaxCompletionTokens)
+            {
+                payload = new
+                {
+                    model = model.Id,
+
+                    messages = CreateVisionProbeMessages(imageBase64),
+
+                    max_completion_tokens = 10
+                };
+            }
+            else
+            {
+                payload = new
+                {
+                    model = model.Id,
+
+                    messages = CreateVisionProbeMessages(imageBase64),
+
+                    max_tokens = 10
+                };
+            }
+
+            await client.PostAsync(
+                provider,
+                "/chat/completions",
+                payload,
+                cancellationToken);
+        }
+
+        private static object[] CreateVisionProbeMessages(string imageBase64)
+        {
+            return
+            [
+                new
+                {
+                    role = "user",
+
+                    content = new object[]
+                    {
+                        new
+                        {
+                            type = "text",
+
+                            text = "Describe this image."
+                        },
+
+                        new
+                        {
+                            type = "image_url",
+
+                            image_url = new
+                            {
+                                url = $"data:image/png;base64,{imageBase64}"
+                            }
+                        }
+                    }
+                }
+            ];
+        }
+
+        private static CapabilityProbeResult MapVisionProbeException(OpenAiCompatibleException ex)
+        {
+            switch (ex.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+
+                    if (IsVisionUnsupported(ex.ResponseBody))
+                        return CapabilityProbeResult.Unsupported;
+
+                    return CapabilityProbeResult.Unknown;
+
+
+                case HttpStatusCode.GatewayTimeout:
+                case HttpStatusCode.ServiceUnavailable:
+                case HttpStatusCode.InternalServerError:
+
+                    return CapabilityProbeResult.Unknown;
+
+
+                default:
+                    return CapabilityProbeResult.Unknown;
+            }
+        }
+
+        private static bool IsMaxTokensUnsupported(string responseBody)
+        {
+            return ContainsIgnoreCase(responseBody, "max_tokens")
+                   && (ContainsIgnoreCase(responseBody, "max_completion_tokens")
+                       || ContainsIgnoreCase(responseBody, "unsupported parameter")
+                       || ContainsIgnoreCase(responseBody, "not supported"));
+        }
+
+        private static bool IsVisionUnsupported(string responseBody)
+        {
+            return ContainsIgnoreCase(responseBody, "does not support image")
+                   || ContainsIgnoreCase(responseBody, "doesn't support image")
+                   || ContainsIgnoreCase(responseBody, "image input is not supported")
+                   || ContainsIgnoreCase(responseBody, "images are not supported")
+                   || ContainsIgnoreCase(responseBody, "vision is not supported")
+                   || ContainsIgnoreCase(responseBody, "does not support vision")
+                   || ContainsIgnoreCase(responseBody, "doesn't support vision")
+                   || ContainsIgnoreCase(responseBody, "not a vision model")
+                   || ContainsIgnoreCase(responseBody, "only supports text");
+        }
+
+        private static bool ContainsIgnoreCase(string value, string text)
+        {
+            return value?.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         private static string LoadProbeImage()
         {
             var assembly = typeof(ProviderCapabilityChecker).Assembly;
