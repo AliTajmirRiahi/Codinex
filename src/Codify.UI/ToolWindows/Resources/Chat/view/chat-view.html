@@ -25,6 +25,33 @@
     </div>
     <div id="main-chat-wrapper" class="chat-wrapper hidden">
 
+        <!-- Toolbar for selecting the active conversation project -->
+        <div class="project-toolbar">
+            <div class="project-selector-wrapper">
+                <button id="project-selector-btn" class="selector-btn" title="Select Project">
+                    <codify-icon name="folder"></codify-icon>
+                    <span id="project-name">Default Project</span>
+                    <codify-icon name="chevron-down"></codify-icon>
+                </button>
+
+                <div id="project-dropdown" class="com-dropdown">
+                    <div class="menu-label">Projects</div>
+
+                    <div id="project-dropdown-menu-container"></div>
+                </div>
+            </div>
+
+            <!-- Button to create a new conversation project -->
+            <button id="new-project-btn" class="toolbar-btn" title="New Project">
+                <codify-icon name="plus"></codify-icon>
+            </button>
+
+            <!-- Button to delete the current active conversation project -->
+            <button id="delete-project-btn" class="toolbar-btn danger" title="Delete Project">
+                <codify-icon name="trash-2"></codify-icon>
+            </button>
+        </div>
+
         <!-- Toolbar for managing chat history and sessions -->
         <div class="chat-toolbar">
             <!-- Dropdown to select and switch between previous chat threads -->

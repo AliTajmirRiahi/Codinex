@@ -115,6 +115,21 @@ public sealed class ConversationGroupManager(
         return group;
     }
 
+    public Task SelectGroupAsync(Guid groupId)
+    {
+        var group = _groups.FirstOrDefault(x => x.Id == groupId);
+
+        if (group == null)
+        {
+            throw new InvalidOperationException(
+                $"Conversation group '{groupId}' was not found.");
+        }
+
+        CurrentGroup = group;
+
+        return Task.CompletedTask;
+    }
+
     public async Task UpdateGroupAsync(ConversationGroup group)
     {
         var current = _groups.FirstOrDefault(x => x.Id == group.Id);
@@ -145,12 +160,32 @@ public sealed class ConversationGroupManager(
             return;
         }
 
-        await storageService.DeleteAsync(
+        if (group.IsDefault)
+        {
+            throw new InvalidOperationException(
+                "The default conversation group cannot be deleted.");
+        }
+
+        var isCurrentGroup = CurrentGroup != null && CurrentGroup.Id == groupId;
+
+        await storageService.DeleteDirectoryAsync(
             StoragePaths.GetGroupPath(
                 WorkspaceName,
                 group.GetId()));
 
         _groups.Remove(group);
+
+        if (!_groups.Any())
+        {
+            await CreateDefaultGroupAsync();
+            return;
+        }
+
+        if (isCurrentGroup)
+        {
+            CurrentGroup = _groups.FirstOrDefault(g => g.IsDefault)
+                ?? _groups.FirstOrDefault();
+        }
     }
 
     private string WorkspaceName =>

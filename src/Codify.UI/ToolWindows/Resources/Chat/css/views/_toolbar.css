@@ -1,4 +1,28 @@
 
+/* Project toolbar container */
+.project-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background-color: var(--vs-background);
+    border-bottom: 1px solid var(--vs-border);
+}
+
+.project-selector-wrapper {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--vs-system-active-border-color);
+    border-radius: 8px;
+}
+
+.project-selector-wrapper .selector-btn {
+    width: 100%;
+    justify-content: space-between;
+}
+
 /* Chat toolbar container */
 .chat-toolbar {
     display: flex;

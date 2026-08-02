@@ -5,6 +5,7 @@
  */
 import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { chatListView } from '../views/chatListView.js';
+import { projectListView } from '../views/projectListView.js';
 import { aiService } from '../services/aiService.js';
 import { getState, setLoading, setCurrentModel, setInputLoading } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
@@ -35,6 +36,7 @@ export function initChatController(transport) {
     });
 
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat);
+    projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject);
 
     function onModelSelected(model) {
         var appState = getState();
@@ -51,6 +53,13 @@ export function initChatController(transport) {
             chatId: chat.id
         };
         transport.send(EVENTS.SELECT_CHAT, data);
+    }
+
+    function onProjectSelected(project) {
+        const data = {
+            groupId: project.id
+        };
+        transport.send(EVENTS.SELECT_GROUP, data);
     }
 
     /**
@@ -102,6 +111,38 @@ export function initChatController(transport) {
         chatView.clearMessages();
         transport.send(EVENTS.DELETE_CHAT);
     }
+
+    async function handleNewProject() {
+        const name = window.prompt('Project name', 'New Project');
+
+        if (name === null) return;
+
+        const projectName = name.trim();
+
+        if (!projectName) return;
+
+        chatView.clearMessages();
+        transport.send(EVENTS.NEW_GROUP, {
+            name: projectName,
+            description: ''
+        });
+    }
+
+    async function handleDeleteProject() {
+        const state = getState();
+        const currentGroup = state.currentGroup;
+
+        if (!currentGroup || currentGroup.isDefault) return;
+
+        const shouldDelete = window.confirm(`Delete project "${currentGroup.name}" and all chats under it?`);
+
+        if (!shouldDelete) return;
+
+        chatView.clearMessages();
+        transport.send(EVENTS.DELETE_GROUP, {
+            groupId: currentGroup.id
+        });
+    }
     /**
      * Returns public methods to allow external interaction with the controller
      */
@@ -142,6 +183,19 @@ export function initChatController(transport) {
             chatListView.renderChatListMenu(
                 appState.chatList,
                 currentChatId
+            );
+        },
+
+        renderProjectList: () => {
+            const appState = getState();
+
+            const currentGroupId = appState.currentGroup
+                ? appState.currentGroup.id
+                : null;
+
+            projectListView.renderProjectListMenu(
+                appState.groupList,
+                currentGroupId
             );
         },
 
@@ -192,6 +246,13 @@ export function initChatController(transport) {
         },
         navigateToChat: () => {
             chatView.clearMessages();
+            chatListView.setCurrentChatName();
+            var appState = getState();
+            chatView.renderMessages(appState.currentChat.messages);
+        },
+        navigateToProject: () => {
+            chatView.clearMessages();
+            projectListView.setCurrentProjectName();
             chatListView.setCurrentChatName();
             var appState = getState();
             chatView.renderMessages(appState.currentChat.messages);

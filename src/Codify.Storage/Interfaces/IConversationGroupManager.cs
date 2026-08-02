@@ -19,6 +19,8 @@ public interface IConversationGroupManager
 
     Task<ConversationGroup> CreateDefaultGroupAsync();
 
+    Task SelectGroupAsync(Guid groupId);
+
     Task UpdateGroupAsync(ConversationGroup group);
 
     Task DeleteGroupAsync(Guid groupId);

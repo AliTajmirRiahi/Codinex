@@ -13,6 +13,8 @@ const _state = {
     isInputLoading : false,
     chatList: [],
     currentChat: null,
+    groupList: [],
+    currentGroup: null,
     composerReferences: [],
     activeDocument: null,
 
@@ -42,6 +44,7 @@ export function getState() {
         }),
         messages: Object.freeze([..._state.messages]),
         chatList: Object.freeze([..._state.chatList]),
+        groupList: Object.freeze([..._state.groupList]),
         selectedModels: _state.selectedModels ? Object.freeze([..._state.selectedModels]) : null,
     });
 }
@@ -120,6 +123,26 @@ export function setCurrentChat(chat) {
 
     updateState({
         currentChat: chat   
+    });
+}
+
+export function setGroupList(groupList) {
+    if (!Array.isArray(groupList)) {
+        throw new Error('Group list histories must be an array.');
+    }
+
+    updateState({
+        groupList: groupList,
+    });
+}
+
+export function setCurrentGroup(group) {
+    if (!group) {
+        throw new Error('Group cannot be null or empty.');
+    }
+
+    updateState({
+        currentGroup: group
     });
 }
 /**
