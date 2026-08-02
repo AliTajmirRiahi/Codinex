@@ -3,7 +3,7 @@
  * Responsible for rendering conversation group project selector UI.
  */
 
-import { $ } from '../utils/dom.js';
+import { $, togglePanelHidden } from '../utils/dom.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { getState } from '../state/appState.js';
 
@@ -44,17 +44,101 @@ export const projectListView = {
             return;
         }
 
+        this.initializeProjectModal();
+        this.initializeDeleteProjectModal();
+
         deleteProjectBtn.addEventListener('click', () => {
             const appState = getState();
 
             if (!appState.currentGroup || appState.currentGroup.isDefault) return;
 
-            this.handleDeleteProject(deleteProjectBtn);
+            this.showDeleteProjectModal(appState.currentGroup);
         });
 
         newProjectBtn.addEventListener('click', () => {
-            this.handleNewProject(newProjectBtn);
+            this.showProjectModal();
         });
+    },
+
+    initializeProjectModal() {
+        const modal = $('#project-management-modal');
+        const nameInput = $('#project-modal-name');
+        const descriptionInput = $('#project-modal-description');
+        const closeBtn = $('#close-project-modal');
+        const cancelBtn = $('#cancel-project-modal');
+        const saveBtn = $('#save-project-modal');
+
+        if (!modal || !nameInput || !descriptionInput || !closeBtn || !cancelBtn || !saveBtn) {
+            throw new Error("ProjectListView initialization failed: Missing project modal DOM elements.");
+        }
+
+        const closeModal = () => this.hideProjectModal();
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        saveBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const description = descriptionInput.value.trim();
+
+            if (!name) {
+                nameInput.focus();
+                return;
+            }
+
+            this.hideProjectModal();
+            this.handleNewProject({ name, description });
+        });
+    },
+
+    initializeDeleteProjectModal() {
+        const modal = $('#delete-project-modal');
+        const closeBtn = $('#close-delete-project-modal');
+        const cancelBtn = $('#cancel-delete-project-modal');
+        const confirmBtn = $('#confirm-delete-project-modal');
+
+        if (!modal || !closeBtn || !cancelBtn || !confirmBtn) {
+            throw new Error("ProjectListView initialization failed: Missing delete project modal DOM elements.");
+        }
+
+        const closeModal = () => this.hideDeleteProjectModal();
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        confirmBtn.addEventListener('click', () => {
+            this.hideDeleteProjectModal();
+            this.handleDeleteProject();
+        });
+    },
+
+    showProjectModal() {
+        const nameInput = $('#project-modal-name');
+        const descriptionInput = $('#project-modal-description');
+
+        nameInput.value = '';
+        descriptionInput.value = '';
+
+        togglePanelHidden('#project-management-modal', true);
+        nameInput.focus();
+    },
+
+    hideProjectModal() {
+        togglePanelHidden('#project-management-modal', false);
+    },
+
+    showDeleteProjectModal(project) {
+        const message = $('#delete-project-message');
+
+        if (message) {
+            message.textContent = `Delete project "${project.name}" and all chats under it?`;
+        }
+
+        togglePanelHidden('#delete-project-modal', true);
+    },
+
+    hideDeleteProjectModal() {
+        togglePanelHidden('#delete-project-modal', false);
     },
 
     setCurrentProjectName(project) {

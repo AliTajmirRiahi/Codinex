@@ -176,8 +176,54 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden">
+    <!-- Project Management Modal -->
+    <div id="project-management-modal" class="modal hidden">
+        <div class="modal-content project-modal-content">
+            <div class="modal-header">
+                <h2>New Project</h2>
+                <button id="close-project-modal">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input id="project-modal-name" type="text" placeholder="New Project">
+                </div>
+
+                <div class="form-group">
+                    <label>Instruction Prompt</label>
+                    <textarea id="project-modal-description" rows="8" placeholder="Add project-specific instructions for Codify AI..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-project-modal" class="secondary-button">Cancel</button>
+                <button id="save-project-modal" class="primary-button">Create Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Project Modal -->
+    <div id="delete-project-modal" class="modal hidden">
+        <div class="modal-content project-delete-modal-content">
+            <div class="modal-header">
+                <h2>Delete Project</h2>
+                <button id="close-delete-project-modal">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <p id="delete-project-message" class="modal-message"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-delete-project-modal" class="secondary-button">Cancel</button>
+                <button id="confirm-delete-project-modal" class="danger-button">Delete Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Model Management Modal -->
+    <div id="model-management-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modal-title">Add AI Model</h2>
