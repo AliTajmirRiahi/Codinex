@@ -47,6 +47,8 @@ export class DropDownView {
     }
 
     show() {
+        window.dispatchEvent(new CustomEvent('ui:close-all-dropdowns'));
+
         this.isOpen = true;
         this.menu.classList.add('show');
         // Custom event for when menu opens

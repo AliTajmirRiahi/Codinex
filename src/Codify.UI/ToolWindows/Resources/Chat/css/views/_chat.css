@@ -35,10 +35,17 @@
     opacity: 0.7;
 }
 .chat-history-selector-wrapper {
+    position: relative;
     display: flex;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     border: 1px solid var(--vs-system-active-border-color);
     border-radius: 8px;
+}
+
+.chat-history-selector-wrapper .selector-btn {
+    width: 100%;
+    justify-content: space-between;
 }
 .messages-container {
     flex: 1;
