@@ -74,3 +74,38 @@
         .modal-footer button:hover {
             background: var(--vs-main-window-active-default-border-color);
         }
+
+.project-modal-content {
+    width: 70%;
+    max-width: 680px;
+    height: auto;
+    min-height: 420px;
+}
+
+.project-delete-modal-content {
+    width: 70%;
+    max-width: 520px;
+    height: auto;
+    min-height: 220px;
+}
+
+.modal-message {
+    color: var(--vs-foreground);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.modal-footer {
+    gap: 8px;
+}
+
+.modal-footer .secondary-button {
+    background: transparent;
+    border: 1px solid var(--vs-border);
+    color: var(--vs-foreground);
+}
+
+.modal-footer .danger-button {
+    background: #c42b1c;
+    color: #fff;
+}

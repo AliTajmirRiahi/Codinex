@@ -1,4 +1,4 @@
-﻿using Codify.Core.Workspace.Prompt;
+using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
 
 namespace Codify.Core.Models
@@ -15,6 +15,8 @@ namespace Codify.Core.Models
         public string DraftText { get; set; } = string.Empty;
 
         public PromptContext PromptContext { get; set; }
+
+        public string ProjectInstruction { get; set; } = string.Empty;
 
         public ChatCommand SelectedCommand { get; set; }
 

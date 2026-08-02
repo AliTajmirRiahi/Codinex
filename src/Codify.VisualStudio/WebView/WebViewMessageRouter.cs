@@ -233,6 +233,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var payload = _payloadBinder.Bind<ChatMessageBuildRequest>(request.Payload);
 
+        payload.ProjectInstruction = _conversationGroupManager.CurrentGroup?.Description ?? string.Empty;
+
         await _sendChatMessageUseCase.ExecuteStreamingAsync(
             payload,
             false,

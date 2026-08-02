@@ -1,4 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
+using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
 using Codify.Core.Models;
@@ -23,6 +23,11 @@ namespace Codify.Core.Chat
             {
                 CreateMessage("system", SystemPrompts.DeveloperOnlyAssistant)
             };
+
+            if (!string.IsNullOrWhiteSpace(request.ProjectInstruction))
+            {
+                messages.Add(CreateMessage("system", BuildProjectInstruction(request.ProjectInstruction)));
+            }
 
             if (request.SelectedAgent is not null)
             {
@@ -55,6 +60,11 @@ namespace Codify.Core.Chat
                 Role = role,
                 Content = content
             };
+        }
+
+        private static string BuildProjectInstruction(string instruction)
+        {
+            return $"Project Instruction:\r\n{instruction.Trim()}";
         }
 
         private static string BuildAgentInstruction(ChatAgent agent)

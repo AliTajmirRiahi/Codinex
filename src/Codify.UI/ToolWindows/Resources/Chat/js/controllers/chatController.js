@@ -112,19 +112,13 @@ export function initChatController(transport) {
         transport.send(EVENTS.DELETE_CHAT);
     }
 
-    async function handleNewProject() {
-        const name = window.prompt('Project name', 'New Project');
-
-        if (name === null) return;
-
-        const projectName = name.trim();
-
-        if (!projectName) return;
+    async function handleNewProject(project) {
+        if (!project || !project.name) return;
 
         chatView.clearMessages();
         transport.send(EVENTS.NEW_GROUP, {
-            name: projectName,
-            description: ''
+            name: project.name,
+            description: project.description || ''
         });
     }
 
@@ -133,10 +127,6 @@ export function initChatController(transport) {
         const currentGroup = state.currentGroup;
 
         if (!currentGroup || currentGroup.isDefault) return;
-
-        const shouldDelete = window.confirm(`Delete project "${currentGroup.name}" and all chats under it?`);
-
-        if (!shouldDelete) return;
 
         chatView.clearMessages();
         transport.send(EVENTS.DELETE_GROUP, {

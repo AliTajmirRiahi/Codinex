@@ -197,13 +197,13 @@ export const manageModelsView = {
      * Shows the settings modal
      */
     show() {
-        togglePanelHidden('#settings-modal', true);
+        togglePanelHidden('#model-management-modal', true);
     },
 
     /**
      * Hides the settings modal
      */
     hide() {
-        togglePanelHidden('#settings-modal', false);
+        togglePanelHidden('#model-management-modal', false);
     },
 };
