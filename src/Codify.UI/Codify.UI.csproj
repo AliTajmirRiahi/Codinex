@@ -73,6 +73,8 @@
     <Content Include="ToolWindows\Resources\Chat\tests\views\messageView.test.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\copy.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\stop-circle.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\donate.png" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\chevron-up.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
@@ -210,12 +212,14 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\main.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\providerController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\manageModelsController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\aboutController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\composerController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\chatController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\constants\statics.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\constants\events.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_toolbar.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_manageModels.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_about.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_inputArea.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_chat.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\main.css" />

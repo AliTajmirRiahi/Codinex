@@ -9,6 +9,7 @@ import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
+import { initAboutController } from './controllers/aboutController.js';
 import { EVENTS } from '../js/constants/events.js';
 import { reportError } from '../../Shared/bridge/errorReporter.js'
 
@@ -39,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatController = initChatController(webViewTransport);
 
     const manageModelsController = initManageModelsController(webViewTransport);
+    initAboutController();
 
     /**
      * Setup message dispatcher

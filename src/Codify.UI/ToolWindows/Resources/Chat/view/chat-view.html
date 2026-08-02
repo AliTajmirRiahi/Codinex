@@ -50,6 +50,7 @@
             <button id="delete-project-btn" class="toolbar-btn danger" title="Delete Project">
                 <codify-icon name="trash-2"></codify-icon>
             </button>
+
         </div>
 
         <!-- Toolbar for managing chat history and sessions -->
@@ -102,6 +103,16 @@
                 <div class="codify-error-box__message">
                     There is some problem, please check output for details
                 </div>
+            </div>
+        </div>
+
+        <!-- About / donate peek box above the input area -->
+        <div class="about-peek-container">
+            <div class="about-peek-box" title="About Codify AI">
+                <codify-image name="chevron-up.svg" class="about-peek-chevron"></codify-image>
+                <button id="about-menu-btn" class="about-peek-button" title="About Codify AI">
+                    <span>About</span>
+                </button>
             </div>
         </div>
 
@@ -218,6 +229,47 @@
             <div class="modal-footer">
                 <button id="cancel-delete-project-modal" class="secondary-button">Cancel</button>
                 <button id="confirm-delete-project-modal" class="danger-button">Delete Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="about-modal" class="modal hidden">
+        <div class="modal-content about-modal-content">
+            <div class="modal-header">
+                <h2>About Codify AI</h2>
+                <button id="close-about-modal">✕</button>
+            </div>
+
+            <div class="modal-body about-modal-body">
+                <div class="about-hero">
+                    <codify-image name="codify-AI-logo-black.svg" class="about-logo"></codify-image>
+                    <div>
+                        <h3>Codify AI</h3>
+                        <p>Built by Ali Tajmir Riahi</p>
+                    </div>
+                </div>
+
+                <div class="about-description">
+                    <p>
+                        A next-generation AI coding assistant for Visual Studio — fully agent-configurable,
+                        provider-agnostic, and built with local-first support in mind.
+                    </p>
+                    <p>
+                        Codify AI is an extensible Visual Studio extension inspired by GitHub Copilot.
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h4>Contact</h4>
+                    <a class="about-external-link" href="mailto:riahi.tajmir@gmail.com" target="_blank" rel="noopener noreferrer">riahi.tajmir@gmail.com</a>
+                    <a class="about-external-link" href="https://www.linkedin.com/in/ali-tajmir-riahi-532206170" target="_blank" rel="noopener noreferrer">LinkedIn: Ali Tajmir Riahi</a>
+                    <a class="about-external-link" href="https://github.com/AliTajmirRiahi" target="_blank" rel="noopener noreferrer">GitHub: AliTajmirRiahi</a>
+                </div>
+
+                <a class="donate-button about-external-link" href="mailto:riahi.tajmir@gmail.com?subject=Donate%20to%20Codify%20AI" target="_blank" rel="noopener noreferrer" title="Contact Ali Tajmir Riahi to donate">
+                    <img src="http://codify.resources/Icons/donate.png" alt="Donate">
+                </a>
             </div>
         </div>
     </div>
