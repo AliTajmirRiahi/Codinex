@@ -2225,6 +2225,11 @@
                                                                                                                  "type":  "folder",
                                                                                                                  "children":  [
                                                                                                                                   {
+                                                                                                                                      "path":  "src/Codify.UI/ToolWindows/Resources/Icons/symbols/copy.svg",
+                                                                                                                                      "name":  "copy.svg",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  },
+                                                                                                                                  {
                                                                                                                                       "path":  "src/Codify.UI/ToolWindows/Resources/Icons/symbols/symbol-array.svg",
                                                                                                                                       "name":  "symbol-array.svg",
                                                                                                                                       "type":  "file"

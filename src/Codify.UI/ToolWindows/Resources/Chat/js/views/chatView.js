@@ -222,6 +222,7 @@ export const chatView = {
 
         // Render markdown/code only once after the stream is complete.
         contentEl.innerHTML = CodeRenderer.render(finalText || contentEl.textContent);
+        CodeRenderer.bindCopyEvents(contentEl);
 
         scrollToBottom();
     },

@@ -1,4 +1,4 @@
-﻿export class CodeRenderer {
+export class CodeRenderer {
 
     /**
      * Process AI text and convert
@@ -25,8 +25,8 @@
                 <div class="code-wrapper">
                     <div class="code-header">
                         <span class="code-lang">${language}</span>
-                        <button class="copy-btn" data-code="${uniqueId}">
-                            Copy
+                        <button class="copy-btn" data-code="${uniqueId}" title="Copy code" aria-label="Copy code">
+                            <codify-icon name="symbols/copy" aria-hidden="true"></codify-icon>
                         </button>
                     </div>
                     <pre><code id="${uniqueId}" class="language-${language}">${escapedCode}</code></pre>
@@ -59,24 +59,80 @@
 
         buttons.forEach(btn => {
 
-            btn.addEventListener("click", () => {
+            if (btn.dataset.copyBound === "true") return;
+
+            btn.dataset.copyBound = "true";
+
+            btn.addEventListener("click", async () => {
 
                 const id = btn.dataset.code;
                 const code = document.getElementById(id)?.textContent;
 
                 if (!code) return;
 
-                navigator.clipboard.writeText(code);
+                const originalTitle = btn.title;
+                const originalLabel = btn.getAttribute("aria-label");
 
-                const original = btn.textContent;
-                btn.textContent = "Copied";
+                try {
+                    await CodeRenderer.copyToClipboard(code);
+
+                    btn.title = "Copied";
+                    btn.setAttribute("aria-label", "Copied");
+                    btn.classList.add("copied");
+                } catch {
+                    btn.title = "Copy failed";
+                    btn.setAttribute("aria-label", "Copy failed");
+                }
 
                 setTimeout(() => {
-                    btn.textContent = original;
+                    btn.title = originalTitle;
+
+                    if (originalLabel) {
+                        btn.setAttribute("aria-label", originalLabel);
+                    } else {
+                        btn.removeAttribute("aria-label");
+                    }
+
+                    btn.classList.remove("copied");
                 }, 1500);
 
             });
 
+        });
+    }
+
+    static copyToClipboard(text) {
+
+        if (navigator.clipboard?.writeText) {
+            return navigator.clipboard.writeText(text);
+        }
+
+        return new Promise((resolve, reject) => {
+            const textArea = document.createElement("textarea");
+
+            textArea.value = text;
+            textArea.setAttribute("readonly", "");
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                const copied = document.execCommand("copy");
+
+                document.body.removeChild(textArea);
+
+                if (copied) {
+                    resolve();
+                } else {
+                    reject(new Error("Copy command failed"));
+                }
+            } catch (error) {
+                document.body.removeChild(textArea);
+                reject(error);
+            }
         });
     }
     static normalizeText(text) {
