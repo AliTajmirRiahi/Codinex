@@ -9,9 +9,10 @@ import { getState } from '../state/appState.js';
 
 export const projectListView = {
 
-    initialize(onProjectSelected, handleNewProject, handleDeleteProject) {
+    initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject) {
         this.handleNewProject = handleNewProject;
         this.handleDeleteProject = handleDeleteProject;
+        this.handleEditProject = handleEditProject;
 
         this.projectDropDown = new DropDownView({
             containerId: 'project-dropdown-menu-container',
@@ -38,8 +39,9 @@ export const projectListView = {
 
         const newProjectBtn = $('#new-project-btn');
         const deleteProjectBtn = $('#delete-project-btn');
+        const editProjectBtn = $('#edit-project-btn');
 
-        if (!newProjectBtn || !deleteProjectBtn) {
+        if (!newProjectBtn || !deleteProjectBtn || !editProjectBtn) {
             throw new Error("ProjectListView initialization failed: Missing required DOM elements.");
             return;
         }
@@ -55,6 +57,12 @@ export const projectListView = {
             this.showDeleteProjectModal(appState.currentGroup);
         });
 
+        editProjectBtn.addEventListener('click', () => {
+            const appState = getState();
+            if (!appState.currentGroup || appState.currentGroup.isDefault) return;
+            this.showProjectModal(appState.currentGroup);
+        });
+
         newProjectBtn.addEventListener('click', () => {
             this.showProjectModal();
         });
@@ -67,10 +75,15 @@ export const projectListView = {
         const closeBtn = $('#close-project-modal');
         const cancelBtn = $('#cancel-project-modal');
         const saveBtn = $('#save-project-modal');
+        
+        const modalTitle = modal ? modal.querySelector('.modal-header h2') : null;
 
-        if (!modal || !nameInput || !descriptionInput || !closeBtn || !cancelBtn || !saveBtn) {
+        if (!modal || !nameInput || !descriptionInput || !closeBtn || !cancelBtn || !saveBtn || !modalTitle) {
             throw new Error("ProjectListView initialization failed: Missing project modal DOM elements.");
         }
+
+        this._isEditMode = false;
+        this._editingProjectId = null;
 
         const closeModal = () => this.hideProjectModal();
 
@@ -87,7 +100,12 @@ export const projectListView = {
             }
 
             this.hideProjectModal();
-            this.handleNewProject({ name, description });
+
+            if (this._isEditMode && this.handleEditProject) {
+                this.handleEditProject({ id: this._editingProjectId, name, description });
+            } else {
+                this.handleNewProject({ name, description });
+            }
         });
     },
 
@@ -112,18 +130,36 @@ export const projectListView = {
         });
     },
 
-    showProjectModal() {
+    showProjectModal(project) {
         const nameInput = $('#project-modal-name');
         const descriptionInput = $('#project-modal-description');
+        const modal = $('#project-management-modal');
+        const modalTitle = modal ? modal.querySelector('.modal-header h2') : null;
+        const saveBtn = $('#save-project-modal');
 
-        nameInput.value = '';
-        descriptionInput.value = '';
+        if (project) {
+            nameInput.value = project.name || '';
+            descriptionInput.value = project.description || '';
+            if (modalTitle) modalTitle.textContent = 'Edit Project';
+            if (saveBtn) saveBtn.textContent = 'Save Changes';
+            this._isEditMode = true;
+            this._editingProjectId = project.id || project.Id || null;
+        } else {
+            nameInput.value = '';
+            descriptionInput.value = '';
+            if (modalTitle) modalTitle.textContent = 'New Project';
+            if (saveBtn) saveBtn.textContent = 'Create Project';
+            this._isEditMode = false;
+            this._editingProjectId = null;
+        }
 
         togglePanelHidden('#project-management-modal', true);
         nameInput.focus();
     },
 
     hideProjectModal() {
+        this._isEditMode = false;
+        this._editingProjectId = null;
         togglePanelHidden('#project-management-modal', false);
     },
 

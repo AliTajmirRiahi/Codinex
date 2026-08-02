@@ -2422,6 +2422,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/copy.svg",
+                                                                                                                 "name":  "copy.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codify.UI/ToolWindows/Resources/Icons/donate.png",
                                                                                                                  "name":  "donate.png",
                                                                                                                  "type":  "file"
@@ -2484,6 +2489,16 @@
                                                                                                              {
                                                                                                                  "path":  "src/Codify.UI/ToolWindows/Resources/Icons/monitor.svg",
                                                                                                                  "name":  "monitor.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/pencil.svg",
+                                                                                                                 "name":  "pencil.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codify.UI/ToolWindows/Resources/Icons/plus-circle.svg",
+                                                                                                                 "name":  "plus-circle.svg",
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {

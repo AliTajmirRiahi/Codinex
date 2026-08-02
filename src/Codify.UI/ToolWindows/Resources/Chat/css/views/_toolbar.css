@@ -43,3 +43,7 @@
     align-items: center;
     gap: 6px;
 }
+
+/* Ensure the New Project "+" icon stays white, even on hover */
+#new-project-btn { color: white; }
+#new-project-btn:hover { color: white; }
