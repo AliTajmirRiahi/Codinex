@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, setLoading, setProvider, setChatList, setCurrentChat, setComposerController, setActiveDocument } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setChatList, setCurrentChat, setComposerController, setActiveDocument } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -47,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const dispatcher = createMessageDispatcher({
         onInitData: (data) => {
 
+            subscribe(() => {
+                var state = getState();
+                togglePanelHidden('#input-loading-screen', state.isInputLoading);
+            })
+
             if (data.providers != null && data.providers.current) {
                 setProvider(data.providers.current);
                 chatController.renderCurrentProvider();
@@ -80,13 +85,16 @@ document.addEventListener('DOMContentLoaded', () => {
             setLoading(false);
         },
 
-        onSelectProvider: (payload) => {
-            if (payload.provider)
-                setProvider({ provider: payload.provider });
+        onChangeModelSettingApproved : (payload) => {
+            if (payload.providers != null && payload.providers.current)
+                setProvider(payload.providers.current);
 
             manageModelsController.closeProviderSettings();
+            chatController.renderCurrentProvider();
         },
-
+        onSelectModel: (payload) => {
+            setInputLoading(false);
+        },
         onSelectChat: (payload) => {
             setCurrentChat(payload.chat);
             chatController.navigateToChat();

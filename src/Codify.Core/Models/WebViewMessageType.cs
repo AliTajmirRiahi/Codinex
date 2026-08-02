@@ -25,7 +25,9 @@ public static class WebViewMessageType
     public const string StreamChunk = "STREAM_CHUNK";
     public const string Error = "ERROR";
     public const string SetLoading = "SET_LOADING";
+    public const string SelectModelApproved = "SELECT_MODEL_APPROVED";
     public const string SelectChatApproved = "SELECT_CHAT_APPROVED";
+    public const string ChangeModelSettingApproved = "CHANGE_MODEL_SETTING_APPROVED";
     public const string ChatTitleChanged = "CHAT_TITLE_CHANGED";
     public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";
     public const string StatusChanged = "STATUS_CHANGED";

@@ -81,7 +81,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     if (_providerManager.ActiveProvider != null)
                     {
                         await _sessionService.InitializeAsync();
+
                         await SendInitialDataAsync(true);
+
                         return;
                     }
 
@@ -125,7 +127,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     await _providerManager.SetCurrentModelAsync(payload);
 
-                    //await SendInitialDataAsync();
+                    await SendSelectedModelApprovedAsync();
+
                     return;
                 }
             case WebViewMessageType.SelectChat:
@@ -143,8 +146,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 {
                     // Future: update provider settings
                     var aiProviderDto = _payloadBinder.Bind<AiProviderDto>(request.Payload);
+
                     await _providerManager.UpdateSettingsAsync(aiProviderDto);
-                    await SendSelectedProviderDataAsync();
+
+                    await SendChangeModelSettingApprovedAsync();
+
                     return;
                 }
             case WebViewMessageType.NewChat:
@@ -195,27 +201,29 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var payload = _payloadBinder.Bind<ChatMessageBuildRequest>(request.Payload);
 
+        await _sendChatMessageUseCase.ExecuteStreamingAsync(
+            payload,
+            false,
+            async response =>
+            {
+                await CheckIfTitleChangedAsync(response);
+
+                await _webViewClient.PostMessageAsync(response);
+            });
+
         //if (payload?.Stream == true)
-        if (true)
-        {
-            await _sendChatMessageUseCase.ExecuteStreamingAsync(
-                payload,
-                false,
-                async response =>
-                {
-                    await CheckIfTitleChangedAsync(response);
+        //if (true)
+        //{
 
-                    await _webViewClient.PostMessageAsync(response);
-                });
-        }
-        else
-        {
-            var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
+        //}
+        //else
+        //{
+        //    var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
 
-            await CheckIfTitleChangedAsync(response);
+        //    await CheckIfTitleChangedAsync(response);
 
-            await _webViewClient.PostMessageAsync(response);
-        }
+        //    await _webViewClient.PostMessageAsync(response);
+        //}
     }
 
     private async Task CheckIfTitleChangedAsync(ChatResponse response)
@@ -296,24 +304,38 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     }
 
 
-    public async Task SendSelectedProviderDataAsync()
+    public async Task SendChangeModelSettingApprovedAsync()
     {
-        // Get all configured providers and their models from ProviderManager
-        var provider = _providerManager.Providers.FirstOrDefault(p => p.IsEnabled);
-
         var message = new WebViewMessageResponse()
         {
-            Type = WebViewMessageType.SelectProvider,
+            Type = WebViewMessageType.ChangeModelSettingApproved,
             Payload = new
             {
-                provider = provider,
+                Providers = new
+                {
+                    AvailableProviders = _providerManager.Providers,
+                    Current = _providerManager.ActiveProvider
+                },
             },
             Timestamp = DateTime.Now
         };
 
         await _webViewClient.PostMessageAsync(message);
     }
+    public async Task SendSelectedModelApprovedAsync()
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.SelectModelApproved,
+            Payload = new
+            {
+                ActiveModel = _providerManager.ActiveModel,
+                Timestamp = DateTime.Now
+            }
+        };
 
+        await _webViewClient.PostMessageAsync(message);
+    }
     public async Task SendSelectedChatApprovedAsync()
     {
         var chat = await _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);

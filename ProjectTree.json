@@ -1089,6 +1089,11 @@
                                                                        "type":  "folder",
                                                                        "children":  [
                                                                                         {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Handlers/CreateDirectoryChangeHandler.cs",
+                                                                                            "name":  "CreateDirectoryChangeHandler.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "src/Codify.Infrastructure/WorkspaceChanges/Handlers/CreateFileChangeHandler.cs",
                                                                                             "name":  "CreateFileChangeHandler.cs",
                                                                                             "type":  "file"
@@ -1101,6 +1106,11 @@
                                                                                         {
                                                                                             "path":  "src/Codify.Infrastructure/WorkspaceChanges/Handlers/EditFileChangeHandler.cs",
                                                                                             "name":  "EditFileChangeHandler.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codify.Infrastructure/WorkspaceChanges/Handlers/MoveFileChangeHandler.cs",
+                                                                                            "name":  "MoveFileChangeHandler.cs",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
