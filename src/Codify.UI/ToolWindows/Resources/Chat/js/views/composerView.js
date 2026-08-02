@@ -22,6 +22,7 @@ export class ComposerView {
         this.onCancel = onCancel;
         this.isStreaming = false;
 
+        this.inputContainer = $('#input-container');
         this.input = $('#userInput');
         this.sendBtn = $('#send-btn');
         this.chipsContainer = $('#composer-chips') || document.querySelector('.composer-chips');
@@ -307,7 +308,42 @@ export class ComposerView {
             ? '<codify-icon name="symbols/stop-circle"></codify-icon>'
             : '<codify-icon name="send-horizontal"></codify-icon>';
 
+        this.setInputDisabled(this.isStreaming);
         this.updateSendState();
+    }
+
+    setInputDisabled(isDisabled) {
+        if (this.inputContainer) {
+            this.inputContainer.classList.toggle('responding-disabled', isDisabled);
+            this.inputContainer.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
+        }
+
+        if (this.input) {
+            this.input.contentEditable = isDisabled ? 'false' : 'true';
+        }
+
+        if (this.contextInput) {
+            this.contextInput.contentEditable = isDisabled ? 'false' : 'true';
+        }
+
+        const disabledSelectors = [
+            '#contextBtn',
+            '#settings-btn',
+            '#model-selector-btn',
+            '#agent-selector-btn',
+            '.context-chip-remove'
+        ];
+
+        disabledSelectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(element => {
+                element.disabled = isDisabled;
+                element.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
+            });
+        });
+
+        if (isDisabled) {
+            this.hideMenu();
+        }
     }
 
     setText(text) {

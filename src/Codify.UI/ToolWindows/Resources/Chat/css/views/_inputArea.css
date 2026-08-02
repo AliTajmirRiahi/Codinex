@@ -5,6 +5,19 @@
     background: var(--vs-background);
 }
 
+.input-container.responding-disabled .input-context-row,
+.input-container.responding-disabled .composer-input,
+.input-container.responding-disabled .selector-group,
+.input-container.responding-disabled #settings-btn {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.input-container.responding-disabled #send-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
 /* Loading overlay that covers ONLY the input area */
 .input-loading-screen {
     position: absolute;
