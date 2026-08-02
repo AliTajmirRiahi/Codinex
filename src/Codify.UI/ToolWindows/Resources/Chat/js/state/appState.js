@@ -127,8 +127,12 @@ export function setCurrentChat(chat) {
         throw new Error('Chat cannot be null or empty.');
     }
 
+    const chatId = chat.id || chat.Id;
+    const chatList = _state.chatList.map(item => (item.id || item.Id) === chatId ? chat : item);
+
     updateState({
-        currentChat: chat   
+        currentChat: chat,
+        chatList: chatList
     });
 }
 
