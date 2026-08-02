@@ -1,4 +1,4 @@
-﻿using Codify.Core.Chat;
+using Codify.Core.Chat;
 using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
@@ -142,10 +142,10 @@ public sealed class SendChatMessageUseCase(
 
                     case ConversationEventType.StatusChanged:
 
-                        //await onMessage(
-                        //    new ChatResponse(
-                        //        WebViewMessageType.StatusChanged,
-                        //        evt.DisplayMessage));
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.StatusChanged,
+                                evt.DisplayMessage));
 
                         continue;
                 }

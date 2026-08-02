@@ -64,6 +64,8 @@ export function initChatController(transport) {
         // Prevent sending while AI is generating
         if (state.isLoading) return;
 
+        chatView.clearStatus();
+
         // Show user message immediately
         chatView.appendMessage(state.composer.draftText, 'user');
 
@@ -149,6 +151,7 @@ export function initChatController(transport) {
 
         handleAIResponse: (payload) => {
             setLoading(false);
+            chatView.clearStatus();
 
             // If streaming was active → finalize it
             if (activeStreamMessage) {
@@ -167,6 +170,9 @@ export function initChatController(transport) {
             // Non-stream fallback
             chatView.appendMessage(payload, 'assistant');
         },
+        handleStatusChanged: (payload) => {
+            chatView.setStatus(payload);
+        },
         handleStreamChunk: (payload) => {
             // Stop loading spinner only on first chunk
             if (!activeStreamMessage) {
@@ -181,6 +187,7 @@ export function initChatController(transport) {
         handleAIError: (payload) => {
             // Show AI Error
             setLoading(false);
+            chatView.clearStatus();
             chatView.appendErrorMessage(payload);
         },
         navigateToChat: () => {

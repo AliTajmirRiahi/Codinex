@@ -49,8 +49,26 @@
     gap: 12px;
 }
 
+.response-status {
+    align-self: flex-start;
+    color: var(--vs-foreground);
+    font-size: 12px;
+    opacity: 0.75;
+    animation: response-status-blink 1.2s ease-in-out infinite;
+}
+
 .response-loading {
     width: 40px;
+}
+
+@keyframes response-status-blink {
+    0%, 100% {
+        opacity: 0.35;
+    }
+
+    50% {
+        opacity: 0.95;
+    }
 }
 
 .message {

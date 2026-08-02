@@ -44,6 +44,18 @@
     letter-spacing: 0.5px;
 }
 
+.model-menu-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.model-provider-name {
+    color: var(--vs-link-foreground);
+    text-transform: none;
+}
+
 .drop-option {
     display: flex;
     align-items: center;

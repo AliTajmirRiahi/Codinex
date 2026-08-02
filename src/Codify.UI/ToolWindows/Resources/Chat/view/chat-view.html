@@ -66,6 +66,7 @@
 
         <!-- Container for displaying chat messages -->
         <div id="chat-container" class="messages-container">
+            <div id="response-status" class="response-status hidden"></div>
             <div id="response-loading" class="response-loading hidden">
                 <codify-image name="linear-loading.svg"></codify-image>
             </div>
@@ -122,7 +123,10 @@
                                 <codify-icon name="chevron-down"></codify-icon>
                             </button>
                             <div id="model-dropdown-menu" class="com-dropdown">
-                                <div class="menu-label">Activated Models</div>
+                                <div class="menu-label model-menu-label">
+                                    <span>Activated Models</span>
+                                    <span id="model-provider-name" class="model-provider-name hidden"></span>
+                                </div>
                                 <div id="model-dropdown-menu-container"></div>
                                 <div class="menu-divider"></div>
                                 <div id="manage-models-action" class="menu-action">
