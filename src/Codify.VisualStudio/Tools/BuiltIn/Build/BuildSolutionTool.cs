@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
@@ -23,6 +23,8 @@ public sealed class BuildSolutionTool(
 
     public string Description =>
         "Builds the current Visual Studio solution and returns the build result.";
+
+    public string StatusMessage => "Building solution...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 

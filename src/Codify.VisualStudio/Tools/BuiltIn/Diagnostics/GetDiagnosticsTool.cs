@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
@@ -19,6 +19,8 @@ public sealed class GetDiagnosticsTool : IAiTool
     public string Name => "get_diagnostics";
 
     public string Description => "";
+
+    public string StatusMessage => "Getting diagnostics...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Debug;
 

@@ -22,6 +22,8 @@ public sealed class RememberMemoryTool(IMemoryManager memoryManager) : IAiTool
     public string Description =>
         "Stores or updates a long-term workspace memory.";
 
+    public string StatusMessage => "Remembering memory...";
+
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
     public ToolDefinition Definition { get; } =

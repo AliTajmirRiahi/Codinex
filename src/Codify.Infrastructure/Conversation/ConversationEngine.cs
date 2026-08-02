@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Interfaces;
@@ -68,8 +68,12 @@ namespace Codify.Infrastructure.Conversation
                         {
                             var tool = toolRegistry.Get(toolRequest.Name);
 
-                            yield return ConversationEvent.Status(
-                                $"Executing tool '{tool.Name}'...");
+                            var statusMessage = GetStatusMessage(tool, toolRequest);
+
+                            if (!string.IsNullOrWhiteSpace(statusMessage))
+                            {
+                                yield return ConversationEvent.Status(statusMessage);
+                            }
 
                             var result = await tool.ExecuteAsync(
                                 toolRequest,
@@ -116,6 +120,67 @@ namespace Codify.Infrastructure.Conversation
                         break;
                 }
             }
+        }
+
+        private static string GetStatusMessage(
+            IAiTool tool,
+            ToolRequest request)
+        {
+            var statusMessage = tool.StatusMessage;
+
+            if (string.IsNullOrWhiteSpace(statusMessage))
+            {
+                return statusMessage;
+            }
+
+            var detail = GetStatusDetail(request);
+
+            if (string.IsNullOrWhiteSpace(detail))
+            {
+                return statusMessage;
+            }
+
+            return $"{statusMessage} ({detail})";
+        }
+
+        private static string GetStatusDetail(ToolRequest request)
+        {
+            if (request.Arguments is not { HasValues: true })
+            {
+                return string.Empty;
+            }
+
+            foreach (var name in new[] { "path", "query", "symbol", "id", "title" })
+            {
+                var detail = request.Arguments.Value<string>(name);
+
+                if (string.IsNullOrWhiteSpace(detail))
+                {
+                    continue;
+                }
+
+                return name == "path" ? GetPathDisplayName(detail) : detail;
+            }
+
+            return string.Empty;
+        }
+
+        private static string GetPathDisplayName(string path)
+        {
+            var normalizedPath = path
+                .Replace('\\', '/')
+                .TrimEnd('/');
+
+            if (string.IsNullOrWhiteSpace(normalizedPath))
+            {
+                return string.Empty;
+            }
+
+            var lastSeparatorIndex = normalizedPath.LastIndexOf('/');
+
+            return lastSeparatorIndex >= 0
+                ? normalizedPath.Substring(lastSeparatorIndex + 1)
+                : normalizedPath;
         }
     }
 }

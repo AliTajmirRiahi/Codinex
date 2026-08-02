@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
@@ -36,6 +36,8 @@ namespace Codify.VisualStudio.Tools.BuiltIn.Workspace
                 ]);
 
         public ToolVisibility Visibility { get; } = ToolVisibility.Model;
+
+        public string StatusMessage => "Listing directory...";
 
         public async Task<ToolResult> ExecuteAsync(
             ToolRequest request,

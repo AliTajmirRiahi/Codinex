@@ -1,4 +1,4 @@
-﻿using Codify.Core.Conversation;
+using Codify.Core.Conversation;
 using Codify.Core.DependencyInjection.Attributes;
 using Codify.Core.DependencyInjection.Models;
 using Codify.Core.Models;
@@ -25,6 +25,9 @@ public sealed class ReadFileTool(
     public string Name => "read_file";
 
     public string Description => "Use only when the requested information cannot be obtained from the current workspace context.";
+
+    public string StatusMessage => "Reading file...";
+
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
 

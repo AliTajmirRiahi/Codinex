@@ -34,6 +34,8 @@ public sealed class ChangeSetCreatorTool(
 
     public ToolVisibility Visibility => ToolVisibility.Model;
 
+    public string StatusMessage => "Applying workspace changes...";
+
     public ToolDefinition Definition => new(
         new Dictionary<string, ToolProperty>
         {
