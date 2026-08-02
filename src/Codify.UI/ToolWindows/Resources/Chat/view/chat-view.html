@@ -1,4 +1,4 @@
-﻿<html lang="en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <!-- Security Policy to allow resources from the custom internal scheme -->
@@ -78,8 +78,10 @@
         </div>
 
         <!-- User input section at the bottom -->
-        <div class="input-container">
-
+        <div id="input-container" class="input-container">
+            <div id="input-loading-screen" class="input-loading-screen hidden">
+                <codify-image name="loading.svg" class="spinner"></codify-image>
+            </div>
             <div class="input-box-wrapper">
                 <!-- Top row: context / file selector -->
                 <div class="input-context-row">

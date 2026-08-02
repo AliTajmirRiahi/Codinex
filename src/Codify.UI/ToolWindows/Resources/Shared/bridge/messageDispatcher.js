@@ -20,8 +20,12 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onInitData) handlers.onInitData(payload);
                 break;
 
-            case EVENTS.SELECT_PROVIDER:
-                if (handlers.onSelectProvider) handlers.onSelectProvider(payload);
+            case EVENTS.CHANGE_MODEL_SETTING_APPROVED:
+                if (handlers.onChangeModelSettingApproved) handlers.onChangeModelSettingApproved(payload);
+                break;
+
+            case EVENTS.SELECT_MODEL_APPROVED:
+                if (handlers.onSelectModel) handlers.onSelectModel(payload);
                 break;
 
             case EVENTS.SELECT_CHAT_APPROVED:

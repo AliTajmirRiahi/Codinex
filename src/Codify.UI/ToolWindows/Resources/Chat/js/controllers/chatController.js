@@ -6,7 +6,7 @@
 import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { chatListView } from '../views/chatListView.js';
 import { aiService } from '../services/aiService.js';
-import { getState, setLoading, setCurrentModel } from '../state/appState.js';
+import { getState, setLoading, setCurrentModel, setInputLoading } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 import { STATICS } from '../constants/statics.js';
 import { reportError } from '../../../Shared/bridge/errorReporter.js';
@@ -42,6 +42,7 @@ export function initChatController(transport) {
             providerId: appState.provider.id,
             modelId: model.id
         };
+        setInputLoading(true);
         transport.send(EVENTS.SELECT_MODEL, data);
     }
 

@@ -46,7 +46,7 @@ namespace Codify.Storage.Managers
         /// </summary>
         private string GetChatPath(string chatId)
         {
-            return StoragePaths.GetChatPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId(), chatId);
+            return StoragePaths.GetChatPath(workspaceContext.SolutionName, conversationGroupManager.CurrentGroup.GetId(), "chat-" + chatId);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using Codify.Core.Interfaces;
+using Codify.Core.Interfaces;
 using Codify.VisualStudio.Diagnostics.Errors;
 using Codify.VisualStudio.Hosting.Startup;
 using Codify.VisualStudio.Interfaces;
@@ -17,7 +17,7 @@ namespace Codify.UI.ToolWindows
     /// <summary>
     /// Interaction logic for CodifyToolWindowControl.
     /// </summary>
-    public partial class CodifyToolWindowControl : UserControl
+    public partial class CodifyToolWindowControl : UserControl, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CodifyToolWindowControl"/> class.
@@ -27,6 +27,7 @@ namespace Codify.UI.ToolWindows
         private IResourceServer _resourceServer;
         private IUserNotificationService _userNotificationService;
         private static IErrorHandler _errorHandler;
+        private bool _isDisposed;
 
         public CodifyToolWindowControl()
         {
@@ -77,6 +78,8 @@ namespace Codify.UI.ToolWindows
 
         private async Task InitializeWebViewAsync()
         {
+            if (_isDisposed) return;
+
             // Define the user data folder path to avoid permission issues.
             var userDataFolder = System.IO.Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -87,6 +90,8 @@ namespace Codify.UI.ToolWindows
 
             // Initialize WebView2 with the environment.
             await WebView.EnsureCoreWebView2Async(environment);
+
+            if (_isDisposed) return;
 
             WebView.CoreWebView2.OpenDevToolsWindow();
 
@@ -254,7 +259,7 @@ namespace Codify.UI.ToolWindows
 
         private async Task ApplyThemeToWebViewAsync()
         {
-            if (WebView.CoreWebView2 == null) return;
+            if (_isDisposed || WebView.CoreWebView2 == null) return;
 
             var cssVariables = _themeService.GetCurrentThemeAsCssVariables();
 
@@ -262,14 +267,43 @@ namespace Codify.UI.ToolWindows
         }
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
+            // Visual Studio can unload tool window content during docking, auto-hide,
+            // or unpin operations. Do not dispose WebView here; dispose only when the
+            // tool window pane is actually disposed.
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed) return;
+
+            _isDisposed = true;
+
+            if (!disposing) return;
+
+            Loaded -= OnLoaded;
+            Unloaded -= OnUnloaded;
+
+            if (_themeService != null)
+            {
+                _themeService.ThemeChanged -= OnThemeChanged;
+            }
+
+            if (WebView == null) return;
+
+            WebView.NavigationCompleted -= OnNavigationCompleted;
 
             if (WebView.CoreWebView2 != null)
             {
                 WebView.CoreWebView2.WebMessageReceived -= OnWebMessageReceived;
-                WebView.NavigationCompleted -= OnNavigationCompleted;
             }
+
             WebView.Dispose();
-            _themeService.ThemeChanged -= OnThemeChanged;
         }
     }
 }

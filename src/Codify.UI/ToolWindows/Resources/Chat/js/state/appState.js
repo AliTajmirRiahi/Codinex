@@ -9,6 +9,8 @@ const _state = {
     currentModel: null,
     messages: [],
     isLoading: false,
+    isScreenLoading: true,
+    isInputLoading : false,
     chatList: [],
     currentChat: null,
     composerReferences: [],
@@ -127,6 +129,19 @@ export function setLoading(isLoading) {
     updateState({ isLoading: !!isLoading });
 }
 
+/**
+ * Set loading state.
+ */
+export function setScreenLoading(isScreenLoading) {
+    updateState({ isScreenLoading: !!isScreenLoading });
+}
+
+/**
+ * Set loading state.
+ */
+export function setInputLoading(isInputLoading) {
+    updateState({ isInputLoading: !!isInputLoading });
+}
 /**
  * Add message to history.
  */

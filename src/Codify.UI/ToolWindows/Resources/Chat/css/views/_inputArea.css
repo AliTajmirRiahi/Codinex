@@ -1,8 +1,28 @@
 /* Main input container */
 .input-container {
+    position: relative; /* enables absolute-positioned loading overlay inside */
     padding: 10px;
     background: var(--vs-background);
 }
+
+/* Loading overlay that covers ONLY the input area */
+.input-loading-screen {
+    position: absolute;
+    inset: 0; /* top/right/bottom/left: 0 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    background-color: var(--vs-background);
+    opacity: 0.7;
+    margin: 10px;
+    border-radius: 10px;
+}
+    .input-loading-screen codify-image {
+        width: 55px;
+    }
+
 
 /* Top row: add context + active document chip */
 .input-context-row {
