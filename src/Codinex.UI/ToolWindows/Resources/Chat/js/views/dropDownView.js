@@ -1,4 +1,4 @@
-// Codify\UI\ToolWindows\Resources\Chat\js\views\dropDownView.js
+// Codinex\UI\ToolWindows\Resources\Chat\js\views\dropDownView.js
 
 import { $ } from '../utils/dom.js';
 
@@ -101,7 +101,7 @@ export class DropDownView {
 
         option.innerHTML = `
             <div class="option-info">
-                <codify-icon name="${item.icon || 'lightning'}"></codify-icon>
+                <codinex-icon name="${item.icon || 'lightning'}"></codinex-icon>
                 <span class="option-name">${item.name}</span>
                 ${item.multiplier ? `<span class="multiplier">${item.multiplier}</span>` : ''}
             </div>

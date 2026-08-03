@@ -155,7 +155,7 @@ export class ComposerController {
                 {
                     id: 'cmd5',
                     name: '/assist',
-                    description: 'Show available Codify commands and usage tips'
+                    description: 'Show available Codinex commands and usage tips'
                 },
                 {
                     id: 'cmd6',

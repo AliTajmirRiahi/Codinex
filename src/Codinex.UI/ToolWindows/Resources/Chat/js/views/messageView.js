@@ -15,8 +15,8 @@ function createMessageHeader(sender) {
     headerEl.className = 'message-header';
 
     if (sender === 'assistant') {
-        const logoEl = document.createElement('codify-image');
-        logoEl.setAttribute('name', 'codify-AI-logo-black.svg');
+        const logoEl = document.createElement('codinex-image');
+        logoEl.setAttribute('name', 'codinex-AI-logo-black.svg');
         logoEl.setAttribute('alt', 'Codinex AI Logo');
         logoEl.className = 'message-header-logo';
 
@@ -50,7 +50,7 @@ function createUserMessageCopyButton(text) {
     buttonEl.className = 'message-copy-btn';
     buttonEl.title = 'Copy message';
     buttonEl.setAttribute('aria-label', 'Copy message');
-    buttonEl.innerHTML = '<codify-icon name="copy" aria-hidden="true"></codify-icon>';
+    buttonEl.innerHTML = '<codinex-icon name="copy" aria-hidden="true"></codinex-icon>';
 
     buttonEl.addEventListener('click', async () => {
         const originalTitle = buttonEl.title;

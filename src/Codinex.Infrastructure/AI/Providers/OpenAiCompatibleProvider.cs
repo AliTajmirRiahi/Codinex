@@ -122,7 +122,7 @@ namespace Codinex.Infrastructure.AI.Providers
 #if DEBUG
             var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
 
-            var path = @$"C:\Users\Programmer\AppData\Local\Codify\prompts\prompt_{Guid.NewGuid()}.json";
+            var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
 
             await workspaceFileService.CreateFileAsync(path, cancellationToken);
 

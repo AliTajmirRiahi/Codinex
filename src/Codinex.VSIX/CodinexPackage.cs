@@ -98,7 +98,7 @@ namespace Codinex.VSIX
             // Since some services need to load files from disk, we do it here.
             await InitializeCoreServicesAsync();
 
-            Debug.WriteLine("[Codify] DI Container & Package Initialized.");
+            Debug.WriteLine("[Codinex] DI Container & Package Initialized.");
         }
         /// <summary>
         /// Handles package initialization errors safely.
@@ -122,7 +122,7 @@ namespace Codinex.VSIX
                 }
                 else
                 {
-                    Debug.WriteLine("[Codify] Package initialization failed before DI initialization.");
+                    Debug.WriteLine("[Codinex] Package initialization failed before DI initialization.");
                     Debug.WriteLine(exception.ToString());
 
                     try
@@ -130,7 +130,7 @@ namespace Codinex.VSIX
                         var pane = await CreateVsOutputWindowPaneAsync();
 
                         pane.OutputStringThreadSafe(
-                            "[Codify] Package initialization failed before DI initialization.\n");
+                            "[Codinex] Package initialization failed before DI initialization.\n");
 
                         pane.OutputStringThreadSafe(
                             exception.ToString() + "\n");
@@ -143,15 +143,15 @@ namespace Codinex.VSIX
 
                 VsShellUtilities.ShowMessageBox(
                     this,
-                    "Codify could not start correctly. Please check Visual Studio Output window for details.",
-                    "Codify",
+                    "Codinex could not start correctly. Please check Visual Studio Output window for details.",
+                    "Codinex",
                     OLEMSGICON.OLEMSGICON_CRITICAL,
                     OLEMSGBUTTON.OLEMSGBUTTON_OK,
                     OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
             }
             catch
             {
-                Debug.WriteLine("[Codify] Failed to handle package initialization error.");
+                Debug.WriteLine("[Codinex] Failed to handle package initialization error.");
                 Debug.WriteLine(exception.ToString());
             }
         }
@@ -175,7 +175,7 @@ namespace Codinex.VSIX
                     }
                     else
                     {
-                        Debug.WriteLine("[Codify] AppDomain unhandled exception before DI initialization.");
+                        Debug.WriteLine("[Codinex] AppDomain unhandled exception before DI initialization.");
                         Debug.WriteLine(exception.ToString());
                     }
                 }
@@ -199,7 +199,7 @@ namespace Codinex.VSIX
                     }
                     else
                     {
-                        Debug.WriteLine("[Codify] Dispatcher unhandled exception before DI initialization.");
+                        Debug.WriteLine("[Codinex] Dispatcher unhandled exception before DI initialization.");
                         Debug.WriteLine(e.Exception.ToString());
                     }
 
@@ -223,7 +223,7 @@ namespace Codinex.VSIX
 
             outputWindow?.CreatePane(
                 ref paneGuid,
-                "Codify",
+                "Codinex",
                 fInitVisible: 1,
                 fClearWithSolution: 1);
 

@@ -40,7 +40,7 @@ namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProvi
 
             result.Metadata.Should().NotBeNull();
             result.Metadata.FilePath.Should().Be(filePath);
-            result.Metadata.ProjectName.Should().Be("Codify");
+            result.Metadata.ProjectName.Should().Be("Codinex");
             result.Metadata.Content.Should().Be("class Test {}");
 
             result.Icon.Should().Be("fileTypes/file_type_csharp");

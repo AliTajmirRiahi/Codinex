@@ -25,7 +25,7 @@ export const projectListView = {
 
                 option.innerHTML = `
                     <div class="drop-info">
-                        <codify-icon name="folder" class="chat-icon"></codify-icon>
+                        <codinex-icon name="folder" class="chat-icon"></codinex-icon>
                         <span>${item.name}</span>
                     </div>`;
                 return option;

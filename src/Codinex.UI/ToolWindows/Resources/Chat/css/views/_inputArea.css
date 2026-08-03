@@ -32,7 +32,7 @@
     margin: 10px;
     border-radius: 10px;
 }
-    .input-loading-screen codify-image {
+    .input-loading-screen codinex-image {
         width: 55px;
     }
 
@@ -116,7 +116,7 @@
         line-height: 1;
     }
 
-    .composer-chip codify-icon {
+    .composer-chip codinex-icon {
         width: 10px;
         height: 10px;
     }
@@ -174,7 +174,7 @@
         color: var(--vs-viz-surface-plum-medium-color);
     }
 
-    .composer-menu-item codify-icon {
+    .composer-menu-item codinex-icon {
         width: 18px;
         height: 18px;
     }

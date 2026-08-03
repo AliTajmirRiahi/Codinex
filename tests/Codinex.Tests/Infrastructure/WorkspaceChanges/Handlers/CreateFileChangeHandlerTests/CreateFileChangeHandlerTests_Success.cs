@@ -19,7 +19,7 @@ public sealed class CreateFileChangeHandlerTests_Success
     {
         // Arrange
         const string filePath = @"C:\Test\File.cs";
-        const string content = "Hello Codify";
+        const string content = "Hello Codinex";
 
         var change = new CreateFileChange
         {

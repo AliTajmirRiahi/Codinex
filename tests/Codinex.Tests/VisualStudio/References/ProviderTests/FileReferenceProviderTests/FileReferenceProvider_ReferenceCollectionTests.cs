@@ -135,7 +135,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         reference.Type.Should().Be(ReferenceKind.File);
         reference.Value.Should().Be(filePath);
 
-        reference.Metadata.ProjectName.Should().Be("Codify");
+        reference.Metadata.ProjectName.Should().Be("Codinex");
         reference.Metadata.Content.Should().Be("class Test {}");
     }
 
@@ -144,7 +144,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
     {
         // Arrange
 
-        WorkspaceContext.SolutionName.Returns("Codify");
+        WorkspaceContext.SolutionName.Returns("Codinex");
 
         const string activeDocumentPath = @"C:\Solution\Program.cs";
         const string projectFilePath = @"C:\Solution\Services\UserService.cs";
@@ -156,12 +156,12 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         SetSolution(
 
             FakeProject.Create(
-                "Codify.Core",
+                "Codinex.Core",
                 FakeProjectItems.Create(
 
                     FakeProjectItem.Create(
                         projectFilePath,
-                        "Codify.Core"))));
+                        "Codinex.Core"))));
 
         WorkspaceFileService.Read(projectFilePath)
             .Returns("UserService");
@@ -183,7 +183,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         result.Should().Contain(x =>
             x.Name == "UserService.cs" &&
             x.Value == projectFilePath &&
-            x.Metadata.ProjectName == "Codify.Core" &&
+            x.Metadata.ProjectName == "Codinex.Core" &&
             x.Metadata.Content == "UserService");
     }
 
@@ -202,7 +202,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
 
         SetSolution(
             FakeProject.Create(
-                "Codify.Core",
+                "Codinex.Core",
                 FakeProjectItems.Create(projectItem)));
 
         var sut = CreateSut();
@@ -242,7 +242,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
 
         var childItem = FakeProjectItem.Create(
             nestedFilePath,
-            "Codify.Core");
+            "Codinex.Core");
 
         var childProjectItems = FakeProjectItems.Create(childItem);
 
@@ -251,7 +251,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
 
         SetSolution(
             FakeProject.Create(
-                "Codify.Core",
+                "Codinex.Core",
                 FakeProjectItems.Create(parentItem)));
 
         var sut = CreateSut();
@@ -271,7 +271,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         result.Should().Contain(x =>
             x.Name == "UserService.cs" &&
             x.Value == nestedFilePath &&
-            x.Metadata.ProjectName == "Codify.Core" &&
+            x.Metadata.ProjectName == "Codinex.Core" &&
             x.Metadata.Content == "UserService");
     }
 
@@ -291,17 +291,17 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             .Returns("Logger");
 
         var subProject = FakeProject.Create(
-            "Codify.Shared",
+            "Codinex.Shared",
             FakeProjectItems.Create(
                 FakeProjectItem.Create(
                     subProjectFilePath,
-                    "Codify.Shared")));
+                    "Codinex.Shared")));
 
         var projectItem = FakeProjectItem.CreateSubProject(subProject);
 
         SetSolution(
             FakeProject.Create(
-                "Codify.Core",
+                "Codinex.Core",
                 FakeProjectItems.Create(projectItem)));
 
         var sut = CreateSut();
@@ -317,7 +317,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         result.Should().Contain(x =>
             x.Name == "Logger.cs" &&
             x.Value == subProjectFilePath &&
-            x.Metadata.ProjectName == "Codify.Shared");
+            x.Metadata.ProjectName == "Codinex.Shared");
     }
 
     [Test]
@@ -338,11 +338,11 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
 
         SetSolution(
             FakeProject.Create(
-                "Codify.Core",
+                "Codinex.Core",
                 FakeProjectItems.Create(
                     FakeProjectItem.Create(
                         projectFilePath,
-                        "Codify.Core"))));
+                        "Codinex.Core"))));
 
         var sut = CreateSut();
 
@@ -375,7 +375,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             "Program");
 
         var project = FakeProject.Create(
-            "Codify.Core",
+            "Codinex.Core",
             null);
 
         SetSolution(project);

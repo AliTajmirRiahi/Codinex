@@ -78,7 +78,7 @@ namespace Codinex.VisualStudio.References.Providers
                 Id = $"file:{Guid.NewGuid()}",
                 Name = folderName,
                 Description = $"Parent ({(string.IsNullOrWhiteSpace(parentFolderName) ? projectName : parentFolderName)})",
-                Type = ReferenceKind.Folder, // Assuming ReferenceKind has a Folder type defined in Codify.Core.Models
+                Type = ReferenceKind.Folder, // Assuming ReferenceKind has a Folder type defined in Codinex.Core.Models
                 Icon = "folder", // Placeholder for actual icon representation
                 Color = "--vs-viz-surface-gold-medium-color", // Placeholder for actual color representation
                 Metadata = new ReferenceMetadata()

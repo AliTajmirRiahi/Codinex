@@ -50,7 +50,7 @@ describe('messageView', () => {
         const element = messageView.createMessageElement(role, content);
 
         expect(element.classList.contains('assistant')).toBe(true);
-        const icon = element.querySelector('codify-icon');
+        const icon = element.querySelector('codinex-icon');
         expect(icon.getAttribute('name')).toBe('assistant-avatar');
     });
 

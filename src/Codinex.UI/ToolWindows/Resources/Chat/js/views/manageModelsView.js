@@ -1,5 +1,5 @@
 /* 
- * path: Codify\UI\ToolWindows\Resources\Chat\js\views\manageModelsView.js
+ * path: Codinex\UI\ToolWindows\Resources\Chat\js\views\manageModelsView.js
  */
 import { $, addDefaultOption, togglePanelHidden, trigger } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
