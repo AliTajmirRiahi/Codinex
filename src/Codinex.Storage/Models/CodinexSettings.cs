@@ -1,6 +1,6 @@
 ﻿namespace Codinex.Storage.Models
 {
-    public class CodifySettings
+    public class CodinexSettings
     {
         // The ID of the currently selected AI Provider (e.g., "openai", "ollama", "custom")
         public string DefaultProviderId { get; set; } = "openai";

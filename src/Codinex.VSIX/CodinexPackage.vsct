@@ -4,10 +4,10 @@
   <Extern href="stdidcmd.h" />
   <Extern href="vsshlids.h" />
 
-  <Commands package="guidCodifyPackage">
+  <Commands package="guidCodinexPackage">
 
     <Buttons>
-      <Button guid="guidCodifyPackageCmdSet" id="cmdidCodifyToolWindowCommand" priority="0x0100" type="Button">
+      <Button guid="guidCodinexPackageCmdSet" id="cmdidCodinexToolWindowCommand" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
@@ -19,27 +19,27 @@
 
     <Bitmaps>
       <Bitmap guid="guidImages"
-              href="Resources\Codify.png"
+              href="Resources\Codinex.png"
               usedList="bmpPic1" />
     </Bitmaps>
 
   </Commands>
 
 	<KeyBindings>
-		<KeyBinding guid="guidCodifyPackageCmdSet"
-            id="cmdidCodifyToolWindowCommand"
+		<KeyBinding guid="guidCodinexPackageCmdSet"
+            id="cmdidCodinexToolWindowCommand"
             editor="guidVSStd97"
             key1="Z"
             mod1="Control Shift" />
 	</KeyBindings>
 
   <Symbols>
-    <!-- ✅ This must match PackageGuidString in CodifyPackage.cs -->
-    <GuidSymbol name="guidCodifyPackage" value="{eb873b7a-8287-48ac-8a6b-646d4166809b}" />
+    <!-- ✅ This must match PackageGuidString in CodinexPackage.cs -->
+    <GuidSymbol name="guidCodinexPackage" value="{eb873b7a-8287-48ac-8a6b-646d4166809b}" />
 
     <!-- ✅ This is the command set GUID — keep as is -->
-    <GuidSymbol name="guidCodifyPackageCmdSet" value="{f695020e-3b35-40ae-b466-57fc5bbe2d6c}">
-      <IDSymbol name="cmdidCodifyToolWindowCommand" value="0x0100" />
+    <GuidSymbol name="guidCodinexPackageCmdSet" value="{f695020e-3b35-40ae-b466-57fc5bbe2d6c}">
+      <IDSymbol name="cmdidCodinexToolWindowCommand" value="0x0100" />
     </GuidSymbol>
 
     <!-- ✅ Icon GUID -->

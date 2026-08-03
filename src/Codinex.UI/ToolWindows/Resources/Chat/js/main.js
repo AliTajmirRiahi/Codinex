@@ -14,8 +14,8 @@ import { EVENTS } from '../js/constants/events.js';
 import { reportError } from '../../Shared/bridge/errorReporter.js'
 
 // Register Custom Elements
-import '../../Shared/components/codify-icon.js';
-import '../../Shared/components/codify-image.js';
+import '../../Shared/components/codinex-icon.js';
+import '../../Shared/components/codinex-image.js';
 
 window.addEventListener('error', (event) => {
     debugger;

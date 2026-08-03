@@ -32,7 +32,7 @@ namespace Codinex.VSIX
             // the object returned by the Content property.
             var tool = new CodinexToolWindowControl();
 
-            tool.Initialize(CodifyServiceContainer.Instance, CodifyServiceContainer.Get<IErrorHandler>());
+            tool.Initialize(CodinexServiceContainer.Instance, CodinexServiceContainer.Get<IErrorHandler>());
 
             this.Content = tool;
         }

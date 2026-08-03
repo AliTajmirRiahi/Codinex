@@ -107,7 +107,7 @@ namespace Codinex.UI.ToolWindows
             await InitializeWebViewZoomAsync();
 
             WebView.CoreWebView2.Navigate(
-                "http://Codinex.resources/Chat/view/chat-view.html"
+                "http://codinex.resources/Chat/view/chat-view.html"
             );
         }
         // Initialize WebView settings

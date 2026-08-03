@@ -68,12 +68,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bootstrap\CodifyServiceContainer.cs" />
+    <Compile Include="Bootstrap\CodinexServiceContainer.cs" />
     <Compile Include="Bootstrap\ServiceCollectionExtensions.cs" />
     <Compile Include="CodinexToolWindow.cs" />
-    <Compile Include="CodifyToolWindowCommand.cs" />
+    <Compile Include="CodinexToolWindowCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CodifyPackage.cs" />
+    <Compile Include="CodinexPackage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -84,11 +84,11 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="CodifyPackage.vsct" />
-    <Content Include="Resources\Codify.png">
+    <Content Include="CodinexPackage.vsct" />
+    <Content Include="Resources\Codinex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\CodifyAI128x128.png">
+    <Content Include="Resources\CodinexAI128x128.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
@@ -162,7 +162,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="CodifyPackage.vsct">
+    <VSCTCompile Include="CodinexPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>

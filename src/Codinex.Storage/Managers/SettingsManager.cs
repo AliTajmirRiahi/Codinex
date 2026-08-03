@@ -10,10 +10,10 @@ namespace Codinex.Storage.Managers
     [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class SettingsManager(IStorageService storage)
     {
-        private CodifySettings _currentSettings = new(); // Default values
+        private CodinexSettings _currentSettings = new(); // Default values
 
         // Get current settings
-        public CodifySettings Settings => _currentSettings;
+        public CodinexSettings Settings => _currentSettings;
 
         /// <summary>
         /// Loads settings from disk, or creates defaults if not found.
@@ -22,7 +22,7 @@ namespace Codinex.Storage.Managers
         {
             if (await storage.ExistsAsync(StoragePaths.Settings))
             {
-                var loaded = await storage.LoadAsync<CodifySettings>(StoragePaths.Settings);
+                var loaded = await storage.LoadAsync<CodinexSettings>(StoragePaths.Settings);
                 if (loaded != null)
                 {
                     _currentSettings = loaded;
@@ -38,7 +38,7 @@ namespace Codinex.Storage.Managers
         /// <summary>
         /// Updates and persists settings.
         /// </summary>
-        public async Task SaveSettingsAsync(CodifySettings newSettings)
+        public async Task SaveSettingsAsync(CodinexSettings newSettings)
         {
             _currentSettings = newSettings;
             await storage.SaveAsync(StoragePaths.Settings, _currentSettings);

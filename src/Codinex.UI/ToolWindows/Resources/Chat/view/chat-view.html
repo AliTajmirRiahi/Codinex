@@ -4,11 +4,11 @@
     <!-- Security Policy to allow resources from the custom internal scheme -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'none';
-               img-src http://codify.resources data:;
-               script-src http://codify.resources 'unsafe-inline';
-               style-src http://codify.resources 'unsafe-inline';
-               connect-src http://codify.resources;
-               font-src 'self' codify.resources http://codify.resources;">
+               img-src http://codinex.resources data:;
+               script-src http://codinex.resources 'unsafe-inline';
+               style-src http://codinex.resources 'unsafe-inline';
+               connect-src http://codinex.resources;
+               font-src 'self' codinex.resources http://codinex.resources;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- External Stylesheets -->
@@ -20,7 +20,7 @@
     <!-- Loading Screen Container -->
     <!-- This will be visible by default until onInitData is triggered -->
     <div id="loading-screen" class="loading-screen">
-        <codify-image name="loading.svg" class="spinner"></codify-image>
+        <codinex-image name="loading.svg" class="spinner"></codinex-image>
         <h2>Loading Codinex AI...</h2>
     </div>
     <div id="main-chat-wrapper" class="chat-wrapper hidden">
@@ -29,9 +29,9 @@
         <div class="project-toolbar">
             <div class="project-selector-wrapper">
                 <button id="project-selector-btn" class="selector-btn" title="Select Project">
-                    <codify-icon name="folder"></codify-icon>
+                    <codinex-icon name="folder"></codinex-icon>
                     <span id="project-name">Default Project</span>
-                    <codify-icon name="chevron-down"></codify-icon>
+                    <codinex-icon name="chevron-down"></codinex-icon>
                 </button>
 
                 <div id="project-dropdown" class="com-dropdown">
@@ -43,17 +43,17 @@
 
             <!-- Button to create a new conversation project -->
             <button id="new-project-btn" class="toolbar-btn" title="New Project">
-                <codify-icon name="plus-circle"></codify-icon>
+                <codinex-icon name="plus-circle"></codinex-icon>
             </button>
 
             <!-- Button to delete the current active conversation project -->
             <!-- Button to edit the current active conversation project -->
             <button id="edit-project-btn" class="toolbar-btn" title="Edit Project">
-                <codify-icon name="pencil"></codify-icon>
+                <codinex-icon name="pencil"></codinex-icon>
             </button>
 
             <button id="delete-project-btn" class="toolbar-btn danger" title="Delete Project">
-                <codify-icon name="trash-2"></codify-icon>
+                <codinex-icon name="trash-2"></codinex-icon>
             </button>
 
         </div>
@@ -64,7 +64,7 @@
             <div class="chat-history-selector-wrapper">
                 <button id="chat-history-selector-btn" class="selector-btn" title="Select Model">
                     <span id="chat-history-name">NAME</span>
-                    <codify-icon name="chevron-down"></codify-icon>
+                    <codinex-icon name="chevron-down"></codinex-icon>
                 </button>
 
                 <div id="chat-history-dropdown" class="com-dropdown">
@@ -76,20 +76,20 @@
 
             <!-- Button to create a new chat session -->
             <button id="new-chat-btn" class="toolbar-btn" title="New Chat">
-                <codify-icon name="plus-circle"></codify-icon>
+                <codinex-icon name="plus-circle"></codinex-icon>
             </button>
 
             <!-- Button to delete the current active chat session -->
             <button id="delete-chat-btn" class="toolbar-btn danger" title="Delete Chat">
-                <codify-icon name="trash-2"></codify-icon>
+                <codinex-icon name="trash-2"></codinex-icon>
             </button>
         </div>
 
         <!-- Initial welcome state when no messages are present -->
         <div id="chat-welcome" class="chat-welcome-screen">
             <!-- Main Logo -->
-            <!--<img src="../Icons/codify-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo">-->
-            <codify-image name="codify-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo"></codify-image>
+            <!--<img src="../Icons/codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo">-->
+            <codinex-image name="codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo"></codinex-image>
             <!-- App Title -->
             <h1 class="welcome-title">Codinex AI</h1>
 
@@ -101,11 +101,11 @@
         <div id="chat-container" class="messages-container">
             <div id="response-status" class="response-status hidden"></div>
             <div id="response-loading" class="response-loading hidden">
-                <codify-image name="linear-loading.svg"></codify-image>
+                <codinex-image name="linear-loading.svg"></codinex-image>
             </div>
-            <div id="error-box" class="codify-error-box hidden">
-                <div class="codify-error-box__title">Error</div>
-                <div class="codify-error-box__message">
+            <div id="error-box" class="codinex-error-box hidden">
+                <div class="codinex-error-box__title">Error</div>
+                <div class="codinex-error-box__message">
                     There is some problem, please check output for details
                 </div>
             </div>
@@ -114,7 +114,7 @@
         <!-- About / donate peek box above the input area -->
         <div class="about-peek-container">
             <div class="about-peek-box" title="About Codinex AI">
-                <codify-image name="chevron-up.svg" class="about-peek-chevron"></codify-image>
+                <codinex-image name="chevron-up.svg" class="about-peek-chevron"></codinex-image>
                 <button id="about-menu-btn" class="about-peek-button" title="About Codinex AI">
                     <span>About</span>
                 </button>
@@ -124,13 +124,13 @@
         <!-- User input section at the bottom -->
         <div id="input-container" class="input-container">
             <div id="input-loading-screen" class="input-loading-screen hidden">
-                <codify-image name="loading.svg" class="spinner"></codify-image>
+                <codinex-image name="loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="input-box-wrapper">
                 <!-- Top row: context / file selector -->
                 <div class="input-context-row">
                     <button id="contextBtn" class="context-add-btn" title="Add Context" data-placeholder=" References">
-                        <codify-icon name="plus"></codify-icon>
+                        <codinex-icon name="plus"></codinex-icon>
                     </button>
                     <div id="contextInput"
                          class="context-input content-editable hidden"
@@ -155,15 +155,15 @@
                 <div class="input-footer-row">
                     <div class="selector-group">
                         <button id="agent-selector-btn" class="selector-btn hidden" title="Select Agent">
-                            <codify-icon name="hat-glasses"></codify-icon>
+                            <codinex-icon name="hat-glasses"></codinex-icon>
                             <span>Agent</span>
-                            <codify-icon name="chevron-down"></codify-icon>
+                            <codinex-icon name="chevron-down"></codinex-icon>
                         </button>
                         <div class="model-selector-wrapper">
                             <button id="model-selector-btn" class="selector-btn" title="Select Model">
-                                <codify-icon name="brain"></codify-icon>
+                                <codinex-icon name="brain"></codinex-icon>
                                 <span id="current-model-name"></span>
-                                <codify-icon name="chevron-down"></codify-icon>
+                                <codinex-icon name="chevron-down"></codinex-icon>
                             </button>
                             <div id="model-dropdown-menu" class="com-dropdown">
                                 <div class="menu-label model-menu-label">
@@ -173,7 +173,7 @@
                                 <div id="model-dropdown-menu-container"></div>
                                 <div class="menu-divider"></div>
                                 <div id="manage-models-action" class="menu-action">
-                                    <codify-icon name="wrench"></codify-icon>
+                                    <codinex-icon name="wrench"></codinex-icon>
                                     <span>Manage Models</span>
                                 </div>
                             </div>
@@ -181,10 +181,10 @@
                     </div>
                     <div class="input-actions">
                         <button id="settings-btn" title="Change Settings">
-                            <codify-icon name="wrench"></codify-icon>
+                            <codinex-icon name="wrench"></codinex-icon>
                         </button>
                         <button id="send-btn" class="disable" title="Send">
-                            <codify-icon name="send-horizontal"></codify-icon>
+                            <codinex-icon name="send-horizontal"></codinex-icon>
                         </button>
                     </div>
                 </div>
@@ -248,7 +248,7 @@
 
             <div class="modal-body about-modal-body">
                 <div class="about-hero">
-                    <codify-image name="codify-AI-logo-black.svg" class="about-logo"></codify-image>
+                    <codinex-image name="codinex-AI-logo-black.svg" class="about-logo"></codinex-image>
                     <div>
                         <h3>Codinex AI</h3>
                         <p>Built by Ali Tajmir Riahi</p>
@@ -273,7 +273,7 @@
                 </div>
 
                 <a class="donate-button about-external-link" href="mailto:riahi.tajmir@gmail.com?subject=Donate%20to%20Codinex%20AI" target="_blank" rel="noopener noreferrer" title="Contact Ali Tajmir Riahi to donate">
-                    <img src="http://codify.resources/Icons/donate.png" alt="Donate">
+                    <img src="http://codinex.resources/Icons/donate.png" alt="Donate">
                 </a>
             </div>
         </div>
@@ -283,7 +283,7 @@
     <div id="model-management-modal" class="modal hidden">
         <div class="modal-content">
             <div id="models-loading-screen" class="modal-loading-screen hidden">
-                <codify-image name="loading.svg" class="spinner"></codify-image>
+                <codinex-image name="loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="modal-header">
                 <h2 id="modal-title">Add AI Model</h2>

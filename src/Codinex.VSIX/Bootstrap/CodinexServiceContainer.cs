@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Codinex.VSIX.Bootstrap
 {
-    public static class CodifyServiceContainer
+    public static class CodinexServiceContainer
     {
         public static IServiceProvider Instance { get; private set; }
 
@@ -47,7 +47,7 @@ namespace Codinex.VSIX.Bootstrap
             services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package, sp.GetRequiredService<IUiThreadDispatcher>()));
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
 
-            var report = ServiceRegistrar.Register(services, typeof(CodifyServiceContainer).Assembly);
+            var report = ServiceRegistrar.Register(services, typeof(CodinexServiceContainer).Assembly);
 
             var text = RegistrationReportFormatter.Format(report);
 
