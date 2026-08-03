@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Codify.Core.Models;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
 using Newtonsoft.Json.Linq;
 
-namespace Codify.Core.Conversation;
+namespace Codinex.Core.Conversation;
 
 /// <summary>
 /// Represents an event emitted during the lifetime of a conversation.

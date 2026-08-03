@@ -1,6 +1,6 @@
-﻿using Codify.Core.Models.WorkspaceChanges;
+﻿using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Core.Interfaces.WorkspaceChanges;
+namespace Codinex.Core.Interfaces.WorkspaceChanges;
 
 /// <summary>
 /// Resolves the appropriate handler for a workspace change.

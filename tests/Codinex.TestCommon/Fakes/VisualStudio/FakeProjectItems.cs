@@ -3,7 +3,7 @@ using NSubstitute;
 using System;
 using System.Collections;
 
-namespace Codify.TestCommon.Fakes.VisualStudio;
+namespace Codinex.TestCommon.Fakes.VisualStudio;
 
 #pragma warning disable VSTHRD010
 public static class FakeProjectItems

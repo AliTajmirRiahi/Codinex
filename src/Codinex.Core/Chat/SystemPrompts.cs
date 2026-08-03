@@ -1,4 +1,4 @@
-namespace Codify.Core.Chat
+namespace Codinex.Core.Chat
 {
     public static class SystemPrompts
     {

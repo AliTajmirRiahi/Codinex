@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Represents Git information for the current workspace.

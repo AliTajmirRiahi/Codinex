@@ -1,7 +1,7 @@
-using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Input model for <c>ChatMessageBuilder</c>.

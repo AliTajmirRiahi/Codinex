@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Conversation;
+namespace Codinex.Core.Conversation;
 
 public sealed class ConversationContext
 {

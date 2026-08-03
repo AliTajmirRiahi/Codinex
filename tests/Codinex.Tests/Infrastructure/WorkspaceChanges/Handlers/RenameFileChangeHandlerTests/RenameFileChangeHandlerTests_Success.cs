@@ -1,12 +1,12 @@
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.RenameFileChangeHandlerTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.RenameFileChangeHandlerTests.Base;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.RenameFileChangeHandlerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.RenameFileChangeHandlerTests;
 
 [TestFixture]
 public sealed class RenameFileChangeHandlerTests_Success

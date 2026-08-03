@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Codify.Core.Interfaces;
+namespace Codinex.Core.Interfaces;
 
 public interface IWorkspaceInitializer
 {

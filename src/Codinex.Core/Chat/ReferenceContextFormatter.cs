@@ -1,10 +1,10 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 using System.Text;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Chat
+namespace Codinex.Core.Chat
 {
     [AutoDiRegister(Modules.Chat, RegistrationOrder.Platform)]
     public sealed class ReferenceContextFormatter : IReferenceContextFormatter

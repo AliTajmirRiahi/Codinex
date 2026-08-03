@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests.Base;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests.Base;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests;
 
 [TestFixture]
 public class WorkspaceStateValidationRuleTests_PathOutsideWorkspace

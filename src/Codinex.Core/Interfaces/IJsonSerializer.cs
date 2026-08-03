@@ -2,7 +2,7 @@
 using System;
 using System.Xml.Linq;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IJsonSerializer
     {

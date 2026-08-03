@@ -1,6 +1,6 @@
 ﻿
 
-namespace Codify.Storage.Commons
+namespace Codinex.Storage.Commons
 {
     public static class Statics
     {

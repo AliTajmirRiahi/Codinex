@@ -1,13 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests;
 
 [TestFixture]
 public sealed class WorkspaceChangeHandlerInvokerTests_Success

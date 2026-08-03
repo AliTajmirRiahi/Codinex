@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Tools;
+namespace Codinex.Core.Tools;
 
 /// <summary>
 /// Resolves AI tools by name.

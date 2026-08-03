@@ -1,11 +1,11 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Interfaces;
-using Microsoft.Web.WebView2.Wpf;
+﻿using Microsoft.Web.WebView2.Wpf;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.WebView;
+namespace Codinex.VisualStudio.WebView;
 
 /// <summary>
 /// WebView2-backed implementation of IWebViewClient.

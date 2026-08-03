@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     /// <summary>
     /// Defines a provider that supplies suggestions for context menu triggers (e.g., #).

@@ -1,13 +1,13 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Storage;
-using Codify.Storage.Managers;
+﻿using Codinex.Storage;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Storage.Managers;
 
-namespace Codify.Infrastructure.Chat
+namespace Codinex.Infrastructure.Chat
 {
     [AutoDiRegister(Modules.Chat, RegistrationOrder.Infrastructure)]
     public class ChatSessionService(ChatManager chatManager, ProviderManager providerManager)

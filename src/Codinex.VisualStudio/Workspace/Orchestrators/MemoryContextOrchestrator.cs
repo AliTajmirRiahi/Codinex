@@ -1,13 +1,13 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Infrastructure.Workspace.PromptPipeline;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Infrastructure.Workspace.PromptPipeline;
 
-namespace Codify.VisualStudio.Workspace.Orchestrators
+namespace Codinex.VisualStudio.Workspace.Orchestrators
 {
     /// <summary>
     /// Provides workspace memory as prompt context.

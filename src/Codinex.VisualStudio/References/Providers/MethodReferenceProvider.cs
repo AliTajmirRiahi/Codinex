@@ -1,10 +1,4 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers.Base;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -12,10 +6,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.References.Providers.Base;
 using Document = Microsoft.CodeAnalysis.Document;
 using Project = Microsoft.CodeAnalysis.Project;
 
-namespace Codify.VisualStudio.References.Providers
+namespace Codinex.VisualStudio.References.Providers
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
     public sealed class MethodReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)

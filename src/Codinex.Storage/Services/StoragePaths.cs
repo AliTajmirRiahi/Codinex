@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Codify.Storage.Services
+namespace Codinex.Storage.Services
 {
     /// <summary>
     /// Provides centralized access to all Codify storage paths.

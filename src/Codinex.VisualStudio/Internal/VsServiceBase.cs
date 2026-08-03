@@ -3,10 +3,10 @@ using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Interfaces;
 using Microsoft.CodeAnalysis;
 
-namespace Codify.VisualStudio.Internal
+namespace Codinex.VisualStudio.Internal
 {
     /// <summary>
     /// Base class for services that interact with the Visual Studio SDK.

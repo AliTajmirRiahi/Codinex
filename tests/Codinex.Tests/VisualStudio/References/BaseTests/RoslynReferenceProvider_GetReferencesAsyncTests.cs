@@ -1,8 +1,5 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.TestCommon.Builders.VisualStudio;
-using Codify.TestCommon.Fakes.VisualStudio;
-using Codify.VisualStudio.Interfaces;
+﻿using Codinex.Core.Models;
+using Codinex.TestCommon.Builders.VisualStudio;
 using FluentAssertions;
 using Microsoft.VisualStudio.LanguageServices;
 using NSubstitute;
@@ -10,9 +7,12 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces;
+using Codinex.TestCommon.Fakes.VisualStudio;
+using Codinex.VisualStudio.Interfaces;
 using Microsoft.CodeAnalysis;
 
-namespace Codify.Tests.VisualStudio.References.BaseTests;
+namespace Codinex.Tests.VisualStudio.References.BaseTests;
 #pragma warning disable VSTHRD010
 [TestFixture]
 public class RoslynReferenceProviderBaseTests

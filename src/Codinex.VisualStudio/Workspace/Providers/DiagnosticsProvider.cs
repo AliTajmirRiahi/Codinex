@@ -1,9 +1,3 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -11,10 +5,17 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DiagnosticSeverity = Codify.Core.Models.DiagnosticSeverity;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Internal;
+using DiagnosticSeverity = Codinex.Core.Models.DiagnosticSeverity;
 using MicrosoftDiagnosticSeverity = Microsoft.CodeAnalysis.DiagnosticSeverity;
+using Models_DiagnosticSeverity = Codinex.Core.Models.DiagnosticSeverity;
 
-namespace Codify.VisualStudio.Workspace.Providers
+namespace Codinex.VisualStudio.Workspace.Providers
 {
     /// <summary>
     /// Provides diagnostics from the current workspace.
@@ -221,12 +222,12 @@ namespace Codify.VisualStudio.Workspace.Providers
 
             return diagnostic.Severity is MicrosoftDiagnosticSeverity.Error or MicrosoftDiagnosticSeverity.Warning;
         }
-        private static int GetSeverityOrder(DiagnosticSeverity severity)
+        private static int GetSeverityOrder(Models_DiagnosticSeverity severity)
         {
             return severity switch
             {
-                DiagnosticSeverity.Error => 0,
-                DiagnosticSeverity.Warning => 1,
+                Models_DiagnosticSeverity.Error => 0,
+                Models_DiagnosticSeverity.Warning => 1,
                 _ => 2
             };
         }
@@ -257,14 +258,14 @@ namespace Codify.VisualStudio.Workspace.Providers
                         StringComparison.OrdinalIgnoreCase));
         }
 
-        private static DiagnosticSeverity MapSeverity(MicrosoftDiagnosticSeverity severity)
+        private static Models_DiagnosticSeverity MapSeverity(MicrosoftDiagnosticSeverity severity)
         {
             return severity switch
             {
-                MicrosoftDiagnosticSeverity.Error => DiagnosticSeverity.Error,
-                MicrosoftDiagnosticSeverity.Warning => DiagnosticSeverity.Warning,
-                MicrosoftDiagnosticSeverity.Info => DiagnosticSeverity.Info,
-                _ => DiagnosticSeverity.Hidden
+                MicrosoftDiagnosticSeverity.Error => Models_DiagnosticSeverity.Error,
+                MicrosoftDiagnosticSeverity.Warning => Models_DiagnosticSeverity.Warning,
+                MicrosoftDiagnosticSeverity.Info => Models_DiagnosticSeverity.Info,
+                _ => Models_DiagnosticSeverity.Hidden
             };
         }
     }

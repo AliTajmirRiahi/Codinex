@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codify.Core.Models;
-using Codify.Storage.Models;
+using Codinex.Storage.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Storage.Interfaces
+namespace Codinex.Storage.Interfaces
 {
     public interface IMemoryManager
     {

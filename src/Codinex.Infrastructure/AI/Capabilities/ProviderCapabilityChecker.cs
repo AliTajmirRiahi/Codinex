@@ -1,8 +1,3 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Infrastructure.CustomeExceptions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -11,8 +6,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Infrastructure.CustomeExceptions;
 
-namespace Codify.Infrastructure.AI.Capabilities
+namespace Codinex.Infrastructure.AI.Capabilities
 {
     public sealed class ChatCapabilityResult
     {

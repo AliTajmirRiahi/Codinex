@@ -1,4 +1,4 @@
-namespace Codify.Core.Conversation;
+namespace Codinex.Core.Conversation;
 
 /// <summary>
 /// Represents the type of activity that occurs during a conversation.

@@ -1,15 +1,15 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using EnvDTE80;
+﻿using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
 
-namespace Codify.VisualStudio.Services
+namespace Codinex.VisualStudio.Services
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class VsWorkspaceContext : IWorkspaceContext

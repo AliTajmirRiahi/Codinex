@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.DependencyInjection.Models;
+﻿namespace Codinex.Core.DependencyInjection.Models;
 
 /// <summary>
 /// Defines the registration order for dependency injection.

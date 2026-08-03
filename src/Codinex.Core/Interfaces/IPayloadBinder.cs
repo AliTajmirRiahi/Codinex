@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IPayloadBinder
     {

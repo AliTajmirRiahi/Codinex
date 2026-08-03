@@ -1,11 +1,11 @@
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.VisualStudio.Workspace.Orchestrators;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.CurrentDocumentContextOrchestratorTests.Base;
+namespace Codinex.Tests.VisualStudio.Workspace.Orchestrators.CurrentDocumentContextOrchestratorTests.Base;
 
 public abstract class CurrentDocumentContextOrchestratorTestBase
 {

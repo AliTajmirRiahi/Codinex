@@ -1,9 +1,9 @@
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Workspace.Orchestrators;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.GitContextOrchestratorTests.Base;
+namespace Codinex.Tests.VisualStudio.Workspace.Orchestrators.GitContextOrchestratorTests.Base;
 
 //public abstract class GitContextOrchestratorTestBase
 //{

@@ -1,7 +1,3 @@
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Diagnostics.Errors;
-using Codify.VisualStudio.Hosting.Startup;
-using Codify.VisualStudio.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -11,16 +7,19 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Diagnostics.Errors;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.UI.ToolWindows
+namespace Codinex.UI.ToolWindows
 {
     /// <summary>
-    /// Interaction logic for CodifyToolWindowControl.
+    /// Interaction logic for CodinexToolWindowControl.
     /// </summary>
-    public partial class CodifyToolWindowControl : UserControl, IDisposable
+    public partial class CodinexToolWindowControl : UserControl, IDisposable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CodifyToolWindowControl"/> class.
+        /// Initializes a new instance of the <see cref="CodinexToolWindowControl"/> class.
         /// </summary>
         private IServiceProvider _serviceProvider;
         private IThemeService _themeService;
@@ -29,7 +28,7 @@ namespace Codify.UI.ToolWindows
         private static IErrorHandler _errorHandler;
         private bool _isDisposed;
 
-        public CodifyToolWindowControl()
+        public CodinexToolWindowControl()
         {
             try
             {
@@ -72,7 +71,7 @@ namespace Codify.UI.ToolWindows
             }
             catch (Exception ex)
             {
-                _ = HandleInitializationErrorAsync(ex, "CodifyToolWindowControl|OnLoaded");
+                _ = HandleInitializationErrorAsync(ex, "CodinexToolWindowControl|OnLoaded");
             }
         }
 
@@ -83,7 +82,7 @@ namespace Codify.UI.ToolWindows
             // Define the user data folder path to avoid permission issues.
             var userDataFolder = System.IO.Path.Combine(
                         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "CodifyExtension");
+                        "CodinexExtension");
 
             // Create the WebView2 environment using the custom folder.
             var environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
@@ -108,7 +107,7 @@ namespace Codify.UI.ToolWindows
             await InitializeWebViewZoomAsync();
 
             WebView.CoreWebView2.Navigate(
-                "http://codify.resources/Chat/view/chat-view.html"
+                "http://Codinex.resources/Chat/view/chat-view.html"
             );
         }
         // Initialize WebView settings
@@ -195,7 +194,7 @@ namespace Codify.UI.ToolWindows
                 {
                     _errorHandler.Handle(
                          exception,
-                         $"CodifyToolWindowControl.{operationName}");
+                         $"CodinexToolWindowControl.{operationName}");
                 }
                 catch
                 {
@@ -208,8 +207,8 @@ namespace Codify.UI.ToolWindows
 
                     VsShellUtilities.ShowMessageBox(
                         Microsoft.VisualStudio.Shell.ServiceProvider.GlobalProvider,
-                        $"Codify failed while executing '{operationName}'.\n\nPlease check the Output window for more details.",
-                        "Codify",
+                        $"Codinex failed while executing '{operationName}'.\n\nPlease check the Output window for more details.",
+                        "Codinex",
                         OLEMSGICON.OLEMSGICON_CRITICAL,
                         OLEMSGBUTTON.OLEMSGBUTTON_OK,
                         OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
@@ -221,7 +220,7 @@ namespace Codify.UI.ToolWindows
             }
             catch
             {
-                Debug.WriteLine("[Codify] Failed to handle UI initialization error.");
+                Debug.WriteLine("[Codinex] Failed to handle UI initialization error.");
                 Debug.WriteLine(exception);
             }
         }

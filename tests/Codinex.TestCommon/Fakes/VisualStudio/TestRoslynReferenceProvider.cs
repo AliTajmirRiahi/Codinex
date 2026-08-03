@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers.Base;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.References.Providers.Base;
 using Microsoft.CodeAnalysis;
 
-namespace Codify.TestCommon.Fakes.VisualStudio
+namespace Codinex.TestCommon.Fakes.VisualStudio
 {
     public sealed class TestRoslynReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
         : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)

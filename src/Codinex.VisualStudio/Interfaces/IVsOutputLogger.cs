@@ -1,4 +1,4 @@
-﻿namespace Codify.VisualStudio.Interfaces
+﻿namespace Codinex.VisualStudio.Interfaces
 {
     /// <summary>
     /// Abstracts writing diagnostic information to Visual Studio output window.

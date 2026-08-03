@@ -2,10 +2,10 @@
 using EnvDTE80;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using Codify.Core.Interfaces;
+using Codinex.Core.Interfaces;
 using NSubstitute;
 
-namespace Codify.TestCommon.Builders.VisualStudio;
+namespace Codinex.TestCommon.Builders.VisualStudio;
 
 #pragma warning disable VSTHRD010
 public sealed class VisualStudioScenario

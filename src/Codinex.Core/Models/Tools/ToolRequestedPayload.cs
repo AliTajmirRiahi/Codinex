@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Codify.Core.Conversation;
+using Codinex.Core.Conversation;
 
-namespace Codify.Core.Models.Tools
+namespace Codinex.Core.Models.Tools
 {
     public sealed class ToolRequestedPayload
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Web.WebView2.Wpf;
 
-namespace Codify.VisualStudio.Interfaces;
+namespace Codinex.VisualStudio.Interfaces;
 
 /// <summary>
 /// Sends messages from the host application back to the WebView UI.

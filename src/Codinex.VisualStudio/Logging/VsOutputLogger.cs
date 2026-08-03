@@ -1,8 +1,8 @@
 ﻿using System;
-using Codify.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Interfaces;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace Codify.VisualStudio.Logging
+namespace Codinex.VisualStudio.Logging
 {
     /// <summary>
     /// Writes logs to a Visual Studio output pane.

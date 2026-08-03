@@ -1,19 +1,19 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Models.Tools.ListDirectory;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Models.Tools.ListDirectory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Workspace
+namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
 {
     [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
     public class ListDirectoryTool(IWorkspaceFileService workspaceFileService) : IAiTool

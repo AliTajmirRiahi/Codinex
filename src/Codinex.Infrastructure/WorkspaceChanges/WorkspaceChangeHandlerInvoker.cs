@@ -1,14 +1,14 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
 using Microsoft.CSharp.RuntimeBinder;
 using System;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Infrastructure.WorkspaceChanges;
+namespace Codinex.Infrastructure.WorkspaceChanges;
 
 [AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class WorkspaceChangeHandlerInvoker(

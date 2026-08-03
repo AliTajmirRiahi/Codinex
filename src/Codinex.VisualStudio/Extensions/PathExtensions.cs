@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codify.VisualStudio.Extensions;
+namespace Codinex.VisualStudio.Extensions;
 
 internal static class PathExtensions
 {

@@ -1,9 +1,9 @@
-using Codify.Core.Models.WorkspaceChanges;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Core.Conversation;
+namespace Codinex.Core.Conversation;
 
 /// <summary>
 /// Represents the execution result of a tool.

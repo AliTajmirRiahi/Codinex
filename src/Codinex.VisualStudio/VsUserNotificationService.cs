@@ -1,14 +1,14 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Internal;
 
-namespace Codify.VisualStudio
+namespace Codinex.VisualStudio
 {
     /// <summary>
     /// Displays Visual Studio native message boxes.

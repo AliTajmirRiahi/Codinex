@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Codify.Properties {
+namespace Codinex.Properties {
     using System;
     
     

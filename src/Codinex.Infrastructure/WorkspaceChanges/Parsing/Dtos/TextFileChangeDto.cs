@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
 /// <summary>
 /// Represents a text replacement inside a file.

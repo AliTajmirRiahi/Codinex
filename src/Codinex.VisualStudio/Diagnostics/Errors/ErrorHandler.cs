@@ -1,10 +1,10 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Interfaces;
-using System;
+﻿using System;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.Diagnostics.Errors
+namespace Codinex.VisualStudio.Diagnostics.Errors
 {
     /// <summary>
     /// Centralized error handler that logs full details to Visual Studio output

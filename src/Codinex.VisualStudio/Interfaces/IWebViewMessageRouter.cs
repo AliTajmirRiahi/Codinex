@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Codify.VisualStudio.Interfaces;
+namespace Codinex.VisualStudio.Interfaces;
 
 /// <summary>
 /// Routes incoming WebView messages to the appropriate application use cases.

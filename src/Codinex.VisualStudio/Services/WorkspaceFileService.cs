@@ -1,10 +1,5 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Extensions;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Models;
-using Codify.VisualStudio.Models.Tools.ListDirectory;
+using Codinex.VisualStudio.Models;
+using Codinex.VisualStudio.Models.Tools.ListDirectory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,9 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Extensions;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.Services;
+namespace Codinex.VisualStudio.Services;
 
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class WorkspaceFileService(IFileSystem fileSystem,

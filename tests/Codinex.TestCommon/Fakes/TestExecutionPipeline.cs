@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
+using Codinex.Core.Interfaces;
 
-namespace Codify.TestCommon.Fakes
+namespace Codinex.TestCommon.Fakes
 {
     public sealed class TestExecutionPipeline : IExecutionPipeline
     {

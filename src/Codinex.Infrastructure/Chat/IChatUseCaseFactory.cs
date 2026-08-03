@@ -1,6 +1,6 @@
-﻿using Codify.Core.UseCases;
+﻿using Codinex.Core.UseCases;
 
-namespace Codify.Infrastructure.Chat
+namespace Codinex.Infrastructure.Chat
 {
     public interface IChatUseCaseFactory
     {

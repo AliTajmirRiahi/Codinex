@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Codify.Core.Models;
-using Codify.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest.Base;
+using Codinex.Core.Models;
+using Codinex.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest.Base;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest;
+namespace Codinex.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest;
 
 [TestFixture]
 public sealed class OpenDocumentsFormatter_FormatTests

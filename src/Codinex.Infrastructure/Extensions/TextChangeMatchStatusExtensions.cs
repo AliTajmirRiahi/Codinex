@@ -1,6 +1,6 @@
-﻿using Codify.Core.Models.WorkspaceChanges;
+﻿using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Infrastructure.Extensions;
+namespace Codinex.Infrastructure.Extensions;
 
 public static class TextChangeMatchStatusExtensions
 {

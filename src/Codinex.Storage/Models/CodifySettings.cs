@@ -1,4 +1,4 @@
-﻿namespace Codify.Storage.Models
+﻿namespace Codinex.Storage.Models
 {
     public class CodifySettings
     {

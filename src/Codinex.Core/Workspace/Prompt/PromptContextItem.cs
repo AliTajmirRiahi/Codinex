@@ -1,4 +1,4 @@
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     /// <summary>
     /// Represents a single piece of prompt context.

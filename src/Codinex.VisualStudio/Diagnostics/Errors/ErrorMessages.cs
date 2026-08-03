@@ -1,4 +1,4 @@
-namespace Codify.VisualStudio.Diagnostics.Errors
+namespace Codinex.VisualStudio.Diagnostics.Errors
 {
     /// <summary>
     /// Centralized user-facing error messages.

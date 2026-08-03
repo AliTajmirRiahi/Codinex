@@ -2,7 +2,7 @@
 using EnvDTE;
 using NSubstitute;
 
-namespace Codify.TestCommon.Fakes.VisualStudio;
+namespace Codinex.TestCommon.Fakes.VisualStudio;
 
 public static class FakeProjects
 {

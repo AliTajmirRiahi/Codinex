@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Codify.TestCommon.Builders.VisualStudio
+namespace Codinex.TestCommon.Builders.VisualStudio
 {
     public sealed class RoslynScenario
     {

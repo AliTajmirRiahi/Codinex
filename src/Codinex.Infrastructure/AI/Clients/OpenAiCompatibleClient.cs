@@ -1,8 +1,3 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Infrastructure.CustomeExceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,8 +8,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Infrastructure.CustomeExceptions;
 
-namespace Codify.Infrastructure.AI.Clients
+namespace Codinex.Infrastructure.AI.Clients
 {
     [AutoDiRegister(Modules.AI, RegistrationOrder.Features)]
     public class OpenAiCompatibleClient(

@@ -1,5 +1,5 @@
 ﻿
-namespace Codify.Core.DependencyInjection.Models;
+namespace Codinex.Core.DependencyInjection.Models;
 
 public enum ServiceLifetimeWrapper
 {

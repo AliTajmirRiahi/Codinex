@@ -1,23 +1,23 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.UseCases;
-using Codify.Infrastructure.Chat;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Managers;
-using Codify.Storage.Models;
-using Codify.Storage.Models.DTO;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.UseCases;
+using Codinex.Infrastructure.Chat;
+using Codinex.Storage.Interfaces;
+using Codinex.Storage.Managers;
+using Codinex.Storage.Models;
+using Codinex.Storage.Models.DTO;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.References;
 
-namespace Codify.VisualStudio.WebView;
+namespace Codinex.VisualStudio.WebView;
 
 /// <summary>
 /// Routes messages from WebView UI to application use cases.

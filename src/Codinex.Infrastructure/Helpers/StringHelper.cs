@@ -1,8 +1,8 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces.Helper;
+﻿using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.Helper;
 
-namespace Codify.Infrastructure.Helpers
+namespace Codinex.Infrastructure.Helpers
 {
     [AutoDiRegister(Modules.Workspace, RegistrationOrder.Foundation)]
     public class StringHelper : IStringHelper

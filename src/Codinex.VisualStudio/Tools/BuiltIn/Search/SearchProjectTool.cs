@@ -1,21 +1,21 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using Codify.Core.Workspace;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Models;
-using Codify.VisualStudio.Models.Tools.SearchProject;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace;
+using Codinex.VisualStudio.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Models.Tools.SearchProject;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Search;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Search;
 
 /// <summary>
 /// Searches files and source code within the current workspace.

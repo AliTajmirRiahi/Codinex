@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Models
+﻿namespace Codinex.Core.Models
 {
     /// <summary>
     /// Specifies which diagnostics should be collected.

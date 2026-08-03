@@ -1,6 +1,6 @@
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.VisualStudio.Models.Tools.ListDirectory;
+namespace Codinex.VisualStudio.Models.Tools.ListDirectory;
 
 public sealed class DirectoryEntry
 {

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Core.Interfaces.WorkspaceChanges;
+namespace Codinex.Core.Interfaces.WorkspaceChanges;
 
 /// <summary>
 /// Applies workspace changes to the project.

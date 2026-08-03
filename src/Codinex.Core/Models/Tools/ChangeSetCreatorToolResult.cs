@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codify.Core.Models.Tools
+namespace Codinex.Core.Models.Tools
 {
     public sealed class WorkspaceChangeSuccess
     {

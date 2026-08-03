@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
 
-namespace Codify.VisualStudio.Interfaces
+namespace Codinex.VisualStudio.Interfaces
 {
     /// <summary>
     /// Provides access to Visual Studio services.

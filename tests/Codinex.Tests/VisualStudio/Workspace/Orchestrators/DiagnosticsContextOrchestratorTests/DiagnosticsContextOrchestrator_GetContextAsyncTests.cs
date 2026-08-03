@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests.Base;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests;
+namespace Codinex.Tests.VisualStudio.Workspace.Orchestrators.DiagnosticsContextOrchestratorTests;
 #pragma warning disable VSTHRD110
 [TestFixture]
 public class DiagnosticsContextOrchestrator_GetContextAsyncTests

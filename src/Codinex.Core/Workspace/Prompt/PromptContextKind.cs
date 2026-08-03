@@ -1,4 +1,4 @@
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     /// <summary>
     /// Identifies the origin of a prompt context item.

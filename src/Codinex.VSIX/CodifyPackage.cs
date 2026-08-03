@@ -1,8 +1,4 @@
-﻿
-using Codify.Core.Interfaces;
-using Codify.Storage;
-using Codify.VisualStudio.Events.Build;
-using Codify.VSIX.Bootstrap;
+﻿using Codinex.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -12,11 +8,14 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Managers;
+using Codinex.Core.Interfaces;
+using Codinex.Storage.Interfaces;
+using Codinex.Storage.Managers;
+using Codinex.VisualStudio.Events.Build;
+using Codinex.VSIX.Bootstrap;
 using Task = System.Threading.Tasks.Task;
 
-namespace Codify.VSIX
+namespace Codinex.VSIX
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -38,7 +37,7 @@ namespace Codify.VSIX
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(CodifyPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(CodifyToolWindow))]
+    [ProvideToolWindow(typeof(CodinexToolWindow))]
     public sealed class CodifyPackage : AsyncPackage
     {
         /// <summary>

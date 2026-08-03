@@ -1,4 +1,4 @@
-namespace Codify.VisualStudio.Interfaces;
+namespace Codinex.VisualStudio.Interfaces;
 
 /// <summary>
 /// Determines whether workspace files or directories should be ignored.

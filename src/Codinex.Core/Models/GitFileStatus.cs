@@ -1,4 +1,4 @@
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Represents the Git status of a file.

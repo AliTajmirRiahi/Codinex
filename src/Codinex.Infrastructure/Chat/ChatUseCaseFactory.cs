@@ -1,15 +1,15 @@
-﻿using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Tools;
-using Codify.Core.UseCases;
-using Codify.Core.Workspace.Prompt;
-using Codify.Infrastructure.AI.Providers;
-using Codify.Storage.Managers;
-using System;
+﻿using System;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Tools;
+using Codinex.Core.UseCases;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Infrastructure.AI.Providers;
+using Codinex.Storage.Managers;
 
-namespace Codify.Infrastructure.Chat
+namespace Codinex.Infrastructure.Chat
 {
     /// <summary>
     /// Provides a factory for creating chat use case instances that enable sending chat messages using the currently

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
 /// <summary>
 /// Represents an edit file change.

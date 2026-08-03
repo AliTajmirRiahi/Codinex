@@ -1,9 +1,9 @@
-using Codify.Core.Interfaces;
-using Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
+using Codinex.Core.Interfaces;
+using Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests.Base;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests.Base;
 
 public abstract class WorkspaceStateValidationRuleBaseTests
 {

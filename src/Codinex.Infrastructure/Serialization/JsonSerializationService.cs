@@ -1,13 +1,13 @@
-﻿using Codify.Core.Interfaces;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
 
-namespace Codify.Infrastructure.Serialization;
+namespace Codinex.Infrastructure.Serialization;
 
 [AutoDiRegister(Modules.JSON, RegistrationOrder.Infrastructure)]
 public sealed class JsonSerializationService : IJsonSerializer

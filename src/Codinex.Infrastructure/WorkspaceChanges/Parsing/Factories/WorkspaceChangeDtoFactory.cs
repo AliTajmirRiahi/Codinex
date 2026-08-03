@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 using Newtonsoft.Json;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Factories;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Factories;
 
 /// <summary>
 /// Creates workspace change DTO instances based on the workspace change kind.

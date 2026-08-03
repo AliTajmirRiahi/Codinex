@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     /// <summary>
     /// Represents a logical section of the prompt context.

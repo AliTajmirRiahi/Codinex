@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.DependencyInjection.Models;
+﻿namespace Codinex.Core.DependencyInjection.Models;
 
 /// <summary>
 /// Well-known DI module names used for registration reporting.

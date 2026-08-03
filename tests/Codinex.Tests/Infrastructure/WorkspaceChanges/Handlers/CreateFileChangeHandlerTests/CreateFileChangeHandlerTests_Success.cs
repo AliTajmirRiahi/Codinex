@@ -1,14 +1,14 @@
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests.Base;
-using Codify.VisualStudio.Services;
+using Codinex.VisualStudio.Services;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests.Base;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests;
 
 [TestFixture]
 public sealed class CreateFileChangeHandlerTests_Success

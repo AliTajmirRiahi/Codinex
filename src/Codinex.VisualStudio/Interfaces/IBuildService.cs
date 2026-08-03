@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.VisualStudio.Models;
+using Codinex.VisualStudio.Models;
 
-namespace Codify.VisualStudio.Interfaces;
+namespace Codinex.VisualStudio.Interfaces;
 
 /// <summary>
 /// Provides solution build operations.

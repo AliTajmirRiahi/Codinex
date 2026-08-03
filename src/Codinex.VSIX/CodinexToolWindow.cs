@@ -1,10 +1,10 @@
 using System.Runtime.InteropServices;
-using Codify.Core.Interfaces;
-using Codify.UI.ToolWindows;
-using Codify.VSIX.Bootstrap;
+using Codinex.UI.ToolWindows;
+using Codinex.Core.Interfaces;
+using Codinex.VSIX.Bootstrap;
 using Microsoft.VisualStudio.Shell;
 
-namespace Codify.VSIX
+namespace Codinex.VSIX
 {
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -18,19 +18,19 @@ namespace Codify.VSIX
     /// </para>
     /// </remarks>
     [Guid("0b1df633-2a89-484e-98a4-0347b31850f8")]
-    public class CodifyToolWindow : ToolWindowPane
+    public class CodinexToolWindow : ToolWindowPane
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CodifyToolWindow"/> class.
+        /// Initializes a new instance of the <see cref="CodinexToolWindow"/> class.
         /// </summary>
-        public CodifyToolWindow() : base(null)
+        public CodinexToolWindow() : base(null)
         {
             this.Caption = "Codinex AI";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            var tool = new CodifyToolWindowControl();
+            var tool = new CodinexToolWindowControl();
 
             tool.Initialize(CodifyServiceContainer.Instance, CodifyServiceContainer.Get<IErrorHandler>());
 

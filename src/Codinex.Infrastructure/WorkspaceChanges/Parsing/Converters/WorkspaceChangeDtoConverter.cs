@@ -1,13 +1,13 @@
 using System;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Factories;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Factories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Converters;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Converters;
 
 /// <summary>
 /// Deserializes workspace change DTOs based on the 'kind' discriminator.

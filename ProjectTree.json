@@ -2619,8 +2619,8 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
-                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/CodifyToolWindowCommand.png",
-                                                                                            "name":  "CodifyToolWindowCommand.png",
+                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/CodinexToolWindowCommand.png",
+                                                                                            "name":  "CodinexToolWindowCommand.png",
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
@@ -2646,13 +2646,13 @@
                                                                                     ]
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codinex.UI/ToolWindows/CodifyToolWindowControl.xaml",
-                                                                       "name":  "CodifyToolWindowControl.xaml",
+                                                                       "path":  "src/Codinex.UI/ToolWindows/CodinexToolWindowControl.xaml",
+                                                                       "name":  "CodinexToolWindowControl.xaml",
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codinex.UI/ToolWindows/CodifyToolWindowControl.xaml.cs",
-                                                                       "name":  "CodifyToolWindowControl.xaml.cs",
+                                                                       "path":  "src/Codinex.UI/ToolWindows/CodinexToolWindowControl.xaml.cs",
+                                                                       "name":  "CodinexToolWindowControl.xaml.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -3427,11 +3427,6 @@
                                                   "type":  "file"
                                               },
                                               {
-                                                  "path":  "src/Codinex.VSIX/CodifyToolWindow.cs",
-                                                  "name":  "CodifyToolWindow.cs",
-                                                  "type":  "file"
-                                              },
-                                              {
                                                   "path":  "src/Codinex.VSIX/CodifyToolWindowCommand.cs",
                                                   "name":  "CodifyToolWindowCommand.cs",
                                                   "type":  "file"
@@ -3444,6 +3439,11 @@
                                               {
                                                   "path":  "src/Codinex.VSIX/Codinex.VSIX.csproj.user",
                                                   "name":  "Codinex.VSIX.csproj.user",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codinex.VSIX/CodinexToolWindow.cs",
+                                                  "name":  "CodinexToolWindow.cs",
                                                   "type":  "file"
                                               },
                                               {

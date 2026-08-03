@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Codify.Core.Models;
-using Codify.Storage.Commons;
+using Codinex.Core.Models;
+using Codinex.Storage.Commons;
 
-namespace Codify.Storage.Models
+namespace Codinex.Storage.Models
 {
     public class ChatSessionDocument
     {

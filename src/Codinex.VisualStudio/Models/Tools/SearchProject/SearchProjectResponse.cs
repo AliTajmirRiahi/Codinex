@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 
-namespace Codify.VisualStudio.Models.Tools.SearchProject;
+namespace Codinex.VisualStudio.Models.Tools.SearchProject;
 
 public sealed class SearchProjectResponse
 {

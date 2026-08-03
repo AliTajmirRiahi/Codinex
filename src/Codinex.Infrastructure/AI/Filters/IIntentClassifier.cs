@@ -1,6 +1,6 @@
 ﻿
 
-namespace Codify.Infrastructure.AI.Filters
+namespace Codinex.Infrastructure.AI.Filters
 {
     public interface IIntentClassifier
     {

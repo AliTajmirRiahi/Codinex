@@ -1,4 +1,4 @@
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Represents the information learned during the conversation.

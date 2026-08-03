@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests.Base;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests.Base;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests;
+namespace Codinex.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests;
 
 [TestFixture]
 public class PromptContextComposer_ComposeTests

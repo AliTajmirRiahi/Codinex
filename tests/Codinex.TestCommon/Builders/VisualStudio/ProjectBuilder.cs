@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using Codify.TestCommon.Fakes.VisualStudio;
+using Codinex.TestCommon.Fakes.VisualStudio;
 using EnvDTE;
 using NSubstitute;
 
-namespace Codify.TestCommon.Builders.VisualStudio;
+namespace Codinex.TestCommon.Builders.VisualStudio;
 
 #pragma warning disable VSTHRD010
 public sealed class ProjectBuilder

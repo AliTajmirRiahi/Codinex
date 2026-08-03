@@ -1,6 +1,6 @@
-using Codify.VisualStudio.Workspace.Formatters;
+using Codinex.VisualStudio.Workspace.Formatters;
 
-namespace Codify.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest.Base;
+namespace Codinex.Tests.VisualStudio.Workspace.FormatterTests.OpenDocumentsFormatterTest.Base;
 
 public abstract class OpenDocumentsFormatterTestBase
 {

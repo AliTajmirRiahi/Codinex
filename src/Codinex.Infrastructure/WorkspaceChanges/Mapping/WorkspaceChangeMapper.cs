@@ -1,12 +1,12 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces.Helper;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
-using System;
+﻿using System;
 using System.Linq;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.Helper;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Mapping;
+namespace Codinex.Infrastructure.WorkspaceChanges.Mapping;
 
 /// <summary>
 /// Maps workspace change DTOs to domain models.

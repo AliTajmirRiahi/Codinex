@@ -1,12 +1,12 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.Workspace.Providers;
+namespace Codinex.VisualStudio.Workspace.Providers;
 
 /// <summary>
 /// Provides build context.

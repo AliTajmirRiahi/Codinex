@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     public enum WorkspaceContextVisibility
     {

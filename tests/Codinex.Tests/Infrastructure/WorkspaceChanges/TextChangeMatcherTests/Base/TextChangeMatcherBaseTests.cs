@@ -1,6 +1,6 @@
-﻿using Codify.Infrastructure.WorkspaceChanges;
+﻿using Codinex.Infrastructure.WorkspaceChanges;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests.Base;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests.Base;
 
 public abstract class TextChangeMatcherTestBase
 {

@@ -1,19 +1,19 @@
 ﻿// Path: Codify\Infrastructure\DependencyInjection\ServiceContainer.cs
 
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
-using Codify.VisualStudio.Logging;
-using Codify.VisualStudio.WebView;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
 using System.IO.Abstractions;
-using Codify.Core.DependencyInjection;
+using Codinex.Core.DependencyInjection;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Internal;
+using Codinex.VisualStudio.Logging;
+using Codinex.VisualStudio.WebView;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codify.VSIX.Bootstrap
+namespace Codinex.VSIX.Bootstrap
 {
     public static class CodifyServiceContainer
     {
@@ -43,7 +43,7 @@ namespace Codify.VSIX.Bootstrap
 
             services.AddSingleton<IFileSystem, FileSystem>();
 
-            services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(typeof(Codify.UI.ToolWindows.CodifyToolWindowControl).Assembly, "Codify.UI.ToolWindows.Resources"));
+            services.AddSingleton<IResourceServer>(sp => new WebViewResourceServer(typeof(Codinex.UI.ToolWindows.CodinexToolWindowControl).Assembly, "Codinex.UI.ToolWindows.Resources"));
             services.AddSingleton<IVisualStudioServices>(sp => new VisualStudioServices(package, sp.GetRequiredService<IUiThreadDispatcher>()));
             services.AddSingleton<IVsOutputLogger>(sp => new VsOutputLogger(pane));
 

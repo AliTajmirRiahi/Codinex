@@ -1,11 +1,11 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Tools;
 
-namespace Codify.VisualStudio.Tools;
+namespace Codinex.VisualStudio.Tools;
 
 /// <summary>
 /// Default AI tool registry.

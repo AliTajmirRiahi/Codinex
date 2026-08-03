@@ -1,17 +1,17 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using Codify.VisualStudio.Interfaces;
+using Codinex.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Files;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Files;
 
 /// <summary>
 /// ReadFileTool

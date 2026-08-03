@@ -1,10 +1,3 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.Models.Tools;
-using Codify.Core.Tools;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,8 +5,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
 
-namespace Codify.Infrastructure.Conversation
+namespace Codinex.Infrastructure.Conversation
 {
     [AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
     public sealed class ConversationEngine(

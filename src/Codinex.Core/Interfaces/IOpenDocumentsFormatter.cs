@@ -1,7 +1,7 @@
-using Codify.Core.Models;
 using System.Collections.Generic;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     /// <summary>
     /// Formats open documents into prompt text.

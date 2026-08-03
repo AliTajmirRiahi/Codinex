@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Infrastructure.Workspace.PromptPipeline;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Infrastructure.Workspace.PromptPipeline;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests.Base;
+namespace Codinex.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests.Base;
 
 public abstract class WorkspaceContextBuilderTestBase
 {

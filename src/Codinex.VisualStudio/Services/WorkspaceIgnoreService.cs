@@ -1,12 +1,12 @@
-using Codify.VisualStudio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.VisualStudio.Interfaces;
 
-namespace Codify.VisualStudio.Services;
+namespace Codinex.VisualStudio.Services;
 
 /// <summary>
 /// Filters generated and non-source files from workspace operations.

@@ -1,10 +1,10 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
 using System.Linq;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Infrastructure.Workspace.PromptPipeline
+namespace Codinex.Infrastructure.Workspace.PromptPipeline
 {
     /// <summary>
     /// Composes the final prompt context from provider results.

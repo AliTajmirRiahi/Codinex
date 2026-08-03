@@ -1,9 +1,9 @@
-using Codify.Core.Models;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Models;
 
-namespace Codify.Core.UseCases;
+namespace Codinex.Core.UseCases;
 
 /// <summary>
 /// Handles sending a user message to an AI provider and returning the result.

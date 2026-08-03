@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.References;
-
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.References;
 using FluentAssertions;
 
 using NSubstitute;
 
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.References;
+namespace Codinex.Tests.VisualStudio.References;
 
 [TestFixture]
 public class ReferenceManagerGetReferencesTests

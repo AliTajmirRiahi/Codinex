@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codify.Tests.VisualStudio.References.ProviderTests.MethodReferenceProviderTests.Base
+namespace Codinex.Tests.VisualStudio.References.ProviderTests.MethodReferenceProviderTests.Base
 {
     internal class MethodReferenceProviderTestBase
     {

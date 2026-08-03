@@ -1,8 +1,8 @@
 ﻿using System;
-using Codify.Core.DependencyInjection.Models;
+using Codinex.Core.DependencyInjection.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codify.Core.DependencyInjection.Attributes;
+namespace Codinex.Core.DependencyInjection.Attributes;
 
 
 /// <summary>

@@ -1,6 +1,6 @@
 using System;
 
-namespace Codify.Storage.Models;
+namespace Codinex.Storage.Models;
 
 public sealed class ConversationGroup
 {

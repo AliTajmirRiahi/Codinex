@@ -1,13 +1,13 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Infrastructure.Workspace.PromptPipeline
+namespace Codinex.Infrastructure.Workspace.PromptPipeline
 {
     /// <summary>
     /// Coordinates all workspace context providers and builds the final prompt context.

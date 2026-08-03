@@ -1,15 +1,15 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.TestCommon.Fakes;
-using Codify.VisualStudio.References;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.TestCommon.Fakes;
+using Codinex.VisualStudio.References;
 
-namespace Codify.Tests.VisualStudio.References
+namespace Codinex.Tests.VisualStudio.References
 {
     [TestFixture]
     public class ReferenceManagerEventsTests

@@ -1,12 +1,12 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
 
-namespace Codify.VisualStudio.Workspace.Formatters
+namespace Codinex.VisualStudio.Workspace.Formatters
 {
     /// <summary>
     /// Formats open documents into prompt text.

@@ -1,16 +1,16 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Chat;
-using Codify.Core.Models;
-using Codify.Storage;
+﻿using Codinex.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codify.Storage.Commons;
-using Codify.Storage.Managers;
-using Codify.Storage.Models;
+using Codinex.Core.Chat;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Storage.Commons;
+using Codinex.Storage.Managers;
+using Codinex.Storage.Models;
 
-namespace Codify.Infrastructure.Chat
+namespace Codinex.Infrastructure.Chat
 {
     /// <summary>
     /// In-memory implementation of IChatSession.

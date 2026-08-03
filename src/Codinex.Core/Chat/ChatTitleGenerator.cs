@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Chat
+﻿namespace Codinex.Core.Chat
 {
     /// <summary>
     /// Generates a short title for a chat session based on the first user message.

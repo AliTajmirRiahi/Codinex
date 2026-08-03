@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     /// <summary>
     /// Represents the result returned by a workspace context provider.
