@@ -1,10 +1,10 @@
 /**
- * CodifyImage.js
+ * CodinexImage.js
  * Custom element to render images from extension resources.
- * Usage: <codify-image name="avatar.png"></codify-image>
+ * Usage: <codinex-image name="avatar.png"></codinex-image>
  */
 
-class CodifyImage extends HTMLElement {
+class CodinexImage extends HTMLElement {
 
     async connectedCallback() {
 
@@ -13,7 +13,7 @@ class CodifyImage extends HTMLElement {
         if (!name)
             return;
 
-        const url = `http://codify.resources/Icons/${name}`;
+        const url = `http://codinex.resources/Icons/${name}`;
 
         try {
 
@@ -29,6 +29,6 @@ class CodifyImage extends HTMLElement {
     }
 }
 
-if (!customElements.get('codify-image')) {
-    customElements.define('codify-image', CodifyImage);
+if (!customElements.get('codinex-image')) {
+    customElements.define('codinex-image', CodinexImage);
 }

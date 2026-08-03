@@ -1420,8 +1420,8 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codinex.Storage/Models/CodifySettings.cs",
-                                                                       "name":  "CodifySettings.cs",
+                                                                       "path":  "src/Codinex.Storage/Models/CodinexSettings.cs",
+                                                                       "name":  "CodinexSettings.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -3366,8 +3366,8 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
-                                                                       "path":  "src/Codinex.VSIX/Bootstrap/CodifyServiceContainer.cs",
-                                                                       "name":  "CodifyServiceContainer.cs",
+                                                                       "path":  "src/Codinex.VSIX/Bootstrap/CodinexServiceContainer.cs",
+                                                                       "name":  "CodinexServiceContainer.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -3405,31 +3405,16 @@
                                                   "type":  "folder",
                                                   "children":  [
                                                                    {
-                                                                       "path":  "src/Codinex.VSIX/Resources/Codify.png",
-                                                                       "name":  "Codify.png",
+                                                                       "path":  "src/Codinex.VSIX/Resources/Codinex.png",
+                                                                       "name":  "Codinex.png",
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codinex.VSIX/Resources/CodifyAI128x128.png",
-                                                                       "name":  "CodifyAI128x128.png",
+                                                                       "path":  "src/Codinex.VSIX/Resources/CodinexAI128x128.png",
+                                                                       "name":  "CodinexAI128x128.png",
                                                                        "type":  "file"
                                                                    }
                                                                ]
-                                              },
-                                              {
-                                                  "path":  "src/Codinex.VSIX/CodifyPackage.cs",
-                                                  "name":  "CodifyPackage.cs",
-                                                  "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "src/Codinex.VSIX/CodifyPackage.vsct",
-                                                  "name":  "CodifyPackage.vsct",
-                                                  "type":  "file"
-                                              },
-                                              {
-                                                  "path":  "src/Codinex.VSIX/CodifyToolWindowCommand.cs",
-                                                  "name":  "CodifyToolWindowCommand.cs",
-                                                  "type":  "file"
                                               },
                                               {
                                                   "path":  "src/Codinex.VSIX/Codinex.VSIX.csproj",
@@ -3442,8 +3427,23 @@
                                                   "type":  "file"
                                               },
                                               {
+                                                  "path":  "src/Codinex.VSIX/CodinexPackage.cs",
+                                                  "name":  "CodinexPackage.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codinex.VSIX/CodinexPackage.vsct",
+                                                  "name":  "CodinexPackage.vsct",
+                                                  "type":  "file"
+                                              },
+                                              {
                                                   "path":  "src/Codinex.VSIX/CodinexToolWindow.cs",
                                                   "name":  "CodinexToolWindow.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
+                                                  "path":  "src/Codinex.VSIX/CodinexToolWindowCommand.cs",
+                                                  "name":  "CodinexToolWindowCommand.cs",
                                                   "type":  "file"
                                               },
                                               {
@@ -4346,8 +4346,8 @@
                                                                    "name":  "Bootstrap",
                                                                    "type":  "folder",
                                                                    "children":  {
-                                                                                    "path":  "tests/Codinex.Tests/VSIX/Bootstrap/CodifyServiceContainerTests.cs",
-                                                                                    "name":  "CodifyServiceContainerTests.cs",
+                                                                                    "path":  "tests/Codinex.Tests/VSIX/Bootstrap/CodinexServiceContainerTests.cs",
+                                                                                    "name":  "CodinexServiceContainerTests.cs",
                                                                                     "type":  "file"
                                                                                 }
                                                                }

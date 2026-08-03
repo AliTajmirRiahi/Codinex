@@ -55,7 +55,7 @@
     <Compile Include="Interfaces\IStorageService.cs" />
     <Compile Include="Managers\ConversationGroupManager.cs" />
     <Compile Include="Models\ChatSessionDocument.cs" />
-    <Compile Include="Models\CodifySettings.cs" />
+    <Compile Include="Models\CodinexSettings.cs" />
     <Compile Include="Models\ConversationGroup.cs" />
     <Compile Include="Models\DTO\AiModelSelectedDto.cs" />
     <Compile Include="Models\DTO\AiProviderDto.cs" />
@@ -95,10 +95,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-	<PackageReference Include="System.IO.Abstractions">
-		<Version>20.0.15</Version>
-	</PackageReference>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>20.0.15</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup/>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,4 @@
-﻿using Codinex.Storage;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
@@ -13,6 +11,7 @@ using Codinex.Storage.Interfaces;
 using Codinex.Storage.Managers;
 using Codinex.VisualStudio.Events.Build;
 using Codinex.VSIX.Bootstrap;
+using Microsoft.Extensions.DependencyInjection;
 using Task = System.Threading.Tasks.Task;
 
 namespace Codinex.VSIX
@@ -35,10 +34,10 @@ namespace Codinex.VSIX
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Guid(CodifyPackage.PackageGuidString)]
+    [Guid(CodinexPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(CodinexToolWindow))]
-    public sealed class CodifyPackage : AsyncPackage
+    public sealed class CodinexPackage : AsyncPackage
     {
         /// <summary>
         /// CodifyPackage GUID string.
@@ -87,13 +86,13 @@ namespace Codinex.VSIX
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             // Initialize UI Commands
-            await CodifyToolWindowCommand.InitializeAsync(this);
+            await CodinexToolWindowCommand.InitializeAsync(this);
 
             var pane = await CreateVsOutputWindowPaneAsync();
 
             // 2. Initialize the Dependency Injection Container
             // This replaces all manual "new Service()" calls.
-            CodifyServiceContainer.Initialize(this, pane);
+            CodinexServiceContainer.Initialize(this, pane);
 
             // 3. Perform Async Initializations
             // Since some services need to load files from disk, we do it here.
@@ -113,9 +112,9 @@ namespace Codinex.VSIX
             {
                 await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
-                if (CodifyServiceContainer.IsInitialized)
+                if (CodinexServiceContainer.IsInitialized)
                 {
-                    var handler = CodifyServiceContainer.Get<IErrorHandler>();
+                    var handler = CodinexServiceContainer.Get<IErrorHandler>();
 
                     handler.Handle(
                         exception,
@@ -166,9 +165,9 @@ namespace Codinex.VSIX
                     var exception = e.ExceptionObject as Exception
                                     ?? new Exception("Unknown AppDomain unhandled exception.");
 
-                    if (CodifyServiceContainer.IsInitialized)
+                    if (CodinexServiceContainer.IsInitialized)
                     {
-                        var handler = CodifyServiceContainer.Get<IErrorHandler>();
+                        var handler = CodinexServiceContainer.Get<IErrorHandler>();
 
                         handler.Handle(
                             exception,
@@ -190,9 +189,9 @@ namespace Codinex.VSIX
             {
                 try
                 {
-                    if (CodifyServiceContainer.IsInitialized)
+                    if (CodinexServiceContainer.IsInitialized)
                     {
-                        var handler = CodifyServiceContainer.Get<IErrorHandler>();
+                        var handler = CodinexServiceContainer.Get<IErrorHandler>();
 
                         handler.Handle(
                             e.Exception,
@@ -240,28 +239,28 @@ namespace Codinex.VSIX
         private async Task InitializeCoreServicesAsync()
         {
             // We get the services from the container and call their init methods.
-            var workspaceInitializer = CodifyServiceContainer.Get<IWorkspaceInitializer>();
+            var workspaceInitializer = CodinexServiceContainer.Get<IWorkspaceInitializer>();
             await workspaceInitializer.InitializeAsync();
 
-            var settings = CodifyServiceContainer.Get<SettingsManager>();
+            var settings = CodinexServiceContainer.Get<SettingsManager>();
             await settings.InitializeAsync();
 
-            var providers = CodifyServiceContainer.Get<ProviderManager>();
+            var providers = CodinexServiceContainer.Get<ProviderManager>();
             await providers.InitializeAsync();
 
-            var groups = CodifyServiceContainer.Get<IConversationGroupManager>();
+            var groups = CodinexServiceContainer.Get<IConversationGroupManager>();
             await groups.InitializeAsync();
             await groups.CreateDefaultGroupAsync();
 
-            var memories = CodifyServiceContainer.Get<IMemoryManager>();
+            var memories = CodinexServiceContainer.Get<IMemoryManager>();
             await memories.InitializeAsync();
 
-            foreach (var startupTask in CodifyServiceContainer.Instance.GetServices<IStartupTask>())
+            foreach (var startupTask in CodinexServiceContainer.Instance.GetServices<IStartupTask>())
             {
                 await startupTask.StartAsync();
             }
 
-            var buildListener = CodifyServiceContainer.Get<BuildEventsListener>();
+            var buildListener = CodinexServiceContainer.Get<BuildEventsListener>();
             await buildListener.InitializeAsync();
         }
 

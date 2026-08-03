@@ -9,7 +9,7 @@ namespace Codinex.VisualStudio.WebView
 {
     /// <summary>
     /// Serves all embedded files under the Resources folder
-    /// through the virtual host: http://codify.resources/*
+    /// through the virtual host: http://codinex.resources/*
     /// </summary>
     public class WebViewResourceServer(Assembly assembly, string resourceRoot) : IResourceServer
 
@@ -17,7 +17,7 @@ namespace Codinex.VisualStudio.WebView
         public void Attach(CoreWebView2 webview)
         {
             webview.AddWebResourceRequestedFilter(
-                "http://codify.resources/*",
+                "http://codinex.resources/*",
                 CoreWebView2WebResourceContext.All
             );
 
@@ -28,7 +28,7 @@ namespace Codinex.VisualStudio.WebView
         {
             var uri = new Uri(e.Request.Uri);
 
-            if (uri.Host != "codify.resources")
+            if (uri.Host != "codinex.resources")
                 return;
 
             var webview = (CoreWebView2)sender;

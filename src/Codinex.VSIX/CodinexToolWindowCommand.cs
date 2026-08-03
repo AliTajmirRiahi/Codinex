@@ -9,7 +9,7 @@ namespace Codinex.VSIX
     /// <summary>
     /// Command handler
     /// </summary>
-    public sealed class CodifyToolWindowCommand
+    public sealed class CodinexToolWindowCommand
     {
         /// <summary>
         /// Command ID.
@@ -27,12 +27,12 @@ namespace Codinex.VSIX
         private readonly AsyncPackage package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CodifyToolWindowCommand"/> class.
+        /// Initializes a new instance of the <see cref="CodinexToolWindowCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private CodifyToolWindowCommand(AsyncPackage package, OleMenuCommandService commandService)
+        private CodinexToolWindowCommand(AsyncPackage package, OleMenuCommandService commandService)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
@@ -45,7 +45,7 @@ namespace Codinex.VSIX
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static CodifyToolWindowCommand Instance
+        public static CodinexToolWindowCommand Instance
         {
             get;
             private set;
@@ -73,7 +73,7 @@ namespace Codinex.VSIX
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new CodifyToolWindowCommand(package, commandService);
+            Instance = new CodinexToolWindowCommand(package, commandService);
         }
 
         /// <summary>
