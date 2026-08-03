@@ -5,13 +5,13 @@
         "type":  "folder",
         "children":  [
                          {
-                             "path":  "assets/Codify_AI_logo_24x24.png",
-                             "name":  "Codify_AI_logo_24x24.png",
+                             "path":  "assets/Codinex_AI_logo_24x24.png",
+                             "name":  "Codinex_AI_logo_24x24.png",
                              "type":  "file"
                          },
                          {
-                             "path":  "assets/Codify_AI_logo_40x40.png",
-                             "name":  "Codify_AI_logo_40x40.png",
+                             "path":  "assets/Codinex_AI_logo_40x40.png",
+                             "name":  "Codinex_AI_logo_40x40.png",
                              "type":  "file"
                          }
                      ]
@@ -3460,6 +3460,22 @@
         "name":  "tests",
         "type":  "folder",
         "children":  [
+                         {
+                             "path":  "tests/Codify.TestCommon",
+                             "name":  "Codify.TestCommon",
+                             "type":  "folder",
+                             "children":  {
+
+                                          }
+                         },
+                         {
+                             "path":  "tests/Codify.Tests",
+                             "name":  "Codify.Tests",
+                             "type":  "folder",
+                             "children":  {
+
+                                          }
+                         },
                          {
                              "path":  "tests/Codinex.TestCommon",
                              "name":  "Codinex.TestCommon",
