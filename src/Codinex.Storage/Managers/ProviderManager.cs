@@ -61,7 +61,7 @@ namespace Codinex.Storage.Managers
         /// </summary>
         private List<T> LoadResourceCollection<T>(string modelFileName)
         {
-            // Get the directory of the executing assembly (Codify.dll location)
+            // Get the directory of the executing assembly (Codinex.dll location)
             var assemblyLocation = Assembly.GetExecutingAssembly().Location;
             var assemblyDir = Path.GetDirectoryName(assemblyLocation)!;
 

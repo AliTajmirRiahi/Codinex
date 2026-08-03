@@ -26,7 +26,7 @@ export class CodeRenderer {
                     <div class="code-header">
                         <span class="code-lang">${language}</span>
                         <button class="copy-btn" data-code="${uniqueId}" title="Copy code" aria-label="Copy code">
-                            <codify-icon name="symbols/copy" aria-hidden="true"></codify-icon>
+                            <codinex-icon name="symbols/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <pre><code id="${uniqueId}" class="language-${language}">${escapedCode}</code></pre>

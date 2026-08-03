@@ -25,7 +25,7 @@ export const chatListView = {
 
                 option.innerHTML = `
                     <div class="drop-info">
-                        <codify-icon name="message-circle-check" class="chat-icon"></codify-icon>
+                        <codinex-icon name="message-circle-check" class="chat-icon"></codinex-icon>
                         <span>${item.title}</span>
                     </div>`;
                 return option;

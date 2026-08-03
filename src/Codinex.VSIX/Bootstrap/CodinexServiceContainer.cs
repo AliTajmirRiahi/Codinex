@@ -1,4 +1,4 @@
-﻿// Path: Codify\Infrastructure\DependencyInjection\ServiceContainer.cs
+﻿// Path: Codinex\Infrastructure\DependencyInjection\ServiceContainer.cs
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -59,7 +59,7 @@ namespace Codinex.VSIX.Bootstrap
 
         public static T Get<T>() where T : notnull
         {
-            return Instance == null ? throw new InvalidOperationException("Codify service container has not been initialized.") : Instance.GetRequiredService<T>();
+            return Instance == null ? throw new InvalidOperationException("Codinex service container has not been initialized.") : Instance.GetRequiredService<T>();
         }
     }
 }

@@ -295,7 +295,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
         {
             var assembly = typeof(ProviderCapabilityChecker).Assembly;
 
-            const string resourceName = "Codify.Infrastructure.Resources.Images.capability-test.png";
+            const string resourceName = "Codinex.Infrastructure.Resources.Images.capability-test.png";
 
             using var stream = assembly.GetManifestResourceStream(resourceName);
 

@@ -22,7 +22,7 @@ public sealed class EditFileChangeHandlerTests_Success
         // Arrange
         const string filePath = @"C:\Test\File.cs";
         const string originalContent = "Hello World";
-        const string updatedContent = "Hello Codify";
+        const string updatedContent = "Hello Codinex";
 
         var change = new EditFileChange
         {
@@ -34,7 +34,7 @@ public sealed class EditFileChangeHandlerTests_Success
                     Id = Guid.NewGuid(),
                     Order = 1,
                     Search = "World",
-                    Replace = "Codify"
+                    Replace = "Codinex"
                 }
             ]
         };
@@ -80,7 +80,7 @@ public sealed class EditFileChangeHandlerTests_Success
             Id = Guid.NewGuid(),
             Order = 2,
             Search = "World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var change2 = new TextFileChange
@@ -133,7 +133,7 @@ public sealed class EditFileChangeHandlerTests_Success
 
         await WorkspaceFileService.Received(1).WriteAsync(
             filePath,
-            "Hi Codify",
+            "Hi Codinex",
             cancellationToken: Arg.Any<CancellationToken>());
     }
 

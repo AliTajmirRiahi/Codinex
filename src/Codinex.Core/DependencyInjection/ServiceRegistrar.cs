@@ -36,7 +36,7 @@ public static class ServiceRegistrar
     }
 
     /// <summary>
-    /// Loads the root assembly and all referenced to Codify assemblies recursively.
+    /// Loads the root assembly and all referenced to Codinex assemblies recursively.
     /// </summary>
     private static IReadOnlyCollection<Assembly> LoadCodinexAssemblies(
         Assembly rootAssembly)

@@ -30,7 +30,7 @@ public abstract class FileReferenceProviderTestBase
 
         Dte = Substitute.For<DTE2>();
 
-        WorkspaceContext.SolutionName.Returns("Codify");
+        WorkspaceContext.SolutionName.Returns("Codinex");
 
         VisualStudioServices
             .GetDteAsync()

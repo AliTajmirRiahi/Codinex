@@ -172,12 +172,12 @@
     transition: all 0.2s ease;
 }
 
-.message-copy-btn codify-icon {
+.message-copy-btn codinex-icon {
     width: 14px;
     height: 14px;
 }
 
-.message-copy-btn codify-icon svg {
+.message-copy-btn codinex-icon svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -280,12 +280,12 @@
     gap: 4px;
 }
 
-.copy-btn codify-icon {
+.copy-btn codinex-icon {
     width: 14px;
     height: 14px;
 }
 
-.copy-btn codify-icon svg {
+.copy-btn codinex-icon svg {
     width: 100%;
     height: 100%;
     display: block;
@@ -328,7 +328,7 @@
     unicode-bidi: plaintext; /* Automatically detects RTL/LTR for the message container */
     line-height: 1.6;
 }
-.codify-error-box {
+.codinex-error-box {
     margin: 12px 16px;
     padding: 12px 14px;
     border: 1px solid rgba(255, 59, 59, 0.85);
@@ -340,7 +340,7 @@
     box-shadow: 0 0 0 1px rgba(255, 59, 59, 0.15), 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
-.codify-error-box__title {
+.codinex-error-box__title {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -349,7 +349,7 @@
     letter-spacing: 0.4px;
 }
 
-.codify-error-box__message {
+.codinex-error-box__message {
     font-size: 13px;
     line-height: 1.6;
     color: #ffeaea;

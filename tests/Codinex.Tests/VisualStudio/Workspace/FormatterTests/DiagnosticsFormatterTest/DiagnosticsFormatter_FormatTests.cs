@@ -50,7 +50,7 @@ public sealed class DiagnosticsFormatter_FormatTests : DiagnosticsFormatterTestB
                 Id = "CS1002",
                 Message = "; expected",
                 FilePath = @"C:\Project\Program.cs",
-                ProjectName = "Codify",
+                ProjectName = "Codinex",
                 Line = 15,
                 Column = 8
             }
@@ -64,7 +64,7 @@ public sealed class DiagnosticsFormatter_FormatTests : DiagnosticsFormatterTestB
         result.Should().Contain("Program.cs");
         result.Should().Contain("15");
         result.Should().Contain("8");
-        result.Should().Contain("Codify");
+        result.Should().Contain("Codinex");
     }
 
     [Test]
@@ -81,7 +81,7 @@ public sealed class DiagnosticsFormatter_FormatTests : DiagnosticsFormatterTestB
                 Id = "CS1002",
                 Message = "; expected",
                 FilePath = @"C:\Project\Program.cs",
-                ProjectName = "Codify",
+                ProjectName = "Codinex",
                 Line = 15,
                 Column = 8
             },
@@ -91,7 +91,7 @@ public sealed class DiagnosticsFormatter_FormatTests : DiagnosticsFormatterTestB
                 Id = "CS8618",
                 Message = "Non-nullable property must contain a value.",
                 FilePath = @"C:\Project\User.cs",
-                ProjectName = "Codify",
+                ProjectName = "Codinex",
                 Line = 42,
                 Column = 13
             }

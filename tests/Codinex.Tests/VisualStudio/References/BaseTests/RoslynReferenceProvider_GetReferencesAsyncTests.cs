@@ -82,7 +82,7 @@ public class RoslynReferenceProviderBaseTests
     //{
     //    // Arrange
     //    var scenario = new RoslynScenarioBuilder()
-    //        .WithProject("Codify")
+    //        .WithProject("Codinex")
     //        .WithDocument(@"C:\Project\Program.cs", "class Program { }")
     //        .WithDocument(@"C:\Project\Readme.txt", "Documentation")
     //        .Build();

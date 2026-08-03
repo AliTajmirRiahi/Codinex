@@ -4,7 +4,7 @@ using System.IO;
 namespace Codinex.Storage.Services
 {
     /// <summary>
-    /// Provides centralized access to all Codify storage paths.
+    /// Provides centralized access to all Codinex storage paths.
     /// </summary>
     public static class StoragePaths
     {
@@ -13,7 +13,7 @@ namespace Codinex.Storage.Services
         public static string Root =>
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "Codify");
+                "Codinex");
 
         #endregion
 

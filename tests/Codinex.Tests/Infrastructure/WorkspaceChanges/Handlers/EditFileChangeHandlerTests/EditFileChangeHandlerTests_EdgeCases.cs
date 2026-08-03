@@ -25,7 +25,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 2,
             Search = "World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var first = new TextFileChange
@@ -193,7 +193,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "Hello World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -224,7 +224,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
         await WorkspaceFileService.Received(1)
             .WriteAsync(
                 filePath,
-                "Codify",
+                "Codinex",
                 cancellationToken: Arg.Any<CancellationToken>());
     }
 

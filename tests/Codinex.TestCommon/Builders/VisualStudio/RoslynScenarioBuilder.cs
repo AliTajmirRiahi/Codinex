@@ -37,7 +37,7 @@ namespace Codinex.TestCommon.Builders.VisualStudio
 
         private readonly List<DocumentDefinition> _documents = [];
 
-        private string _projectName = "Codify";
+        private string _projectName = "Codinex";
 
         public RoslynScenarioBuilder WithProject(string projectName)
         {
@@ -61,7 +61,7 @@ namespace Codinex.TestCommon.Builders.VisualStudio
         public RoslynScenarioBuilder WithSource(string source)
         {
             return WithDocument(
-                @"C:\Codify\Test.cs",
+                @"C:\Codinex\Test.cs",
                 source);
         }
 

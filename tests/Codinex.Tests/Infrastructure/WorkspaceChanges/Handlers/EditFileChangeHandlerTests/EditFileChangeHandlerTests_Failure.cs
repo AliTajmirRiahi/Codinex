@@ -26,7 +26,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -85,7 +85,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -144,7 +144,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codify"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange

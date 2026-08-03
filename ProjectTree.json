@@ -2406,8 +2406,8 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
-                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/codify-AI-logo-black.svg",
-                                                                                                                 "name":  "codify-AI-logo-black.svg",
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/codinex-AI-logo-black.svg",
+                                                                                                                 "name":  "codinex-AI-logo-black.svg",
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
@@ -2585,13 +2585,13 @@
                                                                                                                                       "type":  "file"
                                                                                                                                   },
                                                                                                                                   {
-                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/Shared/components/codify-icon.js",
-                                                                                                                                      "name":  "codify-icon.js",
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/Shared/components/codinex-icon.js",
+                                                                                                                                      "name":  "codinex-icon.js",
                                                                                                                                       "type":  "file"
                                                                                                                                   },
                                                                                                                                   {
-                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/Shared/components/codify-image.js",
-                                                                                                                                      "name":  "codify-image.js",
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/Shared/components/codinex-image.js",
+                                                                                                                                      "name":  "codinex-image.js",
                                                                                                                                       "type":  "file"
                                                                                                                                   },
                                                                                                                                   {

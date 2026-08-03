@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Codinex.Storage.Interfaces
 {
     /// <summary>
-    /// Generic storage abstraction used by Codify managers.
+    /// Generic storage abstraction used by Codinex managers.
     /// </summary>
     public interface IStorageService
     {

@@ -1,10 +1,10 @@
 //using System.Threading;
 //using System.Threading.Tasks;
-//using Codify.Core.Interfaces;
-//using Codify.Core.Workspace.Prompt;
-//using Codify.Infrastructure.Workspace.PromptPipeline;
+//using Codinex.Core.Interfaces;
+//using Codinex.Core.Workspace.Prompt;
+//using Codinex.Infrastructure.Workspace.PromptPipeline;
 
-//namespace Codify.VisualStudio.Workspace.Orchestrators
+//namespace Codinex.VisualStudio.Workspace.Orchestrators
 //{
 //    /// <summary>
 //    /// Provides Git information as workspace context.

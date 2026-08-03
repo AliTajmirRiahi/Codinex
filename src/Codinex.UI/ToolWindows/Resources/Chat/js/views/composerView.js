@@ -251,7 +251,7 @@ export class ComposerView {
         chip.className = `composer-chip composer-chip--${item.type || 'default'}`;
         chip.contentEditable = 'false';
         // Render icon (if provided) and label
-        chip.innerHTML = `${item.icon ? `<codify-icon name="${item.icon}"></codify-icon>` : ''}<span class="chip-label">${item.label || item.name || item.text}</span>`;
+        chip.innerHTML = `${item.icon ? `<codinex-icon name="${item.icon}"></codinex-icon>` : ''}<span class="chip-label">${item.label || item.name || item.text}</span>`;
         chip.dataset.id = item.id;
         chip.dataset.type = item.type;
         chip.dataset.name = item.label || item.name || item.text
@@ -305,8 +305,8 @@ export class ComposerView {
         this.sendBtn.classList.toggle('streaming-stop', this.isStreaming);
         this.sendBtn.title = this.isStreaming ? 'Stop' : 'Send';
         this.sendBtn.innerHTML = this.isStreaming
-            ? '<codify-icon name="symbols/stop-circle"></codify-icon>'
-            : '<codify-icon name="send-horizontal"></codify-icon>';
+            ? '<codinex-icon name="symbols/stop-circle"></codinex-icon>'
+            : '<codinex-icon name="send-horizontal"></codinex-icon>';
 
         this.setInputDisabled(this.isStreaming);
         this.updateSendState();
@@ -439,7 +439,7 @@ export class ComposerView {
             el['data-index'] = index;
 
             el.innerHTML = `
-                ${item.icon ? `<div class="item-icon" style="${item.color ? `color: var(${item.color});` : ''}"><codify-icon name="${item.icon}"></codify-icon></div>` : ''}
+                ${item.icon ? `<div class="item-icon" style="${item.color ? `color: var(${item.color});` : ''}"><codinex-icon name="${item.icon}"></codinex-icon></div>` : ''}
                 <div class="item-name">${item.label || item.name}</div>
                 ${item.description ? `<div class="item-desc">${typeof (item.description) == 'function' ? item.description() : item.description}</div>` : ''}
             `;
@@ -607,10 +607,10 @@ export class ComposerView {
             const chip = document.createElement('div');
             chip.className = 'context-chip dynamic-chip';
             chip.innerHTML = `
-                ${ref.icon ? `<div class="item-icon" style="${ref.color ? `color: var(${ref.color});` : ''}"><codify-icon name="${ref.icon}"></codify-icon></div>` : ''}
+                ${ref.icon ? `<div class="item-icon" style="${ref.color ? `color: var(${ref.color});` : ''}"><codinex-icon name="${ref.icon}"></codinex-icon></div>` : ''}
                 <span class="context-chip-text">${ref.name}</span>
                 <button class="context-chip-remove" title="Remove Context" data-id="${ref.id}">
-                    <codify-icon name="circle-x"></codify-icon>
+                    <codinex-icon name="circle-x"></codinex-icon>
                 </button>`;
 
             // 3. Attach remove event

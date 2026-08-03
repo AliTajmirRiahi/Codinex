@@ -49,7 +49,7 @@ export const chatView = {
         const titleState = state === 'supported' ? 'Supported' : 'Not supported';
         const tooltip = `${label}: ${titleState}`;
 
-        return `<span class="model-capability-tooltip" data-tooltip="${tooltip}" aria-label="${tooltip}"><codify-icon name="${iconName}" class="model-capability-icon ${state}"></codify-icon></span>`;
+        return `<span class="model-capability-tooltip" data-tooltip="${tooltip}" aria-label="${tooltip}"><codinex-icon name="${iconName}" class="model-capability-icon ${state}"></codinex-icon></span>`;
     },
 
     renderModelCapabilityIcons(item) {
@@ -91,7 +91,7 @@ export const chatView = {
 
                 option.innerHTML = `
                     <div class="drop-info">
-                        <codify-icon name="lightning" class="low-vis"></codify-icon>
+                        <codinex-icon name="lightning" class="low-vis"></codinex-icon>
                         <span>${item.name}</span>
                     </div>
                     ${this.renderModelCapabilityIcons(item)}`;
@@ -223,7 +223,7 @@ export const chatView = {
 
         errorBox.classList.remove('hidden');
 
-        const messageEl = errorBox.querySelector('.codify-error-box__message');
+        const messageEl = errorBox.querySelector('.codinex-error-box__message');
 
         messageEl.textContent = text;
 
