@@ -282,6 +282,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var payload = _payloadBinder.Bind<ChatMessageBuildRequest>(request.Payload);
 
+        payload.ProjectName = _conversationGroupManager.CurrentGroup?.Name ?? string.Empty;
         payload.ProjectInstruction = _conversationGroupManager.CurrentGroup?.Description ?? string.Empty;
 
         try

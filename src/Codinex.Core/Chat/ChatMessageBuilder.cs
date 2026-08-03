@@ -26,9 +26,10 @@ namespace Codinex.Core.Chat
                 CreateMessage("system", SystemPrompts.DeveloperOnlyAssistant)
             };
 
-            if (!string.IsNullOrWhiteSpace(request.ProjectInstruction))
+            if (!string.IsNullOrWhiteSpace(request.ProjectName) ||
+                !string.IsNullOrWhiteSpace(request.ProjectInstruction))
             {
-                messages.Add(CreateMessage("system", BuildProjectInstruction(request.ProjectInstruction)));
+                messages.Add(CreateMessage("system", BuildProjectInstruction(request.ProjectName, request.ProjectInstruction)));
             }
 
             if (request.SelectedAgent is not null)
@@ -67,9 +68,23 @@ namespace Codinex.Core.Chat
             };
         }
 
-        private static string BuildProjectInstruction(string instruction)
+        private static string BuildProjectInstruction(string projectName, string instruction)
         {
-            return $"Project Instruction:\r\n{instruction.Trim()}";
+            var sb = new StringBuilder();
+
+            sb.AppendLine("Project Instruction:");
+
+            if (!string.IsNullOrWhiteSpace(projectName))
+            {
+                sb.AppendLine($"Project Name: {projectName.Trim()}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(instruction))
+            {
+                sb.AppendLine(instruction.Trim());
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         private static string BuildAgentInstruction(ChatAgent agent)

@@ -16,6 +16,8 @@ namespace Codinex.Core.Models
 
         public PromptContext PromptContext { get; set; }
 
+        public string ProjectName { get; set; } = string.Empty;
+
         public string ProjectInstruction { get; set; } = string.Empty;
 
         public ChatCommand SelectedCommand { get; set; }
