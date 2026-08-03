@@ -245,8 +245,11 @@ export const chatView = {
         }
     },
     renderMessages(messages) {
-        togglePanelHidden('#chat-welcome', false);
-        for (const message of messages) {
+        const chatMessages = messages || [];
+
+        togglePanelHidden('#chat-welcome', chatMessages.length === 0);
+
+        for (const message of chatMessages) {
             this.appendMessage(message.content, message.role);
         }
     },
@@ -282,12 +285,33 @@ export const chatView = {
     },
 
     clearMessages() {
-        const chatElements = document.getElementsByClassName('chat-message');
+        const container = document.getElementById('chat-container');
 
-        while (chatElements.length > 0) {
-            const parent = chatElements[0].parentElement;
-            parent.removeChild(chatElements[0]);
+        if (!container) return;
+
+        const statusElement = document.getElementById('response-status');
+        const loadingElement = document.getElementById('response-loading');
+        const errorBox = document.getElementById('error-box');
+
+        container.textContent = '';
+
+        if (statusElement) {
+            statusElement.textContent = '';
+            statusElement.classList.add('hidden');
+            container.appendChild(statusElement);
         }
+
+        if (loadingElement) {
+            loadingElement.classList.add('hidden');
+            container.appendChild(loadingElement);
+        }
+
+        if (errorBox) {
+            errorBox.classList.add('hidden');
+            container.appendChild(errorBox);
+        }
+
+        togglePanelHidden('#chat-welcome', true);
     }
 }
 
