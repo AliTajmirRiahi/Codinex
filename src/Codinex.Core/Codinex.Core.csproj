@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FAB3ACEC-0007-48D9-99B7-CD6820FB97F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Codinex.Core</RootNamespace>
+    <AssemblyName>Codinex.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Chat\ChatMessageBuilder.cs" />
+    <Compile Include="Chat\ChatTitleGenerator.cs" />
+    <Compile Include="Chat\ToolPromptBuilder.cs" />
+    <Compile Include="Conversation\ConversationContext.cs" />
+    <Compile Include="Conversation\ConversationEvent.cs" />
+    <Compile Include="Conversation\ConversationEventType.cs" />
+    <Compile Include="Conversation\ConversationExecution.cs" />
+    <Compile Include="Conversation\IConversationEngine.cs" />
+    <Compile Include="Conversation\ToolRequest.cs" />
+    <Compile Include="Conversation\ToolResult.cs" />
+    <Compile Include="DependencyInjection\Attributes\AutoRegisterAttribute.cs" />
+    <Compile Include="DependencyInjection\Models\ModuleType.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationItem.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationOrder.cs" />
+    <Compile Include="DependencyInjection\Models\RegistrationReport.cs" />
+    <Compile Include="DependencyInjection\Models\ServiceLifetimeWrapper.cs" />
+    <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
+    <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
+    <Compile Include="Interfaces\Helper\IStringHelper.cs" />
+    <Compile Include="Interfaces\IBuildContextFormatter.cs" />
+    <Compile Include="Interfaces\IBuildContextProvider.cs" />
+    <Compile Include="Interfaces\IDiagnosticsFormatter.cs" />
+    <Compile Include="Interfaces\IDiagnosticsProvider.cs" />
+    <Compile Include="Interfaces\IGitContextFormatter.cs" />
+    <Compile Include="Interfaces\IGitContextProvider.cs" />
+    <Compile Include="Interfaces\IHttpService.cs" />
+    <Compile Include="Interfaces\IMemoryContextFormatter.cs" />
+    <Compile Include="Interfaces\IMemoryContextProvider.cs" />
+    <Compile Include="Interfaces\IOpenDocumentsProvider.cs" />
+    <Compile Include="Interfaces\IOpenDocumentsFormatter.cs" />
+    <Compile Include="Interfaces\IProjectContextFormatter.cs" />
+    <Compile Include="Interfaces\IProjectContextProvider.cs" />
+    <Compile Include="Interfaces\IChatMessageBuilder.cs" />
+    <Compile Include="Interfaces\IExecutionPipeline.cs" />
+    <Compile Include="Interfaces\IModelResourceLoader.cs" />
+    <Compile Include="Interfaces\IModelRetriever.cs" />
+    <Compile Include="Interfaces\IOpenAiCompatibleClient.cs" />
+    <Compile Include="Interfaces\IProviderCapabilityChecker.cs" />
+    <Compile Include="Interfaces\IProviderModelService.cs" />
+    <Compile Include="Interfaces\IReferenceContextFormatter.cs" />
+    <Compile Include="Chat\ReferenceContextFormatter.cs" />
+    <Compile Include="Chat\SystemPrompts.cs" />
+    <Compile Include="Interfaces\IActiveDocumentWatcher.cs" />
+    <Compile Include="Interfaces\IActiveDocumentProvider.cs" />
+    <Compile Include="Interfaces\IAiProvider.cs" />
+    <Compile Include="Interfaces\IChatSession.cs" />
+    <Compile Include="Interfaces\IErrorHandler.cs" />
+    <Compile Include="Interfaces\IJsonSerializer.cs" />
+    <Compile Include="Interfaces\IPayloadBinder.cs" />
+    <Compile Include="Interfaces\IReferenceProvider.cs" />
+    <Compile Include="Interfaces\IStartupTask.cs" />
+    <Compile Include="Interfaces\IThemeService.cs" />
+    <Compile Include="Interfaces\IUiThreadDispatcher.cs" />
+    <Compile Include="Interfaces\IUserNotificationService.cs" />
+    <Compile Include="Interfaces\IWorkspaceContext.cs" />
+    <Compile Include="Interfaces\IWorkspaceFileService.cs" />
+    <Compile Include="Interfaces\IWorkspaceInitializer.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\ITextChangeMatcher.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeApplier.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeErrorFactory.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeParser.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandler.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandlerInvoker.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeHandlerResolver.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidationRule.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidator.cs" />
+    <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
+    <Compile Include="Models\AiModel.cs" />
+    <Compile Include="Models\AiProvider.cs" />
+    <Compile Include="Models\Attachment.cs" />
+    <Compile Include="Models\BuildContext.cs" />
+    <Compile Include="Models\ChatAgent.cs" />
+    <Compile Include="Models\ChatCommand.cs" />
+    <Compile Include="Models\ChatMessage.cs" />
+    <Compile Include="Models\ChatMessageBuildRequest.cs" />
+    <Compile Include="Models\ChatMessageBuildResult.cs" />
+    <Compile Include="Models\ChatMessageRequestContext.cs" />
+    <Compile Include="Models\ChatResponse.cs" />
+    <Compile Include="Models\DiagnosticItem.cs" />
+    <Compile Include="Models\DiagnosticSeverity.cs" />
+    <Compile Include="Models\DiagnosticsScope.cs" />
+    <Compile Include="Models\GitContext.cs" />
+    <Compile Include="Models\GitFileItem.cs" />
+    <Compile Include="Models\GitFileStatus.cs" />
+    <Compile Include="Models\MemoryDocument.cs" />
+    <Compile Include="Models\MemoryFact.cs" />
+    <Compile Include="Models\OpenDocumentItem.cs" />
+    <Compile Include="Models\ProjectContext.cs" />
+    <Compile Include="Models\ProjectContextItem.cs" />
+    <Compile Include="Models\ReferenceItem.cs" />
+    <Compile Include="Models\Tools\ChangeSetCreatorToolResult.cs" />
+    <Compile Include="Models\Tools\ToolDefinition.cs" />
+    <Compile Include="Models\Tools\ToolProperty.cs" />
+    <Compile Include="Models\Tools\ToolRequestedPayload.cs" />
+    <Compile Include="Models\WebViewMessageRequest.cs" />
+    <Compile Include="Models\WebViewMessageResponse.cs" />
+    <Compile Include="Models\WebViewMessageType.cs" />
+    <Compile Include="Models\WorkspaceChanges\CreateDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\CreateFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\DeleteDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\DeleteFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\MoveDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\MoveFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\RenameDirectoryChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\RenameFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextChangeMatchResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeKind.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeSet.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeValidationError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeValidationResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\EditFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationCategory.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationError.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceValidationResult.cs" />
+    <Compile Include="Models\WorkspaceEntry.cs" />
+    <Compile Include="Models\WorkspaceEntryType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\IAiTool.cs" />
+    <Compile Include="Tools\IAiToolRegistry.cs" />
+    <Compile Include="UseCases\ISendChatMessageUseCase.cs" />
+    <Compile Include="UseCases\SendChatMessageUseCase.cs" />
+    <Compile Include="Workspace\Prompt\IPromptContextComposer.cs" />
+    <Compile Include="Workspace\Prompt\IWorkspaceContextBuilder.cs" />
+    <Compile Include="Workspace\Prompt\IWorkspaceContextProvider.cs" />
+    <Compile Include="Workspace\Prompt\PromptContext.cs" />
+    <Compile Include="Workspace\Prompt\PromptContextItem.cs" />
+    <Compile Include="Workspace\Prompt\PromptContextKind.cs" />
+    <Compile Include="Workspace\Prompt\PromptContextSection.cs" />
+    <Compile Include="Models\WorkspaceContextRequest.cs" />
+    <Compile Include="Workspace\Prompt\ContextProviderResult.cs" />
+    <Compile Include="Models\MemoryContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
+      <Version>9.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>9.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WorkspaceChanges\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

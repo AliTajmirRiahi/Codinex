@@ -1,0 +1,23 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="arm64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/Codinex.Core/Codinex.Core.csproj" Id="fab3acec-0007-48d9-99b7-cd6820fb97f2" />
+    <Project Path="src/Codinex.Infrastructure/Codinex.Infrastructure.csproj" Id="1d853c03-bfd1-42b5-a53a-15b76d1b5c0b" />
+    <Project Path="src/Codinex.Storage/Codinex.Storage.csproj" Id="7cfe5bdb-2d98-4e9a-9508-97b18367280c" />
+    <Project Path="src/Codinex.UI/Codinex.UI.csproj" Id="0bfd8ba2-dd44-48c9-82a8-5de3faea95d2" />
+    <Project Path="src/Codinex.VisualStudio/Codinex.VisualStudio.csproj" Id="1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9" />
+    <Project Path="src/Codinex.VSIX/Codinex.VSIX.csproj" Id="0ce33667-6fb1-4d5c-b376-26994bfbe080">
+      <Platform Solution="*|arm64" Project="arm64" />
+      <Platform Solution="*|x86" Project="x86" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Codinex.TestCommon/Codinex.TestCommon.csproj" Id="7d929c88-a9c1-4790-9a84-efd18fbbd580" />
+    <Project Path="tests/Codinex.Tests/Codinex.Tests.csproj" Id="c0a8615c-14d8-47c8-91df-59062c1d3979" />
+  </Folder>
+  
+</Solution>

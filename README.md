@@ -1,16 +1,16 @@
 ## THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED.
 
-# ![Codify AI Logo](assets/Codify_AI_logo_40x40.png) Codify AI
+# ![Codinex AI Logo](assets/Codinex_AI_logo_40x40.png) Codinex AI
 
 A next‑generation AI coding assistant for Visual Studio — fully agent‑configurable, provider‑agnostic, and built with local‑first support in mind.
 
 ## 🚀 Vision
 
-Codify AI is an extensible Visual Studio extension inspired by GitHub Copilot — but with a fundamental difference:
+Codinex AI is an extensible Visual Studio extension inspired by GitHub Copilot — but with a fundamental difference:
 
     🔌 You are not locked into one AI provider.
 
-Codify allows developers to connect any AI Agent — cloud or local — and configure their own AI pipeline.
+Codinex allows developers to connect any AI Agent — cloud or local — and configure their own AI pipeline.
 
 This makes it especially powerful for:
 
@@ -32,7 +32,7 @@ This makes it especially powerful for:
 
 ## 🏗 Architecture
 
-Codify uses a modern hybrid architecture:
+Codinex uses a modern hybrid architecture:
 Visual Studio Extension Layer
 
     Built with Visual Studio Toolkit
@@ -48,7 +48,7 @@ UI Layer
     Streaming message updates
     Bidirectional JS ↔ C# communication
 
-Codify is provider‑agnostic by design.
+Codinex is provider‑agnostic by design.
 
 🌍 Built With the Iranian Developer Community in Mind
 
@@ -59,7 +59,7 @@ Many developers face:
     Privacy concerns
     Connectivity instability
 
-Codify solves this by enabling:
+Codinex solves this by enabling:
 
     Local AI hosting
     Configurable endpoints
@@ -101,7 +101,7 @@ Codify solves this by enabling:
 
     }
 
-Providers will implement this interface, making Codify fully extensible.
+Providers will implement this interface, making Codinex fully extensible.
 📦 Installation (Development)
 
     Clone repository
@@ -138,4 +138,4 @@ MIT (recommended — adjust if needed)
 
     AI should empower developers — not restrict them.
 
-Codify exists to give control back to developers.
+Codinex exists to give control back to developers.
