@@ -1,12 +1,12 @@
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
+namespace Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 
 public sealed class ConflictValidationRule : IWorkspaceChangeValidationRule
 {

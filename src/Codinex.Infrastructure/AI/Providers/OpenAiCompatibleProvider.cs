@@ -1,10 +1,3 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using Codify.Storage.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,9 +7,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.Storage.Managers;
 
-namespace Codify.Infrastructure.AI.Providers
+namespace Codinex.Infrastructure.AI.Providers
 {
     public sealed class ToolCallBuilder
     {

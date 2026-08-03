@@ -1,11 +1,11 @@
 using System.IO;
 using System.Linq;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests.Base;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests.Base;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.TextChangeMatcherTests;
 
 [TestFixture]
 public sealed class TextChangeMatcherTests_Search : TextChangeMatcherTestBase

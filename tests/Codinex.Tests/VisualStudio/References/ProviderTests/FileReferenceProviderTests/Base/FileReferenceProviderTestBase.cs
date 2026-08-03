@@ -1,14 +1,14 @@
-﻿using Codify.Core.Interfaces;
-using Codify.TestCommon.Fakes.VisualStudio;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces;
+using Codinex.TestCommon.Fakes.VisualStudio;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.References.Providers;
 
-namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
+namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
 #pragma warning disable VSTHRD010
 public abstract class FileReferenceProviderTestBase
 {

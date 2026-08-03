@@ -1,7 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace Codify.Core.Conversation;
+namespace Codinex.Core.Conversation;
 
 /// <summary>
 /// Represents a tool execution request emitted by an AI provider.

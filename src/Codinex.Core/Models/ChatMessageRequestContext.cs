@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Context model produced after chat messages are built.

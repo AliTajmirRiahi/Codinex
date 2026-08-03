@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 /// <summary>
 /// Represents all text modifications for a single file.
 /// </summary>

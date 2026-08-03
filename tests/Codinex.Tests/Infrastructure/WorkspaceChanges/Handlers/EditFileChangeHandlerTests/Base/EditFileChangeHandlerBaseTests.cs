@@ -1,11 +1,11 @@
-using Codify.Core.Interfaces;
-using Codify.Core.Interfaces.Helper;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Handlers;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Helper;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Handlers;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests.Base;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests.Base;
 
 public abstract class EditFileChangeHandlerBaseTests
 {

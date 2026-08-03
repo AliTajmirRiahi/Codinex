@@ -1,7 +1,7 @@
-﻿using Codify.Core.Models.WorkspaceChanges;
-using System;
+﻿using System;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Core.Interfaces.WorkspaceChanges;
+namespace Codinex.Core.Interfaces.WorkspaceChanges;
 
 public interface IWorkspaceChangeErrorFactory
 {

@@ -1,8 +1,8 @@
-﻿using Codify.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IChatSession
     {

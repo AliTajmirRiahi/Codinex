@@ -1,8 +1,8 @@
 ﻿
 using System.Collections.Generic;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Storage.Models.DTO;
+namespace Codinex.Storage.Models.DTO;
 
 public class AiProviderDto
 {

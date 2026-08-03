@@ -1,6 +1,6 @@
 using System;
 
-namespace Codify.VisualStudio.Events.Build
+namespace Codinex.VisualStudio.Events.Build
 {
     /// <summary>
     /// Exposes build lifecycle events.

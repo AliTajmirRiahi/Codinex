@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     //public enum ChatRole
     //{

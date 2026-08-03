@@ -1,14 +1,14 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Hosting.Startup;
+﻿using Codinex.VisualStudio.Hosting.Startup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
 
-namespace Codify.VisualStudio.References
+namespace Codinex.VisualStudio.References
 {
     public class ActiveDocumentUpdatedEventArgs(ReferenceItem activeDocument) : EventArgs
     {

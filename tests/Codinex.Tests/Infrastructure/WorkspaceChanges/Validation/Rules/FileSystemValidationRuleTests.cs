@@ -1,13 +1,13 @@
-using Codify.Core.Interfaces;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Validation.Rules;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules;
 
 [TestFixture]
 public class FileSystemValidationRuleTests

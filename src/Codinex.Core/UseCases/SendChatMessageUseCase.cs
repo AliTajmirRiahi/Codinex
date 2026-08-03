@@ -1,16 +1,16 @@
-using Codify.Core.Chat;
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
+using Codinex.Core.Chat;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Core.UseCases;
+namespace Codinex.Core.UseCases;
 
 /// <summary>
 /// Orchestrates the flow of sending a message to AI. 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Models.Tools;
 
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 
 public sealed class WorkspaceChangeResult
 {

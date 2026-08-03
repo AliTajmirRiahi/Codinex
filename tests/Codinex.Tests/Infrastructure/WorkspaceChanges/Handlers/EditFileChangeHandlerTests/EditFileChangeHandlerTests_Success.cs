@@ -1,7 +1,5 @@
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges;
-using Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests.Base;
-using Codify.VisualStudio.Services;
+using Codinex.Infrastructure.WorkspaceChanges;
+using Codinex.VisualStudio.Services;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -9,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests.Base;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.EditFileChangeHandlerTests;
 
 [TestFixture]
 public sealed class EditFileChangeHandlerTests_Success

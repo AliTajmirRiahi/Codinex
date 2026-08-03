@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     /// <summary>
     /// Formats diagnostics into prompt text.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Codify.Core.Models.Tools
+namespace Codinex.Core.Models.Tools
 {
     public sealed class ToolDefinition(
         IReadOnlyDictionary<string, ToolProperty> properties,

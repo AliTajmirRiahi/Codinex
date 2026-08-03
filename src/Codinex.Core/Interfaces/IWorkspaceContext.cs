@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Codify.Core.Interfaces;
+namespace Codinex.Core.Interfaces;
 
 public interface IWorkspaceContext
 {

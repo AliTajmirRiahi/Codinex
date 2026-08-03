@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Conversation;
-using Codify.Core.Models;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Models;
+using Codinex.Core.Conversation;
+using Codinex.Core.Models.Tools;
 
-namespace Codify.Core.Tools;
+namespace Codinex.Core.Tools;
 
 
 public enum ToolVisibility

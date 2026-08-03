@@ -1,18 +1,18 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Models;
-using Codify.Storage.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Storage.Interfaces;
+using Codinex.Storage.Models;
+using Codinex.Storage.Services;
 
-namespace Codify.Storage.Managers
+namespace Codinex.Storage.Managers
 {
     /// <summary>
     /// Manages chat sessions persistence and lifecycle.

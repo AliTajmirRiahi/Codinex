@@ -1,9 +1,9 @@
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
 
 public abstract class WorkspaceChangeHandlerInvokerBaseTests
 {

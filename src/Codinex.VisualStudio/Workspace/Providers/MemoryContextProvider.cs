@@ -1,11 +1,11 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Storage.Interfaces;
 using System.Linq;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Storage.Interfaces;
 
-namespace Codify.VisualStudio.Workspace.Providers;
+namespace Codinex.VisualStudio.Workspace.Providers;
 
 /// <summary>
 /// Provides long-term workspace memory.

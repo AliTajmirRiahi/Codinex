@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Codify.Core.Interfaces;
-using Codify.Core.Tools;
-using Codify.Core.Workspace.Prompt;
-using Codify.VisualStudio.Tools;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Tools;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.VisualStudio.Tools;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codify.VSIX.Bootstrap;
+namespace Codinex.VSIX.Bootstrap;
 
 public static class ServiceCollectionExtensions
 {

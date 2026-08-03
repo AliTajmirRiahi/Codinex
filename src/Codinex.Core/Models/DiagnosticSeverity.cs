@@ -1,5 +1,5 @@
 ﻿
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Describes how severe a diagnostic is.

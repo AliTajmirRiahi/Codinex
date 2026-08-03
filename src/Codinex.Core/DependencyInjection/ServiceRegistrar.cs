@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codify.Core.DependencyInjection;
+namespace Codinex.Core.DependencyInjection;
 
 public static class ServiceRegistrar
 {
@@ -16,7 +16,7 @@ public static class ServiceRegistrar
     {
         var report = new RegistrationReport();
 
-        var assemblies = LoadCodifyAssemblies(root);
+        var assemblies = LoadCodinexAssemblies(root);
 
         var registrations = assemblies
             .SelectMany(GetRegistrations)
@@ -38,7 +38,7 @@ public static class ServiceRegistrar
     /// <summary>
     /// Loads the root assembly and all referenced to Codify assemblies recursively.
     /// </summary>
-    private static IReadOnlyCollection<Assembly> LoadCodifyAssemblies(
+    private static IReadOnlyCollection<Assembly> LoadCodinexAssemblies(
         Assembly rootAssembly)
     {
         var assemblies = new Dictionary<string, Assembly>(StringComparer.OrdinalIgnoreCase);
@@ -58,7 +58,7 @@ public static class ServiceRegistrar
 
             foreach (var reference in assembly.GetReferencedAssemblies())
             {
-                if (!reference.Name.StartsWith("Codify.", StringComparison.Ordinal))
+                if (!reference.Name.StartsWith("Codinex.", StringComparison.Ordinal))
                     continue;
 
                 try

@@ -1,11 +1,11 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Models;
-using Codify.Storage.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Storage.Interfaces;
+using Codinex.Storage.Models;
+using Codinex.Storage.Services;
 
-namespace Codify.Storage.Managers
+namespace Codinex.Storage.Managers
 {
     [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class SettingsManager(IStorageService storage)

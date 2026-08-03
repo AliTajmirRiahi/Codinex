@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Interfaces
+﻿namespace Codinex.Core.Interfaces
 {
     /// <summary>
     /// Shows safe user-facing notifications.

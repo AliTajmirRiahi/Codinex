@@ -1,4 +1,4 @@
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
 /// <summary>
 /// Represents a rename file change.

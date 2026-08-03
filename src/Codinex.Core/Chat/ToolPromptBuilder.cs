@@ -1,10 +1,10 @@
-﻿using Codify.Core.Tools;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Codinex.Core.Tools;
 
-namespace Codify.Core.Chat
+namespace Codinex.Core.Chat
 {
     internal static class ToolPromptBuilder
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codify.Storage.Models
+namespace Codinex.Storage.Models
 {
     public class UiErrorModel
     {

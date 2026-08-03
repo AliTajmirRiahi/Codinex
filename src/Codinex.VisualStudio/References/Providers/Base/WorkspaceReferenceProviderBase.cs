@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Internal;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 
-namespace Codify.VisualStudio.References.Providers.Base
+namespace Codinex.VisualStudio.References.Providers.Base
 {
     /// <summary>
     /// Base class for providers that iterate through projects in the current workspace.

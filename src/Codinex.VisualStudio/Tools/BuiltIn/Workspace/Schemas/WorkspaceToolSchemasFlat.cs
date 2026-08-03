@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Codify.Core.Models;
-using Codify.Core.Models.Tools;
-using Codify.Core.Models.WorkspaceChanges;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
 
 internal static class WorkspaceToolSchemasFlat
 {

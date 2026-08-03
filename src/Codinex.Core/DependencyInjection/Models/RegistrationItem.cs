@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Codify.Core.DependencyInjection.Models;
+namespace Codinex.Core.DependencyInjection.Models;
 
 public sealed class RegistrationItem(
     Type service,

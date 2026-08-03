@@ -1,15 +1,15 @@
-﻿using Codify.Core.Models;
-using Codify.TestCommon.Fakes.VisualStudio;
-using Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
-using EnvDTE;
+﻿using EnvDTE;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Codinex.Core.Models;
+using Codinex.TestCommon.Fakes.VisualStudio;
+using Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
 
-namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests;
+namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests;
 #pragma warning disable VSTHRD010
 [TestFixture]
 public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProviderTestBase

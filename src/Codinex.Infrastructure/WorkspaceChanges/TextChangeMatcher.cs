@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Infrastructure.WorkspaceChanges;
+namespace Codinex.Infrastructure.WorkspaceChanges;
 
 [AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class TextChangeMatcher : ITextChangeMatcher

@@ -1,15 +1,15 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Tools;
-using Codify.Storage.Interfaces;
+using Codinex.Core.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.Storage.Interfaces;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Memory;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Memory;
 
 /// <summary>
 /// Removes a long-term workspace memory.

@@ -1,7 +1,7 @@
 using EnvDTE;
 using NSubstitute;
 
-namespace Codify.TestCommon.Builders.VisualStudio;
+namespace Codinex.TestCommon.Builders.VisualStudio;
 
 #pragma warning disable VSTHRD010
 public sealed class ActiveDocumentBuilder

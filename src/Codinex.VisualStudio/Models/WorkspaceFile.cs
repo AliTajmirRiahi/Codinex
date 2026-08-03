@@ -1,5 +1,5 @@
 ﻿
-namespace Codify.VisualStudio.Models
+namespace Codinex.VisualStudio.Models
 {
     public enum WorkspaceMatchType
     {

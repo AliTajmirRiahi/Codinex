@@ -1,8 +1,8 @@
-﻿using Codify.Core.DependencyInjection.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
+using Codinex.Core.DependencyInjection.Models;
 
-namespace Codify.Core.DependencyInjection
+namespace Codinex.Core.DependencyInjection
 {
     public static class RegistrationReportFormatter
     {

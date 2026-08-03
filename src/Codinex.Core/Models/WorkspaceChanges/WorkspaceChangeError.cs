@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 
 public enum WorkspaceChangeErrorCode
 {

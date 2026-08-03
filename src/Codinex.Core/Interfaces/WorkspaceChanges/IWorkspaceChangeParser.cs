@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 using Newtonsoft.Json.Linq;
 
-namespace Codify.Core.Interfaces.WorkspaceChanges;
+namespace Codinex.Core.Interfaces.WorkspaceChanges;
 
 /// <summary>
 /// Generates workspace changes from an AI response.

@@ -4,7 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Codify.Core.Models.Tools
+namespace Codinex.Core.Models.Tools
 {
     public enum ToolPropertyType
     {

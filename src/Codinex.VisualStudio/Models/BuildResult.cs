@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.VisualStudio.Models;
+namespace Codinex.VisualStudio.Models;
 
 /// <summary>
 /// Represents the result of a solution build.

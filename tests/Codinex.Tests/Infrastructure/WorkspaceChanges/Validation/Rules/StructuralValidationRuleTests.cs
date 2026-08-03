@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Validation.Rules;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules;
 
 [TestFixture]
 public class StructuralValidationRuleTests

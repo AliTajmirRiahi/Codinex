@@ -1,13 +1,13 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Validation.Rules;
+namespace Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 
 [AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class FileSystemValidationRule(IWorkspaceFileService workspaceFileService)

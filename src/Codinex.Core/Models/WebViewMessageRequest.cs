@@ -1,7 +1,7 @@
 ﻿
 using Newtonsoft.Json.Linq;
 
-namespace Codify.Core.Models;
+namespace Codinex.Core.Models;
 
 /// <summary>
 /// Represents a chat request coming from the WebView UI.

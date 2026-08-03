@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     /// <summary>
     /// Provides Git context for the current workspace.

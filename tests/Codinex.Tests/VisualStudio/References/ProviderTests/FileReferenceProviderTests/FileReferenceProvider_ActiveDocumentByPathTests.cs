@@ -1,16 +1,16 @@
-﻿using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.References.Providers;
+﻿using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.References.Providers;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Codinex.Core.Models;
+using Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
 
-namespace Codify.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests
+namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests
 {
     [TestFixture]
     public class FileReferenceProvider_ActiveDocumentByPathTests : FileReferenceProviderTestBase

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codify.Storage.Models;
+using Codinex.Storage.Models;
 
-namespace Codify.Storage.Interfaces;
+namespace Codinex.Storage.Interfaces;
 
 public interface IConversationGroupManager
 {

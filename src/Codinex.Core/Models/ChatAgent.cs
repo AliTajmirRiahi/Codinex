@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Models
+﻿namespace Codinex.Core.Models
 {
     public sealed class ChatAgent
     {

@@ -1,11 +1,11 @@
-﻿using Codify.Core.Conversation;
-using Codify.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Conversation;
+using Codinex.Core.Models;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IAiProvider
     {

@@ -1,9 +1,9 @@
 ﻿//using Microsoft.ML;
 //using Microsoft.ML.Data;
 using System.Collections.Generic;
-using Codify.Infrastructure.AI.Filters;
+using Codinex.Infrastructure.AI.Filters;
 
-namespace Codify.Infrastructure.AI.Filters
+namespace Codinex.Infrastructure.AI.Filters
 {
     //// Model input structure
     //public class ModelInput

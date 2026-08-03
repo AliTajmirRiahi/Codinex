@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 
 public sealed class WorkspaceValidationResult
 {

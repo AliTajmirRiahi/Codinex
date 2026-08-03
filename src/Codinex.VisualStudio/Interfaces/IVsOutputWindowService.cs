@@ -1,9 +1,9 @@
-﻿using Codify.VisualStudio.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.VisualStudio.Models;
 
-namespace Codify.VisualStudio.Interfaces
+namespace Codinex.VisualStudio.Interfaces
 {
     /// <summary>
     /// Provides access to Visual Studio Output window panes.

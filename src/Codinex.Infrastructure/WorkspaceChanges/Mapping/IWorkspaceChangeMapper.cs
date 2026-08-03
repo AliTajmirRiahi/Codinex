@@ -1,7 +1,7 @@
-﻿using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+﻿using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Mapping
+namespace Codinex.Infrastructure.WorkspaceChanges.Mapping
 {
     public interface IWorkspaceChangeMapper
     {

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Storage.Interfaces;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Storage.Interfaces;
 using Newtonsoft.Json;
 
-namespace Codify.Storage.Services
+namespace Codinex.Storage.Services
 {
     /// <summary>
     /// File-based JSON storage implementation.

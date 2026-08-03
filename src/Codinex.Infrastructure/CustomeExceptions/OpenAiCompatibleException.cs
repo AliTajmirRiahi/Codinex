@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Codify.Infrastructure.CustomeExceptions;
+namespace Codinex.Infrastructure.CustomeExceptions;
 public sealed class OpenAiCompatibleException : Exception
 {
     public HttpStatusCode StatusCode { get; }

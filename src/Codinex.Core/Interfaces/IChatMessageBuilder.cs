@@ -1,7 +1,7 @@
-﻿using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
+﻿using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IChatMessageBuilder
     {

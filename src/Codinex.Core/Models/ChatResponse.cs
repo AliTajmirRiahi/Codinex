@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Codify.Core.Models;
+namespace Codinex.Core.Models;
 
 /// <summary>
 /// Represents a chat response sent back to the WebView UI.

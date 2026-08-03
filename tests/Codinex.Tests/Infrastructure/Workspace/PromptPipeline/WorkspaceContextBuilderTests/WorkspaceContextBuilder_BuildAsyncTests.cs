@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models;
-using Codify.Core.Workspace.Prompt;
-using Codify.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests.Base;
+using Codinex.Core.Models;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests;
+namespace Codinex.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests;
 
 [TestFixture]
 public class WorkspaceContextBuilder_BuildAsyncTests

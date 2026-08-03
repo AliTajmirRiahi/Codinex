@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codify.VisualStudio.Models
+namespace Codinex.VisualStudio.Models
 {
     /// <summary>
     /// Represents a Visual Studio Output window pane.

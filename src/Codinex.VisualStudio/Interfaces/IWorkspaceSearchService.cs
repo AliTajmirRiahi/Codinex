@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Codify.VisualStudio.Models;
-using Codify.VisualStudio.Models.Tools.SearchProject;
+using Codinex.VisualStudio.Models;
+using Codinex.VisualStudio.Models.Tools.SearchProject;
 
-namespace Codify.VisualStudio.Interfaces
+namespace Codinex.VisualStudio.Interfaces
 {
     public interface IWorkspaceSearchService
     {

@@ -1,4 +1,4 @@
-﻿namespace Codify.Core.Models.WorkspaceChanges;
+﻿namespace Codinex.Core.Models.WorkspaceChanges;
 
 /// <summary>
 /// Represents the result of matching a text change.

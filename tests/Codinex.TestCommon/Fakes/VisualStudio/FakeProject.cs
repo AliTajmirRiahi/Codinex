@@ -1,7 +1,7 @@
 ﻿using EnvDTE;
 using NSubstitute;
 
-namespace Codify.TestCommon.Fakes.VisualStudio;
+namespace Codinex.TestCommon.Fakes.VisualStudio;
 
 #pragma warning disable VSTHRD010
 public static class FakeProject

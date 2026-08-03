@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
-using Codify.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests.Base;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.WorkspaceChangeHandlerInvokerTests;
 
 [TestFixture]
 public sealed class WorkspaceChangeHandlerInvokerTests_GuardClauses

@@ -1,4 +1,4 @@
-namespace Codify.Core.Models;
+namespace Codinex.Core.Models;
 
 /// <summary>
 /// Represents message types exchanged between WebView UI and the host application.

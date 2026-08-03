@@ -1,9 +1,3 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Internal;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
@@ -12,8 +6,14 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Internal;
 
-namespace Codify.VisualStudio.Workspace.Providers;
+namespace Codinex.VisualStudio.Workspace.Providers;
 #pragma warning disable VSTHRD010
 
 /// <summary>

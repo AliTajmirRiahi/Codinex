@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
 
     public enum AiProviderFamily

@@ -1,6 +1,6 @@
 using System;
 
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 
 /// <summary>
 /// Represents a workspace modification.

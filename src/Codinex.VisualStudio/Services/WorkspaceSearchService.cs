@@ -1,17 +1,17 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Extensions;
-using Codify.VisualStudio.Interfaces;
-using Codify.VisualStudio.Models;
-using Codify.VisualStudio.Models.Tools.SearchProject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Extensions;
+using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Models;
+using Codinex.VisualStudio.Models.Tools.SearchProject;
 
-namespace Codify.VisualStudio.Services
+namespace Codinex.VisualStudio.Services
 {
     [AutoDiRegister(Modules.Workspace, RegistrationOrder.Foundation)]
     public sealed class WorkspaceSearchService(

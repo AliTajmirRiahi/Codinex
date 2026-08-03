@@ -1,4 +1,4 @@
-namespace Codify.VisualStudio.Models.Tools.ListDirectory;
+namespace Codinex.VisualStudio.Models.Tools.ListDirectory;
 
 public sealed class ListDirectoryRequest
 {

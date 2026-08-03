@@ -1,16 +1,16 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
 
-namespace Codify.Infrastructure.ModelManagement
+namespace Codinex.Infrastructure.ModelManagement
 {
     [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Foundation)]
     public class ResourceModelLoader : IModelResourceLoader

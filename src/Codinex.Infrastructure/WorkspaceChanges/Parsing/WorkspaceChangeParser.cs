@@ -1,16 +1,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models.WorkspaceChanges;
-using Codify.Infrastructure.WorkspaceChanges.Mapping;
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges.Mapping;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 using Newtonsoft.Json.Linq;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing;
 
 /// <summary>
 /// Parses an AI response into a workspace change set.

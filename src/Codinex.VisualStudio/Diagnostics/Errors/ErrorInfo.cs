@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codify.VisualStudio.Diagnostics.Errors
+namespace Codinex.VisualStudio.Diagnostics.Errors
 {
     /// <summary>
     /// Represents a normalized application error for internal diagnostics.

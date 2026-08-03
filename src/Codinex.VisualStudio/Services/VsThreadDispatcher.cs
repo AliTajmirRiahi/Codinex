@@ -1,10 +1,10 @@
-﻿using Codify.Core.Interfaces;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using System.Threading.Tasks;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
 
-namespace Codify.VisualStudio.Services
+namespace Codinex.VisualStudio.Services
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
     public sealed class VsThreadDispatcher : IUiThreadDispatcher

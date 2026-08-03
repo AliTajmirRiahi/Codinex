@@ -1,9 +1,9 @@
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Workspace.Orchestrators;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.VisualStudio.Workspace.Orchestrators.OpenDocumentsContextOrchestratorTests.Base;
+namespace Codinex.Tests.VisualStudio.Workspace.Orchestrators.OpenDocumentsContextOrchestratorTests.Base;
 
 public abstract class OpenDocumentsContextOrchestratorTestBase
 {

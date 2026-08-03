@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Codify.Core.Interfaces
+namespace Codinex.Core.Interfaces
 {
     public interface IThemeService
     {

@@ -1,7 +1,7 @@
-using Codify.Infrastructure.WorkspaceChanges.Parsing.Converters;
+using Codinex.Infrastructure.WorkspaceChanges.Parsing.Converters;
 using Newtonsoft.Json;
 
-namespace Codify.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+namespace Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
 
 /// <summary>
 /// Represents the base type for all workspace change DTOs.

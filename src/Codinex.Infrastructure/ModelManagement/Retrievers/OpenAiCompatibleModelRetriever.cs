@@ -1,14 +1,14 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
 
-namespace Codify.Infrastructure.ModelManagement.Retrievers
+namespace Codinex.Infrastructure.ModelManagement.Retrievers
 {
     [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Infrastructure)]
     public class OpenAiCompatibleModelRetriever(

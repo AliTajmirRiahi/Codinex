@@ -1,6 +1,6 @@
-using Codify.Core.Workspace.Prompt;
+using Codinex.Core.Workspace.Prompt;
 
-namespace Codify.Infrastructure.Workspace.PromptPipeline;
+namespace Codinex.Infrastructure.Workspace.PromptPipeline;
 
 /// <summary>
 /// Creates prompt context items.

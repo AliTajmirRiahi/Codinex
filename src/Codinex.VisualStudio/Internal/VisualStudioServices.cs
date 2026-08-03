@@ -1,15 +1,16 @@
-﻿using Codify.Core.Interfaces;
-using Codify.VisualStudio.Interfaces;
-using EnvDTE80;
+﻿using EnvDTE80;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.LanguageServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Threading.Tasks;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Interfaces;
+
 #pragma warning disable VSTHRD010
 
-namespace Codify.VisualStudio.Internal
+namespace Codinex.VisualStudio.Internal
 {
     /// <summary>
     /// Default implementation for accessing Visual Studio services.

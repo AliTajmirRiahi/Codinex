@@ -1,14 +1,14 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Models;
-using Codify.Core.Tools;
+using Codinex.Core.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Tests;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Tests;
 
 /// <summary>
 /// RunTestsTool

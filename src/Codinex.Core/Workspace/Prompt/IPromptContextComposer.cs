@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Workspace.Prompt
+namespace Codinex.Core.Workspace.Prompt
 {
     /// <summary>
     /// Composes the final prompt context from provider results.

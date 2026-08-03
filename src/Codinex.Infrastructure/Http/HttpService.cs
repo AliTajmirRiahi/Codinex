@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
 
-namespace Codify.Infrastructure.Http;
+namespace Codinex.Infrastructure.Http;
 
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]
 internal sealed class HttpService : IHttpService

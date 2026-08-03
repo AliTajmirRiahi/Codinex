@@ -1,11 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.DeleteFileChangeHandlerTests.Base;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.DeleteFileChangeHandlerTests.Base;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace Codify.Tests.Infrastructure.WorkspaceChanges.Handlers.DeleteFileChangeHandlerTests;
+namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.DeleteFileChangeHandlerTests;
 
 public sealed class DeleteFileChangeHandlerTests_Success
     : DeleteFileChangeHandlerBaseTests

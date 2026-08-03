@@ -1,5 +1,5 @@
 ﻿
-namespace Codify.Storage.Models.DTO;
+namespace Codinex.Storage.Models.DTO;
 
 public class AiModelSelectedDto
 {

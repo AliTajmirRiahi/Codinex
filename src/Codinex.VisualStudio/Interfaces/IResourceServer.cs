@@ -1,6 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 
-namespace Codify.VisualStudio.Interfaces
+namespace Codinex.VisualStudio.Interfaces
 {
     public interface IResourceServer
     {

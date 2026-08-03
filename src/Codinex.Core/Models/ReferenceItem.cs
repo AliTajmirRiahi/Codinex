@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     public enum ReferenceKind
     {

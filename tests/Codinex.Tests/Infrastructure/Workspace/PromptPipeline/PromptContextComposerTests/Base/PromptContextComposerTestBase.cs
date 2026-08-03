@@ -1,6 +1,6 @@
-using Codify.Infrastructure.Workspace.PromptPipeline;
+using Codinex.Infrastructure.Workspace.PromptPipeline;
 
-namespace Codify.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests.Base;
+namespace Codinex.Tests.Infrastructure.Workspace.PromptPipeline.PromptContextComposerTests.Base;
 
 public abstract class PromptContextComposerTestBase
 {

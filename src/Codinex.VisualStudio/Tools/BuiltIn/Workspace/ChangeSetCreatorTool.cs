@@ -1,17 +1,17 @@
-using Codify.Core.Conversation;
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces.WorkspaceChanges;
-using Codify.Core.Models;
-using Codify.Core.Tools;
+using Codinex.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codify.Core.Models.Tools;
-using Codify.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
+using Codinex.Core.Conversation;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
 
-namespace Codify.VisualStudio.Tools.BuiltIn.Workspace;
+namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 
 [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class ChangeSetCreatorTool(

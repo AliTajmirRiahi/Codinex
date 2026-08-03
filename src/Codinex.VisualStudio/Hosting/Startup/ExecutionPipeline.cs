@@ -1,12 +1,12 @@
-﻿using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.VisualStudio.Diagnostics.Errors;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using System;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.Diagnostics.Errors;
 
-namespace Codify.VisualStudio.Hosting.Startup
+namespace Codinex.VisualStudio.Hosting.Startup
 {
     /// <summary>
     /// Central execution boundary for async operations.

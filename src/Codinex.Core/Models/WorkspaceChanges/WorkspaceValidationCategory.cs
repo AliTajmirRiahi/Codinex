@@ -1,4 +1,4 @@
-namespace Codify.Core.Models.WorkspaceChanges;
+namespace Codinex.Core.Models.WorkspaceChanges;
 
 public enum WorkspaceValidationCategory
 {

@@ -2,10 +2,10 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Codify.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Interfaces;
 using Microsoft.Web.WebView2.Core;
 
-namespace Codify.VisualStudio.WebView
+namespace Codinex.VisualStudio.WebView
 {
     /// <summary>
     /// Serves all embedded files under the Resources folder

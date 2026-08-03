@@ -1,10 +1,3 @@
-using Codify.Core.DependencyInjection.Attributes;
-using Codify.Core.DependencyInjection.Models;
-using Codify.Core.Interfaces;
-using Codify.Core.Models;
-using Codify.Storage.Interfaces;
-using Codify.Storage.Models.DTO;
-using Codify.Storage.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,8 +6,15 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.DependencyInjection.Attributes;
+using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Storage.Interfaces;
+using Codinex.Storage.Models.DTO;
+using Codinex.Storage.Services;
 
-namespace Codify.Storage.Managers
+namespace Codinex.Storage.Managers
 {
     [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class ProviderManager(IStorageService storage,

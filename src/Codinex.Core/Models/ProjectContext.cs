@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Codify.Core.Models
+namespace Codinex.Core.Models
 {
     /// <summary>
     /// Represents the current solution context.
