@@ -604,12 +604,24 @@ export class ComposerView {
 
         // 2. Iterate and create new chips
         selectedReferences.forEach(ref => {
+            const refId = ref.id || ref.Id;
+            const refName = ref.name || ref.Name || '';
+            const refDescription = ref.description || ref.Description || '';
+            const refIcon = ref.icon || ref.Icon;
+            const refColor = ref.color || ref.Color;
+            const refMetadata = ref.metadata || ref.Metadata || {};
+            const refFilePath = refMetadata.filePath || refMetadata.FilePath || ref.value || ref.Value || '';
+            const chipTitle = refName === 'Active Document' && refDescription
+                ? `Active Document: ${refDescription}`
+                : (refDescription || refFilePath || refName);
+
             const chip = document.createElement('div');
             chip.className = 'context-chip dynamic-chip';
+            chip.title = chipTitle;
             chip.innerHTML = `
-                ${ref.icon ? `<div class="item-icon" style="${ref.color ? `color: var(${ref.color});` : ''}"><codinex-icon name="${ref.icon}"></codinex-icon></div>` : ''}
-                <span class="context-chip-text">${ref.name}</span>
-                <button class="context-chip-remove" title="Remove Context" data-id="${ref.id}">
+                ${refIcon ? `<div class="item-icon" style="${refColor ? `color: var(${refColor});` : ''}"><codinex-icon name="${refIcon}"></codinex-icon></div>` : ''}
+                <span class="context-chip-text">${refName}</span>
+                <button class="context-chip-remove" title="Remove Context" data-id="${refId}">
                     <codinex-icon name="circle-x"></codinex-icon>
                 </button>`;
 
@@ -617,7 +629,7 @@ export class ComposerView {
             chip.querySelector('.context-chip-remove').addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.dispatchEvent(new CustomEvent('composer:ref-remove', {
-                    detail: { id: ref.id }
+                    detail: { id: refId }
                 }));
             });
 
