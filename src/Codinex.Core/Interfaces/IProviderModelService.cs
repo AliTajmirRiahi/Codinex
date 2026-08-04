@@ -9,4 +9,7 @@ public interface IProviderModelService
 {
     Task<List<AiModel>> GetModelsAsync(AiProvider provider,
         CancellationToken cancellationToken = default);
+
+    Task<List<AiModel>> GetModelsFromServerAsync(AiProvider provider,
+        CancellationToken cancellationToken = default);
 }

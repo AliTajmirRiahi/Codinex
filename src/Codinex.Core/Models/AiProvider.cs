@@ -24,6 +24,9 @@ namespace Codinex.Core.Models
         // Indicates whether this provider requires an API key for remote model retrieval.
         public bool NeedApiKey { get; private set; }
 
+        // Indicates whether this provider runs locally and must be checked via its HTTP API before saving settings.
+        public bool IsLocal { get; private set; }
+
         // Endpoint used to retrieve available models from this provider.
         public string ModelEndPoint { get; private set; }
 
@@ -41,7 +44,7 @@ namespace Codinex.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, true, "/models", new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, true, false, "/models", new List<AiModel>())
         {
 
         }
@@ -58,6 +61,7 @@ namespace Codinex.Core.Models
             string baseUrl,
             bool isEnabled,
             bool? needApiKey,
+            bool? isLocal,
             string modelEndPoint,
             List<AiModel> models)
         {
@@ -80,6 +84,7 @@ namespace Codinex.Core.Models
             BaseUrl = baseUrl ?? "";
             IsEnabled = isEnabled;
             NeedApiKey = needApiKey ?? true;
+            IsLocal = isLocal ?? false;
             ModelEndPoint = string.IsNullOrWhiteSpace(modelEndPoint)
                 ? "/models"
                 : modelEndPoint;

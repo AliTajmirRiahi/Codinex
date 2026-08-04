@@ -162,12 +162,24 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             case WebViewMessageType.UpdateSettings:
                 {
-                    // Future: update provider settings
                     var aiProviderDto = _payloadBinder.Bind<AiProviderDto>(request.Payload);
 
-                    await _providerManager.UpdateSettingsAsync(aiProviderDto);
+                    try
+                    {
+                        var result = await _providerManager.UpdateSettingsAsync(aiProviderDto);
 
-                    await SendChangeModelSettingApprovedAsync();
+                        if (!result.Success)
+                        {
+                            await SendChangeModelSettingRejectedAsync(result.Message, result.IsAvailable);
+                            return;
+                        }
+
+                        await SendChangeModelSettingApprovedAsync(result.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        await SendChangeModelSettingRejectedAsync(ex.Message, false);
+                    }
 
                     return;
                 }
@@ -414,13 +426,35 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     }
 
 
-    public async Task SendChangeModelSettingApprovedAsync()
+    public async Task SendChangeModelSettingApprovedAsync(string messageText = null)
     {
         var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.ChangeModelSettingApproved,
             Payload = new
             {
+                Message = messageText,
+                Providers = new
+                {
+                    AvailableProviders = _providerManager.Providers,
+                    Current = _providerManager.ActiveProvider
+                },
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendChangeModelSettingRejectedAsync(string messageText, bool isAvailable)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ChangeModelSettingRejected,
+            Payload = new
+            {
+                Message = messageText,
+                IsAvailable = isAvailable,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,

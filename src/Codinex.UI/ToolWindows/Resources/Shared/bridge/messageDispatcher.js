@@ -24,6 +24,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onChangeModelSettingApproved) handlers.onChangeModelSettingApproved(payload);
                 break;
 
+            case EVENTS.CHANGE_MODEL_SETTING_REJECTED:
+                if (handlers.onChangeModelSettingRejected) handlers.onChangeModelSettingRejected(payload);
+                break;
+
             case EVENTS.SELECT_MODEL_APPROVED:
                 if (handlers.onSelectModel) handlers.onSelectModel(payload);
                 break;

@@ -116,12 +116,22 @@ document.addEventListener('DOMContentLoaded', () => {
             setLoading(false);
         },
 
-        onChangeModelSettingApproved : (payload) => {
+        onChangeModelSettingApproved: (payload) => {
+            togglePanelHidden('#models-loading-screen', false);
             if (payload.providers != null && payload.providers.current)
                 setProvider(payload.providers.current);
 
             manageModelsController.closeProviderSettings();
             chatController.renderCurrentProvider();
+        },
+        onChangeModelSettingRejected: (payload) => {
+            const providers = payload.providers || payload.Providers;
+            const message = payload.message || payload.Message || 'Settings could not be saved.';
+
+            if (providers)
+                manageModelsController.updateUI(providers);
+
+            manageModelsController.showSettingsError(message);
         },
         onProviderModelsRefreshed: (payload) => {
             const providers = payload.providers || payload.Providers;

@@ -6,6 +6,7 @@
     "ApiKey": "",
     "BaseUrl": "https://api.gapgpt.app/v1",
     "NeedApiKey": true,
+    "IsLocal": false,
     "ModelEndPoint": "/models",
     "IsEnabled": false
   },
@@ -16,6 +17,7 @@
     "ApiKey": "",
     "BaseUrl": "https://api.openai.com/v1",
     "NeedApiKey": true,
+    "IsLocal": false,
     "ModelEndPoint": "/models",
     "IsEnabled": false
   },
@@ -26,6 +28,7 @@
     "ApiKey": "",
     "BaseUrl": "http://localhost:11434",
     "NeedApiKey": false,
+    "IsLocal": true,
     "ModelEndPoint": "/api/tags",
     "IsEnabled": false
   }
