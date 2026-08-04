@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -96,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 chatController.navigateToChat();
             }
 
+            if (data.settings) {
+                setSettings(data.settings);
+            }
+
             if (data.references) {
                 setComposerController(data.references);
                 setActiveDocument(data.activeDocument);
@@ -147,7 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setInputLoading(false);
         },
         onSettingsSaved: (payload) => {
-            settingsController.updateUI(payload.settings || payload.Settings);
+            const settings = payload.settings || payload.Settings;
+
+            setSettings(settings);
+            settingsController.updateUI(settings);
+            chatController.handleSettingsChanged();
             settingsController.closeSettingsModal();
         },
         onSelectModel: (payload) => {
