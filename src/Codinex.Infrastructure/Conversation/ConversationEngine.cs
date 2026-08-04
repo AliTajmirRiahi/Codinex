@@ -1,10 +1,3 @@
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
@@ -12,13 +5,21 @@ using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
+using Codinex.Infrastructure.AI.Providers;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codinex.Infrastructure.Conversation
 {
     [AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
     public sealed class ConversationEngine(
         IChatMessageBuilder chatMessageBuilder,
-        IAiProvider provider,
+        IAiProviderRouter aiProviderRouter,
         IAiToolRegistry toolRegistry,
         IJsonSerializer jsonSerializer)
         : IConversationEngine
@@ -30,6 +31,8 @@ namespace Codinex.Infrastructure.Conversation
             yield return ConversationEvent.Status("Sending request...");
 
             var history = request.Messages.ToList();
+
+            var provider = aiProviderRouter.GetCurrentProvider();
 
             await foreach (var evt in ProcessEvents(
                                history,
@@ -90,6 +93,8 @@ namespace Codinex.Infrastructure.Conversation
 
                             yield return ConversationEvent.ToolCompleted(result);
                         }
+
+                        var provider = aiProviderRouter.GetCurrentProvider();
 
                         await foreach (var continuationEvent in ProcessEvents(
                                            history,

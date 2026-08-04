@@ -28,7 +28,7 @@ namespace Codinex.Storage.Managers
 
         public AiProvider ActiveProvider => Providers.FirstOrDefault(p => p.IsEnabled);
 
-        public AiModel ActiveModel => ActiveProvider.Models.FirstOrDefault(p => p.IsCurrent);
+        public AiModel ActiveModel => ActiveProvider?.Models?.FirstOrDefault(p => p.IsCurrent);
 
         public async Task InitializeAsync()
         {
