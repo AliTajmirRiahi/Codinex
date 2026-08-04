@@ -439,6 +439,25 @@ export class ComposerController {
         setActiveTrigger(null);
     }
 
+    removeActiveDocumentReference() {
+        const state = getState();
+        const activeDocument = state.activeDocument;
+
+        const remainingRefs = state.composer.selectedReferences.filter(item => {
+            const itemName = item.name || item.Name;
+            const itemValue = item.value || item.Value;
+            const activeDocumentValue = activeDocument?.value || activeDocument?.Value;
+
+            return itemName !== 'Active Document' &&
+                (!activeDocumentValue || itemValue !== activeDocumentValue);
+        });
+
+        if (remainingRefs.length === state.composer.selectedReferences.length) return;
+
+        setSelectedReferences(remainingRefs);
+        this.view.updateReferenceChips(remainingRefs);
+    }
+
     handleFileContext(type, item, name) {
         const state = getState();
 

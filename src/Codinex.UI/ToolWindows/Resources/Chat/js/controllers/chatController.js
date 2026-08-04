@@ -293,10 +293,31 @@ export function initChatController(transport) {
         handleActiveDocument: () => {
             const state = getState();
             const activeDocument = state.activeDocument;
+            const autoAddActiveDocumentToMessage = !!(
+                state.settings?.autoAddActiveDocumentToMessage ||
+                state.settings?.AutoAddActiveDocumentToMessage);
 
-            if (activeDocument) {
+            if (autoAddActiveDocumentToMessage && activeDocument) {
                 composerController.handleSpecialDocument('references', activeDocument, 'Active Document');
             }
+        },
+        handleSettingsChanged: () => {
+            const state = getState();
+            const autoAddActiveDocumentToMessage = !!(
+                state.settings?.autoAddActiveDocumentToMessage ||
+                state.settings?.AutoAddActiveDocumentToMessage);
+
+            if (autoAddActiveDocumentToMessage) {
+                const activeDocument = state.activeDocument;
+
+                if (activeDocument) {
+                    composerController.handleSpecialDocument('references', activeDocument, 'Active Document');
+                }
+
+                return;
+            }
+
+            composerController.removeActiveDocumentReference();
         }
     };
 }

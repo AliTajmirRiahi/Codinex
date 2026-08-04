@@ -17,6 +17,7 @@ const _state = {
     currentGroup: null,
     composerReferences: [],
     activeDocument: null,
+    settings: {},
 
     composer: {
         draftText: "",
@@ -46,6 +47,7 @@ export function getState() {
         chatList: Object.freeze([..._state.chatList]),
         groupList: Object.freeze([..._state.groupList]),
         selectedModels: _state.selectedModels ? Object.freeze([..._state.selectedModels]) : null,
+        settings: Object.freeze({ ..._state.settings }),
     });
 }
 /**
@@ -278,5 +280,11 @@ export function setComposerController(refs) {
 export function setActiveDocument(doc) {
     updateState({
         activeDocument: doc
+    });
+}
+
+export function setSettings(settings) {
+    updateState({
+        settings: settings || {}
     });
 }
