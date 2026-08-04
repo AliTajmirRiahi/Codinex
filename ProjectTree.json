@@ -247,6 +247,16 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IAiProviderFactory.cs",
+                                                                       "name":  "IAiProviderFactory.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IAiProviderRouter.cs",
+                                                                       "name":  "IAiProviderRouter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Interfaces/IBuildContextFormatter.cs",
                                                                        "name":  "IBuildContextFormatter.cs",
                                                                        "type":  "file"
@@ -565,6 +575,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Core/Models/ActiveDocumentChangedEventArgs.cs",
                                                                        "name":  "ActiveDocumentChangedEventArgs.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/AgentContext.cs",
+                                                                       "name":  "AgentContext.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -897,6 +912,16 @@
                                                                        "name":  "Providers",
                                                                        "type":  "folder",
                                                                        "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codinex.Infrastructure/AI/Providers/AiProviderFactory.cs",
+                                                                                            "name":  "AiProviderFactory.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codinex.Infrastructure/AI/Providers/AiProviderRouter.cs",
+                                                                                            "name":  "AiProviderRouter.cs",
+                                                                                            "type":  "file"
+                                                                                        },
                                                                                         {
                                                                                             "path":  "src/Codinex.Infrastructure/AI/Providers/OllamaProvider.cs",
                                                                                             "name":  "OllamaProvider.cs",

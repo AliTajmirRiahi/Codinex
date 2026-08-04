@@ -90,6 +90,8 @@
     <Compile Include="Interfaces\IActiveDocumentWatcher.cs" />
     <Compile Include="Interfaces\IActiveDocumentProvider.cs" />
     <Compile Include="Interfaces\IAiProvider.cs" />
+    <Compile Include="Interfaces\IAiProviderFactory.cs" />
+    <Compile Include="Interfaces\IAiProviderRouter.cs" />
     <Compile Include="Interfaces\IChatSession.cs" />
     <Compile Include="Interfaces\IErrorHandler.cs" />
     <Compile Include="Interfaces\IJsonSerializer.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidationRule.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidator.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
+    <Compile Include="Models\AgentContext.cs" />
     <Compile Include="Models\AiModel.cs" />
     <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\Attachment.cs" />

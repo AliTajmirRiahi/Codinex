@@ -9,8 +9,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Conversation;
-using Codinex.Core.DependencyInjection.Attributes;
-using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
@@ -33,7 +31,6 @@ namespace Codinex.Infrastructure.AI.Providers
     }
     /// <summary>
     /// </summary>
-    [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
     public class OpenAiCompatibleProvider(IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,
