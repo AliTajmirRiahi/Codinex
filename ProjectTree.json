@@ -1726,6 +1726,11 @@
                                                                                                                                                            "type":  "file"
                                                                                                                                                        },
                                                                                                                                                        {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/css/views/_settings.css",
+                                                                                                                                                           "name":  "_settings.css",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
                                                                                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/css/views/_toolbar.css",
                                                                                                                                                            "name":  "_toolbar.css",
                                                                                                                                                            "type":  "file"
@@ -1789,6 +1794,11 @@
                                                                                                                                                        {
                                                                                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/controllers/providerController.js",
                                                                                                                                                            "name":  "providerController.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/controllers/settingsController.js",
+                                                                                                                                                           "name":  "settingsController.js",
                                                                                                                                                            "type":  "file"
                                                                                                                                                        }
                                                                                                                                                    ]

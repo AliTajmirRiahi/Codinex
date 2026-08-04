@@ -60,6 +60,8 @@
   <ItemGroup>
     <Content Include="ToolWindows\Resources\babel.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\projectListView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_settings.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\settingsController.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
