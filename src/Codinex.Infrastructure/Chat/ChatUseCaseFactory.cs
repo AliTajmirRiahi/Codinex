@@ -32,6 +32,7 @@ namespace Codinex.Infrastructure.Chat
         IOpenAiCompatibleClient openAiCompatibleClient,
         IWorkspaceContextBuilder workspaceContextBuilder,
         IWorkspaceFileService workspaceFileService,
+        IHttpService httpService,
         IPromptProfiler promptProfiler)
         : IChatUseCaseFactory
     {
@@ -51,6 +52,7 @@ namespace Codinex.Infrastructure.Chat
             IAiProvider aiProvider = provider.Id.ToLower() switch
             {
                 "gapgpt" or "openai" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient, workspaceFileService, promptProfiler),
+                "ollama" => new OllamaProvider(serializer, _providerManager, httpService),
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 
