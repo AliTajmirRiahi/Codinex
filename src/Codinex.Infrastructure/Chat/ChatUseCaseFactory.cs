@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
@@ -31,7 +31,8 @@ namespace Codinex.Infrastructure.Chat
         IAiToolRegistry toolRegistry,
         IOpenAiCompatibleClient openAiCompatibleClient,
         IWorkspaceContextBuilder workspaceContextBuilder,
-        IWorkspaceFileService workspaceFileService)
+        IWorkspaceFileService workspaceFileService,
+        IPromptProfiler promptProfiler)
         : IChatUseCaseFactory
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -49,7 +50,7 @@ namespace Codinex.Infrastructure.Chat
 
             IAiProvider aiProvider = provider.Id.ToLower() switch
             {
-                "gapgpt" or "openai" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient, workspaceFileService),
+                "gapgpt" or "openai" => new OpenAiCompatibleProvider(serializer, _providerManager, toolRegistry, openAiCompatibleClient, workspaceFileService, promptProfiler),
                 _ => throw new NotSupportedException($"Provider {provider.Name} is not supported.")
             };
 

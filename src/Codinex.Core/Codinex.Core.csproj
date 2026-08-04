@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chat\ChatMessageBuilder.cs" />
+    <Compile Include="Chat\PromptProfiler.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
     <Compile Include="Chat\ToolPromptBuilder.cs" />
     <Compile Include="Conversation\ConversationContext.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Interfaces\IModelResourceLoader.cs" />
     <Compile Include="Interfaces\IModelRetriever.cs" />
     <Compile Include="Interfaces\IOpenAiCompatibleClient.cs" />
+    <Compile Include="Interfaces\IPromptProfiler.cs" />
     <Compile Include="Interfaces\IProviderCapabilityChecker.cs" />
     <Compile Include="Interfaces\IProviderModelService.cs" />
     <Compile Include="Interfaces\IReferenceContextFormatter.cs" />
@@ -132,6 +134,8 @@
     <Compile Include="Models\OpenDocumentItem.cs" />
     <Compile Include="Models\ProjectContext.cs" />
     <Compile Include="Models\ProjectContextItem.cs" />
+    <Compile Include="Models\PromptProfileResult.cs" />
+    <Compile Include="Models\PromptSectionProfile.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
     <Compile Include="Models\Tools\ChangeSetCreatorToolResult.cs" />
     <Compile Include="Models\Tools\ToolDefinition.cs" />

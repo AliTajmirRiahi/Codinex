@@ -42,6 +42,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Chat/PromptProfiler.cs",
+                                                                       "name":  "PromptProfiler.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Chat/ReferenceContextFormatter.cs",
                                                                        "name":  "ReferenceContextFormatter.cs",
                                                                        "type":  "file"
@@ -349,6 +354,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Core/Interfaces/IProjectContextProvider.cs",
                                                                        "name":  "IProjectContextProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IPromptProfiler.cs",
+                                                                       "name":  "IPromptProfiler.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -670,6 +680,16 @@
                                                                    {
                                                                        "path":  "src/Codinex.Core/Models/ProjectContextItem.cs",
                                                                        "name":  "ProjectContextItem.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/PromptProfileResult.cs",
+                                                                       "name":  "PromptProfileResult.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/PromptSectionProfile.cs",
+                                                                       "name":  "PromptSectionProfile.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {

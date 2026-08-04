@@ -12,9 +12,12 @@ using Codinex.Core.Workspace.Prompt;
 namespace Codinex.Core.Chat
 {
     [AutoDiRegister(Modules.Chat, RegistrationOrder.Platform)]
-    public sealed class ChatMessageBuilder(IReferenceContextFormatter referenceContextFormatter) : IChatMessageBuilder
+    public sealed class ChatMessageBuilder(
+        IReferenceContextFormatter referenceContextFormatter,
+        IPromptProfiler promptProfiler) : IChatMessageBuilder
     {
         private readonly IReferenceContextFormatter _referenceContextFormatter = referenceContextFormatter ?? throw new ArgumentNullException(nameof(referenceContextFormatter));
+        private readonly IPromptProfiler _promptProfiler = promptProfiler ?? throw new ArgumentNullException(nameof(promptProfiler));
 
         public ChatMessageBuildResult Build(ChatMessageBuildRequest request, PromptContext promptContext)
         {
@@ -47,15 +50,20 @@ namespace Codinex.Core.Chat
 
             messages.Add(userMessage);
 
+            var requestContext = new ChatMessageRequestContext
+            {
+                SelectedCommand = request.SelectedCommand,
+                SelectedAgent = request.SelectedAgent,
+                SelectedReferences = request.SelectedReferences,
+                PromptProfile = _promptProfiler.Profile(BuildPromptProfileContext(request, promptContext, messages))
+            };
+
+            userMessage.Context = requestContext;
+
             return new ChatMessageBuildResult
             {
                 Messages = messages,
-                Context = new ChatMessageRequestContext
-                {
-                    SelectedCommand = request.SelectedCommand,
-                    SelectedAgent = request.SelectedAgent,
-                    SelectedReferences = request.SelectedReferences
-                }
+                Context = requestContext
             };
         }
 
@@ -119,6 +127,203 @@ namespace Codinex.Core.Chat
             {
                 ["images"] = new JArray(images)
             };
+        }
+
+        private PromptContext BuildPromptProfileContext(
+            ChatMessageBuildRequest request,
+            PromptContext promptContext,
+            IReadOnlyList<ChatMessage> messages)
+        {
+            var context = new PromptContext();
+
+            AddProfileSection(
+                context,
+                "System Prompt",
+                string.Join(Environment.NewLine, messages
+                    .Where(x => string.Equals(x.Role, "system", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.Content)
+                    .Where(x => !string.IsNullOrWhiteSpace(x))));
+
+            AddWorkspaceProfileSection(context, promptContext, request);
+
+            AddProfileSection(
+                context,
+                "Conversation",
+                BuildConversationProfileContent(request));
+
+            return context;
+        }
+
+        private static void AddProfileSection(PromptContext context, string name, string content)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return;
+            }
+
+            context.Sections.Add(new PromptContextSection
+            {
+                Name = name,
+                Items = new List<PromptContextItem>
+                {
+                    new()
+                    {
+                        Content = content
+                    }
+                }
+            });
+        }
+
+        private void AddWorkspaceProfileSection(
+            PromptContext context,
+            PromptContext promptContext,
+            ChatMessageBuildRequest request)
+        {
+            var items = new List<PromptContextItem>();
+
+            if (promptContext?.Sections != null)
+            {
+                foreach (var section in promptContext.Sections)
+                {
+                    foreach (var item in section.Items ?? new List<PromptContextItem>())
+                    {
+                        items.Add(new PromptContextItem
+                        {
+                            Kind = item.Kind,
+                            Title = string.IsNullOrWhiteSpace(item.Title) ? section.Name : item.Title,
+                            Content = item.Content,
+                            Reason = BuildWorkspaceProfileReason(item)
+                        });
+                    }
+                }
+            }
+
+            var selectedReferences = BuildSelectedReferencesProfileContent(request);
+
+            if (!string.IsNullOrWhiteSpace(selectedReferences))
+            {
+                items.Add(new PromptContextItem
+                {
+                    Title = "Selected References",
+                    Content = selectedReferences,
+                    Reason = BuildSelectedReferencesReason(request)
+                });
+            }
+
+            if (items.Count == 0)
+            {
+                return;
+            }
+
+            context.Sections.Add(new PromptContextSection
+            {
+                Name = "Workspace",
+                Items = items
+            });
+        }
+
+        private static string BuildWorkspaceProfileContent(PromptContext promptContext)
+        {
+            if (promptContext == null || promptContext.Sections.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+
+            foreach (var section in promptContext.Sections)
+            {
+                sb.AppendLine($"## {section.Name}");
+
+                foreach (var item in section.Items)
+                {
+                    if (!string.IsNullOrWhiteSpace(item.Title))
+                    {
+                        sb.AppendLine($"### {item.Title}");
+                    }
+
+                    sb.AppendLine(item.Content);
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        private static string BuildWorkspaceProfileReason(PromptContextItem item)
+        {
+            return item?.Kind switch
+            {
+                PromptContextKind.CurrentDocument => "Included by CurrentDocumentContextProvider",
+                PromptContextKind.Memory => "Included by MemoryContextProvider",
+                PromptContextKind.Project => "Included by ProjectContextProvider",
+                PromptContextKind.Git => "Included by GitContextProvider",
+                PromptContextKind.Diagnostics => "Included by DiagnosticsContextProvider",
+                PromptContextKind.Tool => "Included by ToolContextProvider",
+                PromptContextKind.OpenDocuments => "Included by OpenDocumentsContextProvider",
+                PromptContextKind.Build => "Included by BuildContextProvider",
+                _ => "Included by WorkspaceContextProvider"
+            };
+        }
+
+        private static string BuildSelectedReferencesReason(ChatMessageBuildRequest request)
+        {
+            var count = request.SelectedReferences?.Count ?? 0;
+            var label = count == 1 ? "file" : "files";
+
+            return $"User attached {count} {label}";
+        }
+
+        private static string BuildConversationProfileContent(ChatMessageBuildRequest request)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var message in request.ConversationHistory ?? Array.Empty<ChatMessage>())
+            {
+                sb.AppendLine($"{message.Role}:");
+
+                if (!string.IsNullOrWhiteSpace(message.Content))
+                {
+                    sb.AppendLine(message.Content);
+                }
+
+                if (message.ToolCalls is { Count: > 0 })
+                {
+                    foreach (var toolCall in message.ToolCalls)
+                    {
+                        sb.AppendLine($"Tool Call: {toolCall.Name}");
+                        sb.AppendLine(toolCall.Arguments?.ToString() ?? string.Empty);
+                    }
+                }
+
+                sb.AppendLine();
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.DraftText))
+            {
+                sb.AppendLine("user:");
+                sb.AppendLine(request.DraftText);
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        private string BuildSelectedReferencesProfileContent(ChatMessageBuildRequest request)
+        {
+            if (request.SelectedReferences == null || request.SelectedReferences.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder();
+
+            foreach (var reference in request.SelectedReferences)
+            {
+                sb.AppendLine(_referenceContextFormatter.Format(reference));
+                sb.AppendLine();
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         private string BuildUserContent(ChatMessageBuildRequest request, PromptContext promptContext)
