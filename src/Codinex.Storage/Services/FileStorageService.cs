@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
@@ -24,8 +24,19 @@ namespace Codinex.Storage.Services
         {
             var json = JsonConvert.SerializeObject(data, _settings);
 
-            // Run synchronous File.WriteAllText in a background thread
-            await Task.Run(() => fileSystem.File.WriteAllText(path, json));
+            // Run synchronous file I/O in a background thread.
+            // File.WriteAllText does not create missing parent directories, so ensure them first.
+            await Task.Run(() =>
+            {
+                var directory = fileSystem.Path.GetDirectoryName(path);
+
+                if (!string.IsNullOrWhiteSpace(directory) && !fileSystem.Directory.Exists(directory))
+                {
+                    fileSystem.Directory.CreateDirectory(directory);
+                }
+
+                fileSystem.File.WriteAllText(path, json);
+            });
         }
 
         public async Task<T> LoadAsync<T>(string path)
