@@ -38,7 +38,10 @@ export const manageModelsView = {
         $('#refresh-models-btn').onclick = () => {
             const provider = this.getSelectedProvider();
 
-            if (!provider || !provider.apiKey) return;
+            if (!provider) return;
+
+            const needsApiKey = this._providerNeedsApiKey(provider);
+            if (needsApiKey && !provider.apiKey) return;
 
             // Show loading overlay while refreshing provider models
             this.setLoading(true);
@@ -59,7 +62,7 @@ export const manageModelsView = {
                 { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'inline', target: '#models-checkbox-list' },
             ];
 
-            if (!this._isLocalProvider(provider)) {
+            if (this._providerNeedsApiKey(provider)) {
                 rules.push({ field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'inline', target: '#model-api-key' });
             }
 
@@ -132,7 +135,8 @@ export const manageModelsView = {
         this.pagination.goToPage(1);
         this.pagination.setItems((provider && provider.models) ? provider.models : []);
         $('#model-api-key').value = provider ? provider.apiKey : '';
-        togglePanelHidden('#refresh-models-btn', !!(provider && provider.apiKey));
+        const needsApiKey = this._providerNeedsApiKey(provider);
+        togglePanelHidden('#refresh-models-btn', !!(provider && (!needsApiKey || provider.apiKey)));
 
         this.state.selectedModels = new Map(
             _.filter((provider && provider.models) ? provider.models : [], { isSelected: true })
@@ -231,15 +235,10 @@ export const manageModelsView = {
     /**
      * @private
      */
-    _isLocalProvider(provider) {
-        if (!provider) return false;
+    _providerNeedsApiKey(provider) {
+        if (!provider) return true;
 
-        const protocol = (provider.protocol || '').toLowerCase();
-        const baseUrl = (provider.baseUrl || '').toLowerCase();
-
-        return protocol === 'ollama'
-            || baseUrl.includes('localhost')
-            || baseUrl.includes('127.0.0.1');
+        return provider.needApiKey !== false;
     },
 
     /**

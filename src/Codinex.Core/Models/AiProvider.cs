@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -19,8 +19,13 @@ namespace Codinex.Core.Models
         // Base URL endpoint for API requests
         public string BaseUrl { get; private set; }
 
-
         public string Protocol { get; private set; }
+
+        // Indicates whether this provider requires an API key for remote model retrieval.
+        public bool NeedApiKey { get; private set; }
+
+        // Endpoint used to retrieve available models from this provider.
+        public string ModelEndPoint { get; private set; }
 
         // Indicates whether this provider is a router that delegates to other providers
         public bool IsRouter { get; set; }
@@ -36,7 +41,7 @@ namespace Codinex.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, true, "/models", new List<AiModel>())
         {
 
         }
@@ -52,6 +57,8 @@ namespace Codinex.Core.Models
             string apiKey,
             string baseUrl,
             bool isEnabled,
+            bool? needApiKey,
+            string modelEndPoint,
             List<AiModel> models)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -72,6 +79,10 @@ namespace Codinex.Core.Models
             ApiKey = apiKey ?? "";
             BaseUrl = baseUrl ?? "";
             IsEnabled = isEnabled;
+            NeedApiKey = needApiKey ?? true;
+            ModelEndPoint = string.IsNullOrWhiteSpace(modelEndPoint)
+                ? "/models"
+                : modelEndPoint;
 
             _models = models ?? new List<AiModel>();
         }
