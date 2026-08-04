@@ -22,7 +22,7 @@ namespace Codinex.Infrastructure.ModelManagement
             // Always load local models first.
             var localModels = await resourceLoader.LoadAsync(provider, cancellationToken);
 
-            if (string.IsNullOrWhiteSpace(provider.ApiKey))
+            if (provider.NeedApiKey && string.IsNullOrWhiteSpace(provider.ApiKey))
                 return localModels;
 
             var retriever = retrievers.FirstOrDefault(x => x.CanHandle(provider));
@@ -36,5 +36,6 @@ namespace Codinex.Infrastructure.ModelManagement
                 ? onlineModels.ToList()
                 : localModels;
         }
+
     }
 }

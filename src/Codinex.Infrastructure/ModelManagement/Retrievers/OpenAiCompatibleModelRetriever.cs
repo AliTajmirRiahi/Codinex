@@ -86,9 +86,7 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
 
-            return provider.Protocol.Equals(
-                "openai",
-                StringComparison.OrdinalIgnoreCase);
+            return !string.IsNullOrWhiteSpace(provider.ModelEndPoint);
         }
 
         public async Task<IReadOnlyList<AiModel>> GetModelsAsync(
@@ -97,14 +95,20 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
         {
             var response = await client.GetAsync(
                 provider,
-                "/models",
+                provider.ModelEndPoint,
                 cancellationToken);
 
             var json = jsonSerializer.Parse(response);
+            var items = json["data"] ?? json["models"];
 
-            var items = json["data"];
-
-            return items == null ? [] : (from item in items select item["id"]?.ToString() into id where !string.IsNullOrWhiteSpace(id) && IsSupportedModel(id) select AiModel.CreateRemote(id)).ToList();
+            return items == null
+                ? []
+                : (from item in items
+                   let id = item["id"]?.ToString()
+                            ?? item["name"]?.ToString()
+                            ?? item["model"]?.ToString()
+                   where !string.IsNullOrWhiteSpace(id) && IsSupportedModel(id)
+                   select AiModel.CreateRemote(id)).ToList();
         }
 
         private static bool IsSupportedModel(string modelId)

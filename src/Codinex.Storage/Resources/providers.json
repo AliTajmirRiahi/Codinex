@@ -5,6 +5,8 @@
     "Name": "GapGPT",
     "ApiKey": "",
     "BaseUrl": "https://api.gapgpt.app/v1",
+    "NeedApiKey": true,
+    "ModelEndPoint": "/models",
     "IsEnabled": false
   },
   {
@@ -13,6 +15,8 @@
     "Name": "Chat GPT",
     "ApiKey": "",
     "BaseUrl": "https://api.openai.com/v1",
+    "NeedApiKey": true,
+    "ModelEndPoint": "/models",
     "IsEnabled": false
   },
   {
@@ -21,6 +25,8 @@
     "Name": "Ollama",
     "ApiKey": "",
     "BaseUrl": "http://localhost:11434",
+    "NeedApiKey": false,
+    "ModelEndPoint": "/api/tags",
     "IsEnabled": false
   }
 ]
