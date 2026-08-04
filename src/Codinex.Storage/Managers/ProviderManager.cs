@@ -131,7 +131,7 @@ namespace Codinex.Storage.Managers
             await SaveAsync();
         }
 
-        public async Task UpdateSettingsAsync(AiProviderDto selectedProvider)
+        public async Task<ProviderSettingsUpdateResult> UpdateSettingsAsync(AiProviderDto selectedProvider)
         {
             if (selectedProvider == null)
                 throw new ArgumentNullException(nameof(selectedProvider));
@@ -145,8 +145,25 @@ namespace Codinex.Storage.Managers
             if (provider == null)
                 throw new InvalidOperationException($"Provider '{selectedProvider.ProviderId}' was not found.");
 
-            if (selectedProvider.SelectedModels.Count == 0)
-                throw new ArgumentException(@"At least one model must be selected.", nameof(selectedProvider));
+            if (provider.IsLocal)
+            {
+                try
+                {
+                    using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+                    var installedModels = await providerModelService.GetModelsFromServerAsync(provider, timeout.Token);
+
+                    provider.SetModels(installedModels);
+                }
+                catch (Exception)
+                {
+                    return ProviderSettingsUpdateResult.Failed(
+                        $"{provider.Name} is unavailable. Make sure its local HTTP API is running and the models endpoint responds within 1 second.",
+                        false);
+                }
+            }
+
+            if (selectedProvider.SelectedModels == null || selectedProvider.SelectedModels.Count == 0)
+                return ProviderSettingsUpdateResult.Failed("At least one model must be selected.");
 
             foreach (var prov in Providers)
                 prov.Disable();
@@ -157,7 +174,17 @@ namespace Codinex.Storage.Managers
             foreach (var model in provider.Models)
                 model.DeSelect();
 
-            var selectedModel = provider.Models.Where(m => selectedProvider.SelectedModels.Any(sm => string.Equals(m.Id, sm.Id, StringComparison.OrdinalIgnoreCase)));
+            var selectedModel = provider.Models
+                .Where(m => selectedProvider.SelectedModels.Any(sm => string.Equals(m.Id, sm.Id, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            if (provider.IsLocal && selectedModel.Count == 0)
+            {
+                provider.Disable();
+
+                return ProviderSettingsUpdateResult.Failed(
+                    $"None of the selected models are installed for {provider.Name}. Refresh the model list and select an installed model.");
+            }
 
             foreach (var model in selectedModel)
                 model.Select();
@@ -172,6 +199,8 @@ namespace Codinex.Storage.Managers
             await SaveAsync();
 
             await InitializeAsync();
+
+            return ProviderSettingsUpdateResult.Saved();
         }
 
         public async Task SetCurrentModelAsync(AiModelSelectedDto payload)

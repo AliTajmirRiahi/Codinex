@@ -107,8 +107,18 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
                    let id = item["id"]?.ToString()
                             ?? item["name"]?.ToString()
                             ?? item["model"]?.ToString()
-                   where !string.IsNullOrWhiteSpace(id) && IsSupportedModel(id)
-                   select AiModel.CreateRemote(id)).ToList();
+                   where !string.IsNullOrWhiteSpace(id) && (provider.IsLocal || IsSupportedModel(id))
+                   select CreateModel(provider, id)).ToList();
+        }
+
+        private static AiModel CreateModel(AiProvider provider, string id)
+        {
+            var model = AiModel.CreateRemote(id);
+
+            if (string.Equals(provider.Protocol, "ollama", StringComparison.OrdinalIgnoreCase))
+                model.Family = AiProviderFamily.Ollama;
+
+            return model;
         }
 
         private static bool IsSupportedModel(string modelId)

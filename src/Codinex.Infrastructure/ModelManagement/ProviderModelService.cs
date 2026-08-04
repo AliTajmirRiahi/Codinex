@@ -25,16 +25,25 @@ namespace Codinex.Infrastructure.ModelManagement
             if (provider.NeedApiKey && string.IsNullOrWhiteSpace(provider.ApiKey))
                 return localModels;
 
-            var retriever = retrievers.FirstOrDefault(x => x.CanHandle(provider));
-
-            if (retriever == null)
-                return localModels;
-
-            var onlineModels = await retriever.GetModelsAsync(provider, cancellationToken);
+            var onlineModels = await GetModelsFromServerAsync(provider, cancellationToken);
 
             return onlineModels.Any()
                 ? onlineModels.ToList()
                 : localModels;
+        }
+
+        public async Task<List<AiModel>> GetModelsFromServerAsync(
+            AiProvider provider,
+            CancellationToken cancellationToken = default)
+        {
+            var retriever = retrievers.FirstOrDefault(x => x.CanHandle(provider));
+
+            if (retriever == null)
+                return [];
+
+            var onlineModels = await retriever.GetModelsAsync(provider, cancellationToken);
+
+            return onlineModels.ToList();
         }
 
     }

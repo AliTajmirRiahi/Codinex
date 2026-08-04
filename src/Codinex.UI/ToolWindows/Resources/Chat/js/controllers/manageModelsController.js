@@ -41,6 +41,9 @@ export const initManageModelsController = (transport) => {
         closeProviderSettings() {
             manageModelsView.hide();
         },
+        showSettingsError(message) {
+            manageModelsView.showError(message);
+        },
         // We can expose show/hide if other controllers need to trigger it
         showSettings: () => manageModelsView.show()
     };

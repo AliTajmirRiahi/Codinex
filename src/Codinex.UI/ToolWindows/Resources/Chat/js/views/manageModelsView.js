@@ -75,12 +75,23 @@ export const manageModelsView = {
                 return;
             }
 
+            this.setLoading(true);
+
             if (saveCallBack)
                 saveCallBack(data);
         };
     },
     setLoading(isLoading) {
         togglePanelHidden('#models-loading-screen', !!isLoading);
+    },
+    showError(message) {
+        this.setLoading(false);
+
+        validationService.showError({
+            message: message || 'Settings could not be saved.',
+            mode: 'inline',
+            target: '#models-checkbox-list'
+        });
     },
     /**
      * Renders the provider dropdown and attaches selection logic.
