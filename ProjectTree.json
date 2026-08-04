@@ -896,11 +896,18 @@
                                                                        "path":  "src/Codinex.Infrastructure/AI/Providers",
                                                                        "name":  "Providers",
                                                                        "type":  "folder",
-                                                                       "children":  {
-                                                                                        "path":  "src/Codinex.Infrastructure/AI/Providers/OpenAiCompatibleProvider.cs",
-                                                                                        "name":  "OpenAiCompatibleProvider.cs",
-                                                                                        "type":  "file"
-                                                                                    }
+                                                                       "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codinex.Infrastructure/AI/Providers/OllamaProvider.cs",
+                                                                                            "name":  "OllamaProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codinex.Infrastructure/AI/Providers/OpenAiCompatibleProvider.cs",
+                                                                                            "name":  "OpenAiCompatibleProvider.cs",
+                                                                                            "type":  "file"
+                                                                                        }
+                                                                                    ]
                                                                    },
                                                                    {
                                                                        "path":  "src/Codinex.Infrastructure/AI/AiProviderRouter.cs",
@@ -1474,6 +1481,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Storage/Resources/gapgpt_models.json",
                                                                        "name":  "gapgpt_models.json",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Storage/Resources/ollama_models.json",
+                                                                       "name":  "ollama_models.json",
                                                                        "type":  "file"
                                                                    },
                                                                    {

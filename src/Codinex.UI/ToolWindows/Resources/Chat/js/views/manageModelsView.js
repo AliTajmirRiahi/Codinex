@@ -53,12 +53,18 @@ export const manageModelsView = {
                 selectedModels: Array.from(this.state.selectedModels.values()),
                 apiKey: $('#model-api-key').value,
             };
+            const provider = this.getSelectedProvider();
+            const rules = [
+                { field: 'providerId', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'inline', target: '#provider-select' },
+                { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'inline', target: '#models-checkbox-list' },
+            ];
+
+            if (!this._isLocalProvider(provider)) {
+                rules.push({ field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'inline', target: '#model-api-key' });
+            }
+
             const validation = validationService.validate(data, {
-                rules: [
-                    { field: 'providerId', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'inline', target: '#provider-select' },
-                    { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'inline', target: '#models-checkbox-list' },
-                    { field: 'apiKey', validator: validationService.isNotEmpty, message: 'API key is required.', mode: 'inline', target: '#model-api-key' }
-                ],
+                rules,
             });
 
             if (!validation.valid) {
@@ -220,6 +226,20 @@ export const manageModelsView = {
             this.state.selectedModels.delete(model.id);
         }
 
+    },
+
+    /**
+     * @private
+     */
+    _isLocalProvider(provider) {
+        if (!provider) return false;
+
+        const protocol = (provider.protocol || '').toLowerCase();
+        const baseUrl = (provider.baseUrl || '').toLowerCase();
+
+        return protocol === 'ollama'
+            || baseUrl.includes('localhost')
+            || baseUrl.includes('127.0.0.1');
     },
 
     /**

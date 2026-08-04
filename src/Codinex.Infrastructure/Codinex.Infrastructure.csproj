@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AI\Capabilities\ProviderCapabilityChecker.cs" />
     <Compile Include="AI\Clients\OpenAiCompatibleClient.cs" />
+    <Compile Include="AI\Providers\OllamaProvider.cs" />
     <Compile Include="AI\Providers\OpenAiCompatibleProvider.cs" />
     <Compile Include="Chat\ChatSession.cs" />
     <Compile Include="Chat\ChatSessionService.cs" />

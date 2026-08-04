@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -12,6 +12,7 @@ namespace Codinex.Core.Models
         Anthropic = 2,
         GoogleGemini = 3,
         Custom = 4,
+        Ollama = 5,
         NaN = -1
     }
     public enum CapabilityProbeResult

@@ -1,0 +1,12 @@
+[
+  {
+    "Id": "qwen3:0.6b",
+    "Name": "Qwen3-0.6B",
+    "TokenLimit": 32768,
+    "SupportsImages": false,
+    "SupportsTools": false,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Ollama"
+  }
+]
