@@ -36,6 +36,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onProviderModelsRefreshed) handlers.onProviderModelsRefreshed(payload);
                 break;
 
+            case EVENTS.SETTINGS_SAVED:
+                if (handlers.onSettingsSaved) handlers.onSettingsSaved(payload);
+                break;
+
             case EVENTS.SELECT_CHAT_APPROVED:
                 if (handlers.onSelectChat) handlers.onSelectChat(payload);
                 break;

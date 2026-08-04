@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const manageModelsController = initManageModelsController(webViewTransport);
     initAboutController();
-    initSettingsController();
+    const settingsController = initSettingsController(webViewTransport);
 
     function getChatsPayload(payload) {
         const chats = payload?.chats || payload?.Chats;
@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             manageModelsController.updateUI(data.providers);
+            settingsController.updateUI(data.settings);
 
             // Get references to the loading screen and the main chat UI
             const loadingScreen = $('#loading-screen');
@@ -144,6 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
             manageModelsController.updateUI(providers);
             chatController.renderCurrentProvider();
             setInputLoading(false);
+        },
+        onSettingsSaved: (payload) => {
+            settingsController.updateUI(payload.settings || payload.Settings);
+            settingsController.closeSettingsModal();
         },
         onSelectModel: (payload) => {
             const providers = payload.providers || payload.Providers;

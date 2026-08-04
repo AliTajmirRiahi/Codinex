@@ -1,19 +1,11 @@
-﻿namespace Codinex.Storage.Models
+namespace Codinex.Storage.Models
 {
     public class CodinexSettings
     {
-        // The ID of the currently selected AI Provider (e.g., "openai", "ollama", "custom")
-        public string DefaultProviderId { get; set; } = "openai";
+        // Automatically include the current active document as message context.
+        public bool AutoAddActiveDocumentToMessage { get; set; }
 
-        // The API Key (if needed for the provider)
-        public string ApiKey { get; set; } = "";
-
-        // The API URL (Important for Local LLMs or Proxies)
-        // Default for OpenAI: https://api.openai.com/v1
-        // Default for Ollama: http://localhost:11434/v1
-        public string BaseUrl { get; set; } = "https://api.openai.com/v1";
-
-        // The Model Name (e.g., "gpt-4o", "codellama", "deepseek")
-        public string ModelName { get; set; } = "gpt-4o";
+        // Show assistant responses as they are generated.
+        public bool EnableStreamingChat { get; set; } = true;
     }
 }
