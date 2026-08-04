@@ -10,6 +10,7 @@ import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.j
 import { initChatController } from './controllers/chatController.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
 import { initAboutController } from './controllers/aboutController.js';
+import { initSettingsController } from './controllers/settingsController.js';
 import { EVENTS } from '../js/constants/events.js';
 import { reportError } from '../../Shared/bridge/errorReporter.js'
 
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const manageModelsController = initManageModelsController(webViewTransport);
     initAboutController();
+    initSettingsController();
 
     function getChatsPayload(payload) {
         const chats = payload?.chats || payload?.Chats;

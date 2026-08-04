@@ -1,0 +1,117 @@
+.settings-modal-content {
+    width: 70%;
+    max-width: 720px;
+    height: auto;
+    min-height: 420px;
+}
+
+.settings-modal-body {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+}
+
+.settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--vs-border);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.settings-tab {
+    width: auto;
+    display: flex;
+    align-items: center;
+    padding: 9px 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+}
+
+    .settings-tab:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .settings-tab.active {
+        background: var(--vs-button-hover);
+        border-color: var(--vs-border);
+    }
+
+.settings-tab-panels {
+    flex: 1;
+    min-width: 0;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.settings-tab-panel {
+    display: none;
+}
+
+    .settings-tab-panel.active {
+        display: block;
+    }
+
+.settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+    .settings-section h3 {
+        margin: 0;
+        color: var(--vs-foreground);
+        font-size: 14px;
+    }
+
+.settings-section-description {
+    margin: 0 0 4px;
+    color: var(--vs-access-tool-tip-color);
+    font-size: 12px;
+}
+
+.setting-checkbox-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+    .setting-checkbox-option:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .setting-checkbox-option input {
+        margin-top: 2px;
+    }
+
+    .setting-checkbox-option span {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .setting-checkbox-option strong {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .setting-checkbox-option small {
+        color: var(--vs-access-tool-tip-color);
+        font-size: 12px;
+        line-height: 1.4;
+    }

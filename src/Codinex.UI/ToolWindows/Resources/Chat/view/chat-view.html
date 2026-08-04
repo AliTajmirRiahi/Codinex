@@ -238,6 +238,64 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+        <div class="modal-content settings-modal-content">
+            <div class="modal-header">
+                <h2 id="settings-modal-title">Settings</h2>
+                <button id="close-settings-modal" title="Close Settings">✕</button>
+            </div>
+
+            <div class="modal-body settings-modal-body">
+                <div class="settings-tabs" role="tablist" aria-label="Settings sections">
+                    <button id="settings-tab-general"
+                            class="settings-tab active"
+                            type="button"
+                            role="tab"
+                            aria-selected="true"
+                            aria-controls="settings-panel-general"
+                            data-settings-tab="general">
+                        General
+                    </button>
+                </div>
+
+                <div class="settings-tab-panels">
+                    <section id="settings-panel-general"
+                             class="settings-tab-panel active"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-general"
+                             data-settings-panel="general">
+                        <div class="settings-section">
+                            <h3>General</h3>
+                            <p class="settings-section-description">Configure general chat behavior.</p>
+
+                            <label class="setting-checkbox-option" for="setting-auto-add-active-document">
+                                <input id="setting-auto-add-active-document" type="checkbox">
+                                <span>
+                                    <strong>Auto add Active Document to message</strong>
+                                    <small>Automatically include the current active document as message context.</small>
+                                </span>
+                            </label>
+
+                            <label class="setting-checkbox-option" for="setting-enable-streaming-chat">
+                                <input id="setting-enable-streaming-chat" type="checkbox">
+                                <span>
+                                    <strong>Enable streaming chat</strong>
+                                    <small>Show assistant responses as they are generated.</small>
+                                </span>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-settings-modal" class="secondary-button">Cancel</button>
+                <button id="save-settings-modal" class="primary-button">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- About Modal -->
     <div id="about-modal" class="modal hidden">
         <div class="modal-content about-modal-content">
