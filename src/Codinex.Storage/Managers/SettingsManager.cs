@@ -1,45 +1,57 @@
-﻿using System.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Models;
 using Codinex.Storage.Services;
+using Newtonsoft.Json;
 
 namespace Codinex.Storage.Managers
 {
     [AutoDiRegister(Modules.Storage, RegistrationOrder.Foundation)]
     public class SettingsManager(IStorageService storage)
     {
-        private CodinexSettings _currentSettings = new(); // Default values
+        private CodinexSettings _currentSettings = new();
 
-        // Get current settings
         public CodinexSettings Settings => _currentSettings;
 
         /// <summary>
-        /// Loads settings from disk, or creates defaults if not found.
+        /// Loads global settings from %LocalAppData%\Codinex\settings.json, or creates defaults if not found.
         /// </summary>
         public async Task InitializeAsync()
         {
-            if (await storage.ExistsAsync(StoragePaths.Settings))
+            if (!await storage.ExistsAsync(StoragePaths.Settings))
+            {
+                await SaveSettingsAsync(_currentSettings);
+                return;
+            }
+
+            try
             {
                 var loaded = await storage.LoadAsync<CodinexSettings>(StoragePaths.Settings);
                 if (loaded != null)
                 {
                     _currentSettings = loaded;
+                    return;
                 }
             }
-            else
+            catch (JsonException)
             {
-                // First run: save the default settings
-                await SaveSettingsAsync(_currentSettings);
+                // If settings.json is empty or invalid, restore the default settings.
             }
+
+            await SaveSettingsAsync(_currentSettings);
         }
 
         /// <summary>
-        /// Updates and persists settings.
+        /// Updates and persists global settings to %LocalAppData%\Codinex\settings.json.
         /// </summary>
         public async Task SaveSettingsAsync(CodinexSettings newSettings)
         {
+            if (newSettings == null)
+                throw new ArgumentNullException(nameof(newSettings));
+
             _currentSettings = newSettings;
             await storage.SaveAsync(StoragePaths.Settings, _currentSettings);
 

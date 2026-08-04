@@ -36,6 +36,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IConversationGroupManager _conversationGroupManager;
     private readonly IErrorHandler _errorHandler;
     private readonly ReferenceManager _referenceManager;
+    private readonly SettingsManager _settingsManager;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -51,7 +52,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ChatManager chatManager,
         IConversationGroupManager conversationGroupManager,
         IErrorHandler errorHandler,
-        ReferenceManager referenceManager)
+        ReferenceManager referenceManager,
+        SettingsManager settingsManager)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -64,6 +66,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _conversationGroupManager = conversationGroupManager;
         _errorHandler = errorHandler;
         _referenceManager = referenceManager;
+        _settingsManager = settingsManager;
 
 
         RegisterEventHandlers();
@@ -190,6 +193,16 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     await _providerManager.RefreshModelsAsync(providerId);
 
                     await SendProviderModelsRefreshedAsync();
+
+                    return;
+                }
+            case WebViewMessageType.SaveSettings:
+                {
+                    var payload = _payloadBinder.Bind<CodinexSettings>(request.Payload);
+
+                    await _settingsManager.SaveSettingsAsync(payload);
+
+                    await SendSettingsSavedAsync();
 
                     return;
                 }
@@ -413,6 +426,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             },
             References = referencesTask?.Result,
             ActiveDocument = activeDocumentTask?.Result,
+            Settings = _settingsManager.Settings,
             Timestamp = DateTime.Now
         };
 
@@ -479,6 +493,21 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     AvailableProviders = _providerManager.Providers,
                     Current = _providerManager.ActiveProvider
                 },
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendSettingsSavedAsync()
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.SettingsSaved,
+            Payload = new
+            {
+                Settings = _settingsManager.Settings,
             },
             Timestamp = DateTime.Now
         };

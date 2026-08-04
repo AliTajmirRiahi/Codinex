@@ -23,6 +23,7 @@ public static class WebViewMessageType
     public const string DeleteGroup = "DELETE_GROUP";
     public const string OpenExternalLink = "OPEN_EXTERNAL_LINK";
     public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";
+    public const string SaveSettings = "SAVE_SETTINGS";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -40,5 +41,6 @@ public static class WebViewMessageType
     public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";
     public const string StatusChanged = "STATUS_CHANGED";
     public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
+    public const string SettingsSaved = "SETTINGS_SAVED";
 
 }
