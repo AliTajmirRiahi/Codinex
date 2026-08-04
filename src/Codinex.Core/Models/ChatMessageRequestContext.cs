@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Codinex.Core.Models
 {
@@ -17,6 +17,8 @@ namespace Codinex.Core.Models
 
         public IReadOnlyList<ReferenceItem> SelectedReferences { get; set; }
 
+        public PromptProfileResult PromptProfile { get; set; }
+
         public static ChatMessageRequestContext CreateChatMessageRequestContextWithoutMetaData(ChatMessageRequestContext context)
         {
             var selectedReferences = (new List<ReferenceItem>(context.SelectedReferences));
@@ -27,7 +29,8 @@ namespace Codinex.Core.Models
             {
                 SelectedCommand = context.SelectedCommand,
                 SelectedAgent = context.SelectedAgent,
-                SelectedReferences = selectedReferences
+                SelectedReferences = selectedReferences,
+                PromptProfile = context.PromptProfile
             };
         }
     }

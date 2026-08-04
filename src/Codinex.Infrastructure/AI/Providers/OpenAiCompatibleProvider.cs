@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -14,6 +15,7 @@ using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
+using Codinex.Core.Workspace.Prompt;
 using Codinex.Storage.Managers;
 
 namespace Codinex.Infrastructure.AI.Providers
@@ -36,7 +38,8 @@ namespace Codinex.Infrastructure.AI.Providers
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,
         IOpenAiCompatibleClient client,
-        IWorkspaceFileService workspaceFileService)
+        IWorkspaceFileService workspaceFileService,
+        IPromptProfiler promptProfiler)
         : IAiProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -114,13 +117,19 @@ namespace Codinex.Infrastructure.AI.Providers
                 IReadOnlyList<ChatMessage> messages,
                 [EnumeratorCancellation] CancellationToken cancellationToken)
         {
+            var tools = BuildTools();
             var payload = BuildChatCompletionPayload(
                 provider,
                 model,
                 messages,
-                true);
+                true,
+                tools);
 #if DEBUG
-            var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+            var promptProfile = BuildPromptProfile(messages, tools);
+            var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented) +
+                                 Environment.NewLine +
+                                 Environment.NewLine +
+                                 FormatPromptProfile(promptProfile);
 
             var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
 
@@ -333,12 +342,27 @@ namespace Codinex.Infrastructure.AI.Providers
             IReadOnlyList<ChatMessage> messages,
             bool stream)
         {
+            return BuildChatCompletionPayload(
+                provider,
+                model,
+                messages,
+                stream,
+                BuildTools());
+        }
+
+        private object BuildChatCompletionPayload(
+            AiProvider provider,
+            AiModel model,
+            IReadOnlyList<ChatMessage> messages,
+            bool stream,
+            object[] tools)
+        {
             return new
             {
                 model = model.Id,
                 messages = BuildMessages(messages),
                 stream = model.SupportsStreaming == CapabilityProbeResult.Supported && stream,
-                tools = BuildTools(),
+                tools,
                 tool_choice = "auto"
             };
         }
@@ -374,6 +398,145 @@ namespace Codinex.Infrastructure.AI.Providers
                     })
             ];
         }
+        private PromptProfileResult BuildPromptProfile(IReadOnlyList<ChatMessage> messages, object[] tools)
+        {
+            var sections = new List<PromptSectionProfile>();
+            var existingProfile = messages
+                .Select(x => x.Context?.PromptProfile)
+                .FirstOrDefault(x => x != null);
+
+            if (existingProfile?.Sections != null)
+            {
+                sections.AddRange(existingProfile.Sections);
+            }
+
+            var toolsContext = new PromptContext();
+            var toolsSection = new PromptContextSection
+            {
+                Name = "Tools"
+            };
+
+            foreach (var tool in tools ?? Array.Empty<object>())
+            {
+                toolsSection.Items.Add(new PromptContextItem
+                {
+                    Title = GetToolName(tool),
+                    Content = Newtonsoft.Json.JsonConvert.SerializeObject(tool),
+                    Reason = "Registered model tool definition"
+                });
+            }
+
+            if (toolsSection.Items.Count > 0)
+            {
+                toolsContext.Sections.Add(toolsSection);
+            }
+
+            var toolsProfile = promptProfiler.Profile(toolsContext);
+
+            if (toolsProfile.Sections != null)
+            {
+                sections.AddRange(toolsProfile.Sections);
+            }
+
+            var totalCharacters = sections.Sum(x => x.Characters);
+
+            ApplySectionPercentages(sections, totalCharacters);
+
+            return new PromptProfileResult
+            {
+                Sections = sections,
+                TotalCharacters = totalCharacters,
+                EstimatedTokens = totalCharacters / 4
+            };
+        }
+
+        private static string FormatPromptProfile(PromptProfileResult profile)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("=========================");
+            sb.AppendLine("Request Statistics");
+            sb.AppendLine("=========================");
+            sb.AppendLine();
+
+            foreach (var section in profile.Sections)
+            {
+                AppendPromptSection(sb, section, 0);
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("-------------------------");
+            sb.AppendLine($"Total Characters : {FormatNumber(profile.TotalCharacters)}");
+            sb.AppendLine($"Total Tokens : {FormatNumber(profile.EstimatedTokens)}");
+
+            return sb.ToString().TrimEnd();
+        }
+
+        private static void AppendPromptSection(StringBuilder sb, PromptSectionProfile section, int depth)
+        {
+            var indent = new string(' ', depth * 2);
+
+            sb.AppendLine($"{indent}{section.Name}");
+            sb.AppendLine($"{indent}Characters : {FormatNumber(section.Characters)}");
+            sb.AppendLine($"{indent}Tokens : {FormatNumber(section.EstimatedTokens)}");
+            sb.AppendLine($"{indent}Percentage : {FormatPercentage(section.SectionPercentage)}");
+
+            if (!string.IsNullOrWhiteSpace(section.Reason))
+            {
+                sb.AppendLine($"{indent}Reason : {section.Reason}");
+            }
+
+            if (section.Children == null || section.Children.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var child in section.Children)
+            {
+                sb.AppendLine();
+                AppendPromptSection(sb, child, depth + 1);
+            }
+        }
+
+        private static void ApplySectionPercentages(IEnumerable<PromptSectionProfile> sections, int totalCharacters)
+        {
+            foreach (var section in sections ?? Enumerable.Empty<PromptSectionProfile>())
+            {
+                section.SectionPercentage = totalCharacters == 0
+                    ? 0
+                    : (double)section.Characters / totalCharacters * 100;
+
+                ApplySectionPercentages(section.Children, totalCharacters);
+            }
+        }
+
+        private static string GetToolName(object tool)
+        {
+            if (tool == null)
+            {
+                return "Tool";
+            }
+
+            try
+            {
+                return JObject.FromObject(tool)["function"]?["name"]?.ToString() ?? "Tool";
+            }
+            catch
+            {
+                return "Tool";
+            }
+        }
+
+        private static string FormatNumber(int value)
+        {
+            return value.ToString("N0", CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatPercentage(double value)
+        {
+            return value.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+
         private static JObject ParseArguments(string arguments)
         {
             if (string.IsNullOrWhiteSpace(arguments))

@@ -13,6 +13,8 @@ namespace Codinex.Core.Workspace.Prompt
 
         public string Content { get; set; }
 
+        public string Reason { get; set; }
+
         public int Score { get; set; }
     }
 }
