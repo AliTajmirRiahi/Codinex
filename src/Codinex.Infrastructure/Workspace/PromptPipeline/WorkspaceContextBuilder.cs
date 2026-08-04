@@ -24,9 +24,9 @@ namespace Codinex.Infrastructure.Workspace.PromptPipeline
         {
             var results = new List<ContextProviderResult>();
 
-            foreach (var provider in providers.Where(
-                         p => p.Visibility == WorkspaceContextVisibility.Model)
-                     )
+            var modelProviders = providers.Where(p => p.Visibility == WorkspaceContextVisibility.Model).ToList();
+
+            foreach (var provider in modelProviders)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

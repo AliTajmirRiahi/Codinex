@@ -99,6 +99,7 @@
     <Compile Include="Tools\AiToolRegistry.cs" />
     <Compile Include="Tools\BuiltIn\Build\BuildSolutionTool.cs" />
     <Compile Include="Tools\BuiltIn\Diagnostics\GetDiagnosticsTool.cs" />
+    <Compile Include="Tools\BuiltIn\Projects\GetProjectsTool.cs" />
     <Compile Include="Tools\BuiltIn\Memory\ForgetMemoryTool.cs" />
     <Compile Include="Tools\BuiltIn\Files\ReadFileTool.cs" />
     <Compile Include="Tools\BuiltIn\Memory\RememberMemoryTool.cs" />
@@ -128,7 +129,6 @@
     <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
-    <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\MemoryContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
