@@ -18,7 +18,7 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IMemoryContextFormatter memoryFormatter)
         : IWorkspaceContextOrchestrator
     {
-        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
+        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
 
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,

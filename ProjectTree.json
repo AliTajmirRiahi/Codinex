@@ -3298,11 +3298,6 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
-                                                                                            "path":  "src/Codinex.VisualStudio/Workspace/Orchestrators/GitContextOrchestrator.cs",
-                                                                                            "name":  "GitContextOrchestrator.cs",
-                                                                                            "type":  "file"
-                                                                                        },
-                                                                                        {
                                                                                             "path":  "src/Codinex.VisualStudio/Workspace/Orchestrators/MemoryContextOrchestrator.cs",
                                                                                             "name":  "MemoryContextOrchestrator.cs",
                                                                                             "type":  "file"

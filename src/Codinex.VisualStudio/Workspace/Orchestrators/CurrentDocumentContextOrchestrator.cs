@@ -20,7 +20,7 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IReferenceContextFormatter referenceContextFormatter)
         : IWorkspaceContextOrchestrator
     {
-        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
+        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
 
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,
