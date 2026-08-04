@@ -3072,11 +3072,18 @@
                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Build",
                                                                                             "name":  "Build",
                                                                                             "type":  "folder",
-                                                                                            "children":  {
-                                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Build/BuildSolutionTool.cs",
-                                                                                                             "name":  "BuildSolutionTool.cs",
-                                                                                                             "type":  "file"
-                                                                                                         }
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Build/BuildProjectTool.cs",
+                                                                                                                 "name":  "BuildProjectTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Build/BuildSolutionTool.cs",
+                                                                                                                 "name":  "BuildSolutionTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
                                                                                         },
                                                                                         {
                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Diagnostics",
@@ -3122,6 +3129,26 @@
                                                                                                                  "type":  "file"
                                                                                                              }
                                                                                                          ]
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/OpenDocuments",
+                                                                                            "name":  "OpenDocuments",
+                                                                                            "type":  "folder",
+                                                                                            "children":  {
+                                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/OpenDocuments/GetOpenDocumentsTool.cs",
+                                                                                                             "name":  "GetOpenDocumentsTool.cs",
+                                                                                                             "type":  "file"
+                                                                                                         }
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Projects",
+                                                                                            "name":  "Projects",
+                                                                                            "type":  "folder",
+                                                                                            "children":  {
+                                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Projects/GetProjectsTool.cs",
+                                                                                                             "name":  "GetProjectsTool.cs",
+                                                                                                             "type":  "file"
+                                                                                                         }
                                                                                         },
                                                                                         {
                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Search",

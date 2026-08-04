@@ -97,9 +97,11 @@
     <Compile Include="Services\WorkspaceFileService.cs" />
     <Compile Include="Theme\VsThemeService.cs" />
     <Compile Include="Tools\AiToolRegistry.cs" />
+    <Compile Include="Tools\BuiltIn\Build\BuildProjectTool.cs" />
     <Compile Include="Tools\BuiltIn\Build\BuildSolutionTool.cs" />
     <Compile Include="Tools\BuiltIn\Diagnostics\GetDiagnosticsTool.cs" />
     <Compile Include="Tools\BuiltIn\Projects\GetProjectsTool.cs" />
+    <Compile Include="Tools\BuiltIn\OpenDocuments\GetOpenDocumentsTool.cs" />
     <Compile Include="Tools\BuiltIn\Memory\ForgetMemoryTool.cs" />
     <Compile Include="Tools\BuiltIn\Files\ReadFileTool.cs" />
     <Compile Include="Tools\BuiltIn\Memory\RememberMemoryTool.cs" />
