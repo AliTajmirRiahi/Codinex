@@ -38,7 +38,7 @@
         .model-item input[type="checkbox"]:checked::after {
             content: '✓';
             position: absolute;
-            color: white;
+            color: var(--vs-foreground);
             font-size: 14px;
             left: 2px;
             top: -2px;

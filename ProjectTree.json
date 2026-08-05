@@ -4540,5 +4540,10 @@
         "path":  "README.md",
         "name":  "README.md",
         "type":  "file"
+    },
+    {
+        "path":  "UpgradeLog.htm",
+        "name":  "UpgradeLog.htm",
+        "type":  "file"
     }
 ]
