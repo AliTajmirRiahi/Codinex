@@ -265,6 +265,27 @@
     min-width: 260px;
 }
 
-codinex-icon.chat-icon {
+.provider-selector-wrapper {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--vs-system-active-border-color);
+    border-radius: 8px;
+}
+
+.provider-selector-btn {
+    width: 100%;
+    justify-content: space-between;
+}
+
+#provider-dropdown.com-dropdown {
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    min-width: 100%;
+}
+
+codinex-icon.chat-icon,
+codinex-icon.provider-icon {
     color: vaR(--vs-viz-surface-green-medium-color);
 }

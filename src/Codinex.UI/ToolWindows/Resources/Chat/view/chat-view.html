@@ -352,9 +352,18 @@
                 <!-- Step 1: Provider Selection -->
                 <div class="form-group">
                     <label>Select Provider</label>
-                    <select id="provider-select">
-                        <!-- Dynamic: Filled from C# -->
-                    </select>
+                    <div class="provider-selector-wrapper">
+                        <button id="provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Provider">
+                            <codinex-icon name="puzzle"></codinex-icon>
+                            <span id="provider-name">Select an AI Provider</span>
+                            <codinex-icon name="chevron-down"></codinex-icon>
+                        </button>
+                        <input id="provider-select" type="hidden" value="">
+                        <div id="provider-dropdown" class="com-dropdown">
+                            <div class="menu-label">Providers</div>
+                            <div id="provider-dropdown-menu-container"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Step 2: Model List (Checkboxes) -->

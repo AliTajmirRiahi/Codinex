@@ -81,6 +81,10 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\pencil.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\copy.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\plus-circle.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\server.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\puzzle.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\ollama.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\openai.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
