@@ -257,6 +257,15 @@
                             data-settings-tab="general">
                         General
                     </button>
+                    <button id="settings-tab-prompt-preprocessor"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-prompt-preprocessor"
+                            data-settings-tab="prompt-preprocessor">
+                        Prompt Preprocessor
+                    </button>
                 </div>
 
                 <div class="settings-tab-panels">
@@ -284,6 +293,41 @@
                                     <small>Show assistant responses as they are generated.</small>
                                 </span>
                             </label>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-prompt-preprocessor"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-prompt-preprocessor"
+                             data-settings-panel="prompt-preprocessor">
+                        <div class="settings-section">
+                            <h3>Prompt Preprocessor</h3>
+                            <p class="settings-section-description">Configure the local AI provider used to preprocess prompts.</p>
+
+                            <label class="setting-checkbox-option" for="setting-enable-preprocessor-ai">
+                                <input id="setting-enable-preprocessor-ai" type="checkbox">
+                                <span>
+                                    <strong>Enable Preprocessor AI</strong>
+                                    <small>Run prompts through a local AI provider before sending them to the selected chat model.</small>
+                                </span>
+                            </label>
+
+                            <div class="form-group">
+                                <label>Local Provider</label>
+                                <div class="provider-selector-wrapper">
+                                    <button id="setting-preprocessor-provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Local Provider">
+                                        <codinex-icon name="puzzle"></codinex-icon>
+                                        <span id="setting-preprocessor-provider-name">Select a local provider</span>
+                                        <codinex-icon name="chevron-down"></codinex-icon>
+                                    </button>
+                                    <input id="setting-preprocessor-provider" type="hidden" value="">
+                                    <div id="setting-preprocessor-provider-dropdown" class="com-dropdown">
+                                        <div class="menu-label">Local Providers</div>
+                                        <div id="setting-preprocessor-provider-dropdown-menu-container"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>

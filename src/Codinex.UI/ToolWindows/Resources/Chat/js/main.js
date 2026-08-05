@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             manageModelsController.updateUI(data.providers);
-            settingsController.updateUI(data.settings);
+            settingsController.updateUI(data.settings, data.providers);
 
             // Get references to the loading screen and the main chat UI
             const loadingScreen = $('#loading-screen');
