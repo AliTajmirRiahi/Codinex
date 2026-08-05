@@ -7,5 +7,11 @@ namespace Codinex.Storage.Models
 
         // Show assistant responses as they are generated.
         public bool EnableStreamingChat { get; set; } = true;
+
+        // Enables preprocessing prompts through a local AI provider before sending them to the main chat model.
+        public bool EnablePreprocessorAi { get; set; }
+
+        // Local provider id used by the prompt preprocessor.
+        public string PreprocessorAiProviderId { get; set; } = string.Empty;
     }
 }
