@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
@@ -16,7 +17,8 @@ namespace Codinex.Infrastructure.WorkspaceChanges.Handlers;
 [AutoDiRegister(Modules.MissionEngine, RegistrationOrder.Features)]
 public sealed class CreateFileChangeHandler(
     IWorkspaceFileService workspaceFileService,
-    IWorkspaceChangeErrorFactory workspaceChangeErrorFactory)
+    IWorkspaceChangeErrorFactory workspaceChangeErrorFactory,
+    IWorkspaceChangeHandler<CreateDirectoryChange> createDirectoryChangeHandler)
     : IWorkspaceChangeHandler<CreateFileChange>
 {
     public async Task<WorkspaceChangeResult> HandleAsync(
@@ -36,6 +38,24 @@ public sealed class CreateFileChangeHandler(
                     change.FilePath,
                     change.Id,
                     $"The file '{change.FilePath}' already exists."));
+        }
+
+        var directoryPath = Path.GetDirectoryName(change.FilePath);
+
+        if (!string.IsNullOrWhiteSpace(directoryPath) &&
+            !workspaceFileService.DirectoryExists(directoryPath))
+        {
+            var createDirectoryResult = await createDirectoryChangeHandler.HandleAsync(
+                new CreateDirectoryChange()
+                {
+                    DirectoryPath = directoryPath,
+                },
+                cancellationToken);
+
+            if (!createDirectoryResult.Success)
+            {
+                return createDirectoryResult;
+            }
         }
 
         await workspaceFileService.WriteAsync(
