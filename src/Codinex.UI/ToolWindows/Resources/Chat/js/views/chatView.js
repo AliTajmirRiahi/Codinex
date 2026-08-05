@@ -11,6 +11,32 @@ import { getState, setCurrentModel, subscribe } from '../state/appState.js';
 import { messageView } from '../views/messageView.js';
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 import { ComposerView } from './composerView.js';
+import { FloatingDateSeparatorView, defaultChatDateSeparatorFormatter } from './floatingDateSeparatorView.js';
+
+const ISO_DATE_TIME_WITHOUT_TIMEZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
+const EXPLICIT_TIMEZONE = /(?:z|[+-]\d{2}:?\d{2})$/i;
+
+function parseChatDate(value) {
+    if (!value) return null;
+
+    if (value instanceof Date) {
+        return isNaN(value.getTime()) ? null : value;
+    }
+
+    if (typeof value === 'string') {
+        const trimmedValue = value.trim();
+        const normalizedValue = ISO_DATE_TIME_WITHOUT_TIMEZONE.test(trimmedValue) && !EXPLICIT_TIMEZONE.test(trimmedValue)
+            ? `${trimmedValue}Z`
+            : trimmedValue;
+        const date = new Date(normalizedValue);
+
+        return isNaN(date.getTime()) ? null : date;
+    }
+
+    const date = new Date(value);
+
+    return isNaN(date.getTime()) ? null : date;
+}
 
 export const chatView = {
 
@@ -70,6 +96,7 @@ export const chatView = {
         this.handleCancel = handleCancel;
 
         this.initializeModelDropdown(onModelSelected);
+        this.initializeFloatingDateSeparator();
 
         this.composer = new ComposerView({
             onSend: () => this.handleSendMessage(),
@@ -77,6 +104,16 @@ export const chatView = {
         });
 
         this.bindLoadingState();
+    },
+
+    initializeFloatingDateSeparator() {
+        this.floatingDateSeparator = new FloatingDateSeparatorView({
+            containerId: 'chat-container',
+            headerId: 'floating-date-separator',
+            formatter: defaultChatDateSeparatorFormatter
+        });
+
+        this.floatingDateSeparator.initialize();
     },
 
     initializeModelDropdown(onModelSelected) {
@@ -180,12 +217,31 @@ export const chatView = {
         this.setStatus('');
     },
 
+    getMessageDate(message) {
+        const value = message?.createdAt || message?.CreatedAt || message?.timestamp || message?.Timestamp;
+        const date = parseChatDate(value);
+
+        return date || new Date();
+    },
+
+    tagMessageElement(element, date, deferRefresh) {
+        if (!element) return;
+
+        const messageDate = parseChatDate(date) || new Date();
+
+        element.dataset.messageCreatedAt = messageDate.toISOString();
+
+        if (!deferRefresh && this.floatingDateSeparator) {
+            this.floatingDateSeparator.refresh();
+        }
+    },
+
     /**
      * Append a new message to the chat container.
      * @param {string} content - Message text
      * @param {'user' | 'assistant'} role - Message sender
      */
-    appendMessage(text, sender) {
+    appendMessage(text, sender, createdAt, deferDateSeparatorRefresh) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
         const statusElement = document.getElementById('response-status');
@@ -198,6 +254,8 @@ export const chatView = {
         parent.removeChild(element);
 
         const messageDiv = messageView.createMessageElement(text, sender);
+
+        this.tagMessageElement(messageDiv, createdAt || new Date(), deferDateSeparatorRefresh);
 
         container.appendChild(messageDiv);
 
@@ -250,7 +308,11 @@ export const chatView = {
         togglePanelHidden('#chat-welcome', chatMessages.length === 0);
 
         for (const message of chatMessages) {
-            this.appendMessage(message.content, message.role);
+            this.appendMessage(message.content, message.role, this.getMessageDate(message), true);
+        }
+
+        if (this.floatingDateSeparator) {
+            this.floatingDateSeparator.refresh();
         }
     },
     /**
@@ -312,6 +374,10 @@ export const chatView = {
         }
 
         togglePanelHidden('#chat-welcome', true);
+
+        if (this.floatingDateSeparator) {
+            this.floatingDateSeparator.refresh();
+        }
     }
 }
 
@@ -331,6 +397,8 @@ export function createStreamingMessage() {
     parent.removeChild(element);
 
     const contentEl = messageView.createStreamingMessage();
+
+    chatView.tagMessageElement(contentEl.parentElement, new Date());
 
     if (statusElement) parent.appendChild(statusElement);
     parent.appendChild(element);
