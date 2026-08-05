@@ -14,6 +14,7 @@ using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Codinex.Core.Workspace.Prompt;
+using Codinex.Infrastructure.AI.Errors;
 using Codinex.Storage.Managers;
 
 namespace Codinex.Infrastructure.AI.Providers
@@ -57,21 +58,33 @@ namespace Codinex.Infrastructure.AI.Providers
                             prompts,
                             true);
 
-            var response = await client.PostAsync(
-                provider,
-                "/chat/completions",
-                payload,
-                ct);
+            try
+            {
+                var response = await client.PostAsync(
+                    provider,
+                    "/chat/completions",
+                    payload,
+                    ct);
 
-            var json = jsonSerializer.Parse(response);
+                var json = jsonSerializer.Parse(response);
 
-            return json["choices"]?[0]?["message"]?["content"]?.ToString()
-                   ?? throw new HttpRequestException("No response content received.");
+                return json["choices"]?[0]?["message"]?["content"]?.ToString()
+                       ?? throw new HttpRequestException("No response content received.");
+            }
+            catch (Exception ex)
+            {
+                if (!AiErrorFactory.TryCreateExpected(ex, ct, out var error))
+                {
+                    throw;
+                }
+
+                return error.Message;
+            }
         }
 
-        public async IAsyncEnumerable<ConversationEvent> SendStreamAsync(
+        public IAsyncEnumerable<ConversationEvent> SendStreamAsync(
             IReadOnlyList<ChatMessage> messages,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
             var provider = _providerManager.ActiveProvider;
@@ -79,19 +92,18 @@ namespace Codinex.Infrastructure.AI.Providers
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
-            await foreach (var item in StreamCompletionAsync(
-                               provider,
-                               model,
-                               messages,
-                               cancellationToken))
-            {
-                yield return item;
-            }
+            return MapExpectedErrors(
+                StreamCompletionAsync(
+                    provider,
+                    model,
+                    messages,
+                    cancellationToken),
+                cancellationToken);
         }
 
-        public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
+        public IAsyncEnumerable<ConversationEvent> ContinueAsync(
             IReadOnlyList<ChatMessage> history,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
             var provider = _providerManager.ActiveProvider;
@@ -99,15 +111,65 @@ namespace Codinex.Infrastructure.AI.Providers
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
-            await foreach (var item in StreamCompletionAsync(
-                               provider,
-                               model,
-                               history,
-                               cancellationToken))
+            return MapExpectedErrors(
+                StreamCompletionAsync(
+                    provider,
+                    model,
+                    history,
+                    cancellationToken),
+                cancellationToken);
+        }
+        private static async IAsyncEnumerable<ConversationEvent> MapExpectedErrors(
+            IAsyncEnumerable<ConversationEvent> events,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            var enumerator = events.GetAsyncEnumerator(cancellationToken);
+
+            try
             {
-                yield return item;
+                while (true)
+                {
+                    ConversationEvent current = null;
+                    AiError error = null;
+                    var hasCurrent = false;
+
+                    try
+                    {
+                        hasCurrent = await enumerator.MoveNextAsync();
+
+                        if (hasCurrent)
+                        {
+                            current = enumerator.Current;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!AiErrorFactory.TryCreateExpected(ex, cancellationToken, out error))
+                        {
+                            throw;
+                        }
+                    }
+
+                    if (error != null)
+                    {
+                        yield return AiErrorFactory.ToConversationEvent(error);
+                        yield break;
+                    }
+
+                    if (!hasCurrent)
+                    {
+                        yield break;
+                    }
+
+                    yield return current;
+                }
+            }
+            finally
+            {
+                await enumerator.DisposeAsync();
             }
         }
+
         private async IAsyncEnumerable<ConversationEvent> StreamCompletionAsync(
                 AiProvider provider,
                 AiModel model,

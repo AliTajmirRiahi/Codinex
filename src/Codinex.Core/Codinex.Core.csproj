@@ -115,6 +115,8 @@
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidator.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
     <Compile Include="Models\AgentContext.cs" />
+    <Compile Include="Models\AiError.cs" />
+    <Compile Include="Models\AiErrorCode.cs" />
     <Compile Include="Models\AiModel.cs" />
     <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\Attachment.cs" />
