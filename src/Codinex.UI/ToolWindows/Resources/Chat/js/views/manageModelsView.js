@@ -1,9 +1,10 @@
 /* 
  * path: Codinex\UI\ToolWindows\Resources\Chat\js\views\manageModelsView.js
  */
-import { $, addDefaultOption, togglePanelHidden, trigger } from '../utils/dom.js';
+import { $, togglePanelHidden } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
 import { validationService } from '../services/validationService.js';
+import { DropDownView } from '../views/dropDownView.js';
 
 /**
  * Manages the settings panel UI, including provider selection, 
@@ -14,6 +15,7 @@ export const manageModelsView = {
     state: {
         selectedModels: new Map(), // Stores full model objects to maintain 
         providers: [],
+        currentProviderId: '',
     },
     // We now store a pagination instance instead of raw pagination values
     pagination: new PaginationService([], 5),
@@ -58,7 +60,7 @@ export const manageModelsView = {
             };
             const provider = this.getSelectedProvider();
             const rules = [
-                { field: 'providerId', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'inline', target: '#provider-select' },
+                { field: 'providerId', validator: validationService.isSelected, message: 'Please select a provider.', mode: 'inline', target: '#provider-selector-btn' },
                 { field: 'selectedModels', validator: validationService.hasSelectedItems, message: 'Please select at least one model.', mode: 'inline', target: '#models-checkbox-list' },
             ];
 
@@ -102,10 +104,33 @@ export const manageModelsView = {
 
         this.state.providers = providers || [];
 
-        // Handle provider change to load respective models
-        select.addEventListener('change', (e) => {
+        if (!this.providerDropDown) {
+            this.providerDropDown = new DropDownView({
+                containerId: 'provider-dropdown-menu-container',
+                menuId: 'provider-dropdown',
+                menuButtonId: 'provider-selector-btn',
+                itemTemplate: (item, isActive) => {
+                    const option = document.createElement('div');
+                    option.className = `drop-option ${isActive ? 'active' : ''}`;
+                    option.dataset.value = item.id;
+
+                    option.innerHTML = `
+                        <div class="drop-info">
+                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon"></codinex-icon>
+                            <span>${item.name}</span>
+                        </div>`;
+                    return option;
+                },
+                onItemSelect: (provider) => {
+                    this.setSelectedProvider(provider.id);
+                    return true;
+                }
+            });
+        }
+
+        select.onchange = (e) => {
             const selectedId = e.target.value;
-            const provider = providers.find(p => p.id === selectedId);
+            const provider = this.state.providers.find(p => p.id === selectedId);
 
             this.renderProviderModels(provider);
 
@@ -114,31 +139,42 @@ export const manageModelsView = {
             } else {
                 togglePanelHidden('#model-pagination', false);
             }
-        });
+        };
 
-        select.innerHTML = '';
-        addDefaultOption(select, 'Select an AI Provider');
+        const selectedProvider = this.state.providers.find(p => p.id === currentProviderId);
+        this.providerDropDown.render(this.state.providers, selectedProvider ? selectedProvider.id : '');
 
-        providers.forEach(p => {
-            const option = document.createElement('option');
-            option.value = p.id;
-            option.textContent = p.name;
-
-            select.appendChild(option);
-
-            if (p.id === currentProviderId) {
-                option.selected = true;
-                trigger(select, 'change');
-            }
-
-        });
+        if (selectedProvider) {
+            this.setSelectedProvider(selectedProvider.id);
+        } else {
+            select.value = '';
+            this.state.currentProviderId = '';
+            this.setCurrentProviderName();
+        }
 
         if (!currentProviderId || currentProviderId == -1) {
             togglePanelHidden('#close-settings', false);
-            select.selectedIndex = 0;
             this.show()
         }
 
+    },
+
+    setSelectedProvider(providerId) {
+        const select = $('#provider-select');
+        if (!select) return;
+
+        select.value = providerId || '';
+        this.state.currentProviderId = select.value;
+        this.setCurrentProviderName();
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+
+    setCurrentProviderName() {
+        const providerName = $('#provider-name');
+        if (!providerName) return;
+
+        const provider = this.state.providers.find(p => p.id === this.state.currentProviderId);
+        providerName.textContent = provider ? provider.name : 'Select an AI Provider';
     },
 
     renderProviderModels(provider) {

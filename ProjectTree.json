@@ -2563,6 +2563,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/puzzle.svg",
+                                                                                                                 "name":  "puzzle.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/refresh-cw.svg",
                                                                                                                  "name":  "refresh-cw.svg",
                                                                                                                  "type":  "file"
@@ -2575,6 +2580,11 @@
                                                                                                              {
                                                                                                                  "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/send-horizontal.svg",
                                                                                                                  "name":  "send-horizontal.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/server.svg",
+                                                                                                                 "name":  "server.svg",
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
