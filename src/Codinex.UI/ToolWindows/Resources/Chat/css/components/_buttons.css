@@ -7,7 +7,7 @@
     justify-content: center;
     border: 0px solid var(--vs-border);
     border-radius: 4px;
-    color: white;
+    color: var(--vs-foreground);
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
     background-color: transparent;
