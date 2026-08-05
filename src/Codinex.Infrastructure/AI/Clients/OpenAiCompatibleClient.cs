@@ -44,7 +44,8 @@ namespace Codinex.Infrastructure.AI.Clients
 
             throw new OpenAiCompatibleException(
                 response.StatusCode,
-                body);
+                body,
+                response.Headers.RetryAfter?.Delta);
 
         }
 
@@ -74,7 +75,8 @@ namespace Codinex.Infrastructure.AI.Clients
 
             throw new OpenAiCompatibleException(
                 response.StatusCode,
-                body);
+                body,
+                response.Headers.RetryAfter?.Delta);
 
         }
 
@@ -104,7 +106,8 @@ namespace Codinex.Infrastructure.AI.Clients
 
                 throw new OpenAiCompatibleException(
                     response.StatusCode,
-                    body);
+                    body,
+                    response.Headers.RetryAfter?.Delta);
             }
 
             using var stream = await response.Content.ReadAsStreamAsync();

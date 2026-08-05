@@ -1,19 +1,16 @@
-﻿using System;
+using System;
 using System.Net;
 
 namespace Codinex.Infrastructure.CustomeExceptions;
-public sealed class OpenAiCompatibleException : Exception
+public sealed class OpenAiCompatibleException(
+    HttpStatusCode statusCode,
+    string responseBody,
+    TimeSpan? retryAfter = null)
+    : Exception(responseBody)
 {
-    public HttpStatusCode StatusCode { get; }
+    public HttpStatusCode StatusCode { get; } = statusCode;
 
-    public string ResponseBody { get; }
+    public string ResponseBody { get; } = responseBody;
 
-    public OpenAiCompatibleException(
-        HttpStatusCode statusCode,
-        string responseBody)
-        : base(responseBody)
-    {
-        StatusCode = statusCode;
-        ResponseBody = responseBody;
-    }
+    public TimeSpan? RetryAfter { get; } = retryAfter;
 }

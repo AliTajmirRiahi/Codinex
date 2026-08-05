@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
+using Codinex.Infrastructure.AI.Errors;
+using Codinex.Infrastructure.CustomeExceptions;
 using Codinex.Storage.Managers;
 
 namespace Codinex.Infrastructure.AI.Providers
@@ -37,40 +39,32 @@ namespace Codinex.Infrastructure.AI.Providers
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
-            var response = await PostAsync(
-                provider,
-                BuildChatPayload(model, prompt, false),
-                ct);
-
-            var json = jsonSerializer.Parse(response);
-
-            return json["message"]?["content"]?.ToString()
-                   ?? throw new HttpRequestException("No response content received from Ollama.");
-        }
-
-        public async IAsyncEnumerable<ConversationEvent> SendStreamAsync(
-            IReadOnlyList<ChatMessage> messages,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            var model = _providerManager.ActiveModel;
-            var provider = _providerManager.ActiveProvider;
-
-            if (provider == null || model == null)
-                throw new ArgumentException("Provider or Model is not configured correctly.");
-
-            await foreach (var item in StreamChatAsync(
-                               provider,
-                               model,
-                               messages,
-                               cancellationToken))
+            try
             {
-                yield return item;
+                var response = await PostAsync(
+                    provider,
+                    BuildChatPayload(model, prompt, false),
+                    ct);
+
+                var json = jsonSerializer.Parse(response);
+
+                return json["message"]?["content"]?.ToString()
+                       ?? throw new HttpRequestException("No response content received from Ollama.");
+            }
+            catch (Exception ex)
+            {
+                if (!AiErrorFactory.TryCreateExpected(ex, ct, out var error))
+                {
+                    throw;
+                }
+
+                return error.Message;
             }
         }
 
-        public async IAsyncEnumerable<ConversationEvent> ContinueAsync(
-            IReadOnlyList<ChatMessage> history,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public IAsyncEnumerable<ConversationEvent> SendStreamAsync(
+            IReadOnlyList<ChatMessage> messages,
+            CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
             var provider = _providerManager.ActiveProvider;
@@ -78,13 +72,82 @@ namespace Codinex.Infrastructure.AI.Providers
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
 
-            await foreach (var item in StreamChatAsync(
-                               provider,
-                               model,
-                               history,
-                               cancellationToken))
+            return MapExpectedErrors(
+                StreamChatAsync(
+                    provider,
+                    model,
+                    messages,
+                    cancellationToken),
+                cancellationToken);
+        }
+
+        public IAsyncEnumerable<ConversationEvent> ContinueAsync(
+            IReadOnlyList<ChatMessage> history,
+            CancellationToken cancellationToken = default)
+        {
+            var model = _providerManager.ActiveModel;
+            var provider = _providerManager.ActiveProvider;
+
+            if (provider == null || model == null)
+                throw new ArgumentException("Provider or Model is not configured correctly.");
+
+            return MapExpectedErrors(
+                StreamChatAsync(
+                    provider,
+                    model,
+                    history,
+                    cancellationToken),
+                cancellationToken);
+        }
+
+        private static async IAsyncEnumerable<ConversationEvent> MapExpectedErrors(
+            IAsyncEnumerable<ConversationEvent> events,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            var enumerator = events.GetAsyncEnumerator(cancellationToken);
+
+            try
             {
-                yield return item;
+                while (true)
+                {
+                    ConversationEvent current = null;
+                    AiError error = null;
+                    var hasCurrent = false;
+
+                    try
+                    {
+                        hasCurrent = await enumerator.MoveNextAsync();
+
+                        if (hasCurrent)
+                        {
+                            current = enumerator.Current;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!AiErrorFactory.TryCreateExpected(ex, cancellationToken, out error))
+                        {
+                            throw;
+                        }
+                    }
+
+                    if (error != null)
+                    {
+                        yield return AiErrorFactory.ToConversationEvent(error);
+                        yield break;
+                    }
+
+                    if (!hasCurrent)
+                    {
+                        yield break;
+                    }
+
+                    yield return current;
+                }
+            }
+            finally
+            {
+                await enumerator.DisposeAsync();
             }
         }
 
@@ -112,8 +175,12 @@ namespace Codinex.Infrastructure.AI.Providers
             {
                 var body = await response.Content.ReadAsStringAsync();
 
-                throw new HttpRequestException(
-                    $"Ollama request failed ({(int)response.StatusCode} {response.ReasonPhrase}): {body}");
+                yield return AiErrorFactory.ToConversationEvent(
+                    AiErrorFactory.FromHttpStatusCode(
+                        response.StatusCode,
+                        body,
+                        response.Headers.RetryAfter?.Delta));
+                yield break;
             }
 
             using var stream = await response.Content.ReadAsStreamAsync();
@@ -177,8 +244,10 @@ namespace Codinex.Infrastructure.AI.Providers
 
             var body = await response.Content.ReadAsStringAsync();
 
-            throw new HttpRequestException(
-                $"Ollama request failed ({(int)response.StatusCode} {response.ReasonPhrase}): {body}");
+            throw new OpenAiCompatibleException(
+                response.StatusCode,
+                body,
+                response.Headers.RetryAfter?.Delta);
         }
 
         private object BuildChatPayload(
