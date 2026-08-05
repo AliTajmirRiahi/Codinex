@@ -17,6 +17,7 @@ public static class WebViewMessageType
     public const string SelectChat = "SELECT_CHAT";
     public const string SelectGroup = "SELECT_GROUP";
     public const string NewChat = "NEW_CHAT";
+    public const string UpdateChat = "UPDATE_CHAT";
     public const string DeleteChat = "DELETE_CHAT";
     public const string NewGroup = "NEW_GROUP";
     public const string UpdateGroup = "UPDATE_GROUP";

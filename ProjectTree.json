@@ -1450,6 +1450,11 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
+                                                                                            "path":  "src/Codinex.Storage/Models/DTO/ChatUpdateDto.cs",
+                                                                                            "name":  "ChatUpdateDto.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "src/Codinex.Storage/Models/DTO/ConversationGroupCreateDto.cs",
                                                                                             "name":  "ConversationGroupCreateDto.cs",
                                                                                             "type":  "file"

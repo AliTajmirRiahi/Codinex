@@ -4,15 +4,16 @@
  * No business logic or AI communication should exist here.
  */
 
-import { $ } from '../utils/dom.js';
+import { $, togglePanelHidden } from '../utils/dom.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { getState } from '../state/appState.js';
 
 export const chatListView = {
 
-    initialize(onChatSelected, handleNewChat, handleDeleteChat) {
+    initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat) {
         this.handleNewChat = handleNewChat;
         this.handleDeleteChat = handleDeleteChat;
+        this.handleEditChat = handleEditChat;
         // Initialize
         this.modelDropDown = new DropDownView({
             containerId: 'chat-history-dropdown-menu-container',
@@ -44,11 +45,14 @@ export const chatListView = {
 
         const newChatBtn = $('#new-chat-btn');
         const deleteChatBtn = $('#delete-chat-btn');
+        const editChatBtn = $('#edit-chat-btn');
 
-        if (!newChatBtn || !deleteChatBtn) {
+        if (!newChatBtn || !deleteChatBtn || !editChatBtn) {
             throw new Error("ChatListView initialization failed: Missing required DOM elements.");
             return;
         }
+
+        this.initializeChatModal();
 
         deleteChatBtn.addEventListener('click', () => {
             var appState = getState();
@@ -56,6 +60,14 @@ export const chatListView = {
             if (appState.currentChat.isNewChat) return;
 
             this.handleDeleteChat(deleteChatBtn);
+        });
+
+        editChatBtn.addEventListener('click', () => {
+            var appState = getState();
+
+            if (!appState.currentChat || appState.currentChat.isNewChat) return;
+
+            this.showChatModal(appState.currentChat);
         });
 
         newChatBtn.addEventListener('click', () => {
@@ -66,10 +78,74 @@ export const chatListView = {
             this.handleSendMessage(newChatBtn);
         });
     },
+
+    initializeChatModal() {
+        const modal = $('#chat-management-modal');
+        const nameInput = $('#chat-modal-name');
+        const closeBtn = $('#close-chat-modal');
+        const cancelBtn = $('#cancel-chat-modal');
+        const saveBtn = $('#save-chat-modal');
+
+        if (!modal || !nameInput || !closeBtn || !cancelBtn || !saveBtn) {
+            throw new Error("ChatListView initialization failed: Missing chat modal DOM elements.");
+        }
+
+        this._editingChatId = null;
+
+        const closeModal = () => this.hideChatModal();
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        nameInput.addEventListener('input', () => {
+            if (nameInput.value.length > 25) {
+                nameInput.value = nameInput.value.substring(0, 25);
+            }
+        });
+
+        saveBtn.addEventListener('click', () => {
+            let name = nameInput.value.trim();
+
+            if (!name) {
+                nameInput.focus();
+                return;
+            }
+
+            if (name.length > 25) {
+                name = name.substring(0, 25);
+            }
+
+            const editingChatId = this._editingChatId;
+
+            this.hideChatModal();
+
+            if (editingChatId && this.handleEditChat) {
+                this.handleEditChat({ id: editingChatId, title: name });
+            }
+        });
+    },
+
+    showChatModal(chat) {
+        if (!chat || chat.isNewChat || chat.IsNewChat) return;
+
+        const nameInput = $('#chat-modal-name');
+
+        nameInput.value = (chat.title || chat.Title || '').substring(0, 25);
+        this._editingChatId = chat.id || chat.Id || null;
+
+        togglePanelHidden('#chat-management-modal', true);
+        nameInput.focus();
+    },
+
+    hideChatModal() {
+        this._editingChatId = null;
+        togglePanelHidden('#chat-management-modal', false);
+    },
+
     // updates current model name
     setCurrentChatName() {
         var appState = getState();
-        $('#chat-history-name').innerHTML = appState.currentChat.title;
+        $('#chat-history-name').textContent = appState.currentChat.title;
     },
 
     renderChatListMenu(items, selectedValue) {
@@ -91,7 +167,7 @@ export const chatListView = {
     },
 
     getChatDate(chat) {
-        const value = chat.updatedAt || chat.UpdatedAt || chat.createdAt || chat.CreatedAt;
+        const value = chat.createdAt || chat.CreatedAt;
 
         if (!value) return null;
 

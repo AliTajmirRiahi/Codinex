@@ -222,7 +222,7 @@ export const projectListView = {
     },
 
     getProjectDate(project) {
-        const value = project.updatedAt || project.UpdatedAt || project.createdAt || project.CreatedAt;
+        const value =  project.createdAt || project.CreatedAt;
 
         if (!value) return null;
 

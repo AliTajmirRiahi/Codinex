@@ -35,7 +35,7 @@ export function initChatController(transport) {
         composerController.handleContextClick(ctx);
     });
 
-    chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat);
+    chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat);
     projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject);
 
     function onModelSelected(model) {
@@ -119,6 +119,21 @@ export function initChatController(transport) {
     async function handleDeleteChat() {
         chatView.clearMessages();
         transport.send(EVENTS.DELETE_CHAT);
+    }
+
+    async function handleEditChat(chat) {
+        const state = getState();
+        const currentChat = state.currentChat;
+
+        if (!chat || !chat.title || !currentChat || currentChat.isNewChat) return;
+
+        const chatId = chat.id || currentChat.id;
+        if (!chatId) return;
+
+        transport.send(EVENTS.UPDATE_CHAT, {
+            chatId: chatId,
+            title: chat.title.substring(0, 25)
+        });
     }
 
     async function handleNewProject(project) {

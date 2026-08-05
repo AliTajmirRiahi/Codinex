@@ -79,6 +79,11 @@
                 <codinex-icon name="plus-circle"></codinex-icon>
             </button>
 
+            <!-- Button to edit the current active chat session -->
+            <button id="edit-chat-btn" class="toolbar-btn" title="Edit Chat">
+                <codinex-icon name="pencil"></codinex-icon>
+            </button>
+
             <!-- Button to delete the current active chat session -->
             <button id="delete-chat-btn" class="toolbar-btn danger" title="Delete Chat">
                 <codinex-icon name="trash-2"></codinex-icon>
@@ -188,6 +193,28 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Management Modal -->
+    <div id="chat-management-modal" class="modal hidden">
+        <div class="modal-content project-modal-content">
+            <div class="modal-header">
+                <h2>Edit Chat</h2>
+                <button id="close-chat-modal">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Chat Name</label>
+                    <input id="chat-modal-name" type="text" maxlength="25" placeholder="Chat Name">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-chat-modal" class="secondary-button">Cancel</button>
+                <button id="save-chat-modal" class="primary-button">Save Changes</button>
             </div>
         </div>
     </div>
