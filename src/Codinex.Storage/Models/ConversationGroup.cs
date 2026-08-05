@@ -16,6 +16,8 @@ public sealed class ConversationGroup
 
     public bool IsDefault { get; set; }
 
+    public bool IsSelected { get; set; }
+
     public string GetId()
     {
         return Id.ToString();

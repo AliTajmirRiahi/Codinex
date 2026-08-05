@@ -47,6 +47,10 @@ public sealed class ConversationGroupManager(
                 _groups.Add(group);
             }
         }
+
+        CurrentGroup = _groups.FirstOrDefault(g => g.IsSelected)
+            ?? _groups.FirstOrDefault(g => g.IsDefault)
+            ?? _groups.FirstOrDefault();
     }
 
     public Task<IReadOnlyList<ConversationGroup>> GetAllGroupsAsync()
@@ -66,13 +70,16 @@ public sealed class ConversationGroupManager(
         string name,
         string description)
     {
+        await DeselectAllGroupsAsync();
+
         var group = new ConversationGroup
         {
             Id = Guid.NewGuid(),
             Name = name,
             Description = description,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            IsSelected = true
         };
 
         var groupPath = StoragePaths.GetGroupPath(
@@ -100,7 +107,11 @@ public sealed class ConversationGroupManager(
 
         if (group != null)
         {
-            CurrentGroup = group;
+            if (CurrentGroup == null)
+            {
+                await SelectGroupAsync(group.Id);
+            }
+
             return group;
         }
 
@@ -115,7 +126,7 @@ public sealed class ConversationGroupManager(
         return group;
     }
 
-    public Task SelectGroupAsync(Guid groupId)
+    public async Task SelectGroupAsync(Guid groupId)
     {
         var group = _groups.FirstOrDefault(x => x.Id == groupId);
 
@@ -125,9 +136,20 @@ public sealed class ConversationGroupManager(
                 $"Conversation group '{groupId}' was not found.");
         }
 
-        CurrentGroup = group;
+        foreach (var item in _groups)
+        {
+            var shouldBeSelected = item.Id == groupId;
 
-        return Task.CompletedTask;
+            if (item.IsSelected == shouldBeSelected)
+            {
+                continue;
+            }
+
+            item.IsSelected = shouldBeSelected;
+            await SaveGroupAsync(item);
+        }
+
+        CurrentGroup = group;
     }
 
     public async Task UpdateGroupAsync(ConversationGroup group)
@@ -144,11 +166,7 @@ public sealed class ConversationGroupManager(
         current.Description = group.Description;
         current.UpdatedAt = DateTime.UtcNow;
 
-        await storageService.SaveAsync(
-            StoragePaths.GetGroupJsonPath(
-                WorkspaceName,
-                current.GetId()),
-            current);
+        await SaveGroupAsync(current);
     }
 
     public async Task DeleteGroupAsync(Guid groupId)
@@ -183,9 +201,32 @@ public sealed class ConversationGroupManager(
 
         if (isCurrentGroup)
         {
-            CurrentGroup = _groups.FirstOrDefault(g => g.IsDefault)
+            var nextGroup = _groups.FirstOrDefault(g => g.IsDefault)
                 ?? _groups.FirstOrDefault();
+
+            if (nextGroup != null)
+            {
+                await SelectGroupAsync(nextGroup.Id);
+            }
         }
+    }
+
+    private async Task DeselectAllGroupsAsync()
+    {
+        foreach (var group in _groups.Where(group => group.IsSelected))
+        {
+            group.IsSelected = false;
+            await SaveGroupAsync(group);
+        }
+    }
+
+    private Task SaveGroupAsync(ConversationGroup group)
+    {
+        return storageService.SaveAsync(
+            StoragePaths.GetGroupJsonPath(
+                WorkspaceName,
+                group.GetId()),
+            group);
     }
 
     private string WorkspaceName =>
