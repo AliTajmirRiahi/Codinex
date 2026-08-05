@@ -103,15 +103,22 @@
         </div>
 
         <!-- Container for displaying chat messages -->
-        <div id="chat-container" class="messages-container">
-            <div id="response-status" class="response-status hidden"></div>
-            <div id="response-loading" class="response-loading hidden">
-                <codinex-image name="linear-loading.svg"></codinex-image>
+        <div class="chat-message-list-wrapper">
+            <div id="floating-date-separator" class="floating-date-separator" aria-hidden="true">
+                <div class="floating-date-separator__inner">
+                    <span class="floating-date-separator__label"></span>
+                </div>
             </div>
-            <div id="error-box" class="codinex-error-box hidden">
-                <div class="codinex-error-box__title">Error</div>
-                <div class="codinex-error-box__message">
-                    There is some problem, please check output for details
+            <div id="chat-container" class="messages-container">
+                <div id="response-status" class="response-status hidden"></div>
+                <div id="response-loading" class="response-loading hidden">
+                    <codinex-image name="linear-loading.svg"></codinex-image>
+                </div>
+                <div id="error-box" class="codinex-error-box hidden">
+                    <div class="codinex-error-box__title">Error</div>
+                    <div class="codinex-error-box__message">
+                        There is some problem, please check output for details
+                    </div>
                 </div>
             </div>
         </div>

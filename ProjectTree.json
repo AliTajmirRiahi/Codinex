@@ -1883,6 +1883,11 @@
                                                                                                                                                            "type":  "file"
                                                                                                                                                        },
                                                                                                                                                        {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/views/floatingDateSeparatorView.js",
+                                                                                                                                                           "name":  "floatingDateSeparatorView.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
                                                                                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/views/manageModelsView.js",
                                                                                                                                                            "name":  "manageModelsView.js",
                                                                                                                                                            "type":  "file"
