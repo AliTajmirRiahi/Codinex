@@ -2548,6 +2548,16 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/ollama.svg",
+                                                                                                                 "name":  "ollama.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/openai.svg",
+                                                                                                                 "name":  "openai.svg",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codinex.UI/ToolWindows/Resources/Icons/pencil.svg",
                                                                                                                  "name":  "pencil.svg",
                                                                                                                  "type":  "file"

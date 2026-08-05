@@ -13,6 +13,9 @@ namespace Codinex.Core.Models
         // Display name of the provider
         public string Name { get; private set; }
 
+        // Icon name used by the UI to render the provider logo.
+        public string Icon { get; private set; }
+
         // Secret API key used for authentication
         public string ApiKey { get; private set; }
 
@@ -44,7 +47,7 @@ namespace Codinex.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string protocol, string baseUrl) : this(id, name, protocol, "", baseUrl, false, true, false, "/models", new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl, string icon = "") : this(id, name, protocol, icon, "", baseUrl, false, true, false, "/models", new List<AiModel>())
         {
 
         }
@@ -57,6 +60,7 @@ namespace Codinex.Core.Models
             string id,
             string name,
             string protocol,
+            string icon,
             string apiKey,
             string baseUrl,
             bool isEnabled,
@@ -80,6 +84,9 @@ namespace Codinex.Core.Models
             Id = id;
             Name = name;
             Protocol = protocol;
+            Icon = string.IsNullOrWhiteSpace(icon)
+                ? GetDefaultIcon(id, name, protocol)
+                : icon;
             ApiKey = apiKey ?? "";
             BaseUrl = baseUrl ?? "";
             IsEnabled = isEnabled;
@@ -91,6 +98,20 @@ namespace Codinex.Core.Models
 
             _models = models ?? new List<AiModel>();
         }
+
+        private static string GetDefaultIcon(string id, string name, string protocol)
+        {
+            if (string.Equals(id, "ollama", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(protocol, "ollama", StringComparison.OrdinalIgnoreCase))
+                return "ollama";
+
+            if (string.Equals(id, "openai", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(id, "openAI", StringComparison.OrdinalIgnoreCase))
+                return "openai";
+
+            return "puzzle";
+        }
+
         /// <summary>
         /// Updates the API key securely.
         /// </summary>
