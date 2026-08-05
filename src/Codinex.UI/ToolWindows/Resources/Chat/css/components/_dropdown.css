@@ -237,9 +237,10 @@
 .col-date {
     font-size: 0.75rem;
     color: var(--vs-descriptionForeground);
-    min-width: 70px;
+    min-width: 120px;
     text-align: right;
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 

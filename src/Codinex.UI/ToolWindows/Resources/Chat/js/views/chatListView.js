@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ChatView
  * Responsible only for rendering UI elements.
  * No business logic or AI communication should exist here.
@@ -23,10 +23,15 @@ export const chatListView = {
                 option.className = `drop-option ${isActive ? 'active' : ''}`;
                 option.dataset.value = item.id;
 
+                const chatDate = this.formatChatDateTime(item);
+
                 option.innerHTML = `
-                    <div class="drop-info">
-                        <codinex-icon name="message-circle-check" class="chat-icon"></codinex-icon>
-                        <span>${item.title}</span>
+                    <div class="drop-row">
+                        <div class="col-main">
+                            <codinex-icon name="message-circle-check" class="chat-icon"></codinex-icon>
+                            <span class="chat-title">${this.escapeHtml(item.title)}</span>
+                        </div>
+                        <span class="col-date">${chatDate}</span>
                     </div>`;
                 return option;
             },
@@ -68,8 +73,52 @@ export const chatListView = {
     },
 
     renderChatListMenu(items, selectedValue) {
-        this.modelDropDown.render(items, selectedValue);
+        const sortedItems = this.sortChatsByDateDesc(items);
+
+        this.modelDropDown.render(sortedItems, selectedValue);
         this.setCurrentChatName();
+    },
+
+    sortChatsByDateDesc(items) {
+        if (!Array.isArray(items)) return [];
+
+        return [...items].sort((a, b) => {
+            const dateA = this.getChatDate(a);
+            const dateB = this.getChatDate(b);
+
+            return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
+        });
+    },
+
+    getChatDate(chat) {
+        const value = chat.updatedAt || chat.UpdatedAt || chat.createdAt || chat.CreatedAt;
+
+        if (!value) return null;
+
+        const date = new Date(value);
+
+        return isNaN(date.getTime()) ? null : date;
+    },
+
+    formatChatDateTime(chat) {
+        const date = this.getChatDate(chat);
+
+        if (!date) return '';
+
+        return date.toLocaleString([], {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    },
+
+    escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value || '';
+
+        return div.innerHTML;
     },
 
     handleSendMessage(input) {

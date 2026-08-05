@@ -23,10 +23,15 @@ export const projectListView = {
                 option.className = `drop-option ${isActive ? 'active' : ''}`;
                 option.dataset.value = item.id;
 
+                const projectDate = this.isDefaultProject(item) ? '' : this.formatProjectDateTime(item);
+
                 option.innerHTML = `
-                    <div class="drop-info">
-                        <codinex-icon name="folder" class="chat-icon"></codinex-icon>
-                        <span>${item.name}</span>
+                    <div class="drop-row">
+                        <div class="col-main">
+                            <codinex-icon name="folder" class="chat-icon"></codinex-icon>
+                            <span class="chat-title">${this.escapeHtml(item.name)}</span>
+                        </div>
+                        <span class="col-date">${projectDate}</span>
                     </div>`;
                 return option;
             },
@@ -190,7 +195,60 @@ export const projectListView = {
     },
 
     renderProjectListMenu(items, selectedValue) {
-        this.projectDropDown.render(items, selectedValue);
+        const sortedItems = this.sortProjectsByDateDesc(items);
+
+        this.projectDropDown.render(sortedItems, selectedValue);
         this.setCurrentProjectName();
+    },
+
+    sortProjectsByDateDesc(items) {
+        if (!Array.isArray(items)) return [];
+
+        const defaultProjects = items.filter((item) => this.isDefaultProject(item));
+        const projects = items.filter((item) => !this.isDefaultProject(item));
+
+        projects.sort((a, b) => {
+            const dateA = this.getProjectDate(a);
+            const dateB = this.getProjectDate(b);
+
+            return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
+        });
+
+        return [...defaultProjects, ...projects];
+    },
+
+    isDefaultProject(project) {
+        return !!(project && (project.isDefault || project.IsDefault));
+    },
+
+    getProjectDate(project) {
+        const value = project.updatedAt || project.UpdatedAt || project.createdAt || project.CreatedAt;
+
+        if (!value) return null;
+
+        const date = new Date(value);
+
+        return isNaN(date.getTime()) ? null : date;
+    },
+
+    formatProjectDateTime(project) {
+        const date = this.getProjectDate(project);
+
+        if (!date) return '';
+
+        return date.toLocaleString([], {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    },
+
+    escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value || '';
+
+        return div.innerHTML;
     },
 }
