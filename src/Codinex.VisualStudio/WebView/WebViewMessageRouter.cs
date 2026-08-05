@@ -211,6 +211,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     await EnsureActiveChatSessionAsync();
                     return;
                 }
+            case WebViewMessageType.UpdateChat:
+                {
+                    var payload = _payloadBinder.Bind<ChatUpdateDto>(request.Payload);
+
+                    await UpdateChatSessionAsync(payload);
+                    return;
+                }
             case WebViewMessageType.DeleteChat:
                 {
                     await DeleteChatSessionAsync();
@@ -663,6 +670,53 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         var message = new WebViewMessageResponse
         {
             Type = WebViewMessageType.NewChat,
+            Payload = new
+            {
+                Chats = new
+                {
+                    ChatList = chatList,
+                    Current = currentChat
+                },
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task UpdateChatSessionAsync(ChatUpdateDto payload)
+    {
+        if (payload == null || string.IsNullOrWhiteSpace(payload.ChatId))
+            return;
+
+        var title = string.IsNullOrWhiteSpace(payload.Title)
+            ? string.Empty
+            : payload.Title.Trim();
+
+        if (string.IsNullOrWhiteSpace(title))
+            return;
+
+        if (title.Length > 25)
+            title = title.Substring(0, 25);
+
+        var chat = await _chatManager.LoadChatAsync(payload.ChatId);
+
+        if (chat == null || chat.IsNewChat)
+            return;
+
+        await _chatManager.UpdateChatTitleAsync(payload.ChatId, title);
+
+        var chatList = await _chatManager.GetAllChatsAsync();
+        var currentChat = await _chatManager.LoadChatAsync(_sessionService.ActiveSession.SessionId);
+
+        await SendChatTitleChangedMessageAsync(chatList, currentChat);
+    }
+
+    private async Task SendChatTitleChangedMessageAsync(object chatList, object currentChat)
+    {
+        var message = new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.ChatTitleChanged,
             Payload = new
             {
                 Chats = new

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -72,6 +72,23 @@ namespace Codinex.Storage.Managers
             var path = GetChatPath(chat.Id);
 
             await storage.SaveAsync(path, chat);
+        }
+
+        /// <summary>
+        /// Updates a chat session title
+        /// </summary>
+        public async Task<ChatSessionDocument> UpdateChatTitleAsync(string chatId, string title)
+        {
+            var chat = await LoadChatAsync(chatId);
+
+            if (chat == null)
+                return null;
+
+            chat.Title = title;
+
+            await SaveChatAsync(chat);
+
+            return chat;
         }
 
         /// <summary>
