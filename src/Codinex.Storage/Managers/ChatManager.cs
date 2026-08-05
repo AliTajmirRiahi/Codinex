@@ -33,8 +33,11 @@ namespace Codinex.Storage.Managers
                 ProviderId = providerId,
                 ModelId = modelId,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                IsSelected = true
             };
+
+            await DeselectAllChatsAsync();
 
             await SaveChatAsync(doc);
 
@@ -126,6 +129,45 @@ namespace Codinex.Storage.Managers
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
+
+        /// <summary>
+        /// Selects the active chat session and deselects all other chats in the current project.
+        /// </summary>
+        public async Task SelectChatAsync(string chatId)
+        {
+            if (string.IsNullOrWhiteSpace(chatId))
+                throw new ArgumentException("Chat id is required.", nameof(chatId));
+
+            var chats = await GetAllChatsAsync();
+            var selectedChat = chats.FirstOrDefault(chat =>
+                string.Equals(chat.Id, chatId, StringComparison.OrdinalIgnoreCase));
+
+            if (selectedChat == null)
+                throw new InvalidOperationException($"Chat session '{chatId}' was not found.");
+
+            foreach (var chat in chats)
+            {
+                var shouldBeSelected = string.Equals(chat.Id, chatId, StringComparison.OrdinalIgnoreCase);
+
+                if (chat.IsSelected == shouldBeSelected)
+                    continue;
+
+                chat.IsSelected = shouldBeSelected;
+                await SaveChatAsync(chat);
+            }
+        }
+
+        private async Task DeselectAllChatsAsync()
+        {
+            var chats = await GetAllChatsAsync();
+
+            foreach (var chat in chats.Where(chat => chat.IsSelected))
+            {
+                chat.IsSelected = false;
+                await SaveChatAsync(chat);
+            }
+        }
+
         /// <summary>
         /// Returns the last N messages for AI context
         /// </summary>

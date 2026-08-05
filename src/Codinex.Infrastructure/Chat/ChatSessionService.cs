@@ -1,4 +1,4 @@
-﻿using Codinex.Storage;
+using Codinex.Storage;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +33,14 @@ namespace Codinex.Infrastructure.Chat
         public async Task InitializeAsync()
         {
             var chats = await chatManager.GetAllChatsAsync();
+
+            var selectedChat = chats.FirstOrDefault(c => c.IsSelected);
+
+            if (selectedChat != null)
+            {
+                await LoadSessionAsync(selectedChat.Id);
+                return;
+            }
 
             var emptyChat = chats.FirstOrDefault(c => c.Messages == null || !c.Messages.Any());
 
@@ -71,6 +79,8 @@ namespace Codinex.Infrastructure.Chat
         /// <returns>A task that represents the asynchronous operation of loading the session.</returns>
         public async Task LoadSessionAsync(string sessionId)
         {
+            await chatManager.SelectChatAsync(sessionId);
+
             var session = new ChatSession(chatManager);
 
             await session.LoadAsync(sessionId);
