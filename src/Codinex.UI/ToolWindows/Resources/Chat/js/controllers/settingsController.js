@@ -1,6 +1,7 @@
 import { $ } from '../utils/dom.js';
 import { EVENTS } from '../constants/events.js';
 import { DropDownView } from '../views/dropDownView.js';
+import { validationService } from '../services/validationService.js';
 
 export function initSettingsController(transport) {
     const settingsButton = $('#settings-btn');
@@ -13,6 +14,7 @@ export function initSettingsController(transport) {
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const preprocessorProviderSelect = $('#setting-preprocessor-provider');
     const preprocessorProviderButton = $('#setting-preprocessor-provider-selector-btn');
+    const preprocessorProviderWrapper = preprocessorProviderButton?.closest('.provider-selector-wrapper');
     const preprocessorProviderName = $('#setting-preprocessor-provider-name');
     const tabs = Array.from(document.querySelectorAll('.settings-tab'));
     const panels = Array.from(document.querySelectorAll('.settings-tab-panel'));
@@ -98,7 +100,15 @@ export function initSettingsController(transport) {
             });
         }
 
-        preprocessorProviderButton.disabled = localProviders.length === 0;
+        const isPreprocessorProviderDisabled = localProviders.length === 0 || !enablePreprocessorAiInput?.checked;
+        preprocessorProviderButton.disabled = isPreprocessorProviderDisabled;
+        preprocessorProviderButton.classList.toggle('disable', isPreprocessorProviderDisabled);
+        preprocessorProviderWrapper?.classList.toggle('disable', isPreprocessorProviderDisabled);
+
+        if (isPreprocessorProviderDisabled) {
+            preprocessorProviderDropDown.hide();
+        }
+
         preprocessorProviderDropDown.render(localProviders, selectedProviderId);
         setSelectedPreprocessorProvider(selectedProviderId);
     };
@@ -155,16 +165,48 @@ export function initSettingsController(transport) {
     closeButton?.addEventListener('click', closeSettingsModal);
     cancelButton?.addEventListener('click', closeSettingsModal);
     saveButton?.addEventListener('click', () => {
-        currentSettings = {
-            ...currentSettings,
-            autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
-            enableStreamingChat: !!enableStreamingChatInput?.checked,
+        const data = {
             enablePreprocessorAi: !!enablePreprocessorAiInput?.checked,
             preprocessorAiProviderId: preprocessorProviderSelect?.value || '',
         };
 
+        validationService.clearInlineError('#setting-preprocessor-provider-selector-btn');
+
+        const validation = validationService.validate(data, {
+            rules: [
+                {
+                    field: 'preprocessorAiProviderId',
+                    validator: (value, formData) => !formData.enablePreprocessorAi || validationService.isSelected(value),
+                    message: 'Please select an AI model.',
+                    mode: 'inline',
+                    target: '#setting-preprocessor-provider-selector-btn',
+                },
+            ],
+        });
+
+        if (!validation.valid) {
+            const firstError = validation.errors[0];
+
+            if (firstError?.field === 'preprocessorAiProviderId') {
+                selectTab('prompt-preprocessor');
+            }
+
+            validationService.showErrors(validation.errors);
+            return;
+        }
+
+        currentSettings = {
+            ...currentSettings,
+            autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
+            enableStreamingChat: !!enableStreamingChatInput?.checked,
+            enablePreprocessorAi: data.enablePreprocessorAi,
+            preprocessorAiProviderId: data.preprocessorAiProviderId,
+        };
+
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);
     });
+
+    enablePreprocessorAiInput?.addEventListener('change', renderLocalProviders);
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {

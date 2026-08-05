@@ -272,17 +272,28 @@
     border-radius: 8px;
 }
 
+.provider-selector-wrapper.disable {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 .provider-selector-btn {
     width: 100%;
     justify-content: space-between;
 }
 
-#provider-dropdown.com-dropdown {
+#provider-dropdown.com-dropdown,
+#setting-preprocessor-provider-dropdown.com-dropdown {
     top: calc(100% + 4px);
     left: 0;
     right: 0;
     flex-direction: column;
     min-width: 100%;
+}
+
+#provider-dropdown-menu-container,
+#setting-preprocessor-provider-dropdown-menu-container {
+    width: 100%;
 }
 
 codinex-icon.chat-icon,
