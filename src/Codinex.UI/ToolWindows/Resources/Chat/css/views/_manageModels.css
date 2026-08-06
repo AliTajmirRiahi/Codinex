@@ -14,7 +14,8 @@
         background: var(--vs-button-bg);
     }
 
-    .model-item input[type="checkbox"] {
+    .model-item input[type="checkbox"],
+    .model-item input[type="radio"] {
         appearance: none;
         width: 18px;
         height: 18px;
@@ -26,11 +27,17 @@
         background: transparent;
     }
 
-    .model-item:hover input[type="checkbox"] {
+    .model-item input[type="radio"] {
+        border-radius: 50%;
+    }
+
+    .model-item:hover input[type="checkbox"],
+    .model-item:hover input[type="radio"] {
         border: 2px solid var(--vs-access-tool-tip-color);
     }
 
-    .model-item input[type="checkbox"]:checked {
+    .model-item input[type="checkbox"]:checked,
+    .model-item input[type="radio"]:checked {
         background: var(--vs-button-background);
         border-color: var(--vs-access-tool-tip-color);
     }
@@ -42,4 +49,15 @@
             font-size: 14px;
             left: 2px;
             top: -2px;
+        }
+
+        .model-item input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--vs-foreground);
+            left: 3px;
+            top: 3px;
         }

@@ -362,6 +362,22 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="setting-preprocessor-model-list-container" class="model-selection-area">
+                                <div class="model-list-header">
+                                    <label>Available Models</label>
+                                </div>
+                                <input id="setting-preprocessor-model" type="hidden" value="">
+                                <div id="setting-preprocessor-models-list" class="checkbox-list">
+                                    <!-- Dynamic: Filled based on Local Provider -->
+                                </div>
+
+                                <div id="setting-preprocessor-model-pagination" class="pagination-controls hidden">
+                                    <button id="setting-preprocessor-prev-page" class="pager-btn" disabled>&lt; Prev</button>
+                                    <span id="setting-preprocessor-page-info">Page 1 of 1</span>
+                                    <button id="setting-preprocessor-next-page" class="pager-btn">Next &gt;</button>
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -468,7 +484,6 @@
                         <input id="model-api-key" type="text" placeholder="sx-...">
                     </div>
 
-                    <button id="btn-show-add-custom" class="link-button">+ Add Custom Model</button>
                 </div>
 
 

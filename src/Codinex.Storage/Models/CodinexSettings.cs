@@ -13,5 +13,8 @@ namespace Codinex.Storage.Models
 
         // Local provider id used by the prompt preprocessor.
         public string PreprocessorAiProviderId { get; set; } = string.Empty;
+
+        // Local model id used by the prompt preprocessor.
+        public string PreprocessorAiModelId { get; set; } = string.Empty;
     }
 }

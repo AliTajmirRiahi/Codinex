@@ -273,10 +273,11 @@
     border-radius: 8px;
 }
 
-.provider-selector-wrapper.disable {
-    opacity: 0.35;
-    cursor: not-allowed;
-}
+    .provider-selector-wrapper.disable,
+    .model-selection-area.disable {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
 
 .provider-selector-btn {
     width: 100%;
