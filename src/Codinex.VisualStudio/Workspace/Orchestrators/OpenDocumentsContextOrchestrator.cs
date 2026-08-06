@@ -19,7 +19,12 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IOpenDocumentsFormatter openDocumentsFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public string Name => "open_documents_context";
+
+        public string Description => "Provides information about the currently open documents.";
+
         public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
+
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,
             CancellationToken cancellationToken)

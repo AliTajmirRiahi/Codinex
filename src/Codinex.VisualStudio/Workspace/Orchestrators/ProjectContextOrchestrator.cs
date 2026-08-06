@@ -18,6 +18,10 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IProjectContextFormatter projectContextFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public string Name => "project_context";
+
+        public string Description => "Provides project information as workspace context.";
+
         public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
 
         public async Task<ContextProviderResult> GetContextAsync(

@@ -19,6 +19,13 @@ namespace Codinex.Core.Workspace.Prompt
     /// </summary>
     public interface IWorkspaceContextOrchestrator
     {
+        /// <summary>
+        /// Gets the unique workspace context orchestrator name.
+        /// </summary>
+        string Name { get; }
+
+        string Description { get; }
+
         WorkspaceContextVisibility Visibility { get; }
 
         Task<ContextProviderResult> GetContextAsync(

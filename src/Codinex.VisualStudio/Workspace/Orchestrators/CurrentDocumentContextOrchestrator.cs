@@ -20,6 +20,10 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IReferenceContextFormatter referenceContextFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public string Name => "current_document_context";
+
+        public string Description => "Provides the active document as workspace context.";
+
         public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
 
         public async Task<ContextProviderResult> GetContextAsync(

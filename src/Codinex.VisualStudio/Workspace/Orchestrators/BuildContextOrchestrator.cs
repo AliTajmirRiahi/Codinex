@@ -16,7 +16,11 @@ public sealed class BuildContextOrchestrator(
     IBuildContextFormatter buildContextFormatter)
     : IWorkspaceContextOrchestrator
 {
-    public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug; 
+    public string Name => "build_context";
+
+    public string Description => "Provides build output and related build context for the workspace.";
+
+    public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
 
     public async Task<ContextProviderResult> GetContextAsync(
         WorkspaceContextRequest request,
