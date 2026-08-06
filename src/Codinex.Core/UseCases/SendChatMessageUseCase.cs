@@ -53,14 +53,12 @@ public sealed class SendChatMessageUseCase(
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
 
-            // Add user message to session
-            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
-
-
             // Send to provider
             var aiResult = await _aiProvider.SendAsync(buildResult.Messages);
 
-            // Save assistant message
+            // Persist the exchange only after a successful AI response.
+            // Provider errors must not be saved into message history.
+            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
             chatSession.AddAssistantMessage(aiResult);
 
             // Save session
@@ -104,6 +102,8 @@ public sealed class SendChatMessageUseCase(
 
         var fullText = string.Empty;
 
+        ChatMessageBuildResult buildResult = null;
+
         try
         {
             // Get last 10 messages for context
@@ -120,10 +120,7 @@ public sealed class SendChatMessageUseCase(
                     workspaceRequest,
                     cancellationToken);
 
-            var buildResult = chatMessageBuilder.Build(request, promptContext);
-
-            //Add user message to session
-            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
+            buildResult = chatMessageBuilder.Build(request, promptContext);
 
             // Accumulate the full assistant text while chunks arrive.
             await foreach (var evt in conversationEngine.ExecuteAsync(
@@ -153,12 +150,23 @@ public sealed class SendChatMessageUseCase(
                                 evt.DisplayMessage));
 
                         continue;
+
+                    case ConversationEventType.ConversationFailed:
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.Error,
+                                evt.DisplayMessage));
+
+                        return;
                 }
             }
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Persist the final assistant answer.
+            // Persist the exchange only after a successful AI response.
+            // Provider errors must not be saved into message history.
+            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
             chatSession.AddAssistantMessage(fullText);
 
             // Save session
@@ -187,8 +195,9 @@ public sealed class SendChatMessageUseCase(
         {
             var titleChanged = false;
 
-            if (!string.IsNullOrWhiteSpace(fullText))
+            if (!string.IsNullOrWhiteSpace(fullText) && buildResult != null)
             {
+                chatSession.AddUserMessage(request.DraftText, buildResult.Context);
                 chatSession.AddAssistantMessage(fullText);
                 titleChanged = await chatSession.SaveAsync();
             }
