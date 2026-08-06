@@ -251,9 +251,13 @@ namespace Codinex.Infrastructure.AI.Providers
 
                 var obj = jsonSerializer.Parse(json);
 
-                var choices = obj["choices"];
+                if (TryCreateProviderErrorEvent(obj, out var providerErrorEventError))
+                {
+                    yield return providerErrorEventError;
+                    yield break;
+                }
 
-                if (choices is not JArray array || array.Count == 0)
+                if (obj["choices"] is not JArray array || array.Count == 0)
                 {
                     continue;
                 }
@@ -301,6 +305,12 @@ namespace Codinex.Infrastructure.AI.Providers
 
                 if (!string.IsNullOrWhiteSpace(content))
                 {
+                    if (TryCreateProviderErrorEvent(content, out var providerErrorEvent))
+                    {
+                        yield return providerErrorEvent;
+                        yield break;
+                    }
+
                     yield return ConversationEvent.TextDelta(content);
                 }
             }
@@ -594,6 +604,61 @@ namespace Codinex.Infrastructure.AI.Providers
         private static string FormatPercentage(double value)
         {
             return value.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+
+        private static bool TryCreateProviderErrorEvent(
+            JToken token,
+            out ConversationEvent providerErrorEvent)
+        {
+            providerErrorEvent = null;
+
+            if (token == null)
+            {
+                return false;
+            }
+
+            var error = token["error"] ?? token["Error"];
+
+            if (error == null)
+            {
+                return false;
+            }
+
+            providerErrorEvent = AiErrorFactory.ToConversationEvent(
+                AiErrorFactory.FromProviderErrorBody(
+                    token.ToString(Newtonsoft.Json.Formatting.None)));
+
+            return true;
+        }
+
+        private static bool TryCreateProviderErrorEvent(
+            string content,
+            out ConversationEvent providerErrorEvent)
+        {
+            providerErrorEvent = null;
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return false;
+            }
+
+            var trimmedContent = content.Trim();
+
+            if (!trimmedContent.StartsWith("{") && !trimmedContent.StartsWith("["))
+            {
+                return false;
+            }
+
+            try
+            {
+                return TryCreateProviderErrorEvent(
+                    JToken.Parse(trimmedContent),
+                    out providerErrorEvent);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static JObject ParseArguments(string arguments)

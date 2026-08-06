@@ -73,8 +73,9 @@ export function createMessageDispatcher(handlers) {
                 break;
 
             case EVENTS.ERROR:
-                // Fixed the typo from the original bridge.js (Ppayload -> payload)
-                if (handlers.onError) handlers.onError(payload.Message || payload);
+                // Keep the full error payload so the chat controller can extract
+                // the user-facing message from AiError/provider error shapes.
+                if (handlers.onError) handlers.onError(payload);
                 break;
 
             default:

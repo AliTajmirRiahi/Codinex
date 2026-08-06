@@ -7,6 +7,7 @@ using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Codinex.Infrastructure.AI.Providers;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace Codinex.Infrastructure.Conversation
         IJsonSerializer jsonSerializer)
         : IConversationEngine
     {
+        private const int MaxAttempts = 5;
+
         public async IAsyncEnumerable<ConversationEvent> ExecuteAsync(
             ChatMessageBuildResult request,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -36,7 +39,7 @@ namespace Codinex.Infrastructure.Conversation
 
             await foreach (var evt in ProcessEvents(
                                history,
-                               provider.SendStreamAsync(
+                               () => provider.SendStreamAsync(
                                    history,
                                    cancellationToken),
                                cancellationToken))
@@ -50,80 +53,118 @@ namespace Codinex.Infrastructure.Conversation
         /// </summary>
         private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
             List<ChatMessage> history,
-            IAsyncEnumerable<ConversationEvent> events,
+            Func<IAsyncEnumerable<ConversationEvent>> createEvents,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            await foreach (var evt in events.WithCancellation(cancellationToken))
+            ConversationEvent originalFailureEvent = null;
+
+            for (var attempt = 1; attempt <= MaxAttempts; attempt++)
             {
-                switch (evt.Type)
+                ConversationEvent retryFailureEvent = null;
+
+                await foreach (var evt in createEvents().WithCancellation(cancellationToken))
                 {
-                    case ConversationEventType.ToolRequested:
+                    if (evt.Type == ConversationEventType.ConversationFailed
+                        && TryGetAiError(evt, out var error)
+                        && ShouldRetry(error))
+                    {
+                        originalFailureEvent ??= evt;
 
-                        var payload = evt.Payload.ToObject<ToolRequestedPayload>();
-
-                        var assistantMessage = payload.AssistantMessage;
-
-                        history.Add(assistantMessage);
-
-                        var results = new List<ToolResult>();
-
-                        foreach (var toolRequest in payload.Requests)
+                        if (attempt >= MaxAttempts)
                         {
-                            var tool = toolRegistry.Get(toolRequest.Name);
+                            yield return originalFailureEvent;
+                            yield break;
+                        }
 
-                            var statusMessage = GetStatusMessage(tool, toolRequest);
+                        retryFailureEvent = evt;
+                        break;
+                    }
 
-                            if (!string.IsNullOrWhiteSpace(statusMessage))
+                    switch (evt.Type)
+                    {
+                        case ConversationEventType.ToolRequested:
+
+                            var payload = evt.Payload.ToObject<ToolRequestedPayload>();
+
+                            var assistantMessage = payload.AssistantMessage;
+
+                            history.Add(assistantMessage);
+
+                            var results = new List<ToolResult>();
+
+                            foreach (var toolRequest in payload.Requests)
                             {
-                                yield return ConversationEvent.Status(statusMessage);
+                                var tool = toolRegistry.Get(toolRequest.Name);
+
+                                var statusMessage = GetStatusMessage(tool, toolRequest);
+
+                                if (!string.IsNullOrWhiteSpace(statusMessage))
+                                {
+                                    yield return ConversationEvent.Status(statusMessage);
+                                }
+
+                                var result = await tool.ExecuteAsync(
+                                    toolRequest,
+                                    cancellationToken);
+
+                                results.Add(result);
+
+                                history.Add(new ChatMessage
+                                {
+                                    Role = "tool",
+                                    ToolCallId = result.Id,
+                                    Content = jsonSerializer.Serialize(result.Data),
+                                });
+
+                                yield return ConversationEvent.ToolCompleted(result);
                             }
 
-                            var result = await tool.ExecuteAsync(
-                                toolRequest,
-                                cancellationToken);
+                            var provider = aiProviderRouter.GetCurrentProvider();
 
-                            results.Add(result);
-
-                            history.Add(new ChatMessage
-                            {
-                                Role = "tool",
-                                ToolCallId = result.Id,
-                                Content = jsonSerializer.Serialize(result.Data),
-                            });
-
-                            yield return ConversationEvent.ToolCompleted(result);
-                        }
-
-                        var provider = aiProviderRouter.GetCurrentProvider();
-
-                        await foreach (var continuationEvent in ProcessEvents(
-                                           history,
-                                           provider.ContinueAsync(
+                            await foreach (var continuationEvent in ProcessEvents(
                                                history,
-                                               cancellationToken),
-                                           cancellationToken))
-                        {
-                            yield return continuationEvent;
-                        }
+                                               () => provider.ContinueAsync(
+                                                   history,
+                                                   cancellationToken),
+                                               cancellationToken))
+                            {
+                                yield return continuationEvent;
+                            }
 
-                        break;
+                            break;
 
-                    case ConversationEventType.Unknown:
-                    case ConversationEventType.TextDelta:
-                    case ConversationEventType.ThinkingStarted:
-                    case ConversationEventType.ThinkingUpdated:
-                    case ConversationEventType.ThinkingCompleted:
-                    case ConversationEventType.ToolCompleted:
-                    case ConversationEventType.ConversationCompleted:
-                    case ConversationEventType.ConversationCancelled:
-                    case ConversationEventType.ConversationFailed:
-                    case ConversationEventType.StatusChanged:
-                    default:
+                        case ConversationEventType.Unknown:
+                        case ConversationEventType.TextDelta:
+                        case ConversationEventType.ThinkingStarted:
+                        case ConversationEventType.ThinkingUpdated:
+                        case ConversationEventType.ThinkingCompleted:
+                        case ConversationEventType.ToolCompleted:
+                        case ConversationEventType.ConversationCompleted:
+                        case ConversationEventType.ConversationCancelled:
+                        case ConversationEventType.ConversationFailed:
+                        case ConversationEventType.StatusChanged:
+                        default:
 
-                        yield return evt;
+                            yield return evt;
 
-                        break;
+                            break;
+                    }
                 }
+
+                if (retryFailureEvent == null)
+                {
+                    yield break;
+                }
+
+                var retryAttempt = attempt;
+
+                yield return ConversationEvent.Status($"Retrying connection ({retryAttempt}/{MaxAttempts})...");
+
+                var retryDelay = GetRetryDelay(
+                    retryFailureEvent.Payload.ToObject<AiError>(),
+                    retryAttempt);
+
+                await Task.Delay(retryDelay, cancellationToken);
             }
         }
 
@@ -140,12 +181,7 @@ namespace Codinex.Infrastructure.Conversation
 
             var detail = GetStatusDetail(request);
 
-            if (string.IsNullOrWhiteSpace(detail))
-            {
-                return statusMessage;
-            }
-
-            return $"{statusMessage} ({detail})";
+            return string.IsNullOrWhiteSpace(detail) ? statusMessage : $"{statusMessage} ({detail})";
         }
 
         private static string GetStatusDetail(ToolRequest request)
@@ -168,6 +204,56 @@ namespace Codinex.Infrastructure.Conversation
             }
 
             return string.Empty;
+        }
+
+        private static bool TryGetAiError(
+            ConversationEvent evt,
+            out AiError error)
+        {
+            error = null;
+
+            if (evt.Payload == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                error = evt.Payload.ToObject<AiError>();
+
+                return error != null;
+            }
+            catch (JsonException)
+            {
+                return false;
+            }
+        }
+
+        private static bool ShouldRetry(AiError error)
+        {
+            if (error is not { IsRetryable: true })
+            {
+                return false;
+            }
+
+            return error.Code switch
+            {
+                AiErrorCode.Network or AiErrorCode.Timeout or AiErrorCode.ProviderUnavailable
+                    or AiErrorCode.RateLimitExceeded => true,
+                _ => false
+            };
+        }
+
+        private static TimeSpan GetRetryDelay(
+            AiError error,
+            int retryAttempt)
+        {
+            if (error?.RetryAfter is { } retryAfter && retryAfter > TimeSpan.Zero)
+            {
+                return retryAfter;
+            }
+
+            return TimeSpan.FromSeconds(Math.Pow(2, retryAttempt - 1));
         }
 
         private static string GetPathDisplayName(string path)

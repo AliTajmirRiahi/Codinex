@@ -17,6 +17,59 @@ import { ComposerController } from '../controllers/composerController.js';
 let activeStreamMessage = null;
 let accumulatedText = '';
 
+function getErrorMessage(payload) {
+    if (!payload) return STATICS.GENERIC_CHAT_ERROR;
+
+    if (typeof payload === 'string') {
+        const trimmedPayload = payload.trim();
+
+        if (!trimmedPayload) return STATICS.GENERIC_CHAT_ERROR;
+
+        if (trimmedPayload.startsWith('{') || trimmedPayload.startsWith('[')) {
+            try {
+                return getErrorMessage(JSON.parse(trimmedPayload));
+            } catch {
+                return trimmedPayload;
+            }
+        }
+
+        return trimmedPayload;
+    }
+
+    if (typeof payload !== 'object') {
+        return String(payload);
+    }
+
+    const directMessage = payload.displayMessage
+        || payload.DisplayMessage
+        || payload.message
+        || payload.Message;
+
+    if (directMessage) {
+        return getErrorMessage(directMessage);
+    }
+
+    const nestedPayload = payload.payload || payload.Payload;
+
+    if (nestedPayload) {
+        return getErrorMessage(nestedPayload);
+    }
+
+    const providerError = payload.error || payload.Error;
+
+    if (providerError) {
+        return getErrorMessage(providerError);
+    }
+
+    const details = payload.details || payload.Details || payload.detail || payload.Detail;
+
+    if (details) {
+        return getErrorMessage(details);
+    }
+
+    return STATICS.GENERIC_CHAT_ERROR;
+}
+
 /**
  * Initialize chat controller
  * @param {Object} transport - Communication transport with VS extension host
@@ -284,10 +337,19 @@ export function initChatController(transport) {
             chatView.updateMessage(activeStreamMessage, payload);
         },
         handleAIError: (payload) => {
-            // Show AI Error
+            // Show AI errors through the dedicated error UI instead of rendering
+            // structured provider payloads as chat messages.
             setLoading(false);
             chatView.clearStatus();
-            chatView.appendErrorMessage(payload);
+
+            if (activeStreamMessage && activeStreamMessage.parentElement) {
+                activeStreamMessage.parentElement.remove();
+            }
+
+            activeStreamMessage = null;
+            accumulatedText = '';
+
+            chatView.appendErrorMessage(getErrorMessage(payload));
         },
         navigateToChat: () => {
             chatView.clearMessages();
