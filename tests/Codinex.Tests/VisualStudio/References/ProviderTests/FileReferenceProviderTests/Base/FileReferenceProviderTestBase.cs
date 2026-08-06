@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using EnvDTE80;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,6 +15,7 @@ public abstract class FileReferenceProviderTestBase
     protected IVisualStudioServices VisualStudioServices = null!;
     protected IWorkspaceContext WorkspaceContext = null!;
     protected IWorkspaceFileService WorkspaceFileService = null!;
+    protected ISourceFileElementService SourceFileElementService = null!;
     protected IUiThreadDispatcher UiThreadDispatcher = null!;
 
     protected DTE2 Dte = null!;
@@ -26,6 +27,7 @@ public abstract class FileReferenceProviderTestBase
         WorkspaceContext = Substitute.For<IWorkspaceContext>();
         //FileSystem = Substitute.For<IFileSystem>();
         WorkspaceFileService = Substitute.For<IWorkspaceFileService>(); 
+        SourceFileElementService = Substitute.For<ISourceFileElementService>();
         UiThreadDispatcher = Substitute.For<IUiThreadDispatcher>();
 
         Dte = Substitute.For<DTE2>();
@@ -51,6 +53,7 @@ public abstract class FileReferenceProviderTestBase
             VisualStudioServices,
             WorkspaceContext,
             WorkspaceFileService,
+            SourceFileElementService,
             UiThreadDispatcher);
     }
 

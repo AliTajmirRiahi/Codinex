@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,11 +19,13 @@ namespace Codinex.VisualStudio.References.Providers
         IVisualStudioServices visualStudio,
         IWorkspaceContext workspaceContext ,
         IWorkspaceFileService workspaceFileService,
+        ISourceFileElementService sourceFileElementService,
         IUiThreadDispatcher uiThreadDispatcher)
         : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
         private readonly IWorkspaceFileService _workspaceFileService = workspaceFileService;
+        private readonly ISourceFileElementService _sourceFileElementService = sourceFileElementService;
         private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
 
         public sealed class FileIconInfo
@@ -163,18 +165,6 @@ namespace Codinex.VisualStudio.References.Providers
 
             if (!string.IsNullOrEmpty(filePath) && _workspaceFileService.Exists(filePath))
             {
-                var content = string.Empty;
-
-                try
-                {
-                    /* Read file content safely for metadata context */
-                    content = _workspaceFileService.Read(filePath);
-                }
-                catch
-                {
-                    /* Fallback to empty string if file is locked or inaccessible */
-                }
-
                 return new ReferenceItem
                 {
                     Id = $"file:{Guid.NewGuid()}",
@@ -183,19 +173,56 @@ namespace Codinex.VisualStudio.References.Providers
                     Type = ReferenceKind.File,
                     Value = filePath,
                     Icon = iconForFile.Icon,
-                    Metadata = new ReferenceMetadata
-                    {
-                        FilePath = filePath,
-                        ContainerName = Path.GetDirectoryName(filePath),
-                        ProjectName = _workspaceContext.SolutionName,
-                        Content = content,
-                    }
+                    Metadata = BuildFileMetadata(
+                        filePath,
+                        _workspaceContext.SolutionName)
                 };
             }
 
             await Task.CompletedTask;
 
             return null;
+        }
+
+        private ReferenceMetadata BuildFileMetadata(
+            string filePath,
+            string projectName)
+        {
+            var metadata = new ReferenceMetadata
+            {
+                FilePath = filePath,
+                ContainerName = Path.GetDirectoryName(filePath),
+                ProjectName = projectName,
+                Elements = []
+            };
+
+            try
+            {
+                var outline = _sourceFileElementService.GetFileOutline(filePath);
+
+                if (outline == null)
+                {
+                    return metadata;
+                }
+
+                metadata.Signature = outline.Language;
+                metadata.Elements = outline.Elements
+                    .OrderBy(e => e.Order)
+                    .Select(e => new ReferenceElement
+                    {
+                        Id = e.Id,
+                        Kind = e.Kind,
+                        Name = e.Name,
+                        Signature = e.Signature
+                    })
+                    .ToArray();
+            }
+            catch
+            {
+                metadata.Elements = [];
+            }
+
+            return metadata;
         }
 
         private void ProcessProjectItems(ProjectItems projectItems, List<ReferenceItem> items)
@@ -213,18 +240,6 @@ namespace Codinex.VisualStudio.References.Providers
                     var fileName = Path.GetFileName(filePath);
                     var iconForFile = GetIconForFile(fileName);
 
-                    var content = string.Empty;
-
-                    try
-                    {
-                        /* Read file content safely for metadata context */
-                        content = _workspaceFileService.Read(filePath);
-                    }
-                    catch
-                    {
-                        /* Fallback to empty string if file is locked or inaccessible */
-                    }
-
                     items.Add(new ReferenceItem
                     {
                         Id = $"file:{Guid.NewGuid()}",
@@ -233,13 +248,9 @@ namespace Codinex.VisualStudio.References.Providers
                         Type = ReferenceKind.File,
                         Icon = iconForFile.Icon,
                         Value = filePath,
-                        Metadata = new ReferenceMetadata
-                        {
-                            FilePath = filePath,
-                            ContainerName = Path.GetDirectoryName(filePath),
-                            ProjectName = item.ContainingProject?.Name ?? string.Empty,
-                            Content = content,
-                        }
+                        Metadata = BuildFileMetadata(
+                            filePath,
+                            item.ContainingProject?.Name ?? string.Empty)
                     });
                 }
 

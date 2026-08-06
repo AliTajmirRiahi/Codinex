@@ -44,7 +44,16 @@ namespace Codinex.Core.Models
         public string Signature { get; set; }
         public string Body { get; set; }
         public string Content { get; set; }
+        public IReadOnlyList<ReferenceElement> Elements { get; set; } = [];
         public int? StartLine { get; set; }
         public int? EndLine { get; set; }
+    }
+
+    public sealed class ReferenceElement
+    {
+        public string Id { get; set; }
+        public string Kind { get; set; }
+        public string Name { get; set; }
+        public string Signature { get; set; }
     }
 }

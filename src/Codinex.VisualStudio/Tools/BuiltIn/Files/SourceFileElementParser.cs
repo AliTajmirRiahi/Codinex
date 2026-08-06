@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Codinex.VisualStudio.Models;
 
 namespace Codinex.VisualStudio.Tools.BuiltIn.Files;
 
@@ -1288,17 +1289,3 @@ internal static class SourceFileElementParser
     }
 }
 
-internal sealed class SourceFileElement
-{
-    public string Id { get; set; }
-
-    public string Kind { get; set; }
-
-    public string Name { get; set; }
-
-    public string Signature { get; set; }
-
-    public string Source { get; set; }
-
-    public int Order { get; set; }
-}

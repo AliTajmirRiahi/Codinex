@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Codinex.VisualStudio.Interfaces;
-using Codinex.VisualStudio.Models;
 
 namespace Codinex.VisualStudio.Tools.BuiltIn.Files;
 
@@ -20,8 +17,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Files;
 /// </summary>
 [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class ReadElementTool(
-    IWorkspaceFileService workspaceFileService,
-    IWorkspaceSearchService workspaceSearchService)
+    ISourceFileElementService sourceFileElementService)
     : IAiTool
 {
     public string Name => "read_element";
@@ -54,34 +50,25 @@ public sealed class ReadElementTool(
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var elementId = request.GetRequiredString("elementId");
-            var files = GetSupportedSourceFiles();
+            var element = sourceFileElementService.FindElement(elementId);
 
-            foreach (var file in files)
+            if (element == null)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var content = await workspaceFileService.ReadAsync(file.FullPath, cancellationToken);
-                var element = SourceFileElementParser.Parse(file.RelativePath, content)
-                    .FirstOrDefault(e => e.Id.Equals(elementId, StringComparison.Ordinal));
-
-                if (element == null)
-                {
-                    continue;
-                }
-
-                return ToolResult.Successful(
+                return ToolResult.Failed(
                     request.Id,
-                    new
-                    {
-                        id = element.Id,
-                        source = element.Source
-                    });
+                    $"No element matching id '{elementId}' was found.");
             }
 
-            return ToolResult.Failed(
+            return ToolResult.Successful(
                 request.Id,
-                $"No element matching id '{elementId}' was found.");
+                new
+                {
+                    id = element.Id,
+                    source = element.Source
+                });
         }
         catch (Exception ex)
         {
@@ -91,13 +78,4 @@ public sealed class ReadElementTool(
         }
     }
 
-    private IReadOnlyList<WorkspaceFile> GetSupportedSourceFiles()
-    {
-        return SourceFileElementParser.SupportedExtensions
-            .SelectMany(extension => workspaceSearchService.FindByExtension(extension))
-            .Where(file => SourceFileElementParser.IsSupported(file.RelativePath))
-            .GroupBy(file => file.FullPath, StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .ToArray();
-    }
 }

@@ -28,7 +28,7 @@ public sealed class ReadFileTool(
 
     public string StatusMessage => "Reading file...";
 
-    public ToolVisibility Visibility { get; } = ToolVisibility.Model;
+    public ToolVisibility Visibility { get; } = ToolVisibility.Debug;
 
 
     public ToolDefinition Definition { get; } =
