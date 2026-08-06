@@ -63,6 +63,7 @@
     <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
+    <Compile Include="Interfaces\IAiPreprocessorProvider.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
     <Compile Include="Interfaces\IBuildContextProvider.cs" />
     <Compile Include="Interfaces\IDiagnosticsFormatter.cs" />
@@ -115,6 +116,8 @@
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeValidator.cs" />
     <Compile Include="Models\ActiveDocumentChangedEventArgs.cs" />
     <Compile Include="Models\AgentContext.cs" />
+    <Compile Include="Models\AiPreprocessorResult.cs" />
+    <Compile Include="Models\AiPreprocessorResultParser.cs" />
     <Compile Include="Models\AiError.cs" />
     <Compile Include="Models\AiErrorCode.cs" />
     <Compile Include="Models\AiModel.cs" />

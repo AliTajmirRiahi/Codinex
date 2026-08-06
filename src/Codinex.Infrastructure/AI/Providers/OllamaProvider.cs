@@ -15,6 +15,7 @@ using Codinex.Core.Models;
 using Codinex.Infrastructure.AI.Errors;
 using Codinex.Infrastructure.CustomeExceptions;
 using Codinex.Storage.Managers;
+using Codinex.Storage.Models;
 
 namespace Codinex.Infrastructure.AI.Providers
 {
@@ -24,17 +25,28 @@ namespace Codinex.Infrastructure.AI.Providers
     public class OllamaProvider(
         IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
+        SettingsManager settingsManager,
         IHttpService httpService)
-        : IAiProvider
+        : IAiPreprocessorProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
+        private readonly SettingsManager _settingsManager = settingsManager;
+
+        public async Task<AiPreprocessorResult> PreprocessAsync(
+            IReadOnlyList<ChatMessage> messages,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await SendAsync(messages, cancellationToken);
+
+            return AiPreprocessorResultParser.ParseOrDefault(response);
+        }
 
         public async Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompt,
             CancellationToken ct = default)
         {
-            var model = _providerManager.ActiveModel;
-            var provider = _providerManager.ActiveProvider;
+            var provider = GetProvider();
+            var model = GetModel(provider);
 
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
@@ -66,8 +78,8 @@ namespace Codinex.Infrastructure.AI.Providers
             IReadOnlyList<ChatMessage> messages,
             CancellationToken cancellationToken = default)
         {
-            var model = _providerManager.ActiveModel;
-            var provider = _providerManager.ActiveProvider;
+            var provider = GetProvider();
+            var model = GetModel(provider);
 
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
@@ -85,8 +97,8 @@ namespace Codinex.Infrastructure.AI.Providers
             IReadOnlyList<ChatMessage> history,
             CancellationToken cancellationToken = default)
         {
-            var model = _providerManager.ActiveModel;
-            var provider = _providerManager.ActiveProvider;
+            var provider = GetProvider();
+            var model = GetModel(provider);
 
             if (provider == null || model == null)
                 throw new ArgumentException("Provider or Model is not configured correctly.");
@@ -348,6 +360,57 @@ namespace Codinex.Infrastructure.AI.Providers
             }
 
             return request;
+        }
+
+        private AiProvider GetProvider()
+        {
+            var activeProvider = _providerManager.ActiveProvider;
+
+            if (activeProvider?.IsLocal == true)
+            {
+                return activeProvider;
+            }
+
+            var settings = _settingsManager.Settings;
+
+            if (settings?.EnablePreprocessorAi != true ||
+                string.IsNullOrWhiteSpace(settings.PreprocessorAiProviderId))
+            {
+                return null;
+            }
+
+            return _providerManager.Providers
+                .FirstOrDefault(x =>
+                    x?.IsLocal == true &&
+                    string.Equals(x.Id, settings.PreprocessorAiProviderId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private AiModel GetModel(AiProvider provider)
+        {
+            if (provider == null)
+            {
+                return null;
+            }
+
+            var activeProvider = _providerManager.ActiveProvider;
+
+            if (activeProvider?.IsLocal == true &&
+                string.Equals(activeProvider.Id, provider.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                return provider.Models?.FirstOrDefault(x => x.IsCurrent)
+                       ?? provider.Models?.FirstOrDefault(x => x.IsSelected);
+            }
+
+            var settings = _settingsManager.Settings;
+
+            if (settings?.EnablePreprocessorAi == true &&
+                !string.IsNullOrWhiteSpace(settings.PreprocessorAiModelId))
+            {
+                return provider.Models?.FirstOrDefault(x =>
+                    string.Equals(x.Id, settings.PreprocessorAiModelId, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return null;
         }
 
         private static string NormalizeRole(string role)

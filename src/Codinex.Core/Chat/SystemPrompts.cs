@@ -22,5 +22,7 @@ namespace Codinex.Core.Chat
                                                      ## Every turn
                                                      End with either a final response or one or more tool calls. Never leave a turn empty or silent.
                                                      """;
+
+        public const string PreprocessorSystemPrompt = "";
     }
 }

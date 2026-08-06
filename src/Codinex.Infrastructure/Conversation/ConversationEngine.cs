@@ -6,6 +6,7 @@ using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,23 +18,68 @@ namespace Codinex.Infrastructure.Conversation
 {
     [AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
     public sealed class ConversationEngine(
-        IChatMessageBuilder chatMessageBuilder,
         IAiProviderRouter aiProviderRouter,
         IAiToolRegistry toolRegistry,
         IJsonSerializer jsonSerializer)
         : IConversationEngine
     {
         private const int MaxAttempts = 5;
+        private const string PreprocessorMetadataPrefix = "Preprocessor Metadata:";
+
+        public async Task<string> ExecuteTextAsync(
+            ChatMessageBuildResult request,
+            CancellationToken cancellationToken = default)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            var history = request.Messages.ToList();
+            var provider = aiProviderRouter.GetCurrentProvider();
+            var preprocessing = await PreprocessAsync(
+                request,
+                history,
+                cancellationToken);
+
+            if (preprocessing.IsDirectAnswer)
+            {
+                return preprocessing.DirectResponse ?? string.Empty;
+            }
+
+            return await provider.SendAsync(
+                history,
+                cancellationToken);
+        }
 
         public async IAsyncEnumerable<ConversationEvent> ExecuteAsync(
             ChatMessageBuildResult request,
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             yield return ConversationEvent.Status("Sending request...");
 
             var history = request.Messages.ToList();
-
             var provider = aiProviderRouter.GetCurrentProvider();
+            var preprocessing = await PreprocessAsync(
+                request,
+                history,
+                cancellationToken);
+
+            if (preprocessing.IsDirectAnswer)
+            {
+                if (!string.IsNullOrEmpty(preprocessing.DirectResponse))
+                {
+                    yield return ConversationEvent.TextDelta(preprocessing.DirectResponse);
+                }
+
+                yield return ConversationEvent.Completed();
+                yield break;
+            }
 
             await foreach (var evt in ProcessEvents(
                                history,
@@ -44,6 +90,108 @@ namespace Codinex.Infrastructure.Conversation
             {
                 yield return evt;
             }
+        }
+
+        private async Task<PreprocessingOutcome> PreprocessAsync(
+            ChatMessageBuildResult request,
+            List<ChatMessage> history,
+            CancellationToken cancellationToken)
+        {
+            var preprocessorProvider = aiProviderRouter.GetCurrentPreprocessorProvider();
+
+            if (preprocessorProvider == null)
+            {
+                return PreprocessingOutcome.Forward();
+            }
+
+            var result = await preprocessorProvider.PreprocessAsync(
+                history,
+                cancellationToken);
+
+            if (result == null)
+            {
+                return PreprocessingOutcome.Forward();
+            }
+
+            request.Context.PreprocessorResult = result;
+            ApplyPreprocessorResult(history, result);
+
+            if (result.IsAnswer)
+            {
+                return PreprocessingOutcome.Answer(result.Response);
+            }
+
+            if (result.IsForward)
+            {
+                AddPreprocessorMetadata(history, result);
+            }
+
+            return PreprocessingOutcome.Forward();
+        }
+
+        private static void ApplyPreprocessorResult(
+            IReadOnlyList<ChatMessage> messages,
+            AiPreprocessorResult result)
+        {
+            var context = messages?
+                .LastOrDefault(x => string.Equals(x.Role, "user", StringComparison.OrdinalIgnoreCase) && x.Context != null)
+                ?.Context;
+
+            if (context != null)
+            {
+                context.PreprocessorResult = result;
+            }
+        }
+
+        private static void AddPreprocessorMetadata(
+            List<ChatMessage> history,
+            AiPreprocessorResult result)
+        {
+            if (history.Any(IsPreprocessorMetadataMessage))
+            {
+                return;
+            }
+
+            var insertionIndex = 0;
+
+            while (insertionIndex < history.Count && IsSystemMessage(history[insertionIndex]))
+            {
+                insertionIndex++;
+            }
+
+            history.Insert(
+                insertionIndex,
+                CreatePreprocessorMetadataMessage(result));
+        }
+
+        private static ChatMessage CreatePreprocessorMetadataMessage(AiPreprocessorResult result)
+        {
+            var metadata = new JObject
+            {
+                ["action"] = "forward",
+                ["user"] = result.User,
+                ["needsPlanner"] = result.NeedsPlanner,
+                ["needsWorkspaceContext"] = result.NeedsWorkspaceContext,
+                ["contextsNeeded"] = new JArray(result.ContextsNeeded ?? new List<string>()),
+                ["toolsNeeded"] = new JArray(result.ToolsNeeded ?? new List<string>())
+            };
+
+            return new ChatMessage
+            {
+                Role = "system",
+                Content = PreprocessorMetadataPrefix + Environment.NewLine + metadata.ToString(Formatting.None)
+            };
+        }
+
+        private static bool IsPreprocessorMetadataMessage(ChatMessage message)
+        {
+            return IsSystemMessage(message) &&
+                   message.Content?.StartsWith(PreprocessorMetadataPrefix, StringComparison.OrdinalIgnoreCase) == true;
+        }
+
+        private static bool IsSystemMessage(ChatMessage message)
+        {
+            return string.Equals(message?.Role, "system", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -270,6 +418,27 @@ namespace Codinex.Infrastructure.Conversation
             return lastSeparatorIndex >= 0
                 ? normalizedPath.Substring(lastSeparatorIndex + 1)
                 : normalizedPath;
+        }
+
+        private sealed class PreprocessingOutcome
+        {
+            public bool IsDirectAnswer { get; private set; }
+
+            public string DirectResponse { get; private set; }
+
+            public static PreprocessingOutcome Forward()
+            {
+                return new PreprocessingOutcome();
+            }
+
+            public static PreprocessingOutcome Answer(string response)
+            {
+                return new PreprocessingOutcome
+                {
+                    IsDirectAnswer = true,
+                    DirectResponse = response
+                };
+            }
         }
     }
 }

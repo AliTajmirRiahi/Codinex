@@ -19,6 +19,8 @@ namespace Codinex.Core.Models
 
         public PromptProfileResult PromptProfile { get; set; }
 
+        public AiPreprocessorResult PreprocessorResult { get; set; }
+
         public static ChatMessageRequestContext CreateChatMessageRequestContextWithoutMetaData(ChatMessageRequestContext context)
         {
             var selectedReferences = (new List<ReferenceItem>(context.SelectedReferences));
@@ -30,7 +32,8 @@ namespace Codinex.Core.Models
                 SelectedCommand = context.SelectedCommand,
                 SelectedAgent = context.SelectedAgent,
                 SelectedReferences = selectedReferences,
-                PromptProfile = context.PromptProfile
+                PromptProfile = context.PromptProfile,
+                PreprocessorResult = context.PreprocessorResult
             };
         }
     }

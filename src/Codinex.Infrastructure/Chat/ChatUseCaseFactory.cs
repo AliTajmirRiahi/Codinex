@@ -35,9 +35,9 @@ namespace Codinex.Infrastructure.Chat
             var session = sessionService.ActiveSession
                           ?? throw new InvalidOperationException("No active chat session.");
 
-            var aiProvider = aiProviderRouter.GetCurrentProvider();
+            _ = aiProviderRouter.GetCurrentProvider();
 
-            return new SendChatMessageUseCase(aiProvider, session, errorHandler, chatMessageBuilder, conversationEngine, workspaceContextBuilder);
+            return new SendChatMessageUseCase(session, errorHandler, chatMessageBuilder, conversationEngine, workspaceContextBuilder);
         }
     }
 

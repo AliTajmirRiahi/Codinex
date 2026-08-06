@@ -242,6 +242,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IAiPreprocessorProvider.cs",
+                                                                       "name":  "IAiPreprocessorProvider.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Interfaces/IAiProvider.cs",
                                                                        "name":  "IAiProvider.cs",
                                                                        "type":  "file"
@@ -583,8 +588,28 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Models/AiError.cs",
+                                                                       "name":  "AiError.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/AiErrorCode.cs",
+                                                                       "name":  "AiErrorCode.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Models/AiModel.cs",
                                                                        "name":  "AiModel.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/AiPreprocessorResult.cs",
+                                                                       "name":  "AiPreprocessorResult.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/AiPreprocessorResultParser.cs",
+                                                                       "name":  "AiPreprocessorResultParser.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -891,6 +916,16 @@
                                                                                     }
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Infrastructure/AI/Errors",
+                                                                       "name":  "Errors",
+                                                                       "type":  "folder",
+                                                                       "children":  {
+                                                                                        "path":  "src/Codinex.Infrastructure/AI/Errors/AiErrorFactory.cs",
+                                                                                        "name":  "AiErrorFactory.cs",
+                                                                                        "type":  "file"
+                                                                                    }
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Infrastructure/AI/Filters",
                                                                        "name":  "Filters",
                                                                        "type":  "folder",
@@ -933,11 +968,6 @@
                                                                                             "type":  "file"
                                                                                         }
                                                                                     ]
-                                                                   },
-                                                                   {
-                                                                       "path":  "src/Codinex.Infrastructure/AI/AiProviderRouter.cs",
-                                                                       "name":  "AiProviderRouter.cs",
-                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -2861,6 +2891,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.VisualStudio/Interfaces/ISourceFileElementService.cs",
+                                                                       "name":  "ISourceFileElementService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.VisualStudio/Interfaces/IVisualStudioServices.cs",
                                                                        "name":  "IVisualStudioServices.cs",
                                                                        "type":  "file"
@@ -2991,6 +3026,16 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.VisualStudio/Models/SourceFileElement.cs",
+                                                                       "name":  "SourceFileElement.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/Models/SourceFileOutline.cs",
+                                                                       "name":  "SourceFileOutline.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.VisualStudio/Models/WorkspaceFile.cs",
                                                                        "name":  "WorkspaceFile.cs",
                                                                        "type":  "file"
@@ -3094,6 +3139,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.VisualStudio/Services/SourceFileElementService.cs",
+                                                                       "name":  "SourceFileElementService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.VisualStudio/Services/VsOutputWindowService.cs",
                                                                        "name":  "VsOutputWindowService.cs",
                                                                        "type":  "file"
@@ -3176,11 +3226,28 @@
                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files",
                                                                                             "name":  "Files",
                                                                                             "type":  "folder",
-                                                                                            "children":  {
-                                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files/ReadFileTool.cs",
-                                                                                                             "name":  "ReadFileTool.cs",
-                                                                                                             "type":  "file"
-                                                                                                         }
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files/GetFileElementsTool.cs",
+                                                                                                                 "name":  "GetFileElementsTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files/ReadElementTool.cs",
+                                                                                                                 "name":  "ReadElementTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files/ReadFileTool.cs",
+                                                                                                                 "name":  "ReadFileTool.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Files/SourceFileElementParser.cs",
+                                                                                                                 "name":  "SourceFileElementParser.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             }
+                                                                                                         ]
                                                                                         },
                                                                                         {
                                                                                             "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Git",

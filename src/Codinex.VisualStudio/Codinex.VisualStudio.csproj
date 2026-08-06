@@ -57,6 +57,7 @@
     <Compile Include="Hosting\Startup\ExecutionPipeline.cs" />
     <Compile Include="Interfaces\IBuildService.cs" />
     <Compile Include="Interfaces\IResourceServer.cs" />
+    <Compile Include="Interfaces\ISourceFileElementService.cs" />
     <Compile Include="Interfaces\IWebViewClient.cs" />
     <Compile Include="Interfaces\IWebViewMessageRouter.cs" />
     <Compile Include="Interfaces\IVsOutputLogger.cs" />
@@ -68,6 +69,8 @@
     <Compile Include="Logging\VsOutputLogger.cs" />
     <Compile Include="Models\BuildResult.cs" />
     <Compile Include="Models\OutputPaneInfo.cs" />
+    <Compile Include="Models\SourceFileElement.cs" />
+    <Compile Include="Models\SourceFileOutline.cs" />
     <Compile Include="Models\Tools\ListDirectory\DirectoryEntry.cs" />
     <Compile Include="Models\Tools\ListDirectory\ListDirectoryRequest.cs" />
     <Compile Include="Models\Tools\ListDirectory\ListDirectoryResponse.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="References\ReferenceManager.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Services\BuildService.cs" />
+    <Compile Include="Services\SourceFileElementService.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
     <Compile Include="Services\WorkspaceIgnoreService.cs" />
@@ -100,6 +104,9 @@
     <Compile Include="Tools\BuiltIn\Build\BuildProjectTool.cs" />
     <Compile Include="Tools\BuiltIn\Build\BuildSolutionTool.cs" />
     <Compile Include="Tools\BuiltIn\Diagnostics\GetDiagnosticsTool.cs" />
+    <Compile Include="Tools\BuiltIn\Files\GetFileElementsTool.cs" />
+    <Compile Include="Tools\BuiltIn\Files\ReadElementTool.cs" />
+    <Compile Include="Tools\BuiltIn\Files\SourceFileElementParser.cs" />
     <Compile Include="Tools\BuiltIn\Projects\GetProjectsTool.cs" />
     <Compile Include="Tools\BuiltIn\OpenDocuments\GetOpenDocumentsTool.cs" />
     <Compile Include="Tools\BuiltIn\Memory\ForgetMemoryTool.cs" />
