@@ -18,6 +18,10 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IDiagnosticsFormatter diagnosticsFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public string Name => "diagnostics_context";
+
+        public string Description => "Provides workspace diagnostics as prompt context.";
+
         public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
 
         public async Task<ContextProviderResult> GetContextAsync(

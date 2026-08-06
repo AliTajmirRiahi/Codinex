@@ -18,6 +18,10 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
         IMemoryContextFormatter memoryFormatter)
         : IWorkspaceContextOrchestrator
     {
+        public string Name => "memory_context";
+
+        public string Description => "Provides workspace memory as prompt context.";
+
         public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
 
         public async Task<ContextProviderResult> GetContextAsync(
