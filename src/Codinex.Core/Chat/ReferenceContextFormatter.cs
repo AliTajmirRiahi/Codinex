@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
@@ -42,12 +43,36 @@ namespace Codinex.Core.Chat
                 sb.AppendLine($"Description: {reference.Description}");
             }
 
-            if (string.IsNullOrWhiteSpace(reference.Metadata.Content)) return sb.ToString().TrimEnd();
+            AppendElements(sb, reference);
+
+            if (reference.Metadata.Elements?.Any() == true || string.IsNullOrWhiteSpace(reference.Metadata.Content)) return sb.ToString().TrimEnd();
 
             sb.AppendLine("Content:");
             sb.AppendLine(reference.Metadata.Content);
 
             return sb.ToString().TrimEnd();
+        }
+
+        private static void AppendElements(StringBuilder sb, ReferenceItem reference)
+        {
+            if (reference.Metadata.Elements?.Any() != true)
+            {
+                return;
+            }
+
+            sb.AppendLine("Elements:");
+
+            foreach (var element in reference.Metadata.Elements)
+            {
+                sb.AppendLine($"- id: {element.Id}");
+                sb.AppendLine($"  kind: {element.Kind}");
+                sb.AppendLine($"  name: {element.Name}");
+
+                if (!string.IsNullOrWhiteSpace(element.Signature))
+                {
+                    sb.AppendLine($"  signature: {element.Signature}");
+                }
+            }
         }
 
         private static string FormatSymbol(ReferenceItem reference, string kindName)

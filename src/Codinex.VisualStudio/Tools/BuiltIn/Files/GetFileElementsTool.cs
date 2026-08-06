@@ -19,8 +19,8 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Files;
 /// </summary>
 [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class GetFileElementsTool(
-    IWorkspaceFileService workspaceFileService,
-    IWorkspaceSearchService workspaceSearchService)
+    IWorkspaceSearchService workspaceSearchService,
+    ISourceFileElementService sourceFileElementService)
     : IAiTool
 {
     public string Name => "get_file_elements";
@@ -77,23 +77,22 @@ public sealed class GetFileElementsTool(
 
             var file = files[0];
 
-            if (!SourceFileElementParser.IsSupported(file.RelativePath))
+            if (!sourceFileElementService.IsSupported(file.RelativePath))
             {
                 return ToolResult.Failed(
                     request.Id,
                     $"Unsupported source file type '{file.Name}'.");
             }
 
-            var content = await workspaceFileService.ReadAsync(file.FullPath, cancellationToken);
-            var elements = SourceFileElementParser.Parse(file.RelativePath, content);
+            var outline = sourceFileElementService.GetFileOutline(file.FullPath, file.RelativePath);
 
             return ToolResult.Successful(
                 request.Id,
                 new
                 {
-                    file = SourceFileElementParser.NormalizePath(file.RelativePath),
-                    language = SourceFileElementParser.GetLanguage(file.RelativePath),
-                    elements = elements
+                    file = outline.File,
+                    language = outline.Language,
+                    elements = outline.Elements
                         .OrderBy(e => e.Order)
                         .Select(e => new
                         {
