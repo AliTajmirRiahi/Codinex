@@ -18,7 +18,7 @@ namespace Codinex.Infrastructure.AI.Providers
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
 
-            if (IsOllamaProvider(provider))
+            if (provider.IsLocal)
                 return ActivatorUtilities.CreateInstance<OllamaProvider>(serviceProvider);
 
             if (IsOpenAiCompatibleProvider(provider))
@@ -27,13 +27,6 @@ namespace Codinex.Infrastructure.AI.Providers
             throw new NotSupportedException($"Provider {provider.Name} is not supported.");
         }
 
-        private static bool IsOllamaProvider(AiProvider provider)
-        {
-            return string.Equals(provider.Id, "ollama", StringComparison.OrdinalIgnoreCase)
-                   || string.Equals(provider.Protocol, "ollama", StringComparison.OrdinalIgnoreCase)
-                   || provider.BaseUrl?.IndexOf("localhost:11434", StringComparison.OrdinalIgnoreCase) >= 0
-                   || provider.BaseUrl?.IndexOf("127.0.0.1:11434", StringComparison.OrdinalIgnoreCase) >= 0;
-        }
 
         private static bool IsOpenAiCompatibleProvider(AiProvider provider)
         {

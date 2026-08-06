@@ -13,6 +13,11 @@ namespace Codinex.Core.Interfaces
         IAiProvider GetCurrentProvider();
 
         /// <summary>
+        /// Gets the configured preprocessor provider for the current primary provider, if one is available.
+        /// </summary>
+        IAiPreprocessorProvider GetCurrentPreprocessorProvider();
+
+        /// <summary>
         /// Gets the provider for an agent context. The current implementation may fall back to the active provider,
         /// while preserving the contract needed for future multi-agent provider routing.
         /// </summary>

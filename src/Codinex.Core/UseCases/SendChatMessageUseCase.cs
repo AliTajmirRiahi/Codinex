@@ -18,7 +18,6 @@ namespace Codinex.Core.UseCases;
 /// </summary>
 [AutoDiRegister(Modules.Conversation, RegistrationOrder.Infrastructure)]
 public sealed class SendChatMessageUseCase(
-    IAiProvider aiProvider,
     IChatSession chatSession,
     IErrorHandler errorHandler,
     IChatMessageBuilder chatMessageBuilder,
@@ -26,11 +25,6 @@ public sealed class SendChatMessageUseCase(
     IWorkspaceContextBuilder workspaceContextBuilder)
     : ISendChatMessageUseCase
 {
-    private readonly IAiProvider _aiProvider = aiProvider ?? throw new ArgumentNullException(nameof(aiProvider));
-
-    // We depend on the Interface (Abstraction), not the concrete implementation.
-    // This makes it easy to swap GapGPT with Local AI or OpenAI.
-
     public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode)
     {
         if (request == null)
@@ -53,8 +47,9 @@ public sealed class SendChatMessageUseCase(
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
 
-            // Send to provider
-            var aiResult = await _aiProvider.SendAsync(buildResult.Messages);
+            var aiResult = await conversationEngine.ExecuteTextAsync(
+                buildResult,
+                CancellationToken.None);
 
             // Persist the exchange only after a successful AI response.
             // Provider errors must not be saved into message history.
