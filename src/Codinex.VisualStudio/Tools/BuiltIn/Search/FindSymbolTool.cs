@@ -20,6 +20,15 @@ public sealed class FindSymbolTool : IAiTool
 
     public string Description => "";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "find symbol",
+        "go to symbol",
+        "search symbol",
+        "locate symbol",
+        "symbol search"
+    ];
+
     public string StatusMessage => "Finding symbol...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Debug;

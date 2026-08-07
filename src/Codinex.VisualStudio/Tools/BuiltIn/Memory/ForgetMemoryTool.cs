@@ -22,6 +22,15 @@ public sealed class ForgetMemoryTool(IMemoryManager memoryManager) : IAiTool
     public string Description =>
         "Removes a previously stored workspace memory.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "forget memory",
+        "remove memory",
+        "delete memory",
+        "clear memory",
+        "forget stored memory"
+    ];
+
     public string StatusMessage => "Forgetting memory...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

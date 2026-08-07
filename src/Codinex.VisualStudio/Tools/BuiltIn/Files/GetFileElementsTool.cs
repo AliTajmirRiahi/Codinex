@@ -29,6 +29,17 @@ public sealed class GetFileElementsTool(
         "Return the structural outline of a source file without returning its implementation. " +
         "The returned element kinds depend on the programming language.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "get file elements",
+        "show file outline",
+        "inspect file structure",
+        "list classes",
+        "list methods",
+        "summarize file structure",
+        "source outline"
+    ];
+
     public string StatusMessage => "Getting file elements...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

@@ -89,6 +89,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Conversation/ConversationProviderRole.cs",
+                                                                       "name":  "ConversationProviderRole.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Conversation/IConversationEngine.cs",
                                                                        "name":  "IConversationEngine.cs",
                                                                        "type":  "file"

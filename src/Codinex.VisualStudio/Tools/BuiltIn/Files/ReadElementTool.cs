@@ -26,6 +26,16 @@ public sealed class ReadElementTool(
         "Return the complete implementation of the requested code element. " +
         "Input must be an element id returned by get_file_elements.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "read element",
+        "read code element",
+        "show method implementation",
+        "show class implementation",
+        "inspect element source",
+        "read function"
+    ];
+
     public string StatusMessage => "Reading element...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

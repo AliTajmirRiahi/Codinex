@@ -32,6 +32,21 @@ public sealed class ChangeSetCreatorTool(
         @"The Search text must be copied exactly from the source file. Do not append \n, \r, or trailing whitespace unless they are intentionally part of the selected text" +
         "If a tool returns status = completed, treat the user's request as completed unless additional tool calls are required for a different task";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "apply changes",
+        "edit file",
+        "modify code",
+        "create file",
+        "delete file",
+        "rename file",
+        "move file",
+        "create directory",
+        "delete directory",
+        "workspace changes",
+        "change set"
+    ];
+
     public ToolVisibility Visibility => ToolVisibility.Model;
 
     public string StatusMessage => "Applying workspace changes...";

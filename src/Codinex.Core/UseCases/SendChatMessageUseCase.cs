@@ -382,7 +382,8 @@ public sealed class SendChatMessageUseCase(
             .Select(x => new AiPreprocessorCatalogItem
             {
                 Name = x.Name,
-                Description = x.Description
+                Description = x.Description,
+                Capabilities = x.Capabilities
             })
             .ToList();
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Models;
@@ -28,6 +29,8 @@ public interface IAiTool
     string Name { get; }
 
     string Description { get; }
+
+    IReadOnlyList<string> Capabilities { get; }
 
     string StatusMessage { get; }
 
