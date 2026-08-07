@@ -22,15 +22,29 @@ namespace Codinex.Core.Models
         public bool NeedsWorkspaceContext { get; set; }
 
         [JsonProperty("contextsNeeded")]
-        public List<string> ContextsNeeded { get; set; } = new();
+        public List<string> ContextsNeeded { get; set; } = [];
 
-        [JsonProperty("toolsNeeded")]
-        public List<string> ToolsNeeded { get; set; } = new();
+        [JsonProperty("intents")]
+        public List<string> Intents { get; set; } = [];
+
 
         public bool IsAnswer =>
             string.Equals(Action, "answer", StringComparison.OrdinalIgnoreCase);
 
         public bool IsForward =>
             string.Equals(Action, "forward", StringComparison.OrdinalIgnoreCase);
+
+        public static AiPreprocessorResult CreateForwardFallback(string user = null)
+        {
+            return new AiPreprocessorResult
+            {
+                Action = "forward",
+                User = user,
+                NeedsPlanner = false,
+                NeedsWorkspaceContext = false,
+                ContextsNeeded = new List<string>(),
+                Intents = new List<string>()
+            };
+        }
     }
 }

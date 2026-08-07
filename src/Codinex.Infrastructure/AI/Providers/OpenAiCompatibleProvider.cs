@@ -442,15 +442,15 @@ namespace Codinex.Infrastructure.AI.Providers
                 .GetAll()
                 .Where(x => x.Visibility == ToolVisibility.Model);
 
-            var preprocessorResult = GetPreprocessorResult(messages);
+            var plannedTools = GetPlannedTools(messages);
 
-            if (preprocessorResult != null)
+            if (plannedTools is { Count: > 0 })
             {
-                var toolsNeeded = new HashSet<string>(
-                    preprocessorResult.ToolsNeeded ?? [],
+                var plannedToolNames = new HashSet<string>(
+                    plannedTools,
                     StringComparer.OrdinalIgnoreCase);
 
-                tools = tools.Where(x => toolsNeeded.Contains(x.Name));
+                tools = tools.Where(x => plannedToolNames.Contains(x.Name));
             }
 
             return
@@ -480,11 +480,11 @@ namespace Codinex.Infrastructure.AI.Providers
             ];
         }
 
-        private static AiPreprocessorResult GetPreprocessorResult(IReadOnlyList<ChatMessage> messages)
+        private static IReadOnlyList<string> GetPlannedTools(IReadOnlyList<ChatMessage> messages)
         {
             return messages?
-                .Select(x => x.Context?.PreprocessorResult)
-                .FirstOrDefault(x => x is { IsForward: true });
+                .Select(x => x.Context?.PlannedTools)
+                .FirstOrDefault(x => x != null);
         }
 
         private PromptProfileResult BuildPromptProfile(IReadOnlyList<ChatMessage> messages, object[] tools)

@@ -7,11 +7,11 @@ namespace Codinex.Core.Models
 {
     public static class AiPreprocessorResultParser
     {
-        public static AiPreprocessorResult ParseOrDefault(string response)
+        public static AiPreprocessorResult ParseOrDefault(string response, string user = null)
         {
             return TryParse(response, out var result)
                 ? result
-                : null;
+                : AiPreprocessorResult.CreateForwardFallback(user);
         }
 
         public static bool TryParse(
@@ -38,12 +38,22 @@ namespace Codinex.Core.Models
                 }
 
                 result = obj.ToObject<AiPreprocessorResult>();
+
+                if (result == null)
+                {
+                    return false;
+                }
+
                 result.ContextsNeeded = result.ContextsNeeded ?? new List<string>();
-                result.ToolsNeeded = result.ToolsNeeded ?? new List<string>();
+                result.Intents = result.Intents ?? new List<string>();
 
                 return true;
             }
             catch (JsonException)
+            {
+                return false;
+            }
+            catch (InvalidOperationException)
             {
                 return false;
             }

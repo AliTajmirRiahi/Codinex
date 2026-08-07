@@ -50,7 +50,12 @@ namespace Codinex.Infrastructure.Conversation
                 throw new ArgumentNullException(nameof(request));
             }
 
-            yield return ConversationEvent.Status("Sending request...");
+            var status = "Sending request...";
+
+            if (request.ProviderRole == ConversationProviderRole.Preprocessor)
+                status = "Preprocessoring...";
+
+            yield return ConversationEvent.Status(status);
 
             var history = request.Messages.ToList();
             var provider = ResolveProvider(request.ProviderRole);

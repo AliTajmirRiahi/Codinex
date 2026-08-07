@@ -28,7 +28,7 @@ public sealed class SendChatMessageUseCase(
     IConversationEngine conversationEngine,
     IWorkspaceContextBuilder workspaceContextBuilder,
     IAiProviderRouter aiProviderRouter,
-    IAiToolRegistry toolRegistry)
+    IIntentToolPlanner intentToolPlanner)
     : ISendChatMessageUseCase
 {
     public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode)
@@ -76,6 +76,7 @@ public sealed class SendChatMessageUseCase(
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
+            ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
 
             var aiResult = await conversationEngine.ExecuteTextAsync(
                 buildResult,
@@ -134,8 +135,6 @@ public sealed class SendChatMessageUseCase(
                 onMessage,
                 cancellationToken);
 
-            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(preprocessorResult);
-
             if (preprocessorResult?.IsAnswer == true)
             {
                 buildResult = CreateDirectResponseResult(request, preprocessorResult);
@@ -159,7 +158,7 @@ public sealed class SendChatMessageUseCase(
                 Conversation = request.ConversationHistory,
                 References = request.SelectedReferences,
                 ContextsNeeded = preprocessorResult?.IsForward == true
-                    ? preprocessorResult.ContextsNeeded ?? []
+                    ? preprocessorResult.ContextsNeeded is { Count: > 0 } ? preprocessorResult.ContextsNeeded : []
                     : null
             };
 
@@ -170,6 +169,7 @@ public sealed class SendChatMessageUseCase(
 
             buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
+            ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
 
             // Accumulate the full assistant text while chunks arrive.
             await foreach (var evt in conversationEngine.ExecuteAsync(
@@ -184,7 +184,7 @@ public sealed class SendChatMessageUseCase(
 
                         fullText += chunk;
 
-                        await Task.Delay(50, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
+                        await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
 
                         await onMessage(
                             new ChatResponse(
@@ -271,7 +271,7 @@ public sealed class SendChatMessageUseCase(
 
         if (preprocessorProvider == null)
         {
-            return null;
+            return AiPreprocessorResult.CreateForwardFallback(request.DraftText);
         }
 
         var buildResult = CreatePreprocessorBuildResult(request);
@@ -279,7 +279,7 @@ public sealed class SendChatMessageUseCase(
             buildResult,
             cancellationToken);
 
-        return AiPreprocessorResultParser.ParseOrDefault(response);
+        return AiPreprocessorResultParser.ParseOrDefault(response, request.DraftText);
     }
 
     private async Task<AiPreprocessorResult> RunPreprocessorStreamingAsync(
@@ -291,13 +291,11 @@ public sealed class SendChatMessageUseCase(
 
         if (preprocessorProvider == null)
         {
-            return null;
+            return AiPreprocessorResult.CreateForwardFallback(request.DraftText);
         }
 
         var preprocessorText = string.Empty;
         var buildResult = CreatePreprocessorBuildResult(request);
-
-        var tt = Newtonsoft.Json.JsonConvert.SerializeObject(buildResult);
 
         await foreach (var evt in conversationEngine.ExecuteAsync(
                            buildResult,
@@ -306,7 +304,7 @@ public sealed class SendChatMessageUseCase(
             switch (evt.Type)
             {
                 case ConversationEventType.TextDelta:
-                    await Task.Delay(50, cancellationToken);
+                    await Task.Delay(20, cancellationToken);
                     preprocessorText += evt.Payload.ToString();
                     continue;
 
@@ -318,11 +316,23 @@ public sealed class SendChatMessageUseCase(
                     continue;
 
                 case ConversationEventType.ConversationFailed:
-                    return null;
+                    return AiPreprocessorResult.CreateForwardFallback(request.DraftText);
             }
         }
 
-        return AiPreprocessorResultParser.ParseOrDefault(preprocessorText);
+        return AiPreprocessorResultParser.ParseOrDefault(preprocessorText, request.DraftText);
+    }
+
+    private void ApplyIntentToolPlan(
+        ChatMessageRequestContext context,
+        AiPreprocessorResult preprocessorResult)
+    {
+        if (context == null || preprocessorResult?.IsForward != true)
+        {
+            return;
+        }
+
+        context.PlannedTools = intentToolPlanner.PlanTools(preprocessorResult.Intents);
     }
 
     private ChatMessageBuildResult CreatePreprocessorBuildResult(ChatMessageBuildRequest request)
@@ -376,34 +386,15 @@ public sealed class SendChatMessageUseCase(
     private string BuildPreprocessorUserContent(ChatMessageBuildRequest request)
     {
         var contexts = workspaceContextBuilder.GetAvailableContexts();
-        var tools = toolRegistry
-            .GetAll()
-            .Where(x => x.Visibility == ToolVisibility.Model)
-            .Select(x => new AiPreprocessorCatalogItem
-            {
-                Name = x.Name,
-                Description = x.Description,
-                Capabilities = x.Capabilities
-            })
-            .ToList();
+        var intents = GetAvailableIntents();
 
         var sb = new StringBuilder();
 
-        sb.AppendLine("You are the Preprocessor AI.");
-        sb.AppendLine("Decide whether to answer directly or forward this request to the primary AI.");
-        sb.AppendLine("Return exactly one JSON object and no markdown.");
-        sb.AppendLine();
-        sb.AppendLine("Direct response schema:");
-        sb.AppendLine("{ \"action\": \"answer\", \"response\": \"<complete response>\" }");
-        sb.AppendLine();
-        sb.AppendLine("Forward schema:");
-        sb.AppendLine("{ \"action\": \"forward\", \"user\": \"<original user request>\", \"needsPlanner\": false, \"needsWorkspaceContext\": false, \"contextsNeeded\": [], \"toolsNeeded\": [] }");
-        sb.AppendLine();
         sb.AppendLine("Available Workspace Contexts:");
         sb.AppendLine(JsonConvert.SerializeObject(contexts, Formatting.Indented));
         sb.AppendLine();
-        sb.AppendLine("Available Tools:");
-        sb.AppendLine(JsonConvert.SerializeObject(tools, Formatting.Indented));
+        sb.AppendLine("Available Intents:");
+        sb.AppendLine(JsonConvert.SerializeObject(intents, Formatting.Indented));
         sb.AppendLine();
 
         if (request.SelectedCommand is not null)
@@ -434,6 +425,145 @@ public sealed class SendChatMessageUseCase(
         sb.AppendLine(request.DraftText);
 
         return sb.ToString().TrimEnd();
+    }
+
+    private static Dictionary<string, string[]> GetAvailableIntents()
+    {
+        return new Dictionary<string, string[]>
+        {
+            ["Conversation"] =
+            [
+                "Greeting",
+                "SmallTalk",
+                "GeneralQuestion",
+                "ProgrammingQuestion",
+                "ConceptExplanation",
+                "DocumentationQuestion",
+                "Translation",
+                "Summarization"
+            ],
+            ["Workspace"] =
+            [
+                "ReadWorkspace",
+                "ReadProject",
+                "ReadProjects",
+                "ReadSolution",
+                "ReadFile",
+                "ReadDirectory",
+                "ReadCodeElement",
+                "SearchProject",
+                "SearchFile",
+                "SearchSymbol",
+                "SearchText",
+                "OpenDocuments",
+                "CurrentDocument",
+                "WorkspaceMemory"
+            ],
+            ["CodeGeneration"] =
+            [
+                "GenerateCode",
+                "CreateFile",
+                "CreateFolder",
+                "CreateClass",
+                "CreateInterface",
+                "CreateRecord",
+                "CreateStruct",
+                "CreateEnum",
+                "CreateMethod",
+                "CreateProperty",
+                "CreateTest",
+                "Scaffold"
+            ],
+            ["CodeModification"] =
+            [
+                "EditCode",
+                "RefactorCode",
+                "RenameSymbol",
+                "ExtractMethod",
+                "OptimizeCode",
+                "FixBug",
+                "ImplementFeature",
+                "CompleteCode",
+                "ApplyChangeSet"
+            ],
+            ["Build"] =
+            [
+                "BuildProject",
+                "BuildSolution",
+                "CleanSolution",
+                "RestorePackages",
+                "RunProject"
+            ],
+            ["Testing"] =
+            [
+                "RunTests",
+                "RunTest",
+                "GenerateTests",
+                "FixTests"
+            ],
+            ["Diagnostics"] =
+            [
+                "GetDiagnostics",
+                "FixDiagnostics",
+                "AnalyzeBuildFailure"
+            ],
+            ["CodeAnalysis"] =
+            [
+                "ExplainCode",
+                "ReviewCode",
+                "AnalyzeCode",
+                "AnalyzeArchitecture",
+                "PerformanceAnalysis",
+                "SecurityAnalysis",
+                "FindBug",
+                "FindDeadCode",
+                "FindUsages",
+                "FindReferences"
+            ],
+            ["Navigation"] =
+            [
+                "FindFile",
+                "FindType",
+                "FindMethod",
+                "FindClass",
+                "FindInterface",
+                "GoToDefinition",
+                "GoToImplementation"
+            ],
+            ["Git"] =
+            [
+                "GitStatus",
+                "GitDiff",
+                "GitLog",
+                "GitBranches",
+                "GitCommit",
+                "GitStage",
+                "GitCheckout",
+                "GitMerge"
+            ],
+            ["Memory"] =
+            [
+                "Remember",
+                "Forget",
+                "Recall"
+            ],
+            ["Planning"] =
+            [
+                "CreatePlan",
+                "BreakIntoSteps",
+                "EstimateComplexity"
+            ],
+            ["External"] =
+            [
+                "WebSearch",
+                "OpenUrl",
+                "DownloadResource"
+            ],
+            ["Other"] =
+            [
+                "Unknown"
+            ]
+        };
     }
 
     private static ChatMessage CloneMessage(ChatMessage message)

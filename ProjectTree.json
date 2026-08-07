@@ -798,6 +798,16 @@
                                                                        "path":  "src/Codinex.Core/Tools/IAiToolRegistry.cs",
                                                                        "name":  "IAiToolRegistry.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Tools/IIntentToolPlanner.cs",
+                                                                       "name":  "IIntentToolPlanner.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Tools/IntentToolPlanner.cs",
+                                                                       "name":  "IntentToolPlanner.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
