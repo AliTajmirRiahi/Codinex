@@ -125,8 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         onChangeModelSettingApproved: (payload) => {
             togglePanelHidden('#models-loading-screen', false);
-            if (payload.providers != null && payload.providers.current)
-                setProvider(payload.providers.current);
+
+            const providers = payload.providers || payload.Providers;
+            const currentProvider = providers?.current || providers?.Current;
+
+            if (currentProvider)
+                setProvider(currentProvider);
+
+            if (providers)
+                manageModelsController.updateUI(providers);
 
             manageModelsController.closeProviderSettings();
             chatController.renderCurrentProvider();

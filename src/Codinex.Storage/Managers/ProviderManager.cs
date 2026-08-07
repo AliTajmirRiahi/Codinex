@@ -110,23 +110,11 @@ namespace Codinex.Storage.Managers
             if (provider == null)
                 throw new InvalidOperationException($"Provider '{providerId}' was not found.");
 
-            var selectedModelIds = provider.Models
-                .Where(m => m.IsSelected)
-                .Select(m => m.Id)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var refreshedModels = (await providerModelService.GetModelsAsync(provider)).ToList();
 
-            var currentModelId = provider.Models.FirstOrDefault(m => m.IsCurrent)?.Id;
-            var refreshedModels = await providerModelService.GetModelsAsync(provider);
+            PreserveModelRuntimeState(provider, refreshedModels);
 
             provider.SetModels(refreshedModels);
-
-            foreach (var model in provider.Models.Where(m => selectedModelIds.Contains(m.Id)))
-                model.Select();
-
-            var currentModel = provider.Models.FirstOrDefault(m =>
-                string.Equals(m.Id, currentModelId, StringComparison.OrdinalIgnoreCase));
-
-            currentModel?.MarkAsCurrent();
 
             await SaveAsync();
         }
@@ -150,7 +138,9 @@ namespace Codinex.Storage.Managers
                 try
                 {
                     using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(1));
-                    var installedModels = await providerModelService.GetModelsFromServerAsync(provider, timeout.Token);
+                    var installedModels = (await providerModelService.GetModelsFromServerAsync(provider, timeout.Token)).ToList();
+
+                    PreserveModelRuntimeState(provider, installedModels);
 
                     provider.SetModels(installedModels);
                 }
@@ -171,8 +161,13 @@ namespace Codinex.Storage.Managers
             provider.SetApiKey(selectedProvider.ApiKey);
             provider.Enable();
 
+            var previousCurrentModelId = provider.Models.FirstOrDefault(m => m.IsCurrent)?.Id;
+
             foreach (var model in provider.Models)
+            {
                 model.DeSelect();
+                model.ClearCurrent();
+            }
 
             var selectedModel = provider.Models
                 .Where(m => selectedProvider.SelectedModels.Any(sm => string.Equals(m.Id, sm.Id, StringComparison.OrdinalIgnoreCase)))
@@ -189,14 +184,11 @@ namespace Codinex.Storage.Managers
             foreach (var model in selectedModel)
                 model.Select();
 
-            var currentModel = provider.Models.FirstOrDefault(m => m.IsCurrent == true);
-            if (currentModel == null)
-            {
-                var firstSelectedModel = provider.Models.FirstOrDefault(m => m.IsSelected);
-                firstSelectedModel?.MarkAsCurrent();
+            var currentModel = selectedModel.FirstOrDefault(m =>
+                string.Equals(m.Id, previousCurrentModelId, StringComparison.OrdinalIgnoreCase))
+                ?? selectedModel.FirstOrDefault();
 
-                currentModel = firstSelectedModel;
-            }
+            currentModel?.MarkAsCurrent();
 
             await providerCapabilityChecker.CheckAsync(provider, currentModel, CancellationToken.None);
 
@@ -205,6 +197,35 @@ namespace Codinex.Storage.Managers
             await InitializeAsync();
 
             return ProviderSettingsUpdateResult.Saved();
+        }
+
+        private static void PreserveModelRuntimeState(AiProvider provider, IReadOnlyCollection<AiModel> refreshedModels)
+        {
+            if (provider == null || refreshedModels == null || refreshedModels.Count == 0)
+                return;
+
+            var existingModels = provider.Models.ToDictionary(m => m.Id, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var refreshedModel in refreshedModels)
+            {
+                if (!existingModels.TryGetValue(refreshedModel.Id, out var existingModel))
+                    continue;
+
+                if (existingModel.IsSelected)
+                    refreshedModel.Select();
+
+                if (existingModel.IsCurrent)
+                    refreshedModel.MarkAsCurrent();
+
+                if (existingModel.CapabilitiesChecked)
+                {
+                    refreshedModel.UpdateCapabilities(
+                        existingModel.SupportsStreaming,
+                        existingModel.SupportsToolCalling,
+                        existingModel.SupportsVision,
+                        existingModel.SupportsReasoning);
+                }
+            }
         }
 
         public async Task SetCurrentModelAsync(AiModelSelectedDto payload)
