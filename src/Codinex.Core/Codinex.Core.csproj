@@ -51,6 +51,7 @@
     <Compile Include="Conversation\ConversationEvent.cs" />
     <Compile Include="Conversation\ConversationEventType.cs" />
     <Compile Include="Conversation\ConversationExecution.cs" />
+    <Compile Include="Conversation\ConversationProviderRole.cs" />
     <Compile Include="Conversation\IConversationEngine.cs" />
     <Compile Include="Conversation\ToolRequest.cs" />
     <Compile Include="Conversation\ToolResult.cs" />
