@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Models;
 
 namespace Codinex.Core.Interfaces
 {
-    public interface IOpenAiCompatibleClient
+    public interface IProviderClient
     {
         /// <summary>
-        /// Sends a GET request to an OpenAI-compatible endpoint.
+        /// Sends a GET request to a provider endpoint.
         /// </summary>
         Task<string> GetAsync(
             AiProvider provider,
@@ -16,7 +16,7 @@ namespace Codinex.Core.Interfaces
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Sends a POST request to an OpenAI-compatible endpoint.
+        /// Sends a POST request to a provider endpoint.
         /// </summary>
         Task<string> PostAsync(
             AiProvider provider,
@@ -25,8 +25,8 @@ namespace Codinex.Core.Interfaces
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Sends a streaming POST request to an OpenAI-compatible endpoint.
-        /// Returns the raw SSE data lines.
+        /// Sends a streaming POST request to a provider endpoint.
+        /// Returns raw provider data lines.
         /// </summary>
         IAsyncEnumerable<string> StreamPostAsync(
             AiProvider provider,

@@ -1,21 +1,18 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
 using Codinex.Infrastructure.AI.Errors;
-using Codinex.Infrastructure.CustomeExceptions;
 using Codinex.Storage.Managers;
-using Codinex.Storage.Models;
 
 namespace Codinex.Infrastructure.AI.Providers
 {
@@ -26,7 +23,8 @@ namespace Codinex.Infrastructure.AI.Providers
         IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
         SettingsManager settingsManager,
-        IHttpService httpService)
+        IAiToolRegistry toolRegistry,
+        IProviderClient client)
         : IAiPreprocessorProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -44,9 +42,14 @@ namespace Codinex.Infrastructure.AI.Providers
 
             try
             {
-                var response = await PostAsync(
+                var response = await client.PostAsync(
                     provider,
-                    BuildChatPayload(model, prompt, false),
+                    "/api/chat",
+                    BuildChatPayload(
+                        provider,
+                        model,
+                        prompt,
+                        false),
                     ct);
 
                 var json = jsonSerializer.Parse(response);
@@ -160,47 +163,29 @@ namespace Codinex.Infrastructure.AI.Providers
             IReadOnlyList<ChatMessage> messages,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            using var request = CreateRequest(
-                HttpMethod.Post,
-                provider,
-                "/api/chat");
+            var toolCalls = new Dictionary<string, ToolCall>();
 
-            request.Content = new StringContent(
-                jsonSerializer.Serialize(BuildChatPayload(model, messages, true)),
-                Encoding.UTF8,
-                "application/json");
-
-            using var response = await httpService.SendAsync(
-                request,
-                cancellationToken);
-
-            if (!response.IsSuccessStatusCode)
+            await foreach (var line in client.StreamPostAsync(
+                               provider,
+                               "/api/chat",
+                               BuildChatPayload(
+                                   provider,
+                                   model,
+                                   messages,
+                                   true),
+                               cancellationToken))
             {
-                var body = await response.Content.ReadAsStringAsync();
-
-                yield return AiErrorFactory.ToConversationEvent(
-                    AiErrorFactory.FromHttpStatusCode(
-                        response.StatusCode,
-                        body,
-                        response.Headers.RetryAfter?.Delta));
-                yield break;
-            }
-
-            using var stream = await response.Content.ReadAsStreamAsync();
-            using var reader = new StreamReader(stream);
-            var completed = false;
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                var line = await reader.ReadLineAsync();
-
-                if (line == null)
-                    break;
-
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
                 var json = jsonSerializer.Parse(line);
+
+                foreach (var toolCall in ReadToolCalls(json))
+                {
+                    if (string.IsNullOrWhiteSpace(toolCall.Id))
+                    {
+                        toolCall.Id = $"call_{toolCalls.Count}";
+                    }
+
+                    toolCalls[toolCall.Id] = toolCall;
+                }
 
                 var content = json["message"]?["content"]?.ToString();
 
@@ -211,59 +196,60 @@ namespace Codinex.Infrastructure.AI.Providers
 
                 if (json.Value<bool?>("done") == true)
                 {
-                    completed = true;
-                    yield return ConversationEvent.Completed();
+                    if (toolCalls.Count > 0)
+                    {
+                        var assistantToolCalls = toolCalls.Values.ToList();
+                        var requests = assistantToolCalls
+                            .Select(x => new ToolRequest
+                            {
+                                Id = x.Id,
+                                Name = x.Name,
+                                Arguments = x.Arguments ?? new JObject()
+                            })
+                            .ToList();
+
+                        yield return ConversationEvent.ToolRequested(
+                            requests,
+                            new ChatMessage
+                            {
+                                Role = "assistant",
+                                ToolCalls = assistantToolCalls
+                            });
+                    }
+                    else
+                    {
+                        yield return ConversationEvent.Completed();
+                    }
+
                     yield break;
                 }
             }
 
-            if (!completed)
-            {
-                yield return ConversationEvent.Completed();
-            }
-        }
-
-        private async Task<string> PostAsync(
-            AiProvider provider,
-            object payload,
-            CancellationToken cancellationToken)
-        {
-            using var request = CreateRequest(
-                HttpMethod.Post,
-                provider,
-                "/api/chat");
-
-            request.Content = new StringContent(
-                jsonSerializer.Serialize(payload),
-                Encoding.UTF8,
-                "application/json");
-
-            using var response = await httpService.SendAsync(
-                request,
-                cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-                return await response.Content.ReadAsStringAsync();
-
-            var body = await response.Content.ReadAsStringAsync();
-
-            throw new OpenAiCompatibleException(
-                response.StatusCode,
-                body,
-                response.Headers.RetryAfter?.Delta);
+            yield return ConversationEvent.Completed();
         }
 
         private object BuildChatPayload(
+            AiProvider provider,
             AiModel model,
             IReadOnlyList<ChatMessage> messages,
             bool stream)
         {
-            return new
-            {
-                model = model.Id,
-                messages = BuildMessages(messages),
-                stream
-            };
+            var tools = BuildTools(provider, messages);
+
+            return tools.Length == 0
+                ? new
+                {
+                    model = model.Id,
+                    messages = BuildMessages(messages),
+                    stream
+                }
+                : new
+                {
+                    model = model.Id,
+                    messages = BuildMessages(messages),
+                    stream,
+                    tools
+                };
         }
 
         private static List<object> BuildMessages(IReadOnlyList<ChatMessage> prompts)
@@ -273,15 +259,42 @@ namespace Codinex.Infrastructure.AI.Providers
             foreach (var prompt in prompts)
             {
                 var role = NormalizeRole(prompt.Role);
-                var content = prompt.Content ?? string.Empty;
 
-                if (prompt.Role?.Trim().Equals("tool", StringComparison.OrdinalIgnoreCase) == true)
+                switch (role)
                 {
-                    content = string.IsNullOrWhiteSpace(prompt.ToolCallId)
-                        ? content
-                        : $"Tool result ({prompt.ToolCallId}): {content}";
+                    case "tool":
+                        messages.Add(new
+                        {
+                            role,
+                            tool_call_id = prompt.ToolCallId,
+                            content = prompt.Content ?? string.Empty
+                        });
+
+                        continue;
+                    case "assistant" when
+                        prompt.ToolCalls is { Count: > 0 }:
+                        messages.Add(new
+                        {
+                            role,
+                            tool_calls = prompt.ToolCalls.Select(x => new
+                            {
+                                id = x.Id,
+                                type = "function",
+                                function = new
+                                {
+                                    name = x.Name,
+                                    arguments = x.Arguments?.ToString() ?? "{}"
+                                }
+                            }),
+                            content = prompt.Content ?? string.Empty
+                        });
+
+                        continue;
+                    default:
+                        break;
                 }
 
+                var content = prompt.Content ?? string.Empty;
                 var images = GetImages(prompt.Data);
 
                 if (images.Length > 0)
@@ -331,26 +344,132 @@ namespace Codinex.Infrastructure.AI.Providers
                 : base64;
         }
 
-        private static HttpRequestMessage CreateRequest(
-            HttpMethod method,
+        private object[] BuildTools(
             AiProvider provider,
-            string endpoint)
+            IReadOnlyList<ChatMessage> messages)
         {
-            var baseUrl = provider.BaseUrl.TrimEnd('/');
-
-            var request = new HttpRequestMessage(
-                method,
-                $"{baseUrl}/{endpoint.TrimStart('/')}");
-
-            if (!string.IsNullOrWhiteSpace(provider.ApiKey))
+            if (!IsPrimaryProvider(provider))
             {
-                request.Headers.Authorization =
-                    new AuthenticationHeaderValue(
-                        "Bearer",
-                        provider.ApiKey);
+                return [];
             }
 
-            return request;
+            var tools = toolRegistry
+                .GetAll()
+                .Where(x => x.Visibility == ToolVisibility.Model);
+
+            var plannedTools = GetPlannedTools(messages);
+
+            if (plannedTools is { Count: > 0 })
+            {
+                var plannedToolNames = new HashSet<string>(
+                    plannedTools,
+                    StringComparer.OrdinalIgnoreCase);
+
+                tools = tools.Where(x => plannedToolNames.Contains(x.Name));
+            }
+
+            return
+            [
+                .. tools.Select(tool => new
+                    {
+                        type = "function",
+
+                        function = new
+                        {
+                            name = tool.Name,
+
+                            description = tool.Description,
+
+                            parameters = new
+                            {
+                                type = "object",
+
+                                properties = tool.Definition.Properties.ToDictionary(
+                                    p => p.Key,
+                                    p => p.Value.ToJsonSchema()),
+
+                                required = tool.Definition.Required
+                            }
+                        }
+                    })
+            ];
+        }
+
+        private bool IsPrimaryProvider(AiProvider provider)
+        {
+            var activeProvider = _providerManager.ActiveProvider;
+
+            return activeProvider?.IsLocal == true &&
+                   string.Equals(activeProvider.Id, provider?.Id, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static IReadOnlyList<string> GetPlannedTools(IReadOnlyList<ChatMessage> messages)
+        {
+            return messages?
+                .Select(x => x.Context?.PlannedTools)
+                .FirstOrDefault(x => x != null);
+        }
+
+        private static IEnumerable<ToolCall> ReadToolCalls(JObject json)
+        {
+            if (json?["message"]?["tool_calls"] is not JArray toolCalls)
+            {
+                yield break;
+            }
+
+            var index = 0;
+
+            foreach (var toolCall in toolCalls)
+            {
+                var function = toolCall["function"];
+                var name = function?["name"]?.ToString()
+                           ?? toolCall["name"]?.ToString();
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    continue;
+                }
+
+                yield return new ToolCall
+                {
+                    Id = toolCall["id"]?.ToString() ?? $"call_{index++}",
+                    Name = name,
+                    Arguments = ParseArguments(
+                        function?["arguments"] ??
+                        toolCall["arguments"])
+                };
+            }
+        }
+
+        private static JObject ParseArguments(JToken arguments)
+        {
+            if (arguments == null)
+                return new JObject();
+
+            if (arguments is JObject obj)
+                return obj;
+
+            if (arguments.Type == JTokenType.String)
+            {
+                var value = arguments.ToString();
+
+                if (string.IsNullOrWhiteSpace(value))
+                    return new JObject();
+
+                try
+                {
+                    return JObject.Parse(value);
+                }
+                catch
+                {
+                    return new JObject
+                    {
+                        ["raw"] = value
+                    };
+                }
+            }
+
+            return JObject.FromObject(arguments);
         }
 
         private AiProvider GetProvider()
@@ -413,6 +532,7 @@ namespace Codinex.Infrastructure.AI.Providers
             {
                 "assistant" => "assistant",
                 "system" => "system",
+                "tool" => "tool",
                 _ => "user"
             };
         }

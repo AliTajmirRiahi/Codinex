@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AI\Capabilities\ProviderCapabilityChecker.cs" />
-    <Compile Include="AI\Clients\OpenAiCompatibleClient.cs" />
+    <Compile Include="AI\Clients\ProviderClient.cs" />
     <Compile Include="AI\Errors\AiErrorFactory.cs" />
     <Compile Include="AI\Providers\AiProviderFactory.cs" />
     <Compile Include="AI\Providers\AiProviderRouter.cs" />

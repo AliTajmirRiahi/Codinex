@@ -5,12 +5,6 @@ namespace Codinex.Core.Models
     /// </summary>
     public sealed class AgentContext
     {
-        public string AgentId { get; set; }
-
-        public string AgentName { get; set; }
-
         public string ProviderId { get; set; }
-
-        public string ModelId { get; set; }
     }
 }

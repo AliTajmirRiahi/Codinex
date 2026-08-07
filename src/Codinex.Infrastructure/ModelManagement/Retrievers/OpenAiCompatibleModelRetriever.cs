@@ -12,7 +12,7 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
 {
     [AutoDiRegister(Modules.ModelManagement, RegistrationOrder.Infrastructure)]
     public class OpenAiCompatibleModelRetriever(
-        IOpenAiCompatibleClient client,
+        IProviderClient client,
         IJsonSerializer jsonSerializer) : IModelRetriever
     {
 

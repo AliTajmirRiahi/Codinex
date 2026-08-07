@@ -82,7 +82,7 @@
     <Compile Include="Interfaces\IExecutionPipeline.cs" />
     <Compile Include="Interfaces\IModelResourceLoader.cs" />
     <Compile Include="Interfaces\IModelRetriever.cs" />
-    <Compile Include="Interfaces\IOpenAiCompatibleClient.cs" />
+    <Compile Include="Interfaces\IProviderClient.cs" />
     <Compile Include="Interfaces\IPromptProfiler.cs" />
     <Compile Include="Interfaces\IProviderCapabilityChecker.cs" />
     <Compile Include="Interfaces\IProviderModelService.cs" />
