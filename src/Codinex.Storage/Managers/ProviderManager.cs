@@ -194,7 +194,11 @@ namespace Codinex.Storage.Managers
             {
                 var firstSelectedModel = provider.Models.FirstOrDefault(m => m.IsSelected);
                 firstSelectedModel?.MarkAsCurrent();
+
+                currentModel = firstSelectedModel;
             }
+
+            await providerCapabilityChecker.CheckAsync(provider, currentModel, CancellationToken.None);
 
             await SaveAsync();
 
