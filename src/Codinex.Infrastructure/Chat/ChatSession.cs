@@ -1,4 +1,4 @@
-﻿using Codinex.Storage;
+using Codinex.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,11 +59,41 @@ namespace Codinex.Infrastructure.Chat
                 isTitleChanged = true;
             }
 
-            chatData.Messages = _messages;
+            chatData.Messages = _messages
+                .Select(CreatePersistableMessage)
+                .ToList();
 
             await chatManager.SaveChatAsync(chatData);
 
             return isTitleChanged;
+        }
+
+        private static ChatMessage CreatePersistableMessage(ChatMessage message)
+        {
+            return new ChatMessage
+            {
+                Role = message.Role,
+                Content = message.Content,
+                Data = message.Data,
+                ToolCalls = message.ToolCalls,
+                ToolCallId = message.ToolCallId,
+                Context = CreatePersistableContext(message.Context),
+                CreatedAt = message.CreatedAt,
+                Stream = message.Stream
+            };
+        }
+
+        private static ChatMessageRequestContext CreatePersistableContext(ChatMessageRequestContext context)
+        {
+            if (context == null)
+                return null;
+
+            return new ChatMessageRequestContext
+            {
+                SelectedCommand = context.SelectedCommand,
+                SelectedAgent = context.SelectedAgent,
+                SelectedReferences = context.SelectedReferences
+            };
         }
 
         /// <summary>
