@@ -3,8 +3,8 @@ using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
-using Codinex.Core.Tools;
 using Codinex.Core.UseCases;
+using Codinex.Core.Tools;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Storage.Managers;
 
@@ -23,7 +23,7 @@ namespace Codinex.Infrastructure.Chat
         IChatMessageBuilder chatMessageBuilder,
         IConversationEngine conversationEngine,
         IWorkspaceContextBuilder workspaceContextBuilder,
-        IAiToolRegistry toolRegistry)
+        IIntentToolPlanner intentToolPlanner)
         : IChatUseCaseFactory
     {
         public ISendChatMessageUseCase Create()
@@ -46,7 +46,7 @@ namespace Codinex.Infrastructure.Chat
                 conversationEngine,
                 workspaceContextBuilder,
                 aiProviderRouter,
-                toolRegistry);
+                intentToolPlanner);
         }
     }
 

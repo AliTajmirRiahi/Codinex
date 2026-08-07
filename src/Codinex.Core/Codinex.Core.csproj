@@ -179,6 +179,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\IAiTool.cs" />
     <Compile Include="Tools\IAiToolRegistry.cs" />
+    <Compile Include="Tools\IIntentToolPlanner.cs" />
+    <Compile Include="Tools\IntentToolPlanner.cs" />
     <Compile Include="UseCases\ISendChatMessageUseCase.cs" />
     <Compile Include="UseCases\SendChatMessageUseCase.cs" />
     <Compile Include="Workspace\Prompt\IPromptContextComposer.cs" />

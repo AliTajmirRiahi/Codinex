@@ -21,6 +21,8 @@ namespace Codinex.Core.Models
 
         public AiPreprocessorResult PreprocessorResult { get; set; }
 
+        public IReadOnlyList<string> PlannedTools { get; set; }
+
         public static ChatMessageRequestContext CreateChatMessageRequestContextWithoutMetaData(ChatMessageRequestContext context)
         {
             var selectedReferences = (new List<ReferenceItem>(context.SelectedReferences));
@@ -33,7 +35,8 @@ namespace Codinex.Core.Models
                 SelectedAgent = context.SelectedAgent,
                 SelectedReferences = selectedReferences,
                 PromptProfile = context.PromptProfile,
-                PreprocessorResult = context.PreprocessorResult
+                PreprocessorResult = context.PreprocessorResult,
+                PlannedTools = context.PlannedTools
             };
         }
     }
