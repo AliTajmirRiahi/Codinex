@@ -193,8 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 applyChatsPayload(meta);
             }
         },
-        onHandleStreamChunk: (payload) => {
-            chatController.handleStreamChunk(payload);
+        onHandleStreamChunk: (payload, meta) => {
+            chatController.handleStreamChunk(payload, meta);
         },
         onStatusChanged: (payload) => {
             chatController.handleStatusChanged(payload);

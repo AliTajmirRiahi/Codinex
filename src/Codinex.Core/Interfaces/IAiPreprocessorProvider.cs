@@ -13,5 +13,6 @@ namespace Codinex.Core.Interfaces
         Task<AiPreprocessorResult> PreprocessAsync(
             IReadOnlyList<ChatMessage> messages,
             CancellationToken cancellationToken = default);
+        
     }
 }
