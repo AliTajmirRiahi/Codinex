@@ -100,9 +100,15 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public IAiProvider GetProvider(AgentContext context)
         {
-            // Future multi-agent routing can resolve a provider from AgentContext here.
-            // Until agent-specific provider mappings exist, the current provider remains the default route.
-            return GetCurrentProvider();
+            var providers = providerManager.Providers
+                           ?? throw new InvalidOperationException("Providers not found.");
+
+            var provider = providers.FirstOrDefault(p => p.Id == context.ProviderId) 
+                           ?? throw new InvalidOperationException("Provider not found.");
+
+            var providerKey = BuildProviderKey(provider);
+
+            return providerFactory.Create(provider);
         }
 
         public void Dispose()

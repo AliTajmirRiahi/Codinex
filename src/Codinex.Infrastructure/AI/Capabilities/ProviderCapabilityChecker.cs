@@ -22,7 +22,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
     }
 
     [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
-    public sealed class ProviderCapabilityChecker(IOpenAiCompatibleClient client) : IProviderCapabilityChecker
+    public sealed class ProviderCapabilityChecker(IProviderClient client) : IProviderCapabilityChecker
     {
         public async Task CheckAsync(
             AiProvider provider,
@@ -54,8 +54,25 @@ namespace Codinex.Infrastructure.AI.Capabilities
             AiModel model,
             CancellationToken cancellationToken)
         {
-            var result = new ChatCapabilityResult();
+            return new ChatCapabilityResult
+            {
+                SupportsStreaming = await ProbeStreamingCapabilityAsync(
+                    provider,
+                    model,
+                    cancellationToken),
 
+                SupportsToolCalling = await ProbeToolCallingCapabilityAsync(
+                    provider,
+                    model,
+                    cancellationToken)
+            };
+        }
+
+        private async Task<CapabilityProbeResult> ProbeStreamingCapabilityAsync(
+            AiProvider provider,
+            AiModel model,
+            CancellationToken cancellationToken)
+        {
             try
             {
                 var payload = new
@@ -63,6 +80,49 @@ namespace Codinex.Infrastructure.AI.Capabilities
                     model = model.Id,
 
                     stream = true,
+
+                    messages = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            content = "Reply with pong."
+                        }
+                    }
+                };
+
+                await foreach (var chunk in client.StreamPostAsync(
+                                   provider,
+                                   GetChatEndpoint(provider),
+                                   payload,
+                                   cancellationToken))
+                {
+                    if (string.IsNullOrWhiteSpace(chunk))
+                        continue;
+
+                    return CapabilityProbeResult.Supported;
+                }
+
+                return CapabilityProbeResult.Unsupported;
+            }
+            catch
+            {
+                return CapabilityProbeResult.Unknown;
+            }
+        }
+
+        private async Task<CapabilityProbeResult> ProbeToolCallingCapabilityAsync(
+            AiProvider provider,
+            AiModel model,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var payload = new
+                {
+                    model = model.Id,
+
+                    stream = false,
 
                     messages = new[]
                     {
@@ -96,36 +156,28 @@ namespace Codinex.Infrastructure.AI.Capabilities
                     }
                 };
 
-                await foreach (var chunk in client.StreamPostAsync(
-                                   provider,
-                                   "/chat/completions",
-                                   payload,
-                                   cancellationToken))
-                {
-                    result.SupportsStreaming = CapabilityProbeResult.Supported;
+                var response = await client.PostAsync(
+                    provider,
+                    GetChatEndpoint(provider),
+                    payload,
+                    cancellationToken);
 
-                    if (string.IsNullOrWhiteSpace(chunk))
-                        continue;
+                var root = JObject.Parse(response);
 
-                    if (chunk == "[DONE]")
-                        break;
-
-                    var root = JObject.Parse(chunk);
-
-                    var toolCalls =
-                        root["choices"]?[0]?["delta"]?["tool_calls"];
-
-                    if (toolCalls != null)
-                        result.SupportsToolCalling = CapabilityProbeResult.Supported;
-                }
+                return HasToolCalls(provider, root)
+                    ? CapabilityProbeResult.Supported
+                    : CapabilityProbeResult.Unsupported;
+            }
+            catch (OpenAiCompatibleException ex)
+            {
+                return IsToolCallingUnsupported(ex.ResponseBody)
+                    ? CapabilityProbeResult.Unsupported
+                    : CapabilityProbeResult.Unknown;
             }
             catch
             {
-                result.SupportsToolCalling = CapabilityProbeResult.Unknown;
-                result.SupportsStreaming = CapabilityProbeResult.Unknown;
+                return CapabilityProbeResult.Unknown;
             }
-
-            return result;
         }
 
         private async Task<CapabilityProbeResult> ProbeVisionCapabilityAsync(
@@ -171,6 +223,20 @@ namespace Codinex.Infrastructure.AI.Capabilities
             }
         }
 
+        private static string GetChatEndpoint(AiProvider provider)
+        {
+            return provider.Protocol == "openai" ? "/chat/completions" : "/api/chat";
+        }
+
+        private static bool HasToolCalls(AiProvider provider, JObject root)
+        {
+            var toolCalls = provider.Protocol == "openai"
+                ? root["choices"]?[0]?["message"]?["tool_calls"]
+                : root["message"]?["tool_calls"];
+
+            return toolCalls != null;
+        }
+
         private async Task PostVisionProbeAsync(
             AiProvider provider,
             AiModel model,
@@ -205,7 +271,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
             await client.PostAsync(
                 provider,
-                "/chat/completions",
+                GetChatEndpoint(provider),
                 payload,
                 cancellationToken);
         }
@@ -271,6 +337,16 @@ namespace Codinex.Infrastructure.AI.Capabilities
                    && (ContainsIgnoreCase(responseBody, "max_completion_tokens")
                        || ContainsIgnoreCase(responseBody, "unsupported parameter")
                        || ContainsIgnoreCase(responseBody, "not supported"));
+        }
+
+        private static bool IsToolCallingUnsupported(string responseBody)
+        {
+            return ContainsIgnoreCase(responseBody, "does not support tools")
+                   || ContainsIgnoreCase(responseBody, "doesn't support tools")
+                   || ContainsIgnoreCase(responseBody, "tools are not supported")
+                   || ContainsIgnoreCase(responseBody, "tool calling is not supported")
+                   || ContainsIgnoreCase(responseBody, "does not support tool calling")
+                   || ContainsIgnoreCase(responseBody, "doesn't support tool calling");
         }
 
         private static bool IsVisionUnsupported(string responseBody)

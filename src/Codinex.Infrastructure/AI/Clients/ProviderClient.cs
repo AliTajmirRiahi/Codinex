@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
@@ -17,11 +16,10 @@ using Codinex.Infrastructure.CustomeExceptions;
 namespace Codinex.Infrastructure.AI.Clients
 {
     [AutoDiRegister(Modules.AI, RegistrationOrder.Features)]
-    public class OpenAiCompatibleClient(
+    public class ProviderClient(
         IHttpService httpService,
-        IJsonSerializer jsonSerializer,
-        IWorkspaceFileService workspaceFileService)
-        : IOpenAiCompatibleClient
+        IJsonSerializer jsonSerializer)
+        : IProviderClient
     {
 
         public async Task<string> GetAsync(
@@ -100,7 +98,7 @@ namespace Codinex.Infrastructure.AI.Clients
                 request,
                 cancellationToken);
 
-            if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode )
             {
                 var body = await response.Content.ReadAsStringAsync();
 
@@ -126,7 +124,7 @@ namespace Codinex.Infrastructure.AI.Clients
                     cancellationToken.ThrowIfCancellationRequested();
 
                     throw new TimeoutException(
-                        "No SSE event received for 300 seconds.");
+                        "No provider stream event received for 300 seconds.");
                 }
 
                 var line = await readTask;
@@ -137,15 +135,18 @@ namespace Codinex.Infrastructure.AI.Clients
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                if (!line.StartsWith("data:"))
+                if (line.StartsWith("data:"))
+                {
+                    yield return line.Substring(5).Trim();
                     continue;
+                }
 
-                yield return line.Substring(5).Trim();
+                yield return line.Trim();
             }
         }
 
         /// <summary>
-        /// Creates an HTTP request for an OpenAI-compatible endpoint.
+        /// Creates an HTTP request for a provider endpoint.
         /// </summary>
         private static HttpRequestMessage CreateRequest(
             HttpMethod method,

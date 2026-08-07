@@ -347,11 +347,6 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
-                                                                       "path":  "src/Codinex.Core/Interfaces/IOpenAiCompatibleClient.cs",
-                                                                       "name":  "IOpenAiCompatibleClient.cs",
-                                                                       "type":  "file"
-                                                                   },
-                                                                   {
                                                                        "path":  "src/Codinex.Core/Interfaces/IOpenDocumentsFormatter.cs",
                                                                        "name":  "IOpenDocumentsFormatter.cs",
                                                                        "type":  "file"
@@ -384,6 +379,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Core/Interfaces/IProviderCapabilityChecker.cs",
                                                                        "name":  "IProviderCapabilityChecker.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IProviderClient.cs",
+                                                                       "name":  "IProviderClient.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -925,8 +925,8 @@
                                                                        "name":  "Clients",
                                                                        "type":  "folder",
                                                                        "children":  {
-                                                                                        "path":  "src/Codinex.Infrastructure/AI/Clients/OpenAiCompatibleClient.cs",
-                                                                                        "name":  "OpenAiCompatibleClient.cs",
+                                                                                        "path":  "src/Codinex.Infrastructure/AI/Clients/ProviderClient.cs",
+                                                                                        "name":  "ProviderClient.cs",
                                                                                         "type":  "file"
                                                                                     }
                                                                    },

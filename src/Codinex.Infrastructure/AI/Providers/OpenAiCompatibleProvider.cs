@@ -1,3 +1,11 @@
+using Codinex.Core.Conversation;
+using Codinex.Core.Interfaces;
+using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
+using Codinex.Core.Tools;
+using Codinex.Core.Workspace.Prompt;
+using Codinex.Infrastructure.AI.Errors;
+using Codinex.Storage.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -8,14 +16,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Conversation;
-using Codinex.Core.Interfaces;
-using Codinex.Core.Models;
-using Codinex.Core.Models.Tools;
-using Codinex.Core.Tools;
-using Codinex.Core.Workspace.Prompt;
-using Codinex.Infrastructure.AI.Errors;
-using Codinex.Storage.Managers;
 
 namespace Codinex.Infrastructure.AI.Providers
 {
@@ -32,10 +32,11 @@ namespace Codinex.Infrastructure.AI.Providers
     }
     /// <summary>
     /// </summary>
-    public class OpenAiCompatibleProvider(IJsonSerializer jsonSerializer,
+    public class OpenAiCompatibleProvider(
+        IJsonSerializer jsonSerializer,
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,
-        IOpenAiCompatibleClient client,
+        IProviderClient client,
         IWorkspaceFileService workspaceFileService,
         IPromptProfiler promptProfiler)
         : IAiProvider
