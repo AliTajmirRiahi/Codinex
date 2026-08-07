@@ -1,6 +1,8 @@
 using Codinex.Core.Chat;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Conversation;
@@ -8,7 +10,9 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
+using Codinex.Core.Tools;
 using Codinex.Core.Workspace.Prompt;
+using Newtonsoft.Json;
 
 namespace Codinex.Core.UseCases;
 
@@ -22,7 +26,9 @@ public sealed class SendChatMessageUseCase(
     IErrorHandler errorHandler,
     IChatMessageBuilder chatMessageBuilder,
     IConversationEngine conversationEngine,
-    IWorkspaceContextBuilder workspaceContextBuilder)
+    IWorkspaceContextBuilder workspaceContextBuilder,
+    IAiProviderRouter aiProviderRouter,
+    IAiToolRegistry toolRegistry)
     : ISendChatMessageUseCase
 {
     public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode)
@@ -35,9 +41,32 @@ public sealed class SendChatMessageUseCase(
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
+            var preprocessorResult = await RunPreprocessorAsync(
+                request,
+                CancellationToken.None);
+
+            if (preprocessorResult?.IsAnswer == true)
+            {
+                var directResult = CreateDirectResponseResult(request, preprocessorResult);
+                var directResponse = preprocessorResult.Response ?? string.Empty;
+
+                chatSession.AddUserMessage(request.DraftText, directResult.Context);
+                chatSession.AddAssistantMessage(directResponse);
+
+                var directTitleChanged = await chatSession.SaveAsync();
+
+                return new ChatResponse(
+                    WebViewMessageType.AiResponse,
+                    directResponse,
+                    CreateResponseMeta(directResult, directTitleChanged));
+            }
+
             var workspaceRequest = new WorkspaceContextRequest
             {
-                Conversation = request.ConversationHistory
+                Conversation = request.ConversationHistory,
+                ContextsNeeded = preprocessorResult?.IsForward == true
+                    ? preprocessorResult.ContextsNeeded ?? new List<string>()
+                    : null
             };
 
             var promptContext =
@@ -46,6 +75,7 @@ public sealed class SendChatMessageUseCase(
                     CancellationToken.None);
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
+            buildResult.Context.PreprocessorResult = preprocessorResult;
 
             var aiResult = await conversationEngine.ExecuteTextAsync(
                 buildResult,
@@ -59,12 +89,7 @@ public sealed class SendChatMessageUseCase(
             // Save session
             var titleChanged = await chatSession.SaveAsync();
 
-            if (!titleChanged) return new ChatResponse(WebViewMessageType.AiResponse, aiResult);
-
-            var meta = new Dictionary<string, object>
-            {
-                ["titleChanged"] = true
-            };
+            var meta = CreateResponseMeta(buildResult, titleChanged);
 
             return new ChatResponse(WebViewMessageType.AiResponse, aiResult, meta);
         }
@@ -101,6 +126,34 @@ public sealed class SendChatMessageUseCase(
 
         try
         {
+            var preprocessorResult = await RunPreprocessorAsync(
+                request,
+                cancellationToken);
+
+            if (preprocessorResult?.IsAnswer == true)
+            {
+                buildResult = CreateDirectResponseResult(request, preprocessorResult);
+                fullText = preprocessorResult.Response ?? string.Empty;
+
+                await StreamDirectResponseAsync(
+                    fullText,
+                    buildResult,
+                    onMessage,
+                    cancellationToken);
+
+                chatSession.AddUserMessage(request.DraftText, buildResult.Context);
+                chatSession.AddAssistantMessage(fullText);
+
+                var directTitleChanged = await chatSession.SaveAsync();
+
+                await onMessage(new ChatResponse(
+                    WebViewMessageType.AiResponse,
+                    fullText,
+                    CreateResponseMeta(buildResult, directTitleChanged)));
+
+                return;
+            }
+
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
@@ -108,6 +161,9 @@ public sealed class SendChatMessageUseCase(
             {
                 Conversation = request.ConversationHistory,
                 References = request.SelectedReferences,
+                ContextsNeeded = preprocessorResult?.IsForward == true
+                    ? preprocessorResult.ContextsNeeded ?? []
+                    : null
             };
 
             var promptContext =
@@ -116,6 +172,7 @@ public sealed class SendChatMessageUseCase(
                     cancellationToken);
 
             buildResult = chatMessageBuilder.Build(request, promptContext);
+            buildResult.Context.PreprocessorResult = preprocessorResult;
 
             // Accumulate the full assistant text while chunks arrive.
             await foreach (var evt in conversationEngine.ExecuteAsync(
@@ -130,10 +187,13 @@ public sealed class SendChatMessageUseCase(
 
                         fullText += chunk;
 
+                        await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
+
                         await onMessage(
                             new ChatResponse(
                                 WebViewMessageType.StreamChunk,
-                                chunk));
+                                chunk,
+                                CreateResponseMeta(buildResult)));
 
                         continue;
 
@@ -167,24 +227,11 @@ public sealed class SendChatMessageUseCase(
             // Save session
             var titleChanged = await chatSession.SaveAsync();
 
-            if (!titleChanged)
-            {
-                // Emit the final completed response.
-                await onMessage(new ChatResponse(
-                    WebViewMessageType.AiResponse,
-                    fullText));
-                return;
-            }
-
-            var meta = new Dictionary<string, object>
-            {
-                ["titleChanged"] = true
-            };
-
             // Emit the final completed response.
             await onMessage(new ChatResponse(
                 WebViewMessageType.AiResponse,
-                fullText, meta));
+                fullText,
+                CreateResponseMeta(buildResult, titleChanged)));
         }
         catch (OperationCanceledException)
         {
@@ -197,15 +244,7 @@ public sealed class SendChatMessageUseCase(
                 titleChanged = await chatSession.SaveAsync();
             }
 
-            var meta = new Dictionary<string, object>
-            {
-                ["cancelled"] = true
-            };
-
-            if (titleChanged)
-            {
-                meta["titleChanged"] = true;
-            }
+            var meta = CreateResponseMeta(buildResult, titleChanged, true);
 
             await onMessage(new ChatResponse(
                 WebViewMessageType.AiResponse,
@@ -225,5 +264,204 @@ public sealed class SendChatMessageUseCase(
                 WebViewMessageType.Error,
                 errorHandler.GetUserFacingMessage()));
         }
+    }
+
+    private static async Task StreamDirectResponseAsync(
+        string text,
+        ChatMessageBuildResult buildResult,
+        Func<ChatResponse, Task> onMessage,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        foreach (var chunk in CreateStreamingChunks(text))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
+
+            await onMessage(new ChatResponse(
+                WebViewMessageType.StreamChunk,
+                chunk,
+                CreateResponseMeta(buildResult)));
+        }
+    }
+
+    private static IEnumerable<string> CreateStreamingChunks(string text)
+    {
+        const int chunkSize = 24;
+
+        for (var index = 0; index < text.Length; index += chunkSize)
+        {
+            var length = Math.Min(chunkSize, text.Length - index);
+            yield return text.Substring(index, length);
+        }
+    }
+
+    private async Task<AiPreprocessorResult> RunPreprocessorAsync(
+        ChatMessageBuildRequest request,
+        CancellationToken cancellationToken)
+    {
+        var preprocessorProvider = aiProviderRouter.GetCurrentPreprocessorProvider();
+
+        if (preprocessorProvider == null)
+        {
+            return null;
+        }
+
+        return await preprocessorProvider.PreprocessAsync(
+            BuildPreprocessorMessages(request),
+            cancellationToken);
+    }
+
+    private IReadOnlyList<ChatMessage> BuildPreprocessorMessages(ChatMessageBuildRequest request)
+    {
+        var messages = new List<ChatMessage>
+        {
+            new()
+            {
+                Role = "system",
+                Content = SystemPrompts.PreprocessorSystemPrompt
+            }
+        };
+
+        if (request.ConversationHistory != null)
+        {
+            messages.AddRange(request.ConversationHistory.Select(CloneMessage));
+        }
+
+        messages.Add(new ChatMessage
+        {
+            Role = "user",
+            Content = BuildPreprocessorUserContent(request)
+        });
+
+        return messages;
+    }
+
+    private string BuildPreprocessorUserContent(ChatMessageBuildRequest request)
+    {
+        var contexts = workspaceContextBuilder.GetAvailableContexts();
+        var tools = toolRegistry
+            .GetAll()
+            .Where(x => x.Visibility == ToolVisibility.Model)
+            .Select(x => new AiPreprocessorCatalogItem
+            {
+                Name = x.Name,
+                Description = x.Description
+            })
+            .ToList();
+
+        var sb = new StringBuilder();
+
+        sb.AppendLine("You are the Preprocessor AI.");
+        sb.AppendLine("Decide whether to answer directly or forward this request to the primary AI.");
+        sb.AppendLine("Return exactly one JSON object and no markdown.");
+        sb.AppendLine();
+        sb.AppendLine("Direct response schema:");
+        sb.AppendLine("{ \"action\": \"answer\", \"response\": \"<complete response>\" }");
+        sb.AppendLine();
+        sb.AppendLine("Forward schema:");
+        sb.AppendLine("{ \"action\": \"forward\", \"user\": \"<original user request>\", \"needsPlanner\": false, \"needsWorkspaceContext\": false, \"contextsNeeded\": [], \"toolsNeeded\": [] }");
+        sb.AppendLine();
+        sb.AppendLine("Available Workspace Contexts:");
+        sb.AppendLine(JsonConvert.SerializeObject(contexts, Formatting.Indented));
+        sb.AppendLine();
+        sb.AppendLine("Available Tools:");
+        sb.AppendLine(JsonConvert.SerializeObject(tools, Formatting.Indented));
+        sb.AppendLine();
+
+        if (request.SelectedCommand is not null)
+        {
+            sb.AppendLine($"Command: {request.SelectedCommand.Name}");
+
+            if (!string.IsNullOrWhiteSpace(request.SelectedCommand.Description))
+            {
+                sb.AppendLine($"Command Description: {request.SelectedCommand.Description}");
+            }
+
+            sb.AppendLine();
+        }
+
+        if (request.SelectedAgent is not null)
+        {
+            sb.AppendLine($"Agent: {request.SelectedAgent.Name}");
+
+            if (!string.IsNullOrWhiteSpace(request.SelectedAgent.Description))
+            {
+                sb.AppendLine($"Agent Description: {request.SelectedAgent.Description}");
+            }
+
+            sb.AppendLine();
+        }
+
+        sb.AppendLine("User Request:");
+        sb.AppendLine(request.DraftText);
+
+        return sb.ToString().TrimEnd();
+    }
+
+    private static ChatMessage CloneMessage(ChatMessage message)
+    {
+        return new ChatMessage
+        {
+            Role = message.Role,
+            Content = message.Content,
+            Data = message.Data,
+            ToolCalls = message.ToolCalls,
+            ToolCallId = message.ToolCallId,
+            CreatedAt = message.CreatedAt,
+            Stream = message.Stream
+        };
+    }
+
+    private static ChatMessageBuildResult CreateDirectResponseResult(
+        ChatMessageBuildRequest request,
+        AiPreprocessorResult preprocessorResult)
+    {
+        return new ChatMessageBuildResult
+        {
+            Context = new ChatMessageRequestContext
+            {
+                SelectedCommand = request.SelectedCommand,
+                SelectedAgent = request.SelectedAgent,
+                SelectedReferences = request.SelectedReferences,
+                PreprocessorResult = preprocessorResult
+            }
+        };
+    }
+
+    private static Dictionary<string, object> CreateResponseMeta(
+        ChatMessageBuildResult buildResult,
+        bool titleChanged = false,
+        bool cancelled = false)
+    {
+        Dictionary<string, object> meta = null;
+
+        void Add(string key, object value)
+        {
+            meta ??= new Dictionary<string, object>();
+            meta[key] = value;
+        }
+
+        if (buildResult?.Context?.PreprocessorResult?.IsAnswer == true)
+        {
+            Add("isPreprocessorAnswer", true);
+        }
+
+        if (titleChanged)
+        {
+            Add("titleChanged", true);
+        }
+
+        if (cancelled)
+        {
+            Add("cancelled", true);
+        }
+
+        return meta;
     }
 }

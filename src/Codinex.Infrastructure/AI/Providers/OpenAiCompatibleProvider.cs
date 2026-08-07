@@ -176,7 +176,7 @@ namespace Codinex.Infrastructure.AI.Providers
                 IReadOnlyList<ChatMessage> messages,
                 [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var tools = BuildTools();
+            var tools = BuildTools(messages);
             var payload = BuildChatCompletionPayload(
                 provider,
                 model,
@@ -416,7 +416,7 @@ namespace Codinex.Infrastructure.AI.Providers
                 model,
                 messages,
                 stream,
-                BuildTools());
+                BuildTools(messages));
         }
 
         private object BuildChatCompletionPayload(
@@ -436,14 +436,26 @@ namespace Codinex.Infrastructure.AI.Providers
             };
         }
 
-        private object[] BuildTools()
+        private object[] BuildTools(IReadOnlyList<ChatMessage> messages)
         {
+            var tools = toolRegistry
+                .GetAll()
+                .Where(x => x.Visibility == ToolVisibility.Model);
+
+            var preprocessorResult = GetPreprocessorResult(messages);
+
+            if (preprocessorResult != null)
+            {
+                var toolsNeeded = new HashSet<string>(
+                    preprocessorResult.ToolsNeeded ?? [],
+                    StringComparer.OrdinalIgnoreCase);
+
+                tools = tools.Where(x => toolsNeeded.Contains(x.Name));
+            }
+
             return
             [
-                .. toolRegistry
-                    .GetAll()
-                    .Where(x => x.Visibility == ToolVisibility.Model)
-                    .Select(tool => new
+                .. tools.Select(tool => new
                     {
                         type = "function",
 
@@ -467,6 +479,14 @@ namespace Codinex.Infrastructure.AI.Providers
                     })
             ];
         }
+
+        private static AiPreprocessorResult GetPreprocessorResult(IReadOnlyList<ChatMessage> messages)
+        {
+            return messages?
+                .Select(x => x.Context?.PreprocessorResult)
+                .FirstOrDefault(x => x is { IsForward: true });
+        }
+
         private PromptProfileResult BuildPromptProfile(IReadOnlyList<ChatMessage> messages, object[] tools)
         {
             var sections = new List<PromptSectionProfile>();

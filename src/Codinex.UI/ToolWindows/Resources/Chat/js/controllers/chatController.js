@@ -320,15 +320,15 @@ export function initChatController(transport) {
             if (!payload) return;
 
             // Non-stream fallback
-            chatView.appendMessage(payload, 'assistant');
+            chatView.appendMessage(payload, 'assistant', null, false, meta);
         },
         handleStatusChanged: (payload) => {
             chatView.setStatus(payload);
         },
-        handleStreamChunk: (payload) => {
+        handleStreamChunk: (payload, meta) => {
             // Stop loading spinner only on first chunk
             if (!activeStreamMessage) {
-                activeStreamMessage = createStreamingMessage();
+                activeStreamMessage = createStreamingMessage(meta);
                 accumulatedText = '';
             }
 

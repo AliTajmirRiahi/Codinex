@@ -3,6 +3,7 @@ using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
+using Codinex.Core.Tools;
 using Codinex.Core.UseCases;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Storage.Managers;
@@ -21,7 +22,8 @@ namespace Codinex.Infrastructure.Chat
         IErrorHandler errorHandler,
         IChatMessageBuilder chatMessageBuilder,
         IConversationEngine conversationEngine,
-        IWorkspaceContextBuilder workspaceContextBuilder)
+        IWorkspaceContextBuilder workspaceContextBuilder,
+        IAiToolRegistry toolRegistry)
         : IChatUseCaseFactory
     {
         public ISendChatMessageUseCase Create()
@@ -37,7 +39,14 @@ namespace Codinex.Infrastructure.Chat
 
             _ = aiProviderRouter.GetCurrentProvider();
 
-            return new SendChatMessageUseCase(session, errorHandler, chatMessageBuilder, conversationEngine, workspaceContextBuilder);
+            return new SendChatMessageUseCase(
+                session,
+                errorHandler,
+                chatMessageBuilder,
+                conversationEngine,
+                workspaceContextBuilder,
+                aiProviderRouter,
+                toolRegistry);
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace Codinex.Infrastructure.Workspace.PromptPipeline
         {
             var results = new List<ContextProviderResult>();
 
-            var modelProviders = providers.Where(p => p.Visibility == WorkspaceContextVisibility.Model).ToList();
+            var modelProviders = GetModelProviders(request).ToList();
 
             foreach (var provider in modelProviders)
             {
@@ -41,6 +42,34 @@ namespace Codinex.Infrastructure.Workspace.PromptPipeline
             }
 
             return composer.Compose(results);
+        }
+
+        public IReadOnlyList<AiPreprocessorCatalogItem> GetAvailableContexts()
+        {
+            return providers
+                .Where(p => p.Visibility == WorkspaceContextVisibility.Model)
+                .Select(p => new AiPreprocessorCatalogItem
+                {
+                    Name = p.Name,
+                    Description = p.Description
+                })
+                .ToList();
+        }
+
+        private IEnumerable<IWorkspaceContextOrchestrator> GetModelProviders(WorkspaceContextRequest request)
+        {
+            var modelProviders = providers.Where(p => p.Visibility == WorkspaceContextVisibility.Model);
+
+            if (request?.ContextsNeeded == null)
+            {
+                return modelProviders;
+            }
+
+            var contextsNeeded = new HashSet<string>(
+                request.ContextsNeeded.Where(x => !string.IsNullOrWhiteSpace(x)),
+                StringComparer.OrdinalIgnoreCase);
+
+            return modelProviders.Where(p => contextsNeeded.Contains(p.Name));
         }
     }
 }

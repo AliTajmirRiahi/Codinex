@@ -53,7 +53,7 @@ export function createMessageDispatcher(handlers) {
                 break;
 
             case EVENTS.STREAM_CHUNK:
-                if (handlers.onHandleStreamChunk) handlers.onHandleStreamChunk(payload);
+                if (handlers.onHandleStreamChunk) handlers.onHandleStreamChunk(payload, message.meta || message.Meta);
                 break;
 
             case EVENTS.STATUS_CHANGED:

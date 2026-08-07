@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Codinex.Core.Models
 {
@@ -9,5 +9,7 @@ namespace Codinex.Core.Models
         public IReadOnlyList<ReferenceItem> References { get; set; }
 
         public string AgentId { get; set; }
+
+        public IReadOnlyList<string> ContextsNeeded { get; set; }
     }
 }

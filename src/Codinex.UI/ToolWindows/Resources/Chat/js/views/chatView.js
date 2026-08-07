@@ -241,7 +241,7 @@ export const chatView = {
      * @param {string} content - Message text
      * @param {'user' | 'assistant'} role - Message sender
      */
-    appendMessage(text, sender, createdAt, deferDateSeparatorRefresh) {
+    appendMessage(text, sender, createdAt, deferDateSeparatorRefresh, options) {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
         const statusElement = document.getElementById('response-status');
@@ -253,7 +253,7 @@ export const chatView = {
         if (statusElement) parent.removeChild(statusElement);
         parent.removeChild(element);
 
-        const messageDiv = messageView.createMessageElement(text, sender);
+        const messageDiv = messageView.createMessageElement(text, sender, options);
 
         this.tagMessageElement(messageDiv, createdAt || new Date(), deferDateSeparatorRefresh);
 
@@ -385,7 +385,7 @@ export const chatView = {
  * Creates an empty assistant message element for streaming.
  * Returns the content element so it can be updated progressively.
  */
-export function createStreamingMessage() {
+export function createStreamingMessage(options) {
 
     const container = document.getElementById('chat-container');
 
@@ -396,7 +396,7 @@ export function createStreamingMessage() {
     if (statusElement) parent.removeChild(statusElement);
     parent.removeChild(element);
 
-    const contentEl = messageView.createStreamingMessage();
+    const contentEl = messageView.createStreamingMessage(options);
 
     chatView.tagMessageElement(contentEl.parentElement, new Date());
 

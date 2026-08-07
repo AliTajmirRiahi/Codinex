@@ -1,8 +1,26 @@
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 import { getState } from "../state/appState.js";
 
-function getCurrentModelName() {
+function isPreprocessorAnswer(options) {
+    return !!(options && (options.isPreprocessorAnswer || options.IsPreprocessorAnswer));
+}
+
+function getPreprocessorModelName(state) {
+    return state.settings?.preprocessorAiModelId
+        || state.settings?.PreprocessorAiModelId
+        || '';
+}
+
+function getCurrentModelName(options) {
     const state = getState();
+
+    if (isPreprocessorAnswer(options)) {
+        const modelName = getPreprocessorModelName(state);
+
+        return modelName
+            ? `preprocessing answer : ${modelName}`
+            : 'preprocessing answer';
+    }
 
     return state.currentChat?.modelId
         || state.currentModel?.name
@@ -32,8 +50,8 @@ function createMessageHeader(sender) {
     return headerEl;
 }
 
-function createModelFooter() {
-    const modelName = getCurrentModelName();
+function createModelFooter(options) {
+    const modelName = getCurrentModelName(options);
 
     if (!modelName) return null;
 
@@ -97,7 +115,7 @@ function createUserMessageElement(messageDiv, text) {
  * Specifically handles message rendering logic.
  */
 export const messageView = {
-    createMessageElement(text, sender) {
+    createMessageElement(text, sender, options) {
         const messageDiv = document.createElement('div');
 
         // Add base and sender-specific classes
@@ -112,7 +130,7 @@ export const messageView = {
         messageDiv.appendChild(contentEl);
 
         if (sender === 'assistant') {
-            const footerEl = createModelFooter();
+            const footerEl = createModelFooter(options);
 
             if (footerEl) {
                 messageDiv.appendChild(footerEl);
@@ -125,7 +143,7 @@ export const messageView = {
 
         return messageDiv;
     },
-    createStreamingMessage() {
+    createStreamingMessage(options) {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'chat-message assistant';
 
@@ -135,7 +153,7 @@ export const messageView = {
         messageDiv.appendChild(createMessageHeader('assistant'));
         messageDiv.appendChild(contentEl);
 
-        const footerEl = createModelFooter();
+        const footerEl = createModelFooter(options);
 
         if (footerEl) {
             messageDiv.appendChild(footerEl);
