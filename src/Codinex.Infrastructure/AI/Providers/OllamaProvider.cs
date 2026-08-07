@@ -32,15 +32,6 @@ namespace Codinex.Infrastructure.AI.Providers
         private readonly ProviderManager _providerManager = providerManager;
         private readonly SettingsManager _settingsManager = settingsManager;
 
-        public async Task<AiPreprocessorResult> PreprocessAsync(
-            IReadOnlyList<ChatMessage> messages,
-            CancellationToken cancellationToken = default)
-        {
-            var response = await SendAsync(messages, cancellationToken);
-
-            return AiPreprocessorResultParser.ParseOrDefault(response);
-        }
-
         public async Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompt,
             CancellationToken ct = default)

@@ -34,7 +34,7 @@ namespace Codinex.Infrastructure.Conversation
             }
 
             var history = request.Messages.ToList();
-            var provider = aiProviderRouter.GetCurrentProvider();
+            var provider = ResolveProvider(request.ProviderRole);
 
             return await provider.SendAsync(
                 history,
@@ -53,10 +53,11 @@ namespace Codinex.Infrastructure.Conversation
             yield return ConversationEvent.Status("Sending request...");
 
             var history = request.Messages.ToList();
-            var provider = aiProviderRouter.GetCurrentProvider();
+            var provider = ResolveProvider(request.ProviderRole);
 
             await foreach (var evt in ProcessEvents(
                                history,
+                               request.ProviderRole,
                                () => provider.SendStreamAsync(
                                    history,
                                    cancellationToken),
@@ -71,6 +72,7 @@ namespace Codinex.Infrastructure.Conversation
         /// </summary>
         private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
             List<ChatMessage> history,
+            ConversationProviderRole providerRole,
             Func<IAsyncEnumerable<ConversationEvent>> createEvents,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -137,10 +139,11 @@ namespace Codinex.Infrastructure.Conversation
                                 yield return ConversationEvent.ToolCompleted(result);
                             }
 
-                            var provider = aiProviderRouter.GetCurrentProvider();
+                            var provider = ResolveProvider(providerRole);
 
                             await foreach (var continuationEvent in ProcessEvents(
                                                history,
+                                               providerRole,
                                                () => provider.ContinueAsync(
                                                    history,
                                                    cancellationToken),
@@ -184,6 +187,17 @@ namespace Codinex.Infrastructure.Conversation
 
                 await Task.Delay(retryDelay, cancellationToken);
             }
+        }
+
+        private IAiProvider ResolveProvider(ConversationProviderRole providerRole)
+        {
+            if (providerRole == ConversationProviderRole.Preprocessor)
+            {
+                return aiProviderRouter.GetCurrentPreprocessorProvider()
+                       ?? throw new InvalidOperationException("Preprocessor Provider not found.");
+            }
+
+            return aiProviderRouter.GetCurrentProvider();
         }
 
         private static string GetStatusMessage(

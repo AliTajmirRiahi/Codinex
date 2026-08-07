@@ -126,20 +126,20 @@ public sealed class SendChatMessageUseCase(
 
         try
         {
-            var preprocessorResult = await RunPreprocessorAsync(
+            // Get last 10 messages for context
+            request.ConversationHistory = chatSession.GetRecentMessages(10);
+
+            var preprocessorResult = await RunPreprocessorStreamingAsync(
                 request,
+                onMessage,
                 cancellationToken);
+
+            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(preprocessorResult);
 
             if (preprocessorResult?.IsAnswer == true)
             {
                 buildResult = CreateDirectResponseResult(request, preprocessorResult);
                 fullText = preprocessorResult.Response ?? string.Empty;
-
-                await StreamDirectResponseAsync(
-                    fullText,
-                    buildResult,
-                    onMessage,
-                    cancellationToken);
 
                 chatSession.AddUserMessage(request.DraftText, buildResult.Context);
                 chatSession.AddAssistantMessage(fullText);
@@ -153,9 +153,6 @@ public sealed class SendChatMessageUseCase(
 
                 return;
             }
-
-            // Get last 10 messages for context
-            request.ConversationHistory = chatSession.GetRecentMessages(10);
 
             var workspaceRequest = new WorkspaceContextRequest
             {
@@ -187,7 +184,7 @@ public sealed class SendChatMessageUseCase(
 
                         fullText += chunk;
 
-                        await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
+                        await Task.Delay(50, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
 
                         await onMessage(
                             new ChatResponse(
@@ -266,41 +263,6 @@ public sealed class SendChatMessageUseCase(
         }
     }
 
-    private static async Task StreamDirectResponseAsync(
-        string text,
-        ChatMessageBuildResult buildResult,
-        Func<ChatResponse, Task> onMessage,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return;
-        }
-
-        foreach (var chunk in CreateStreamingChunks(text))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
-
-            await onMessage(new ChatResponse(
-                WebViewMessageType.StreamChunk,
-                chunk,
-                CreateResponseMeta(buildResult)));
-        }
-    }
-
-    private static IEnumerable<string> CreateStreamingChunks(string text)
-    {
-        const int chunkSize = 24;
-
-        for (var index = 0; index < text.Length; index += chunkSize)
-        {
-            var length = Math.Min(chunkSize, text.Length - index);
-            yield return text.Substring(index, length);
-        }
-    }
-
     private async Task<AiPreprocessorResult> RunPreprocessorAsync(
         ChatMessageBuildRequest request,
         CancellationToken cancellationToken)
@@ -312,9 +274,78 @@ public sealed class SendChatMessageUseCase(
             return null;
         }
 
-        return await preprocessorProvider.PreprocessAsync(
-            BuildPreprocessorMessages(request),
+        var buildResult = CreatePreprocessorBuildResult(request);
+        var response = await conversationEngine.ExecuteTextAsync(
+            buildResult,
             cancellationToken);
+
+        return AiPreprocessorResultParser.ParseOrDefault(response);
+    }
+
+    private async Task<AiPreprocessorResult> RunPreprocessorStreamingAsync(
+        ChatMessageBuildRequest request,
+        Func<ChatResponse, Task> onMessage,
+        CancellationToken cancellationToken)
+    {
+        var preprocessorProvider = aiProviderRouter.GetCurrentPreprocessorProvider();
+
+        if (preprocessorProvider == null)
+        {
+            return null;
+        }
+
+        var preprocessorText = string.Empty;
+        var buildResult = CreatePreprocessorBuildResult(request);
+
+        var tt = Newtonsoft.Json.JsonConvert.SerializeObject(buildResult);
+
+        await foreach (var evt in conversationEngine.ExecuteAsync(
+                           buildResult,
+                           cancellationToken))
+        {
+            switch (evt.Type)
+            {
+                case ConversationEventType.TextDelta:
+                    await Task.Delay(50, cancellationToken);
+                    preprocessorText += evt.Payload.ToString();
+                    continue;
+
+                case ConversationEventType.StatusChanged:
+                    await onMessage(
+                        new ChatResponse(
+                            WebViewMessageType.StatusChanged,
+                            evt.DisplayMessage));
+                    continue;
+
+                case ConversationEventType.ConversationFailed:
+                    return null;
+            }
+        }
+
+        return AiPreprocessorResultParser.ParseOrDefault(preprocessorText);
+    }
+
+    private ChatMessageBuildResult CreatePreprocessorBuildResult(ChatMessageBuildRequest request)
+    {
+        var messages = BuildPreprocessorMessages(request);
+        var context = new ChatMessageRequestContext
+        {
+            SelectedCommand = request.SelectedCommand,
+            SelectedAgent = request.SelectedAgent,
+            SelectedReferences = request.SelectedReferences
+        };
+
+        var userMessage = messages.LastOrDefault(x =>
+            string.Equals(x.Role, "user", StringComparison.OrdinalIgnoreCase));
+
+        userMessage?.Context = context;
+
+        return new ChatMessageBuildResult
+        {
+            Messages = messages,
+            ProviderRole = ConversationProviderRole.Preprocessor,
+            Context = context
+        };
     }
 
     private IReadOnlyList<ChatMessage> BuildPreprocessorMessages(ChatMessageBuildRequest request)
@@ -424,6 +455,7 @@ public sealed class SendChatMessageUseCase(
     {
         return new ChatMessageBuildResult
         {
+            ProviderRole = ConversationProviderRole.Preprocessor,
             Context = new ChatMessageRequestContext
             {
                 SelectedCommand = request.SelectedCommand,
