@@ -25,6 +25,19 @@ public sealed class BuildProjectTool(
     public string Description =>
         "Builds one project in the current Visual Studio solution by project name.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "build project",
+        "compile project",
+        "rebuild project",
+        "build a project",
+        "compile a project",
+        "build current project",
+        "compile current project",
+        "project build",
+        "project compile"
+    ];
+
     public string StatusMessage => "Building project...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

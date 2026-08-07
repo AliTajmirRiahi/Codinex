@@ -26,6 +26,16 @@ public sealed class GetProjectsTool(
     public string Description =>
         "Gets project information for the current Visual Studio solution.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "get projects",
+        "list projects",
+        "show projects",
+        "solution projects",
+        "project information",
+        "workspace projects"
+    ];
+
     public string StatusMessage => "Getting projects...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

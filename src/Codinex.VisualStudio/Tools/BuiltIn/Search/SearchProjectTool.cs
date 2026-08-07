@@ -36,6 +36,18 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
         "- text search\n" +
         "- regular expression search";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "search project",
+        "search workspace",
+        "find text",
+        "find file",
+        "search files",
+        "regex search",
+        "search source code",
+        "find in files"
+    ];
+
     public ToolVisibility Visibility => ToolVisibility.Model;
 
     public string StatusMessage => "Searching project...";

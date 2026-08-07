@@ -20,6 +20,15 @@ public sealed class FindReferencesTool : IAiTool
 
     public string Description => "";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "find references",
+        "show references",
+        "symbol references",
+        "where used",
+        "find usages"
+    ];
+
     public string StatusMessage => "Finding references...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Debug;

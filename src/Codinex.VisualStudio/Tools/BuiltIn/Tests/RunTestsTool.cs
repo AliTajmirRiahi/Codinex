@@ -20,6 +20,15 @@ public sealed class RunTestsTool : IAiTool
 
     public string Description => "";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "run tests",
+        "execute tests",
+        "test project",
+        "run unit tests",
+        "run all tests"
+    ];
+
     public string StatusMessage => "Running tests...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Debug;

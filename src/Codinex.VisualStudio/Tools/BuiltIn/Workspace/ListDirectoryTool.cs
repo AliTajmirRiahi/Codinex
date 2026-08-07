@@ -23,6 +23,17 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
         public string Description =>
             "Lists the files and directories within a workspace directory. It Should Have path";
 
+        public IReadOnlyList<string> Capabilities =>
+        [
+            "list directory",
+            "show directory",
+            "browse folder",
+            "list files",
+            "show files",
+            "workspace tree",
+            "directory contents"
+        ];
+
         public ToolDefinition Definition { get; } =
             new ToolDefinition(
                 new Dictionary<string, ToolProperty>

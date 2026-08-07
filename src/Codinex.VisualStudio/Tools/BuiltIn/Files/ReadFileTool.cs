@@ -26,6 +26,15 @@ public sealed class ReadFileTool(
 
     public string Description => "Use only when the requested information cannot be obtained from the current workspace context.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "read file",
+        "open file contents",
+        "show file contents",
+        "inspect file",
+        "view file"
+    ];
+
     public string StatusMessage => "Reading file...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Debug;

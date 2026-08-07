@@ -24,6 +24,17 @@ public sealed class BuildSolutionTool(
     public string Description =>
         "Builds the current Visual Studio solution and returns the build result.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "build solution",
+        "compile solution",
+        "rebuild solution",
+        "build workspace",
+        "compile workspace",
+        "solution build",
+        "solution compile"
+    ];
+
     public string StatusMessage => "Building solution...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

@@ -26,6 +26,18 @@ public sealed class GetDiagnosticsTool(
     public string Description =>
         "Gets compiler and analyzer diagnostics from the current workspace.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "get diagnostics",
+        "show diagnostics",
+        "list diagnostics",
+        "compiler diagnostics",
+        "analyzer diagnostics",
+        "errors and warnings",
+        "show errors",
+        "show warnings"
+    ];
+
     public string StatusMessage => "Getting diagnostics...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;

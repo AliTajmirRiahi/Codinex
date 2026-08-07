@@ -25,6 +25,15 @@ public sealed class GetOpenDocumentsTool(
     public string Description =>
         "Gets the currently open documents in Visual Studio.";
 
+    public IReadOnlyList<string> Capabilities =>
+    [
+        "get open documents",
+        "list open documents",
+        "show open files",
+        "currently open documents",
+        "active documents"
+    ];
+
     public string StatusMessage => "Getting open documents...";
 
     public ToolVisibility Visibility { get; } = ToolVisibility.Model;
