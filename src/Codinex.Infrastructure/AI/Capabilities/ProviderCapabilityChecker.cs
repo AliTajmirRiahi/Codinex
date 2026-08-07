@@ -185,10 +185,10 @@ namespace Codinex.Infrastructure.AI.Capabilities
             AiModel model,
             CancellationToken cancellationToken)
         {
-            var imageBase64 = LoadProbeImage();
-
             try
             {
+                var imageBase64 = LoadProbeImage();
+
                 await PostVisionProbeAsync(
                     provider,
                     model,
@@ -203,6 +203,8 @@ namespace Codinex.Infrastructure.AI.Capabilities
             {
                 try
                 {
+                    var imageBase64 = LoadProbeImage();
+
                     await PostVisionProbeAsync(
                         provider,
                         model,
@@ -220,6 +222,14 @@ namespace Codinex.Infrastructure.AI.Capabilities
             catch (OpenAiCompatibleException ex)
             {
                 return MapVisionProbeException(ex);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch
+            {
+                return CapabilityProbeResult.Unknown;
             }
         }
 

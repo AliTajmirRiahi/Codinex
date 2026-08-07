@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setCurrentModel(activeModel);
             }
 
+            manageModelsController.updateUI(providers);
             chatController.renderCurrentProvider();
             setInputLoading(false);
         },
