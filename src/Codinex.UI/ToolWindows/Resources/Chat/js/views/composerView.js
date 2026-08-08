@@ -34,6 +34,7 @@ export class ComposerView {
         this.filteredItems = [];
         this.currentType = null;
         this.currentTrigger = null;
+        this.suppressTriggerDetection = false;
 
         if (!this.input || !this.sendBtn)
             throw new Error("ComposerView: missing input elements");
@@ -121,6 +122,10 @@ export class ComposerView {
             this.configInput();
         });
 
+        this.input.addEventListener('paste', (e) => {
+            this.handlePaste(e);
+        });
+
         this.contextBtn.addEventListener('click', () => {
             var triggerData = {
                 symbol: '+',
@@ -181,6 +186,58 @@ export class ComposerView {
         this.notifyChange();
     }
 
+    handlePaste(e) {
+        e.preventDefault();
+
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) return;
+
+        const text = clipboardData.getData('text/plain');
+        if (!text) return;
+
+        this.insertPlainTextAtSelection(text);
+
+        this.suppressTriggerDetection = true;
+        try {
+            this.configInput();
+        } finally {
+            this.suppressTriggerDetection = false;
+        }
+    }
+
+    insertPlainTextAtSelection(text) {
+        const input = this.input;
+        input.focus();
+
+        const selection = window.getSelection();
+        let range = null;
+
+        if (selection && selection.rangeCount > 0) {
+            const selectedRange = selection.getRangeAt(0);
+
+            if (input.contains(selectedRange.startContainer) && input.contains(selectedRange.endContainer)) {
+                range = selectedRange;
+            }
+        }
+
+        if (!range) {
+            range = document.createRange();
+            range.selectNodeContents(input);
+            range.collapse(false);
+        }
+
+        range.deleteContents();
+
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+        range.setStartAfter(textNode);
+        range.collapse(true);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
     send() {
         if (this.isStreaming) {
             if (this.onCancel)
@@ -222,7 +279,9 @@ export class ComposerView {
         const textBeforeCursor = preCaretRange.toString();
 
         // 2. Detect trigger
-        const triggerData = this.detectTrigger(textBeforeCursor, textBeforeCursor.length);
+        const triggerData = this.suppressTriggerDetection
+            ? null
+            : this.detectTrigger(textBeforeCursor, textBeforeCursor.length);
 
         if (triggerData) {
             // 3. Safely remove the trigger from the DOM
