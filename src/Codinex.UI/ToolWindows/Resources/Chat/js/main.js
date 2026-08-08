@@ -150,11 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
         onProviderModelsRefreshed: (payload) => {
             const providers = payload.providers || payload.Providers;
 
-            if (providers != null && providers.current)
-                setProvider(providers.current);
+            manageModelsController.updateUI(providers, payload.SelectedProviderId || payload.selectedProviderId);
 
-            manageModelsController.updateUI(providers);
-            chatController.renderCurrentProvider();
             setInputLoading(false);
         },
         onSettingsSaved: (payload) => {

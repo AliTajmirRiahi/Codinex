@@ -35,6 +35,12 @@ export class ComposerView {
         this.currentType = null;
         this.currentTrigger = null;
         this.suppressTriggerDetection = false;
+        this.menuPageSize = 20;
+        this.menuRenderedCount = 0;
+
+        if (this.menu) {
+            this.menu.addEventListener('scroll', () => this.handleMenuScroll());
+        }
 
         if (!this.input || !this.sendBtn)
             throw new Error("ComposerView: missing input elements");
@@ -482,19 +488,32 @@ export class ComposerView {
         this.selectedIndex = 0; // Reset to first item whenever list changes
         this.currentType = type;
         this.currentTrigger = trigger;
+        this.menuRenderedCount = 0;
 
         // mark menu with the current section type (commands/agents/references)
         this.menu.setAttribute('data-section', type);
         this.menu.innerHTML = '';
+        this.menu.scrollTop = 0;
         this.menu.classList.remove('hidden');
 
-        var index = 0;
+        this.renderNextMenuPage();
 
-        for (const item of items) {
+    }
 
+    renderNextMenuPage() {
+
+        if (!this.menu) return;
+
+        const start = this.menuRenderedCount;
+        const pageSize = this.currentType === 'references' ? this.menuPageSize : this.filteredItems.length;
+        const end = Math.min(start + pageSize, this.filteredItems.length);
+
+        for (let index = start; index < end; index++) {
+
+            const item = this.filteredItems[index];
             const el = document.createElement('button');
 
-            el.className = `composer-menu-item  ${index === 0 ? 'active' : ''}`;
+            el.className = `composer-menu-item  ${index === this.selectedIndex ? 'active' : ''}`;
 
             el['data-index'] = index;
 
@@ -505,11 +524,25 @@ export class ComposerView {
             `;
 
             el.addEventListener('click', () => {
-                this.composerMenuSelect(type, item, trigger);
+                this.composerMenuSelect(this.currentType, item, this.currentTrigger);
             });
 
             this.menu.appendChild(el);
-            index++;
+        }
+
+        this.menuRenderedCount = end;
+    }
+
+    handleMenuScroll() {
+
+        if (!this.menu || this.currentType !== 'references') return;
+        if (this.menuRenderedCount >= this.filteredItems.length) return;
+
+        const scrollThreshold = 20;
+        const isAtBottom = this.menu.scrollTop + this.menu.clientHeight >= this.menu.scrollHeight - scrollThreshold;
+
+        if (isAtBottom) {
+            this.renderNextMenuPage();
         }
 
     }
@@ -525,10 +558,11 @@ export class ComposerView {
 
         this.menu.classList.add('hidden');
         this.menu.innerHTML = '';
+        this.menuRenderedCount = 0;
 
     }
     navigateMenu(direction) {
-        const items = document.querySelectorAll('.composer-menu-item');
+        let items = this.menu ? this.menu.querySelectorAll('.composer-menu-item') : document.querySelectorAll('.composer-menu-item');
         if (items.length === 0) return;
 
         // Remove active class from old item
@@ -536,6 +570,11 @@ export class ComposerView {
 
         // Calculate new index
         this.selectedIndex += direction;
+
+        if (this.selectedIndex >= items.length && this.menuRenderedCount < this.filteredItems.length) {
+            this.renderNextMenuPage();
+            items = this.menu.querySelectorAll('.composer-menu-item');
+        }
 
         // Boundary checks (Looping)
         if (this.selectedIndex < 0) this.selectedIndex = items.length - 1;
