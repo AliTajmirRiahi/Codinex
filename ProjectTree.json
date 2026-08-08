@@ -2906,6 +2906,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.VisualStudio/Interfaces/ISourceFileElementIndex.cs",
+                                                                       "name":  "ISourceFileElementIndex.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.VisualStudio/Interfaces/ISourceFileElementService.cs",
                                                                        "name":  "ISourceFileElementService.cs",
                                                                        "type":  "file"
@@ -3151,6 +3156,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.VisualStudio/Services/BuildService.cs",
                                                                        "name":  "BuildService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/Services/SourceFileElementIndex.cs",
+                                                                       "name":  "SourceFileElementIndex.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {

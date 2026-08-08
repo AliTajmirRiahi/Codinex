@@ -57,6 +57,7 @@
     <Compile Include="Hosting\Startup\ExecutionPipeline.cs" />
     <Compile Include="Interfaces\IBuildService.cs" />
     <Compile Include="Interfaces\IResourceServer.cs" />
+    <Compile Include="Interfaces\ISourceFileElementIndex.cs" />
     <Compile Include="Interfaces\ISourceFileElementService.cs" />
     <Compile Include="Interfaces\IWebViewClient.cs" />
     <Compile Include="Interfaces\IWebViewMessageRouter.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="References\ReferenceManager.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Services\BuildService.cs" />
+    <Compile Include="Services\SourceFileElementIndex.cs" />
     <Compile Include="Services\SourceFileElementService.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
