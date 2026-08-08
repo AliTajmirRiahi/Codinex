@@ -22,9 +22,12 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
             throw new ArgumentNullException(nameof(change));
 
         if (string.IsNullOrWhiteSpace(change.Search))
-            throw new ArgumentException(
-                "Search text cannot be null or empty.",
-                nameof(change));
+            return new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.NoUniqueMatch,
+                MatchCount = 0,
+                Error = "Unable to search with empty text."
+            };
 
         var matches = FindMatches(content, change.Search);
 

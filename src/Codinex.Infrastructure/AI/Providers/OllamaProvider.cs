@@ -24,7 +24,8 @@ namespace Codinex.Infrastructure.AI.Providers
         ProviderManager providerManager,
         SettingsManager settingsManager,
         IAiToolRegistry toolRegistry,
-        IProviderClient client)
+        IProviderClient client,
+        IWorkspaceFileService workspaceFileService)
         : IAiPreprocessorProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -165,14 +166,26 @@ namespace Codinex.Infrastructure.AI.Providers
         {
             var toolCalls = new Dictionary<string, ToolCall>();
 
+            var payload = BuildChatPayload(
+                provider,
+                model,
+                messages,
+                true);
+
+#if DEBUG
+            var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented);
+
+            var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
+
+            await workspaceFileService.CreateFileAsync(path, cancellationToken);
+
+            await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: cancellationToken);
+#endif
+
             await foreach (var line in client.StreamPostAsync(
                                provider,
                                "/api/chat",
-                               BuildChatPayload(
-                                   provider,
-                                   model,
-                                   messages,
-                                   true),
+                               payload,
                                cancellationToken))
             {
                 var json = jsonSerializer.Parse(line);
@@ -283,7 +296,7 @@ namespace Codinex.Infrastructure.AI.Providers
                                 function = new
                                 {
                                     name = x.Name,
-                                    arguments = x.Arguments?.ToString() ?? "{}"
+                                    arguments = x.Arguments ?? new JObject()
                                 }
                             }),
                             content = prompt.Content ?? string.Empty

@@ -24,11 +24,11 @@ public sealed class ToolRequest
     public JObject Arguments { get; set; } = new JObject();
 
 
-    public string GetRequiredString(string name)
+    public string GetRequiredString(string name, bool failedOpen = false)
     {
         var value = Arguments.Value<string>(name);
 
-        if (string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(value) && !failedOpen)
         {
             throw new InvalidOperationException(
                 $"Required tool argument '{name}' was not provided.");

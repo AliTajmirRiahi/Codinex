@@ -29,8 +29,8 @@
 		<KeyBinding guid="guidCodinexPackageCmdSet"
             id="cmdidCodinexToolWindowCommand"
             editor="guidVSStd97"
-            key1="Z"
-            mod1="Control Shift" />
+            key1="I"
+            mod1="Control Shift Alt" />
 	</KeyBindings>
 
   <Symbols>
