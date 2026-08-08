@@ -88,6 +88,16 @@ export function initChatController(transport) {
         composerController.handleContextClick(ctx);
     });
 
+    document.addEventListener('composer:ref-click', (e) => {
+        const reference = e.detail?.reference;
+        const metadata = reference?.metadata || reference?.Metadata || {};
+        const filePath = metadata.filePath || metadata.FilePath || reference?.value || reference?.Value;
+
+        if (!filePath) return;
+
+        transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath });
+    });
+
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat);
     projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject);
 
