@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +38,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IErrorHandler _errorHandler;
     private readonly ReferenceManager _referenceManager;
     private readonly SettingsManager _settingsManager;
+    private readonly IVisualStudioServices _visualStudio;
+    private readonly IWorkspaceFileService _workspaceFileService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -53,7 +56,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IConversationGroupManager conversationGroupManager,
         IErrorHandler errorHandler,
         ReferenceManager referenceManager,
-        SettingsManager settingsManager)
+        SettingsManager settingsManager,
+        IVisualStudioServices visualStudio,
+        IWorkspaceFileService workspaceFileService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -67,6 +72,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _errorHandler = errorHandler;
         _referenceManager = referenceManager;
         _settingsManager = settingsManager;
+        _visualStudio = visualStudio;
+        _workspaceFileService = workspaceFileService;
 
 
         RegisterEventHandlers();
@@ -258,6 +265,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     OpenExternalLink(request);
                     return;
                 }
+            case WebViewMessageType.OpenReferenceFile:
+                {
+                    await OpenReferenceFileAsync(request);
+                    return;
+                }
             default:
                 {
                     await _webViewClient.PostMessageAsync(new WebViewMessageResponse(
@@ -301,6 +313,21 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             UseShellExecute = true
         });
     }
+#pragma warning disable VSTHRD010
+
+    private async Task OpenReferenceFileAsync(WebViewMessageRequest request)
+    {
+        var filePath = request.Payload?["filePath"]?.ToString();
+        if (string.IsNullOrWhiteSpace(filePath))
+            return;
+
+        if (!_workspaceFileService.FileExists(filePath))
+            return;
+
+        var dte = await _visualStudio.GetDteAsync();
+        dte?.ItemOperations.OpenFile(filePath);
+    }
+#pragma warning restore VSTHRD010
 
     private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {

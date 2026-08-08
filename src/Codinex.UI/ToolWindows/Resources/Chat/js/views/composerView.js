@@ -390,7 +390,8 @@ export class ComposerView {
             '#settings-btn',
             '#model-selector-btn',
             '#agent-selector-btn',
-            '.context-chip-remove'
+            '.context-chip-remove',
+            '.context-chip-text'
         ];
 
         disabledSelectors.forEach(selector => {
@@ -679,10 +680,23 @@ export class ComposerView {
             chip.title = chipTitle;
             chip.innerHTML = `
                 ${refIcon ? `<div class="item-icon" style="${refColor ? `color: var(${refColor});` : ''}"><codinex-icon name="${refIcon}"></codinex-icon></div>` : ''}
-                <span class="context-chip-text">${refName}</span>
+                <span class="context-chip-text" role="button" tabindex="0" data-id="${refId}">${refName}</span>
                 <button class="context-chip-remove" title="Remove Context" data-id="${refId}">
                     <codinex-icon name="circle-x"></codinex-icon>
                 </button>`;
+
+            const chipText = chip.querySelector('.context-chip-text');
+            const handleChipTextClick = (e) => {
+                e.stopPropagation();
+
+                if (chipText.getAttribute('aria-disabled') === 'true') return;
+
+                document.dispatchEvent(new CustomEvent('composer:ref-click', {
+                    detail: { id: refId, reference: ref }
+                }));
+            };
+
+            chipText.addEventListener('click', handleChipTextClick);
 
             // 3. Attach remove event
             chip.querySelector('.context-chip-remove').addEventListener('click', (e) => {
