@@ -16,7 +16,7 @@ using Codinex.Core.Tools;
 namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
 {
     [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
-    public class ListDirectoryTool(IWorkspaceFileService workspaceFileService) : IAiTool
+    public class ListDirectoryTool(IWorkspaceFileService workspaceFileService, IWorkspaceContext workspaceContext) : IAiTool
     {
         public string Name => "list_directory";
 
@@ -56,7 +56,10 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
         {
             await Task.Yield();
 
-            var path = request.GetRequiredString("path");
+            var path = request.GetRequiredString("path", true);
+
+            if (string.IsNullOrEmpty(path))
+                path = workspaceContext.SolutionPath;
 
             var entries = await workspaceFileService.ListDirectoryAsync(path, cancellationToken);
 
@@ -70,7 +73,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
                         {
                             e.Name,
                             e.RelativePath,
-                            Type = e.Type ==  WorkspaceEntryType.Directory ? "Directory" : "File"
+                            Type = e.Type == WorkspaceEntryType.Directory ? "Directory" : "File"
                         })
                 });
         }
