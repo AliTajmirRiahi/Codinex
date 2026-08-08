@@ -228,7 +228,7 @@ namespace Codinex.Infrastructure.Conversation
                 return string.Empty;
             }
 
-            foreach (var name in new[] { "path", "query", "symbol", "id", "title" })
+            foreach (var name in new[] { "path", "filePath", "query", "symbol", "id", "title", "elementId" })
             {
                 var detail = request.Arguments.Value<string>(name);
 
@@ -237,7 +237,7 @@ namespace Codinex.Infrastructure.Conversation
                     continue;
                 }
 
-                return name == "path" ? GetPathDisplayName(detail) : detail;
+                return name.Contains("path") ? GetPathDisplayName(detail) : detail;
             }
 
             return string.Empty;

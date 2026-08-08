@@ -16,7 +16,7 @@ namespace Codinex.VisualStudio.Services;
 public sealed class SourceFileElementService(
     IWorkspaceContext workspaceContext,
     IWorkspaceFileService workspaceFileService,
-    IWorkspaceSearchService workspaceSearchService)
+    ISourceFileElementIndex sourceFileElementIndex)
     : ISourceFileElementService
 {
     public IReadOnlyList<string> SupportedExtensions => SourceFileElementParser.SupportedExtensions;
@@ -54,6 +54,8 @@ public sealed class SourceFileElementService(
             .OrderBy(e => e.Order)
             .ToArray();
 
+        sourceFileElementIndex.UpdateFile(relativePath, elements);
+
         return new SourceFileOutline
         {
             File = SourceFileElementParser.NormalizePath(relativePath),
@@ -64,37 +66,9 @@ public sealed class SourceFileElementService(
 
     public SourceFileElement FindElement(string elementId)
     {
-        if (string.IsNullOrWhiteSpace(elementId))
-        {
-            return null;
-        }
-
-        var files = SupportedExtensions
-            .SelectMany(extension => workspaceSearchService.FindByExtension(extension))
-            .Where(file => IsSupported(file.RelativePath))
-            .GroupBy(file => file.FullPath, StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First());
-
-        foreach (var file in files)
-        {
-            try
-            {
-                var element = GetFileOutline(file.FullPath, file.RelativePath)
-                    .Elements
-                    .FirstOrDefault(e => e.Id.Equals(elementId, StringComparison.Ordinal));
-
-                if (element != null)
-                {
-                    return element;
-                }
-            }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-            {
-                // Skip files that cannot be read.
-            }
-        }
-
-        return null;
+        return sourceFileElementIndex.TryGetElement(elementId, out var element)
+            ? element
+            : null;
     }
 
     private string GetWorkspaceRelativePath(string fullPath)

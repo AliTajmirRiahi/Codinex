@@ -63,7 +63,9 @@ public sealed class ReadElementTool(
             cancellationToken.ThrowIfCancellationRequested();
 
             var elementId = request.GetRequiredString("elementId");
-            var element = sourceFileElementService.FindElement(elementId);
+            var element = await Task.Run(
+                () => sourceFileElementService.FindElement(elementId),
+                cancellationToken);
 
             if (element == null)
             {
