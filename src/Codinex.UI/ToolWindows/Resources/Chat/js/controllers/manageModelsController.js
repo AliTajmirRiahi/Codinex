@@ -4,7 +4,7 @@ import { EVENTS, CUSTOME_EVENTS } from '../constants/events.js';
  * Orchestrates settings changes.
  */
 export const initManageModelsController = (transport) => {
-    let latestSettings = null;
+    let latestProviders = null;
 
     function getAvailableProviders(settings) {
         return settings?.availableProviders || settings?.AvailableProviders || [];
@@ -21,10 +21,10 @@ export const initManageModelsController = (transport) => {
         //Ask for close other dropdowns
         window.dispatchEvent(new CustomEvent(CUSTOME_EVENTS.CLOSE_ALL_DROPDOWNS));
 
-        if (latestSettings) {
+        if (latestProviders) {
             manageModelsView.renderProviders(
-                getAvailableProviders(latestSettings),
-                getCurrentProviderId(latestSettings));
+                getAvailableProviders(latestProviders),
+                getCurrentProviderId(latestProviders));
         }
 
         manageModelsView.show();
@@ -36,10 +36,10 @@ export const initManageModelsController = (transport) => {
     });
 
     return {
-        updateUI(settings) {
-            if (!settings) return;
+        updateUI(providers, selectedProviderId) {
+            if (!providers) return;
 
-            latestSettings = settings;
+            latestProviders = providers;
 
             manageModelsView.initEventHandlers(
                 (updatedSettings) => {
@@ -48,7 +48,8 @@ export const initManageModelsController = (transport) => {
                 (payload) => {
                     this.refreshProviderModels(payload);
                 }); // Ensure event handlers are set up
-            manageModelsView.renderProviders(getAvailableProviders(settings), getCurrentProviderId(settings));
+
+            manageModelsView.renderProviders(getAvailableProviders(providers), selectedProviderId != null ? selectedProviderId : getCurrentProviderId(providers));
 
             // Ensure loading overlay is hidden after any UI update (e.g., after refresh completes)
             manageModelsView.setLoading(false);

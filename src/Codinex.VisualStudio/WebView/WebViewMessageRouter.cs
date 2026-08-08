@@ -199,7 +199,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     await _providerManager.RefreshModelsAsync(providerId);
 
-                    await SendProviderModelsRefreshedAsync();
+                    await SendProviderModelsRefreshedAsync(providerId);
 
                     return;
                 }
@@ -515,17 +515,17 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendProviderModelsRefreshedAsync()
+    public async Task SendProviderModelsRefreshedAsync(string selectedProviderId)
     {
         var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.ProviderModelsRefreshed,
             Payload = new
             {
+                SelectedProviderId = selectedProviderId,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
-                    Current = _providerManager.ActiveProvider
                 },
             },
             Timestamp = DateTime.Now
