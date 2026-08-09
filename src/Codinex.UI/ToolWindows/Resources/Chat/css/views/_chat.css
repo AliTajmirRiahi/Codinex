@@ -70,11 +70,6 @@
     -webkit-text-fill-color: transparent;
     animation: gradientBlink 2s ease-in-out infinite;
 }
-
-.response-loading {
-    width: 40px;
-}
-
 @keyframes gradientBlink {
     0% {
         background-position: 0% 50%;
@@ -88,6 +83,85 @@
         background-position: 0% 50%;
     }
 }
+
+.response-loading {
+    width: 40px;
+}
+
+.thinking-box {
+    align-self: flex-start;
+    flex-shrink: 0;
+    max-width: 85%;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    background-color: var(--vs-access-tool-tip-disabled-text-color);
+    overflow: hidden;
+}
+
+.thinking-toggle {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 16px;
+    padding: 6px 10px;
+    border: none;
+    background: transparent;
+    color: var(--vs-access-tool-tip-color);
+    font-size: 12px;
+    line-height: 16px;
+    cursor: pointer;
+    text-align: left;
+    box-sizing: content-box;
+}
+
+.thinking-toggle:hover {
+    color: var(--vs-foreground);
+}
+
+.thinking-box:not(.collapsed) .thinking-label {
+    background: linear-gradient( 90deg, var(--vs-control-link-text-color) 0%, var(--vs-system-highlight-color) 50%, var(--vs-control-link-text-color) 100% );
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientBlink 2s ease-in-out infinite;
+}
+
+.thinking-chevron {
+    width: 12px;
+    height: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    transition: transform 0.15s ease;
+}
+
+.thinking-chevron svg {
+    width: 12px;
+    height: 12px;
+}
+
+.thinking-box.collapsed .thinking-chevron {
+    transform: rotate(-90deg);
+}
+
+.thinking-content {
+    padding: 0 10px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--vs-class-designer-typedef-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.thinking-box.collapsed .thinking-content {
+    display: none;
+}
+
+
 .message {
     max-width: 85%;
     padding: 8px 12px;

@@ -202,6 +202,15 @@ document.addEventListener('DOMContentLoaded', () => {
         onHandleStreamChunk: (payload, meta) => {
             chatController.handleStreamChunk(payload, meta);
         },
+        onThinkingStarted: () => {
+            chatController.handleThinkingStarted();
+        },
+        onThinkingChunk: (payload) => {
+            chatController.handleThinkingChunk(payload);
+        },
+        onThinkingCompleted: () => {
+            chatController.handleThinkingCompleted();
+        },
         onStatusChanged: (payload) => {
             chatController.handleStatusChanged(payload);
         },

@@ -56,6 +56,18 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onHandleStreamChunk) handlers.onHandleStreamChunk(payload, message.meta || message.Meta);
                 break;
 
+            case EVENTS.THINKING_STARTED:
+                if (handlers.onThinkingStarted) handlers.onThinkingStarted(payload, message.meta || message.Meta);
+                break;
+
+            case EVENTS.THINKING_CHUNK:
+                if (handlers.onThinkingChunk) handlers.onThinkingChunk(payload, message.meta || message.Meta);
+                break;
+
+            case EVENTS.THINKING_COMPLETED:
+                if (handlers.onThinkingCompleted) handlers.onThinkingCompleted(payload, message.meta || message.Meta);
+                break;
+
             case EVENTS.STATUS_CHANGED:
                 if (handlers.onStatusChanged) handlers.onStatusChanged(payload);
                 break;

@@ -137,6 +137,7 @@ export function initChatController(transport) {
         if (state.isLoading) return;
 
         chatView.clearStatus();
+        chatView.resetThinking();
 
         // Show user message immediately
         chatView.appendMessage(state.composer.draftText, 'user');
@@ -296,6 +297,7 @@ export function initChatController(transport) {
         handleAIResponse: (payload, meta) => {
             setLoading(false);
             chatView.clearStatus();
+            chatView.completeThinking();
 
             const wasCancelled = !!(meta && (meta.cancelled || meta.Cancelled));
 
@@ -346,11 +348,21 @@ export function initChatController(transport) {
 
             chatView.updateMessage(activeStreamMessage, payload);
         },
+        handleThinkingStarted: () => {
+            chatView.showThinking();
+        },
+        handleThinkingChunk: (payload) => {
+            chatView.appendThinking(payload);
+        },
+        handleThinkingCompleted: () => {
+            chatView.completeThinking();
+        },
         handleAIError: (payload) => {
             // Show AI errors through the dedicated error UI instead of rendering
             // structured provider payloads as chat messages.
             setLoading(false);
             chatView.clearStatus();
+            chatView.completeThinking();
 
             if (activeStreamMessage && activeStreamMessage.parentElement) {
                 activeStreamMessage.parentElement.remove();
