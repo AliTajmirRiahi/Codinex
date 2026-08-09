@@ -327,6 +327,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Interfaces/IInputLanguageWatcher.cs",
+                                                                       "name":  "IInputLanguageWatcher.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Interfaces/IJsonSerializer.cs",
                                                                        "name":  "IJsonSerializer.cs",
                                                                        "type":  "file"
@@ -700,6 +705,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Core/Models/GitFileStatus.cs",
                                                                        "name":  "GitFileStatus.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Core/Models/InputLanguageChangedEventArgs.cs",
+                                                                       "name":  "InputLanguageChangedEventArgs.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -1904,6 +1914,11 @@
                                                                                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/utils/dom.js",
                                                                                                                                                            "name":  "dom.js",
                                                                                                                                                            "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/Chat/js/utils/languageDirection.js",
+                                                                                                                                                           "name":  "languageDirection.js",
+                                                                                                                                                           "type":  "file"
                                                                                                                                                        }
                                                                                                                                                    ]
                                                                                                                                   },
@@ -2893,6 +2908,16 @@
                                                                                     "name":  "ExecutionPipeline.cs",
                                                                                     "type":  "file"
                                                                                 }
+                                                               }
+                                              },
+                                              {
+                                                  "path":  "src/Codinex.VisualStudio/Input",
+                                                  "name":  "Input",
+                                                  "type":  "folder",
+                                                  "children":  {
+                                                                   "path":  "src/Codinex.VisualStudio/Input/VsInputLanguageWatcher.cs",
+                                                                   "name":  "VsInputLanguageWatcher.cs",
+                                                                   "type":  "file"
                                                                }
                                               },
                                               {

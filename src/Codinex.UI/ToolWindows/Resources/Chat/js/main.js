@@ -5,6 +5,7 @@
  */
 import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
+import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
@@ -217,6 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
         onActiveDocumentChanged: (payload) => {
             setActiveDocument(payload);
             chatController.handleActiveDocument();
+        },
+        onInputLanguageChanged: (payload) => {
+            const isRightToLeft = payload?.isRightToLeft ?? payload?.IsRightToLeft ?? false;
+            applyComposerDirection(isRightToLeft);
         },
         onError: (error) => {
             chatController.handleAIError(error);

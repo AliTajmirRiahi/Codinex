@@ -47,6 +47,12 @@
     <Reference Include="PresentationFramework">
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationCore">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\Build\BuildEventsListener.cs" />
@@ -55,6 +61,7 @@
     <Compile Include="Diagnostics\Errors\ErrorMessages.cs" />
     <Compile Include="Events\Build\IBuildEvents.cs" />
     <Compile Include="Hosting\Startup\ExecutionPipeline.cs" />
+    <Compile Include="Input\VsInputLanguageWatcher.cs" />
     <Compile Include="Interfaces\IBuildService.cs" />
     <Compile Include="Interfaces\IResourceServer.cs" />
     <Compile Include="Interfaces\ISourceFileElementIndex.cs" />
