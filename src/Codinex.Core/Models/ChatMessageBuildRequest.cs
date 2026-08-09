@@ -27,12 +27,5 @@ namespace Codinex.Core.Models
         public IReadOnlyList<ReferenceItem> SelectedReferences { get; set; }
 
         public IReadOnlyList<ChatMessage> ConversationHistory { get; set; }
-
-        /// <summary>
-        /// Whether the outgoing request should use streaming output.
-        /// Computed by the caller from the active model's streaming capability
-        /// and the user's streaming preference.
-        /// </summary>
-        public bool Stream { get; set; } = true;
     }
 }

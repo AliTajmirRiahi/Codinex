@@ -357,8 +357,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         var canStream = _providerManager.ActiveModel.SupportsStreaming == CapabilityProbeResult.Supported
                          && _settingsManager.Settings.EnableStreamingChat;
 
-        payload.Stream = canStream;
-
         try
         {
             if (canStream)

@@ -583,7 +583,6 @@ public sealed class SendChatMessageUseCase(
             ToolCalls = message.ToolCalls,
             ToolCallId = message.ToolCallId,
             CreatedAt = message.CreatedAt,
-            Stream = message.Stream
         };
     }
 
