@@ -13,7 +13,10 @@ public interface ISendChatMessageUseCase
     /// <summary>
     /// Executes the chat flow for a single user message.
     /// </summary>
-    Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode);
+    Task<ChatResponse> ExecuteAsync(
+        ChatMessageBuildRequest request
+        , bool includeSelectedCode,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Executes the chat request in streaming mode.

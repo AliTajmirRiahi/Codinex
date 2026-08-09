@@ -31,7 +31,9 @@ public sealed class SendChatMessageUseCase(
     IIntentToolPlanner intentToolPlanner)
     : ISendChatMessageUseCase
 {
-    public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request, bool includeSelectedCode)
+    public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request,
+        bool includeSelectedCode,
+        CancellationToken cancellationToken = default)
     {
         if (request == null)
             throw new InvalidOperationException("Request cannot be empty.");
@@ -43,7 +45,7 @@ public sealed class SendChatMessageUseCase(
 
             var preprocessorResult = await RunPreprocessorAsync(
                 request,
-                CancellationToken.None);
+                cancellationToken);
 
             if (preprocessorResult?.IsAnswer == true)
             {
@@ -72,7 +74,7 @@ public sealed class SendChatMessageUseCase(
             var promptContext =
                 await workspaceContextBuilder.BuildAsync(
                     workspaceRequest,
-                    CancellationToken.None);
+                    cancellationToken);
 
             var buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
@@ -80,7 +82,7 @@ public sealed class SendChatMessageUseCase(
 
             var aiResult = await conversationEngine.ExecuteTextAsync(
                 buildResult,
-                CancellationToken.None);
+                cancellationToken);
 
             // Persist the exchange only after a successful AI response.
             // Provider errors must not be saved into message history.
