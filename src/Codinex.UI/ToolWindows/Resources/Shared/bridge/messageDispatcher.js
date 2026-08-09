@@ -40,6 +40,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onSettingsSaved) handlers.onSettingsSaved(payload);
                 break;
 
+            case EVENTS.SOLUTION_INSTRUCTION_SAVED:
+                if (handlers.onSolutionInstructionSaved) handlers.onSolutionInstructionSaved(payload);
+                break;
+
             case EVENTS.SELECT_CHAT_APPROVED:
                 if (handlers.onSelectChat) handlers.onSelectChat(payload);
                 break;

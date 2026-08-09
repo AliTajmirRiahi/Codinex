@@ -1459,6 +1459,11 @@
                                                                        "path":  "src/Codinex.Storage/Interfaces/IStorageService.cs",
                                                                        "name":  "IStorageService.cs",
                                                                        "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Storage/Interfaces/IWorkspaceSettingsManager.cs",
+                                                                       "name":  "IWorkspaceSettingsManager.cs",
+                                                                       "type":  "file"
                                                                    }
                                                                ]
                                               },
@@ -1490,6 +1495,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Storage/Managers/SettingsManager.cs",
                                                                        "name":  "SettingsManager.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Storage/Managers/WorkspaceSettingsManager.cs",
+                                                                       "name":  "WorkspaceSettingsManager.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]
@@ -1538,6 +1548,11 @@
                                                                                             "path":  "src/Codinex.Storage/Models/DTO/ConversationGroupUpdateDto.cs",
                                                                                             "name":  "ConversationGroupUpdateDto.cs",
                                                                                             "type":  "file"
+                                                                                        },
+                                                                                        {
+                                                                                            "path":  "src/Codinex.Storage/Models/DTO/SolutionInstructionDto.cs",
+                                                                                            "name":  "SolutionInstructionDto.cs",
+                                                                                            "type":  "file"
                                                                                         }
                                                                                     ]
                                                                    },
@@ -1559,6 +1574,11 @@
                                                                    {
                                                                        "path":  "src/Codinex.Storage/Models/UiErrorModel.cs",
                                                                        "name":  "UiErrorModel.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Storage/Models/WorkspaceSettings.cs",
+                                                                       "name":  "WorkspaceSettings.cs",
                                                                        "type":  "file"
                                                                    }
                                                                ]

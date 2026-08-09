@@ -307,6 +307,15 @@
                             data-settings-tab="prompt-preprocessor">
                         Prompt Preprocessor
                     </button>
+                    <button id="settings-tab-solution-instruction"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-solution-instruction"
+                            data-settings-tab="solution-instruction">
+                        Solution Instructions
+                    </button>
                 </div>
 
                 <div class="settings-tab-panels">
@@ -384,6 +393,22 @@
                                     <span id="setting-preprocessor-page-info">Page 1 of 1</span>
                                     <button id="setting-preprocessor-next-page" class="pager-btn">Next &gt;</button>
                                 </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-solution-instruction"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-solution-instruction"
+                             data-settings-panel="solution-instruction">
+                        <div class="settings-section">
+                            <h3>Solution Instructions</h3>
+                            <p class="settings-section-description">This instruction applies to every chat and project in the current solution.</p>
+
+                            <div class="form-group">
+                                <label>Instruction Prompt</label>
+                                <textarea id="setting-solution-instruction" rows="8" placeholder="Add solution-wide instructions for Codinex AI..."></textarea>
                             </div>
                         </div>
                     </section>

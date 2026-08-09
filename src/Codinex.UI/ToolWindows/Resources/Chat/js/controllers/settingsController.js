@@ -13,6 +13,7 @@ export function initSettingsController(transport) {
     const autoAddActiveDocumentInput = $('#setting-auto-add-active-document');
     const enableStreamingChatInput = $('#setting-enable-streaming-chat');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
+    const solutionInstructionInput = $('#setting-solution-instruction');
     const preprocessorProviderSelect = $('#setting-preprocessor-provider');
     const preprocessorProviderButton = $('#setting-preprocessor-provider-selector-btn');
     const preprocessorProviderWrapper = preprocessorProviderButton?.closest('.provider-selector-wrapper');
@@ -27,6 +28,7 @@ export function initSettingsController(transport) {
     const tabs = Array.from(document.querySelectorAll('.settings-tab'));
     const panels = Array.from(document.querySelectorAll('.settings-tab-panel'));
     let currentSettings = {};
+    let currentWorkspaceSettings = {};
     let localProviders = [];
     let preprocessorProviderDropDown = null;
     const preprocessorModelPaginationService = new PaginationService([], 5);
@@ -262,6 +264,14 @@ export function initSettingsController(transport) {
         }
 
         renderLocalProviders();
+
+        if (solutionInstructionInput) {
+            solutionInstructionInput.value = getValue(
+                currentWorkspaceSettings,
+                'solutionInstruction',
+                'SolutionInstruction',
+                '');
+        }
     };
 
     const openSettingsModal = () => {
@@ -351,6 +361,15 @@ export function initSettingsController(transport) {
         };
 
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);
+
+        currentWorkspaceSettings = {
+            ...currentWorkspaceSettings,
+            solutionInstruction: solutionInstructionInput?.value || '',
+        };
+
+        transport?.send(EVENTS.SAVE_SOLUTION_INSTRUCTION, {
+            solutionInstruction: currentWorkspaceSettings.solutionInstruction,
+        });
     });
 
     enablePreprocessorAiInput?.addEventListener('change', renderLocalProviders);
@@ -374,11 +393,17 @@ export function initSettingsController(transport) {
     });
 
     return {
-        updateUI(settings, providers) {
-            currentSettings = settings || {};
+        updateUI(settings, providers, workspaceSettings) {
+            if (settings) {
+                currentSettings = settings;
+            }
 
             if (providers) {
                 localProviders = getProviderList(providers);
+            }
+
+            if (workspaceSettings) {
+                currentWorkspaceSettings = workspaceSettings;
             }
 
             applySettingsToForm();

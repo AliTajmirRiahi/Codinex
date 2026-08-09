@@ -26,6 +26,7 @@ public static class WebViewMessageType
     public const string OpenReferenceFile = "OPEN_REFERENCE_FILE";
     public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";
     public const string SaveSettings = "SAVE_SETTINGS";
+    public const string SaveSolutionInstruction = "SAVE_SOLUTION_INSTRUCTION";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -48,5 +49,6 @@ public static class WebViewMessageType
     public const string StatusChanged = "STATUS_CHANGED";
     public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
     public const string SettingsSaved = "SETTINGS_SAVED";
+    public const string SolutionInstructionSaved = "SOLUTION_INSTRUCTION_SAVED";
 
 }

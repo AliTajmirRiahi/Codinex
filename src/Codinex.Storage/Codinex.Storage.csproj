@@ -47,9 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IMemoryManager.cs" />
+    <Compile Include="Interfaces\IWorkspaceSettingsManager.cs" />
     <Compile Include="Managers\ChatManager.cs" />
     <Compile Include="Commons\Statics.cs" />
     <Compile Include="Managers\MemoryManager.cs" />
+    <Compile Include="Managers\WorkspaceSettingsManager.cs" />
+    <Compile Include="Models\DTO\SolutionInstructionDto.cs" />
+    <Compile Include="Models\WorkspaceSettings.cs" />
     <Compile Include="Services\FileStorageService.cs" />
     <Compile Include="Interfaces\IConversationGroupManager.cs" />
     <Compile Include="Interfaces\IStorageService.cs" />
