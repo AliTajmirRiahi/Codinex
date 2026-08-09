@@ -209,6 +209,7 @@ namespace Codinex.Infrastructure.AI.Providers
 #endif
             Dictionary<int, ToolCallBuilder> toolCalls = [];
             var toolArguments = new StringBuilder();
+            var isThinking = false;
 
             await foreach (var json in client.StreamPostAsync(
                                provider,
@@ -218,6 +219,13 @@ namespace Codinex.Infrastructure.AI.Providers
             {
                 if (json == "[DONE]")
                 {
+                    if (isThinking)
+                    {
+                        isThinking = false;
+
+                        yield return ConversationEvent.ThinkingCompleted();
+                    }
+
                     if (toolCalls.Count > 0)
                     {
                         var requests = new List<ToolRequest>();
@@ -312,10 +320,33 @@ namespace Codinex.Infrastructure.AI.Providers
                     continue;
                 }
 
+                var reasoning = delta["reasoning_content"]?.ToString()
+                    ?? delta["reasoning"]?.ToString()
+                    ?? delta["thinking"]?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(reasoning))
+                {
+                    if (!isThinking)
+                    {
+                        isThinking = true;
+
+                        yield return ConversationEvent.ThinkingStarted();
+                    }
+
+                    yield return ConversationEvent.ThinkingUpdated(reasoning);
+                }
+
                 var content = delta["content"]?.ToString();
 
                 if (!string.IsNullOrWhiteSpace(content))
                 {
+                    if (isThinking)
+                    {
+                        isThinking = false;
+
+                        yield return ConversationEvent.ThinkingCompleted();
+                    }
+
                     if (TryCreateProviderErrorEvent(content, out var providerErrorEvent))
                     {
                         yield return providerErrorEvent;

@@ -165,6 +165,7 @@ namespace Codinex.Infrastructure.AI.Providers
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var toolCalls = new Dictionary<string, ToolCall>();
+            var isThinking = false;
 
             var payload = BuildChatPayload(
                 provider,
@@ -200,15 +201,45 @@ namespace Codinex.Infrastructure.AI.Providers
                     toolCalls[toolCall.Id] = toolCall;
                 }
 
+                var thinking = json["message"]?["thinking"]?.ToString()
+                    ?? json["message"]?["reasoning_content"]?.ToString()
+                    ?? json["message"]?["reasoning"]?.ToString();
+
+                if (!string.IsNullOrEmpty(thinking))
+                {
+                    if (!isThinking)
+                    {
+                        isThinking = true;
+
+                        yield return ConversationEvent.ThinkingStarted();
+                    }
+
+                    yield return ConversationEvent.ThinkingUpdated(thinking);
+                }
+
                 var content = json["message"]?["content"]?.ToString();
 
                 if (!string.IsNullOrEmpty(content))
                 {
+                    if (isThinking)
+                    {
+                        isThinking = false;
+
+                        yield return ConversationEvent.ThinkingCompleted();
+                    }
+
                     yield return ConversationEvent.TextDelta(content);
                 }
 
                 if (json.Value<bool?>("done") == true)
                 {
+                    if (isThinking)
+                    {
+                        isThinking = false;
+
+                        yield return ConversationEvent.ThinkingCompleted();
+                    }
+
                     if (toolCalls.Count > 0)
                     {
                         var assistantToolCalls = toolCalls.Values.ToList();

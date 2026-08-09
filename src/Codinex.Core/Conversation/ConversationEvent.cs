@@ -83,7 +83,7 @@ public sealed class ConversationEvent
     {
         return Create(
             ConversationEventType.ThinkingUpdated,
-            message: text,
+            JValue.CreateString(text),
             sequence: sequence);
     }
 
