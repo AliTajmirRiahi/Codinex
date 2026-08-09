@@ -26,18 +26,18 @@ namespace Codinex.Core.Chat
 
             var messages = new List<ChatMessage>
             {
-                CreateMessage("system", SystemPrompts.DeveloperOnlyAssistant)
+                CreateMessage("system", SystemPrompts.DeveloperOnlyAssistant, request.Stream)
             };
 
             if (!string.IsNullOrWhiteSpace(request.ProjectName) ||
                 !string.IsNullOrWhiteSpace(request.ProjectInstruction))
             {
-                messages.Add(CreateMessage("system", BuildProjectInstruction(request.ProjectName, request.ProjectInstruction)));
+                messages.Add(CreateMessage("system", BuildProjectInstruction(request.ProjectName, request.ProjectInstruction), request.Stream));
             }
 
             if (request.SelectedAgent is not null)
             {
-                messages.Add(CreateMessage("system", BuildAgentInstruction(request.SelectedAgent)));
+                messages.Add(CreateMessage("system", BuildAgentInstruction(request.SelectedAgent), request.Stream));
             }
 
             if (request.ConversationHistory.Count > 0)
@@ -45,7 +45,7 @@ namespace Codinex.Core.Chat
                 messages.AddRange(request.ConversationHistory);
             }
 
-            var userMessage = CreateMessage("user", BuildUserContent(request, promptContext));
+            var userMessage = CreateMessage("user", BuildUserContent(request, promptContext), request.Stream);
             AddImageData(userMessage, request.SelectedReferences);
 
             messages.Add(userMessage);
@@ -67,12 +67,13 @@ namespace Codinex.Core.Chat
             };
         }
 
-        private static ChatMessage CreateMessage(string role, string content)
+        private static ChatMessage CreateMessage(string role, string content, bool stream)
         {
             return new ChatMessage
             {
                 Role = role,
-                Content = content
+                Content = content,
+                Stream = stream,
             };
         }
 

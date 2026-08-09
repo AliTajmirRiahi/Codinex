@@ -57,7 +57,7 @@ namespace Codinex.Infrastructure.AI.Providers
                             provider,
                             model,
                             prompts,
-                            true);
+                            false);
 
             try
             {
@@ -66,6 +66,16 @@ namespace Codinex.Infrastructure.AI.Providers
                     "/chat/completions",
                     payload,
                     ct);
+
+#if DEBUG
+                var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented);
+
+                var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
+
+                await workspaceFileService.CreateFileAsync(path, CancellationToken.None);
+
+                await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: CancellationToken.None);
+#endif
 
                 var json = jsonSerializer.Parse(response);
 

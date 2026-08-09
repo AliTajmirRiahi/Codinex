@@ -24,7 +24,7 @@ namespace Codinex.Infrastructure.Chat
     /// LoadAsync and SaveAsync are currently no-op (in-memory only).
     /// They can later be extended to persist data using a storage service.
     /// </summary>
-    public sealed class ChatSession(ChatManager chatManager) : IChatSession
+    public sealed class ChatSession(ChatManager chatManager, ProviderManager providerManager, SettingsManager settingsManager) : IChatSession
     {
         private List<ChatMessage> _messages = new();
 
@@ -109,7 +109,8 @@ namespace Codinex.Infrastructure.Chat
                 Role = "user",
                 Content = content,
                 Context = context,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Stream = IsStreamingEnabled()
             };
 
             _messages.Add(msg);
@@ -129,7 +130,8 @@ namespace Codinex.Infrastructure.Chat
             {
                 Role = "assistant",
                 Content = content,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                Stream = IsStreamingEnabled()
             };
 
             _messages.Add(msg);
@@ -163,6 +165,16 @@ namespace Codinex.Infrastructure.Chat
             var chatData = await chatManager.LoadChatAsync(sessionId);
 
             return chatData ?? throw new InvalidOperationException($"Chat session with ID {sessionId} already exists.");
+        }
+
+        /// <summary>
+        /// Determines whether streaming output should be used, based on the active model's
+        /// streaming capability and the user's streaming preference.
+        /// </summary>
+        private bool IsStreamingEnabled()
+        {
+            return providerManager.ActiveModel?.SupportsStreaming == CapabilityProbeResult.Supported
+                   && settingsManager.Settings.EnableStreamingChat;
         }
     }
 }
