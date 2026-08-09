@@ -110,6 +110,13 @@
                 </div>
             </div>
             <div id="chat-container" class="messages-container">
+                <div id="thinking-box" class="thinking-box hidden">
+                    <button id="thinking-toggle" class="thinking-toggle" type="button" aria-expanded="true">
+                        <codinex-image name="chevron-down.svg" class="thinking-chevron"></codinex-image>
+                        <span id="thinking-label" class="thinking-label">Thinking...</span>
+                    </button>
+                    <div id="thinking-content" class="thinking-content"></div>
+                </div>
                 <div id="response-status" class="response-status hidden"></div>
                 <div id="response-loading" class="response-loading hidden">
                     <codinex-image name="linear-loading.svg"></codinex-image>
