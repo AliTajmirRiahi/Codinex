@@ -15,6 +15,8 @@ export const manageModelsView = {
     state: {
         selectedModels: new Map(), // Stores full model objects to maintain 
         providers: [],
+        allModels: [],
+        modelSearchTerm: '',
         currentProviderId: '',
     },
     // We now store a pagination instance instead of raw pagination values
@@ -36,6 +38,16 @@ export const manageModelsView = {
                 this.renderModelPage();
             }
         };
+
+        const modelSearchInput = $('#model-search-input');
+        if (modelSearchInput) {
+            modelSearchInput.addEventListener('input', (e) => {
+                this.state.modelSearchTerm = e.target.value || '';
+                this.pagination.goToPage(1);
+                this._applyModelFilter();
+                this.renderModelPage();
+            });
+        }
 
         $('#refresh-models-btn').onclick = () => {
             const provider = this.getSelectedProvider();
@@ -179,14 +191,19 @@ export const manageModelsView = {
 
     renderProviderModels(provider) {
         // Reset state for the selected provider
+        this.state.allModels = (provider && provider.models) ? provider.models : [];
+        this.state.modelSearchTerm = '';
+        const modelSearchInput = $('#model-search-input');
+        if (modelSearchInput) modelSearchInput.value = '';
+
         this.pagination.goToPage(1);
-        this.pagination.setItems((provider && provider.models) ? provider.models : []);
+        this._applyModelFilter();
         $('#model-api-key').value = provider ? provider.apiKey : '';
         const needsApiKey = this._providerNeedsApiKey(provider);
         togglePanelHidden('#refresh-models-btn', !!(provider && (!needsApiKey || provider.apiKey)));
 
         this.state.selectedModels = new Map(
-            _.filter((provider && provider.models) ? provider.models : [], { isSelected: true })
+            _.filter(this.state.allModels, { isSelected: true })
                 .map(model => [model.id, model])
         );
 
@@ -211,6 +228,15 @@ export const manageModelsView = {
         const { selectedModels } = this.state;
 
         const pageItems = this.pagination.getPageItems();
+
+        if (pageItems.length === 0) {
+            const emptyItem = document.createElement('div');
+            emptyItem.className = 'model-item empty-model-item';
+            emptyItem.textContent = this.state.modelSearchTerm ? 'No models found.' : 'No models available.';
+            listContainer.appendChild(emptyItem);
+            this._updatePaginationUI();
+            return;
+        }
 
         pageItems.forEach(model => {
             const item = document.createElement('div');
@@ -261,10 +287,21 @@ export const manageModelsView = {
     _updatePaginationUI() {
         const total = this.pagination.getTotalPages();
         const current = this.pagination.currentPage;
+        const paginationVisible = this.pagination.items.length > this.pagination.itemsPerPage;
 
         $('#page-info').textContent = `Page ${current} of ${total}`;
         $('#prev-page').disabled = current === 1;
         $('#next-page').disabled = current === total;
+        togglePanelHidden('#model-pagination', paginationVisible);
+    },
+
+    _applyModelFilter() {
+        const searchTerm = (this.state.modelSearchTerm || '').trim().toLowerCase();
+        const filteredModels = searchTerm
+            ? this.state.allModels.filter(model => (model.name || '').toLowerCase().includes(searchTerm))
+            : this.state.allModels;
+
+        this.pagination.setItems(filteredModels);
     },
     /**
      * Helper to synchronize state with checkbox status.

@@ -104,6 +104,11 @@
                                                                        "type":  "file"
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Core/Conversation/ToolRequestValidationException.cs",
+                                                                       "name":  "ToolRequestValidationException.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Core/Conversation/ToolResult.cs",
                                                                        "name":  "ToolResult.cs",
                                                                        "type":  "file"
