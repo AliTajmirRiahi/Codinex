@@ -56,10 +56,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
         {
             await Task.Yield();
 
-            var path = request.GetRequiredString("path", true);
-
-            if (string.IsNullOrEmpty(path))
-                path = workspaceContext.SolutionPath;
+            var path = request.GetRequiredString("path");
 
             var entries = await workspaceFileService.ListDirectoryAsync(path, cancellationToken);
 
