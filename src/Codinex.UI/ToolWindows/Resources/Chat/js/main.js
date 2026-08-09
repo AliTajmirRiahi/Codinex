@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             manageModelsController.updateUI(data.providers);
-            settingsController.updateUI(data.settings, data.providers);
+            settingsController.updateUI(data.settings, data.providers, data.workspaceSettings);
 
             // Get references to the loading screen and the main chat UI
             const loadingScreen = $('#loading-screen');
@@ -162,6 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
             settingsController.updateUI(settings);
             chatController.handleSettingsChanged();
             settingsController.closeSettingsModal();
+        },
+        onSolutionInstructionSaved: (payload) => {
+            const workspaceSettings = payload.workspaceSettings || payload.WorkspaceSettings;
+
+            settingsController.updateUI(null, null, workspaceSettings);
         },
         onSelectModel: (payload) => {
             const providers = payload.providers || payload.Providers;

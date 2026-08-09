@@ -38,6 +38,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IErrorHandler _errorHandler;
     private readonly ReferenceManager _referenceManager;
     private readonly SettingsManager _settingsManager;
+    private readonly IWorkspaceSettingsManager _workspaceSettingsManager;
     private readonly IVisualStudioServices _visualStudio;
     private readonly IWorkspaceFileService _workspaceFileService;
     private readonly IInputLanguageWatcher _inputLanguageWatcher;
@@ -49,6 +50,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IExecutionPipeline pipeline,
         ProviderManager providerManager,
         SettingsManager settingsManager,
+        IWorkspaceSettingsManager workspaceSettingsManager,
         ChatSessionService sessionService,
         ChatManager chatManager,
         ReferenceManager referenceManager,
@@ -74,6 +76,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _errorHandler = errorHandler;
         _referenceManager = referenceManager;
         _settingsManager = settingsManager;
+        _workspaceSettingsManager = workspaceSettingsManager;
         _visualStudio = visualStudio;
         _workspaceFileService = workspaceFileService;
         _inputLanguageWatcher = inputLanguageWatcher;
@@ -216,6 +219,19 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.SaveSolutionInstruction:
+                {
+                    var payload = _payloadBinder.Bind<SolutionInstructionDto>(request.Payload);
+
+                    await _workspaceSettingsManager.SaveAsync(new WorkspaceSettings
+                    {
+                        SolutionInstruction = payload.SolutionInstruction ?? string.Empty
+                    });
+
+                    await SendSolutionInstructionSavedAsync();
+
+                    return;
+                }
             case WebViewMessageType.NewChat:
                 {
                     await EnsureActiveChatSessionAsync();
@@ -353,6 +369,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         payload.ProjectName = _conversationGroupManager.CurrentGroup?.Name ?? string.Empty;
         payload.ProjectInstruction = _conversationGroupManager.CurrentGroup?.Description ?? string.Empty;
+        payload.SolutionInstruction = _workspaceSettingsManager.Settings?.SolutionInstruction ?? string.Empty;
 
         var canStream = _providerManager.ActiveModel.SupportsStreaming == CapabilityProbeResult.Supported
                          && _settingsManager.Settings.EnableStreamingChat;
@@ -470,6 +487,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             References = referencesTask?.Result,
             ActiveDocument = activeDocumentTask?.Result,
             Settings = _settingsManager.Settings,
+            WorkspaceSettings = _workspaceSettingsManager.Settings,
             Timestamp = DateTime.Now
         };
 
@@ -557,6 +575,21 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         await _webViewClient.PostMessageAsync(message);
     }
+    public async Task SendSolutionInstructionSavedAsync()
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.SolutionInstructionSaved,
+            Payload = new
+            {
+                WorkspaceSettings = _workspaceSettingsManager.Settings,
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
     public async Task SendSelectedModelApprovedAsync()
     {
         var message = new WebViewMessageResponse()

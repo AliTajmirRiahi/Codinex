@@ -245,6 +245,9 @@ namespace Codinex.VSIX
             var settings = CodinexServiceContainer.Get<SettingsManager>();
             await settings.InitializeAsync();
 
+            var workspaceSettings = CodinexServiceContainer.Get<IWorkspaceSettingsManager>();
+            await workspaceSettings.InitializeAsync();
+
             var providers = CodinexServiceContainer.Get<ProviderManager>();
             await providers.InitializeAsync();
 

@@ -29,6 +29,11 @@ namespace Codinex.Core.Chat
                 CreateMessage("system", SystemPrompts.DeveloperOnlyAssistant)
             };
 
+            if (!string.IsNullOrWhiteSpace(request.SolutionInstruction))
+            {
+                messages.Add(CreateMessage("system", BuildSolutionInstruction(request.SolutionInstruction)));
+            }
+
             if (!string.IsNullOrWhiteSpace(request.ProjectName) ||
                 !string.IsNullOrWhiteSpace(request.ProjectInstruction))
             {
@@ -76,15 +81,25 @@ namespace Codinex.Core.Chat
             };
         }
 
+        private static string BuildSolutionInstruction(string instruction)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("Solution Instruction:");
+            sb.AppendLine(instruction.Trim());
+
+            return sb.ToString().TrimEnd();
+        }
+
         private static string BuildProjectInstruction(string projectName, string instruction)
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine("Project Instruction:");
+            sb.AppendLine("Group Chat Instruction:");
 
             if (!string.IsNullOrWhiteSpace(projectName))
             {
-                sb.AppendLine($"Project Name: {projectName.Trim()}");
+                sb.AppendLine($"Group Name: {projectName.Trim()}");
             }
 
             if (!string.IsNullOrWhiteSpace(instruction))

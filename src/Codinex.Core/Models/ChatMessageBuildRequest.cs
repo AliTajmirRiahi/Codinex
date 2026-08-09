@@ -20,6 +20,8 @@ namespace Codinex.Core.Models
 
         public string ProjectInstruction { get; set; } = string.Empty;
 
+        public string SolutionInstruction { get; set; } = string.Empty;
+
         public ChatCommand SelectedCommand { get; set; }
 
         public ChatAgent SelectedAgent { get; set; }
