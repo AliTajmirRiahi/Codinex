@@ -205,6 +205,40 @@ public sealed class SendChatMessageUseCase(
 
                         continue;
 
+                    case ConversationEventType.ThinkingStarted:
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.ThinkingStarted,
+                                string.Empty,
+                                CreateResponseMeta(buildResult)));
+
+                        continue;
+
+                    case ConversationEventType.ThinkingUpdated:
+
+                        var thinkingChunk = evt.Payload.ToString();
+
+                        await Task.Delay(20, cancellationToken); // Small delay to avoid overwhelming the UI with too many messages.
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.ThinkingChunk,
+                                thinkingChunk,
+                                CreateResponseMeta(buildResult)));
+
+                        continue;
+
+                    case ConversationEventType.ThinkingCompleted:
+
+                        await onMessage(
+                            new ChatResponse(
+                                WebViewMessageType.ThinkingCompleted,
+                                string.Empty,
+                                CreateResponseMeta(buildResult)));
+
+                        continue;
+
                     case ConversationEventType.StatusChanged:
 
                         await onMessage(

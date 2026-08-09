@@ -32,6 +32,9 @@ public static class WebViewMessageType
     public const string OpenProviderManager = "OPEN_PROVIDER_MANAGER";
     public const string AiResponse = "AI_RESPONSE";
     public const string StreamChunk = "STREAM_CHUNK";
+    public const string ThinkingStarted = "THINKING_STARTED";
+    public const string ThinkingChunk = "THINKING_CHUNK";
+    public const string ThinkingCompleted = "THINKING_COMPLETED";
     public const string Error = "ERROR";
     public const string SetLoading = "SET_LOADING";
     public const string SelectModelApproved = "SELECT_MODEL_APPROVED";
