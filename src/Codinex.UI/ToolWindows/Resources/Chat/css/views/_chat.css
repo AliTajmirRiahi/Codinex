@@ -63,27 +63,31 @@
 }
 
 .response-status {
-    align-self: flex-start;
-    color: var(--vs-foreground);
-    font-size: 12px;
-    opacity: 0.75;
-    animation: response-status-blink 1.2s ease-in-out infinite;
+    background: linear-gradient( 90deg, var(--vs-control-link-text-color) 0%, var(--vs-system-highlight-color) 50%, var(--vs-control-link-text-color) 100% );
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientBlink 2s ease-in-out infinite;
 }
 
 .response-loading {
     width: 40px;
 }
 
-@keyframes response-status-blink {
-    0%, 100% {
-        opacity: 0.35;
+@keyframes gradientBlink {
+    0% {
+        background-position: 0% 50%;
     }
 
     50% {
-        opacity: 0.95;
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
     }
 }
-
 .message {
     max-width: 85%;
     padding: 8px 12px;
