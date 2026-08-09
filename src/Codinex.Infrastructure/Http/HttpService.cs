@@ -25,6 +25,7 @@ internal sealed class HttpService : IHttpService
 
         return await client.SendAsync(
             request,
+            HttpCompletionOption.ResponseHeadersRead,
             cancellationToken);
     }
     private static HttpClientHandler CreateHandler()

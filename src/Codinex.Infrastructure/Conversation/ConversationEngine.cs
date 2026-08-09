@@ -128,9 +128,27 @@ namespace Codinex.Infrastructure.Conversation
                                     yield return ConversationEvent.Status(statusMessage);
                                 }
 
-                                var result = await tool.ExecuteAsync(
-                                    toolRequest,
-                                    cancellationToken);
+                                ToolResult result;
+
+                                try
+                                {
+                                    result = await tool.ExecuteAsync(
+                                        toolRequest,
+                                        cancellationToken);
+                                }
+                                catch (ToolRequestValidationException ex)
+                                {
+                                    result = ToolResult.Failed(
+                                        toolRequest.Id,
+                                        ex.Message,
+                                        new
+                                        {
+                                            errorType = "missing_required_argument",
+                                            toolName = ex.ToolName,
+                                            argumentName = ex.ArgumentName,
+                                            message = ex.Message
+                                        });
+                                }
 
                                 results.Add(result);
 

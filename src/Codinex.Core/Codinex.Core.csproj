@@ -54,6 +54,7 @@
     <Compile Include="Conversation\ConversationProviderRole.cs" />
     <Compile Include="Conversation\IConversationEngine.cs" />
     <Compile Include="Conversation\ToolRequest.cs" />
+    <Compile Include="Conversation\ToolRequestValidationException.cs" />
     <Compile Include="Conversation\ToolResult.cs" />
     <Compile Include="DependencyInjection\Attributes\AutoRegisterAttribute.cs" />
     <Compile Include="DependencyInjection\Models\ModuleType.cs" />
