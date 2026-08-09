@@ -29,8 +29,6 @@ public sealed class WorkspaceChangeApplier(
                     workspaceChange,
                     cancellationToken);
 
-            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(workspaceChange);
-
             if (!result.Success)
                 return result;
         }
