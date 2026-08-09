@@ -1,5 +1,15 @@
 ﻿[
     {
+        "path":  ".claude",
+        "name":  ".claude",
+        "type":  "folder",
+        "children":  {
+                         "path":  ".claude/settings.local.json",
+                         "name":  "settings.local.json",
+                         "type":  "file"
+                     }
+    },
+    {
         "path":  "assets",
         "name":  "assets",
         "type":  "folder",

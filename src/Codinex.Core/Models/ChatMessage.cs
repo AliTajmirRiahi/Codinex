@@ -28,8 +28,7 @@ namespace Codinex.Core.Models
         public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Indicates whether this request should use streaming output.
-        /// Default is false to preserve current behavior.
+        /// Indicates whether this message was sent/received using streaming output.
         /// </summary>
         public bool Stream { get; set; } = true;
     }

@@ -48,16 +48,16 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     public WebViewMessageRouter(
         IExecutionPipeline pipeline,
         ProviderManager providerManager,
+        SettingsManager settingsManager,
+        ChatSessionService sessionService,
+        ChatManager chatManager,
+        ReferenceManager referenceManager,
         IWebViewClient webViewClient,
         IJsonSerializer serializer,
         IPayloadBinder payloadBinder,
         IChatUseCaseFactory chatUseCaseFactory,
-        ChatSessionService sessionService,
-        ChatManager chatManager,
         IConversationGroupManager conversationGroupManager,
         IErrorHandler errorHandler,
-        ReferenceManager referenceManager,
-        SettingsManager settingsManager,
         IVisualStudioServices visualStudio,
         IWorkspaceFileService workspaceFileService,
         IInputLanguageWatcher inputLanguageWatcher)
@@ -354,18 +354,34 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         payload.ProjectName = _conversationGroupManager.CurrentGroup?.Name ?? string.Empty;
         payload.ProjectInstruction = _conversationGroupManager.CurrentGroup?.Description ?? string.Empty;
 
+        var canStream = _providerManager.ActiveModel.SupportsStreaming == CapabilityProbeResult.Supported
+                         && _settingsManager.Settings.EnableStreamingChat;
+
+        payload.Stream = canStream;
+
         try
         {
-            await _sendChatMessageUseCase.ExecuteStreamingAsync(
-                payload,
-                false,
-                async response =>
-                {
-                    await CheckIfTitleChangedAsync(response);
+            if (canStream)
+            {
+                await _sendChatMessageUseCase.ExecuteStreamingAsync(
+                    payload,
+                    false,
+                    async response =>
+                    {
+                        await CheckIfTitleChangedAsync(response);
 
-                    await _webViewClient.PostMessageAsync(response);
-                },
-                cancellationToken);
+                        await _webViewClient.PostMessageAsync(response);
+                    },
+                    cancellationToken);
+            }
+            else
+            {
+                var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false, cancellationToken);
+
+                await CheckIfTitleChangedAsync(response);
+
+                await _webViewClient.PostMessageAsync(response);
+            }
         }
         finally
         {
@@ -375,21 +391,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 _generationCancellation = null;
             }
         }
-
-
-        //if (payload?.Stream == true)
-        //if (true)
-        //{
-
-        //}
-        //else
-        //{
-        //    var response = await _sendChatMessageUseCase.ExecuteAsync(payload, false);
-
-        //    await CheckIfTitleChangedAsync(response);
-
-        //    await _webViewClient.PostMessageAsync(response);
-        //}
     }
 
     private async Task CheckIfTitleChangedAsync(ChatResponse response)
