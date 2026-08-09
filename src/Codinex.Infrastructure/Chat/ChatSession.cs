@@ -79,7 +79,6 @@ namespace Codinex.Infrastructure.Chat
                 ToolCallId = message.ToolCallId,
                 Context = CreatePersistableContext(message.Context),
                 CreatedAt = message.CreatedAt,
-                Stream = message.Stream
             };
         }
 
@@ -110,7 +109,6 @@ namespace Codinex.Infrastructure.Chat
                 Content = content,
                 Context = context,
                 CreatedAt = DateTime.UtcNow,
-                Stream = IsStreamingEnabled()
             };
 
             _messages.Add(msg);
@@ -131,7 +129,6 @@ namespace Codinex.Infrastructure.Chat
                 Role = "assistant",
                 Content = content,
                 CreatedAt = DateTime.UtcNow,
-                Stream = IsStreamingEnabled()
             };
 
             _messages.Add(msg);
@@ -165,16 +162,6 @@ namespace Codinex.Infrastructure.Chat
             var chatData = await chatManager.LoadChatAsync(sessionId);
 
             return chatData ?? throw new InvalidOperationException($"Chat session with ID {sessionId} already exists.");
-        }
-
-        /// <summary>
-        /// Determines whether streaming output should be used, based on the active model's
-        /// streaming capability and the user's streaming preference.
-        /// </summary>
-        private bool IsStreamingEnabled()
-        {
-            return providerManager.ActiveModel?.SupportsStreaming == CapabilityProbeResult.Supported
-                   && settingsManager.Settings.EnableStreamingChat;
         }
     }
 }

@@ -26,11 +26,6 @@ namespace Codinex.Core.Models
         public ChatMessageRequestContext Context { get; set; }
 
         public DateTime CreatedAt { get; set; }
-
-        /// <summary>
-        /// Indicates whether this message was sent/received using streaming output.
-        /// </summary>
-        public bool Stream { get; set; } = true;
     }
 
     public sealed class ToolCall
