@@ -12,15 +12,17 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
-using Codinex.VisualStudio.Extensions;
 using Codinex.VisualStudio.Interfaces;
+using Microsoft.VisualStudio.ProjectSystem.Query;
 
+using Codinex.VisualStudio.Extensions;
 namespace Codinex.VisualStudio.Services;
 
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
 public sealed class WorkspaceFileService(IFileSystem fileSystem,
     IWorkspaceContext workspaceContext,
-    IWorkspaceIgnoreService workspaceIgnoreService) : IWorkspaceFileService
+    IWorkspaceIgnoreService workspaceIgnoreService,
+    IVisualStudioServices visualStudio) : IWorkspaceFileService
 {
     public bool Exists(string path)
     {
@@ -100,18 +102,94 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
 
     public void CreateFile(string filePath)
     {
+        Microsoft.VisualStudio.Shell.ThreadHelper.JoinableTaskFactory.Run(
+            async () => await CreateFileAsync(filePath));
+    }
+
+    private void CreateFileOnFileSystem(string filePath)
+    {
         using (fileSystem.File.Create(filePath))
         {
         }
     }
 
-    public Task CreateFileAsync(string filePath, CancellationToken cancellationToken = default)
+    public async Task CreateFileAsync(string filePath, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        CreateFile(filePath);
+        if (await TryCreateFileInProjectAsync(filePath, cancellationToken))
+        {
+            return;
+        }
 
-        return Task.CompletedTask;
+        CreateFileOnFileSystem(filePath);
+    }
+
+    private async Task<bool> TryCreateFileInProjectAsync(
+        string filePath,
+        CancellationToken cancellationToken)
+    {
+        var projectQueryService = await visualStudio.GetServiceAsync<IProjectSystemQueryService>();
+        if (projectQueryService?.QueryableSpace == null)
+        {
+            return false;
+        }
+
+        var projects = await projectQueryService.QueryableSpace.Projects
+            .With(project => project.Path)
+            .ExecuteQueryAsync(cancellationToken);
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var owningProject = FindOwningProject(projects, filePath);
+
+        if (owningProject == null)
+        {
+            return false;
+        }
+
+        await owningProject
+            .AsUpdatable()
+            .CreateFile(filePath)
+            .ExecuteAsync(cancellationToken);
+
+        return true;
+    }
+
+    private static IProjectSnapshot FindOwningProject(
+        IEnumerable<IProjectSnapshot> projects,
+        string filePath)
+    {
+        var fullFilePath = Path.GetFullPath(filePath);
+
+        return projects
+            .Where(project => IsFileInProjectDirectory(fullFilePath, project.Path))
+            .OrderByDescending(project => Path.GetDirectoryName(project.Path)?.Length ?? 0)
+            .FirstOrDefault();
+    }
+
+    private static bool IsFileInProjectDirectory(string fullFilePath, string projectPath)
+    {
+        if (string.IsNullOrWhiteSpace(projectPath))
+        {
+            return false;
+        }
+
+        var projectDirectory = Path.GetDirectoryName(Path.GetFullPath(projectPath));
+        if (string.IsNullOrWhiteSpace(projectDirectory))
+        {
+            return false;
+        }
+
+        var directoryWithSeparator = projectDirectory.EndsWith(
+            Path.DirectorySeparatorChar.ToString(),
+            StringComparison.Ordinal)
+            ? projectDirectory
+            : projectDirectory + Path.DirectorySeparatorChar;
+
+        return fullFilePath.StartsWith(
+            directoryWithSeparator,
+            StringComparison.OrdinalIgnoreCase);
     }
 
     public void CreateDirectory(string filePath)
