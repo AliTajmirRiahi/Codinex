@@ -251,20 +251,16 @@
     min-width: 300px;
     overflow: visible;
 }
-#chat-history-dropdown.com-dropdown {
+#chat-history-dropdown.com-dropdown, #project-dropdown.com-dropdown {
     top: 35px;
     left: 0;
     right: 0;
     flex-direction: column;
     min-width: 260px;
+    max-height: 500px;
+    overflow-y: auto;
 }
-#project-dropdown.com-dropdown {
-    top: 35px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    min-width: 260px;
-}
+
 
 .provider-selector-wrapper {
     position: relative;

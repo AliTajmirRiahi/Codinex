@@ -130,6 +130,8 @@ public sealed class SendChatMessageUseCase(
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
+
+
             var preprocessorResult = await RunPreprocessorStreamingAsync(
                 request,
                 onMessage,
@@ -170,6 +172,13 @@ public sealed class SendChatMessageUseCase(
             buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
             ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
+
+            // Persist the exchange only after a successful AI response.
+            // Provider errors must not be saved into message history.
+            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
+
+            // Save session
+            var titleChanged = await chatSession.SaveAsync();
 
             // Accumulate the full assistant text while chunks arrive.
             await foreach (var evt in conversationEngine.ExecuteAsync(
@@ -216,13 +225,9 @@ public sealed class SendChatMessageUseCase(
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            // Persist the exchange only after a successful AI response.
-            // Provider errors must not be saved into message history.
-            chatSession.AddUserMessage(request.DraftText, buildResult.Context);
             chatSession.AddAssistantMessage(fullText);
 
-            // Save session
-            var titleChanged = await chatSession.SaveAsync();
+            await chatSession.SaveAsync();
 
             // Emit the final completed response.
             await onMessage(new ChatResponse(
