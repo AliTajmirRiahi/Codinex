@@ -72,6 +72,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onActiveDocumentChanged) handlers.onActiveDocumentChanged(payload);
                 break;
 
+            case EVENTS.INPUT_LANGUAGE_CHANGED:
+                if (handlers.onInputLanguageChanged) handlers.onInputLanguageChanged(payload);
+                break;
+
             case EVENTS.ERROR:
                 // Keep the full error payload so the chat controller can extract
                 // the user-facing message from AiError/provider error shapes.

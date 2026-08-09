@@ -40,6 +40,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly SettingsManager _settingsManager;
     private readonly IVisualStudioServices _visualStudio;
     private readonly IWorkspaceFileService _workspaceFileService;
+    private readonly IInputLanguageWatcher _inputLanguageWatcher;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -58,7 +59,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ReferenceManager referenceManager,
         SettingsManager settingsManager,
         IVisualStudioServices visualStudio,
-        IWorkspaceFileService workspaceFileService)
+        IWorkspaceFileService workspaceFileService,
+        IInputLanguageWatcher inputLanguageWatcher)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -74,6 +76,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _settingsManager = settingsManager;
         _visualStudio = visualStudio;
         _workspaceFileService = workspaceFileService;
+        _inputLanguageWatcher = inputLanguageWatcher;
 
 
         RegisterEventHandlers();
@@ -291,6 +294,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             _ = _pipeline.RunAsync(
                 () => SendActiveDocumentAsync(e.ActiveDocument),
                 nameof(SendActiveDocumentAsync));
+        };
+
+        _inputLanguageWatcher.InputLanguageChanged += (s, e) =>
+        {
+            _ = _pipeline.RunAsync(
+                () => SendInputLanguageChangedAsync(e),
+                nameof(SendInputLanguageChangedAsync));
         };
     }
 
@@ -785,6 +795,23 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             Type = WebViewMessageType.ActiveDocumentChanged,
             Payload = activeDocument
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendInputLanguageChangedAsync(InputLanguageChangedEventArgs inputLanguage)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.InputLanguageChanged,
+            Payload = new
+            {
+                LanguageTag = inputLanguage.LanguageTag,
+                LanguageName = inputLanguage.LanguageName,
+                IsRightToLeft = inputLanguage.IsRightToLeft
+            },
+            Timestamp = DateTime.Now
         };
 
         await _webViewClient.PostMessageAsync(message);

@@ -41,6 +41,7 @@ public static class WebViewMessageType
     public const string ChangeModelSettingRejected = "CHANGE_MODEL_SETTING_REJECTED";
     public const string ChatTitleChanged = "CHAT_TITLE_CHANGED";
     public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";
+    public const string InputLanguageChanged = "INPUT_LANGUAGE_CHANGED";
     public const string StatusChanged = "STATUS_CHANGED";
     public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
     public const string SettingsSaved = "SETTINGS_SAVED";
