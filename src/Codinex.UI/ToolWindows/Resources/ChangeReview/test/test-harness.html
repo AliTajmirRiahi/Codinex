@@ -45,14 +45,19 @@
                         <span id="diff-additions-badge" class="diff-badge diff-badge-add"></span>
                     </div>
                 </div>
-                <div class="diff-columns-header">
-                    <div class="diff-column-title">Original (Base)</div>
-                    <div class="diff-column-title">AI Suggestion (Modified)</div>
+                <div id="diff-columns" class="diff-columns">
+                    <div class="diff-columns-header">
+                        <div class="diff-column-title">Original (Base)</div>
+                        <div class="diff-column-title">AI Suggestion (Modified)</div>
+                    </div>
+                    <div id="diff-content" class="diff-content"></div>
+                    <div id="diff-col-resizer" class="diff-col-resizer" title="Drag to resize"></div>
                 </div>
-                <div id="diff-content" class="diff-content"></div>
             </main>
 
-            <aside class="review-sidebar">
+            <div id="sidebar-resizer" class="sidebar-resizer" title="Drag to resize"></div>
+
+            <aside id="review-sidebar" class="review-sidebar">
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Changed Files</div>
                     <div id="file-list" class="file-list"></div>
