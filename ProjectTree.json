@@ -563,6 +563,11 @@
                                                                                             "type":  "file"
                                                                                         },
                                                                                         {
+                                                                                            "path":  "src/Codinex.Core/Models/WorkspaceChanges/WorkspaceChangeConverter.cs",
+                                                                                            "name":  "WorkspaceChangeConverter.cs",
+                                                                                            "type":  "file"
+                                                                                        },
+                                                                                        {
                                                                                             "path":  "src/Codinex.Core/Models/WorkspaceChanges/WorkspaceChangeError.cs",
                                                                                             "name":  "WorkspaceChangeError.cs",
                                                                                             "type":  "file"

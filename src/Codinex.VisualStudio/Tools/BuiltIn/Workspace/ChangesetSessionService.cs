@@ -247,8 +247,11 @@ public sealed class ChangesetSessionService(
         {
             return await storage.LoadAsync<PendingChangesetRecord>(path);
         }
-        catch
+        catch (Exception)
         {
+            // Corrupt or legacy (pre-$type) file — it can never load, so drop it
+            // rather than fail every startup from now on.
+            await storage.DeleteAsync(path);
             return null;
         }
     }

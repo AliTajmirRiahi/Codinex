@@ -104,6 +104,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             case WebViewMessageType.Ready:
                 {
+                    await _changesetSessionService.TryRestorePendingReviewAsync(CancellationToken.None);
 
                     if (_providerManager.ActiveProvider != null)
                     {
@@ -115,6 +116,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     }
 
                     await SendInitialDataAsync(false);
+
                     return;
                 }
 
