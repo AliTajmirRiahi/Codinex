@@ -364,3 +364,4 @@ FodyWeavers.xsd
 *.runsettings
 *.ps1
 *.zip
+/.claude
