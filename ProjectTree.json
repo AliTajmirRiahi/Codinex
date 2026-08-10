@@ -3569,6 +3569,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/ChangesetDecision.cs",
+                                                                                                                 "name":  "ChangesetDecision.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/IWorkspaceApprovalService.cs",
                                                                                                                  "name":  "IWorkspaceApprovalService.cs",
                                                                                                                  "type":  "file"
@@ -3586,6 +3591,11 @@
                                                                                                              {
                                                                                                                  "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/WorkspaceApprovalService.cs",
                                                                                                                  "name":  "WorkspaceApprovalService.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/WorkspaceChangePathResolver.cs",
+                                                                                                                 "name":  "WorkspaceChangePathResolver.cs",
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {

@@ -1,6 +1,7 @@
 using Codinex.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Conversation;
@@ -8,6 +9,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.Tools;
+using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Core.Tools;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
 
@@ -77,19 +79,48 @@ public sealed class ChangeSetCreatorTool(
 
         var changesetId = await previewService.ShowAsync(changeSet, cancellationToken);
 
-        if (!await approvalService.WaitForApprovalAsync(changesetId, cancellationToken))
+        var decision = await approvalService.WaitForApprovalAsync(changesetId, cancellationToken);
+
+        var approvedChanges = changeSet.Changes
+            .Where(change => decision.FileDecisions.TryGetValue(WorkspaceChangePathResolver.GetPath(change), out var approved) && approved)
+            .ToList();
+
+        var rejectedChanges = changeSet.Changes
+            .Except(approvedChanges)
+            .ToList();
+
+        if (approvedChanges.Count == 0)
         {
             return ToolResult.Failed(
                 request.Id,
-                "The user rejected the proposed changes in the review window. " +
-                "No files were created, edited, deleted, renamed, or moved. " +
+                "The user rejected all proposed changes in the review window." +
+                (string.IsNullOrWhiteSpace(decision.Reason) ? string.Empty : $" Rejection reason: {decision.Reason}") +
+                " No files were created, edited, deleted, renamed, or moved. " +
                 "Do not tell the user the change was made. Tell the user the change was rejected and not applied.");
         }
 
         var result = await applier.ApplyAsync(
-             changeSet,
+             new WorkspaceChangeSet { Changes = approvedChanges },
              cancellationToken);
 
-        return result.Success ? ToolResult.Successful(request.Id, result.ChangeSuccess) : ToolResult.Failed(request.Id, result.Error.Message, result.Error);
+        if (!result.Success)
+        {
+            return ToolResult.Failed(request.Id, result.Error.Message, result.Error);
+        }
+
+        if (rejectedChanges.Count > 0)
+        {
+            var rejectedPaths = rejectedChanges
+                .Select(WorkspaceChangePathResolver.GetPath)
+                .Distinct()
+                .ToList();
+
+            result.ChangeSuccess.Message =
+                $"{result.ChangeSuccess.Message} The user rejected these and they were NOT applied: {string.Join(", ", rejectedPaths)}." +
+                (string.IsNullOrWhiteSpace(decision.Reason) ? string.Empty : $" Rejection reason: {decision.Reason}") +
+                " Do not tell the user the rejected changes were made.";
+        }
+
+        return ToolResult.Successful(request.Id, result.ChangeSuccess);
     }
 }

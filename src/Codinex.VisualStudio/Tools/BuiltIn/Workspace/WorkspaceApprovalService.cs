@@ -10,15 +10,15 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
 public sealed class WorkspaceApprovalService : IWorkspaceApprovalService
 {
-    private readonly ConcurrentDictionary<Guid, TaskCompletionSource<bool>> _pendingDecisions = new();
+    private readonly ConcurrentDictionary<Guid, TaskCompletionSource<ChangesetDecision>> _pendingDecisions = new();
 
-    public Task<bool> WaitForApprovalAsync(
+    public Task<ChangesetDecision> WaitForApprovalAsync(
         Guid changesetId,
         CancellationToken cancellationToken)
     {
         var tcs = _pendingDecisions.GetOrAdd(
             changesetId,
-            _ => new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously));
+            _ => new TaskCompletionSource<ChangesetDecision>(TaskCreationOptions.RunContinuationsAsynchronously));
 
         cancellationToken.Register(() =>
         {
@@ -29,11 +29,11 @@ public sealed class WorkspaceApprovalService : IWorkspaceApprovalService
         return tcs.Task;
     }
 
-    public void SetDecision(Guid changesetId, bool approved)
+    public void SetDecision(Guid changesetId, ChangesetDecision decision)
     {
         if (_pendingDecisions.TryRemove(changesetId, out var tcs))
         {
-            tcs.TrySetResult(approved);
+            tcs.TrySetResult(decision);
         }
     }
 }

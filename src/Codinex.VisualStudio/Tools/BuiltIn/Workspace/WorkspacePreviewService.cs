@@ -111,14 +111,14 @@ public sealed class WorkspacePreviewService(
             case CreateDirectoryChange createDirectory:
                 return new ChangesetFileDiff
                 {
-                    FilePath = createDirectory.DirectoryPath,
+                    FilePath = WorkspaceChangePathResolver.GetPath(createDirectory),
                     Operation = "CreateDirectory"
                 };
 
             case DeleteDirectoryChange deleteDirectory:
                 return new ChangesetFileDiff
                 {
-                    FilePath = deleteDirectory.DirectoryPath,
+                    FilePath = WorkspaceChangePathResolver.GetPath(deleteDirectory),
                     Operation = "DeleteDirectory"
                 };
 

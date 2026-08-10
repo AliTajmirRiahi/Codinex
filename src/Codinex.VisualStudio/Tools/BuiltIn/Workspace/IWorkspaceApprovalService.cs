@@ -11,14 +11,14 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 public interface IWorkspaceApprovalService
 {
     /// <summary>
-    /// Awaits the user's decision for the given change set id.
+    /// Awaits the user's per-file decision for the given change set id.
     /// </summary>
-    Task<bool> WaitForApprovalAsync(
+    Task<ChangesetDecision> WaitForApprovalAsync(
         Guid changesetId,
         CancellationToken cancellationToken);
 
     /// <summary>
     /// Records the user's decision, unblocking the matching <see cref="WaitForApprovalAsync"/> call.
     /// </summary>
-    void SetDecision(Guid changesetId, bool approved);
+    void SetDecision(Guid changesetId, ChangesetDecision decision);
 }

@@ -1,8 +1,8 @@
 /**
  * changeReviewController.js
  * Entry point for the Code Changes review view: renders a proposed workspace
- * change set (file tree, diff, summary) and reports the user's Accept/Reject
- * decision back to the host.
+ * change set (file tree, diff, summary) and reports the user's per-file
+ * Accept/Reject decision (plus an optional rejection reason) back to the host.
  */
 import { webViewTransport } from '../../../Shared/bridge/webViewTransport.js';
 import { EVENTS } from '../constants/events.js';
@@ -28,12 +28,21 @@ function normalizePayload(payload) {
     };
 }
 
-function renderFileList(container, files, selectedIndex, onSelect) {
+/**
+ * @param decisions {Object} filePath -> true (accepted) | false (rejected) | undefined (pending)
+ * @param onDecide {(filePath: string, approved: boolean) => void}
+ */
+function renderFileList(container, files, selectedIndex, onSelect, decisions, onDecide) {
     container.innerHTML = '';
 
     files.forEach((file, index) => {
+        const decision = decisions[file.filePath];
+
         const item = document.createElement('div');
-        item.className = 'file-item' + (index === selectedIndex ? ' active' : '');
+        item.className = 'file-item'
+            + (index === selectedIndex ? ' active' : '')
+            + (decision === true ? ' decision-approved' : '')
+            + (decision === false ? ' decision-rejected' : '');
 
         const path = document.createElement('span');
         path.className = 'file-item-path';
@@ -44,8 +53,30 @@ function renderFileList(container, files, selectedIndex, onSelect) {
         badge.className = `file-item-badge op-${file.operation}`;
         badge.textContent = file.operation.replace(/File|Directory/, '');
 
+        const acceptBtn = document.createElement('button');
+        acceptBtn.type = 'button';
+        acceptBtn.className = 'file-item-decision-btn accept' + (decision === true ? ' active' : '');
+        acceptBtn.title = 'Accept this change';
+        acceptBtn.textContent = '✓';
+        acceptBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            onDecide(file.filePath, true);
+        });
+
+        const rejectBtn = document.createElement('button');
+        rejectBtn.type = 'button';
+        rejectBtn.className = 'file-item-decision-btn reject' + (decision === false ? ' active' : '');
+        rejectBtn.title = 'Reject this change';
+        rejectBtn.textContent = '✕';
+        rejectBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            onDecide(file.filePath, false);
+        });
+
         item.appendChild(path);
         item.appendChild(badge);
+        item.appendChild(acceptBtn);
+        item.appendChild(rejectBtn);
         item.addEventListener('click', () => onSelect(index));
 
         container.appendChild(item);
@@ -188,11 +219,14 @@ function initChangeReviewController(transport) {
     const diffColResizerEl = document.getElementById('diff-col-resizer');
     const sidebarResizerEl = document.getElementById('sidebar-resizer');
     const reviewSidebarEl = document.getElementById('review-sidebar');
-    const acceptBtn = document.getElementById('accept-btn');
-    const rejectBtn = document.getElementById('reject-btn');
+    const acceptAllBtn = document.getElementById('accept-all-btn');
+    const rejectAllBtn = document.getElementById('reject-all-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const rejectReasonEl = document.getElementById('reject-reason');
 
     let currentChangeset = null;
     let selectedIndex = 0;
+    let decisions = {};
     let diffInfo = { hunkElements: [], stats: { hunkCount: 0, additions: 0, deletions: 0 } };
     let currentHunk = -1;
 
@@ -227,10 +261,36 @@ function initChangeReviewController(transport) {
         }
     }
 
+    function updateSubmitState() {
+        const allDecided = currentChangeset
+            ? currentChangeset.files.every(f => decisions[f.filePath] !== undefined)
+            : false;
+
+        submitBtn.disabled = !allDecided;
+    }
+
+    function refreshFileList() {
+        renderFileList(fileListEl, currentChangeset.files, selectedIndex, selectFile, decisions, decide);
+    }
+
+    function decide(filePath, approved) {
+        decisions[filePath] = approved;
+        refreshFileList();
+        updateSubmitState();
+    }
+
+    function markAll(approved) {
+        if (!currentChangeset) return;
+
+        currentChangeset.files.forEach(f => { decisions[f.filePath] = approved; });
+        refreshFileList();
+        updateSubmitState();
+    }
+
     function selectFile(index) {
         selectedIndex = index;
 
-        renderFileList(fileListEl, currentChangeset.files, selectedIndex, selectFile);
+        refreshFileList();
 
         const file = currentChangeset.files[selectedIndex];
 
@@ -245,6 +305,8 @@ function initChangeReviewController(transport) {
     function showChangeset(payload) {
         currentChangeset = normalizePayload(payload);
         selectedIndex = 0;
+        decisions = {};
+        rejectReasonEl.value = '';
 
         emptyState.classList.add('hidden');
         root.classList.remove('hidden');
@@ -253,29 +315,40 @@ function initChangeReviewController(transport) {
         changeSummaryEl.textContent = currentChangeset.summary;
 
         selectFile(0);
+        updateSubmitState();
     }
 
-    function sendDecision(approved) {
+    function submitDecision() {
         if (!currentChangeset) return;
+
+        const files = {};
+        currentChangeset.files.forEach(f => { files[f.filePath] = decisions[f.filePath] === true; });
+
+        const hasRejection = Object.values(files).some(approved => !approved);
+        const reason = hasRejection ? rejectReasonEl.value.trim() : '';
 
         if (transport.isAvailable()) {
             transport.send(EVENTS.CHANGESET_DECISION, {
                 id: currentChangeset.id,
-                approved
+                files,
+                reason
             });
         } else {
             // Standalone browser test mode: no WebView2 host to report back to.
-            console.log('[Test Mode] Decision:', approved ? 'Accepted' : 'Rejected', currentChangeset.id);
+            console.log('[Test Mode] Decision:', files, 'Reason:', reason || '(none)');
         }
 
         currentChangeset = null;
+        decisions = {};
+        rejectReasonEl.value = '';
 
         root.classList.add('hidden');
         emptyState.classList.remove('hidden');
     }
 
-    acceptBtn.addEventListener('click', () => sendDecision(true));
-    rejectBtn.addEventListener('click', () => sendDecision(false));
+    acceptAllBtn.addEventListener('click', () => markAll(true));
+    rejectAllBtn.addEventListener('click', () => markAll(false));
+    submitBtn.addEventListener('click', submitDecision);
     diffPrevBtn.addEventListener('click', () => goToHunk(currentHunk - 1));
     diffNextBtn.addEventListener('click', () => goToHunk(currentHunk + 1));
 

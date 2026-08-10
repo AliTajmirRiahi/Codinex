@@ -136,6 +136,8 @@
     <Compile Include="Tools\BuiltIn\Workspace\WorkspacePreviewModel.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspacePreviewService.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspaceApprovalService.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\WorkspaceChangePathResolver.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\ChangesetDecision.cs" />
     <Compile Include="ToolWindowGuids.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
