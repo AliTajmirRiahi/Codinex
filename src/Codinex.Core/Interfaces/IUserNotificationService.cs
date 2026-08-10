@@ -10,5 +10,10 @@
         /// Shows a safe error message to the user.
         /// </summary>
         void ShowError(string message);
+
+        /// <summary>
+        /// Shows an informational message to the user (not an error).
+        /// </summary>
+        void ShowInfo(string message);
     }
 }

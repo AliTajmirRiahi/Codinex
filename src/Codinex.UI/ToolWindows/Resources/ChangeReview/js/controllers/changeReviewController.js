@@ -23,7 +23,8 @@ function normalizePayload(payload) {
             filePath: pick(f, 'filePath', 'FilePath') || '',
             operation: pick(f, 'operation', 'Operation') || '',
             originalText: pick(f, 'originalText', 'OriginalText') || '',
-            modifiedText: pick(f, 'modifiedText', 'ModifiedText') || ''
+            modifiedText: pick(f, 'modifiedText', 'ModifiedText') || '',
+            previewWarning: pick(f, 'previewWarning', 'PreviewWarning') || ''
         }))
     };
 }
@@ -53,6 +54,18 @@ function renderFileList(container, files, selectedIndex, onSelect, decisions, on
         badge.className = `file-item-badge op-${file.operation}`;
         badge.textContent = file.operation.replace(/File|Directory/, '');
 
+        item.appendChild(path);
+
+        if (file.previewWarning) {
+            const warning = document.createElement('span');
+            warning.className = 'file-item-warning';
+            warning.textContent = '⚠';
+            warning.title = file.previewWarning;
+            item.appendChild(warning);
+        }
+
+        item.appendChild(badge);
+
         const acceptBtn = document.createElement('button');
         acceptBtn.type = 'button';
         acceptBtn.className = 'file-item-decision-btn accept' + (decision === true ? ' active' : '');
@@ -73,8 +86,6 @@ function renderFileList(container, files, selectedIndex, onSelect, decisions, on
             onDecide(file.filePath, false);
         });
 
-        item.appendChild(path);
-        item.appendChild(badge);
         item.appendChild(acceptBtn);
         item.appendChild(rejectBtn);
         item.addEventListener('click', () => onSelect(index));
@@ -210,6 +221,7 @@ function initChangeReviewController(transport) {
     const diffContentEl = document.getElementById('diff-content');
     const diffFilePathEl = document.getElementById('diff-file-path');
     const diffFileOperationEl = document.getElementById('diff-file-operation');
+    const diffWarningEl = document.getElementById('diff-warning');
     const diffChangeLabelEl = document.getElementById('diff-change-label');
     const diffDeletionsBadgeEl = document.getElementById('diff-deletions-badge');
     const diffAdditionsBadgeEl = document.getElementById('diff-additions-badge');
@@ -296,6 +308,14 @@ function initChangeReviewController(transport) {
 
         diffFilePathEl.textContent = file?.filePath || '';
         diffFileOperationEl.textContent = file?.operation || '';
+
+        if (file?.previewWarning) {
+            diffWarningEl.textContent = `⚠ ${file.previewWarning}`;
+            diffWarningEl.classList.remove('hidden');
+        } else {
+            diffWarningEl.textContent = '';
+            diffWarningEl.classList.add('hidden');
+        }
 
         diffInfo = renderDiff(diffContentEl, file);
         currentHunk = -1;

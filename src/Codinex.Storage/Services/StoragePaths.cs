@@ -47,6 +47,9 @@ namespace Codinex.Storage.Services
         public static string GetWorkspaceSettingsPath(string workspaceName) =>
             Path.Combine(GetWorkspacePath(workspaceName), "settings.json");
 
+        public static string GetPendingChangesetPath(string workspaceName) =>
+            Path.Combine(GetWorkspacePath(workspaceName), "pending-changeset.json");
+
         #endregion
 
         #region Groups

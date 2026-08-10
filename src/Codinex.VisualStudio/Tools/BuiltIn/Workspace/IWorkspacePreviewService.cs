@@ -15,7 +15,13 @@ public interface IWorkspacePreviewService
     /// tool window, and returns the id the caller must pass to
     /// <see cref="IWorkspaceApprovalService.WaitForApprovalAsync"/>.
     /// </summary>
+    /// <param name="existingId">
+    /// Pass the id of a changeset restored from a persisted <c>PendingChangesetRecord</c> so the
+    /// re-shown review keeps the same id (e.g. for matching an incoming decision back to it).
+    /// Leave null to generate a new id for a brand-new review.
+    /// </param>
     Task<Guid> ShowAsync(
         WorkspaceChangeSet changeSet,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken,
+        Guid? existingId = null);
 }

@@ -10,6 +10,7 @@ using Codinex.Core.Interfaces;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Managers;
 using Codinex.VisualStudio.Events.Build;
+using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 using Codinex.VSIX.Bootstrap;
 using Microsoft.Extensions.DependencyInjection;
 using Task = System.Threading.Tasks.Task;
@@ -266,6 +267,28 @@ namespace Codinex.VSIX
 
             var buildListener = CodinexServiceContainer.Get<BuildEventsListener>();
             await buildListener.InitializeAsync();
+        }
+
+        /// <summary>
+        /// If a changeset review is still pending when Visual Studio closes, resolve its wait as
+        /// "undecided" so the awaiting tool call ends cleanly. The persisted review and blocked-chat
+        /// state are left untouched — the next launch of this solution picks it back up.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                if (disposing && CodinexServiceContainer.IsInitialized)
+                {
+                    CodinexServiceContainer.Get<IChangesetSessionService>().MarkUndecidedIfPending();
+                }
+            }
+            catch
+            {
+                // Must never throw from Dispose during shutdown.
+            }
+
+            base.Dispose(disposing);
         }
 
         #endregion

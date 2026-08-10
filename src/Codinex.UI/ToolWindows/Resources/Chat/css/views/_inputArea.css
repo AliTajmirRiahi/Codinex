@@ -18,6 +18,31 @@
     pointer-events: auto;
 }
 
+/* A pending Code Changes review locks the whole composer, including send. */
+.chat-blocked-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 10px 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--vs-border, #3f3f46);
+    border-radius: 8px;
+    background: rgba(234, 179, 8, 0.12);
+    color: var(--vs-foreground);
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.chat-blocked-banner codinex-icon {
+    flex: 0 0 auto;
+    color: #eab308;
+}
+
+body.chat-blocked #input-container {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* Loading overlay that covers ONLY the input area */
 .input-loading-screen {
     position: absolute;

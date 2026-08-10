@@ -39,5 +39,26 @@ namespace Codinex.VisualStudio
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
+
+        /// <summary>
+        /// Shows an informational message to the user.
+        /// </summary>
+        public void ShowInfo(string message)
+        {
+            _ = ShowInfoAsync(message);
+        }
+
+        public async Task ShowInfoAsync(string message)
+        {
+            await uiThreadDispatcher.SwitchToMainThreadAsync();
+
+            VsShellUtilities.ShowMessageBox(
+                VisualStudio.Provider as IServiceProvider ?? throw new InvalidOperationException("VisualStudio => Provider is null"),
+                message,
+                "Codinex AI",
+                OLEMSGICON.OLEMSGICON_INFO,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
     }
 }

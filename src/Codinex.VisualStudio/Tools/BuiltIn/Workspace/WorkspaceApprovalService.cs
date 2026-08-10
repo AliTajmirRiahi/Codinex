@@ -29,11 +29,11 @@ public sealed class WorkspaceApprovalService : IWorkspaceApprovalService
         return tcs.Task;
     }
 
-    public void SetDecision(Guid changesetId, ChangesetDecision decision)
+    public bool TryResolveIfWaiting(Guid changesetId, ChangesetDecision decision)
     {
-        if (_pendingDecisions.TryRemove(changesetId, out var tcs))
-        {
-            tcs.TrySetResult(decision);
-        }
+        if (!_pendingDecisions.TryRemove(changesetId, out var tcs))
+            return false;
+
+        return tcs.TrySetResult(decision);
     }
 }

@@ -69,7 +69,10 @@ export const sampleChangeset = {
                 '    }\n' +
                 '\n' +
                 '    public bool CanHandle(Exception exception) => exception != null;\n' +
-                '}\n'
+                '}\n',
+            previewWarning:
+                'Could not preview edit #2: SearchNotFound (the expected text was not found). ' +
+                'The diff shown reflects only the edits applied before this point.'
         },
         {
             filePath: 'src/Codify.Core/Extensions/ServiceCollectionExtensions.cs',

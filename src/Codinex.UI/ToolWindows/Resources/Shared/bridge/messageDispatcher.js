@@ -98,6 +98,14 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onError) handlers.onError(payload);
                 break;
 
+            case EVENTS.CHAT_BLOCKED:
+                if (handlers.onChatBlocked) handlers.onChatBlocked(payload);
+                break;
+
+            case EVENTS.CHAT_UNBLOCKED:
+                if (handlers.onChatUnblocked) handlers.onChatUnblocked(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }

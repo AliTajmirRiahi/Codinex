@@ -32,4 +32,12 @@ public sealed class ChangesetFileDiff
     public string OriginalText { get; set; }
 
     public string ModifiedText { get; set; }
+
+    /// <summary>
+    /// Set when one of this file's edits couldn't be located in the current file content while
+    /// building the preview (e.g. the file changed since the AI proposed the edit). The diff shown
+    /// stops at the failure point, so it may look like fewer/no changes even though more were
+    /// proposed — this is surfaced instead of silently rendering as if nothing changed.
+    /// </summary>
+    public string PreviewWarning { get; set; }
 }
