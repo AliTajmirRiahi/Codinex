@@ -11,6 +11,7 @@ using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.WorkspaceChanges;
 
 namespace Codinex.Infrastructure.WorkspaceChanges.Handlers;
 
@@ -22,7 +23,8 @@ public sealed class EditFileChangeHandler(
     IWorkspaceFileService workspaceFileService,
     ITextChangeMatcher textChangeMatcher,
     IWorkspaceChangeErrorFactory workspaceChangeErrorFactory,
-    IStringHelper stringHelper)
+    IStringHelper stringHelper,
+    ITextChangeApplier textChangeApplier)
     : IWorkspaceChangeHandler<EditFileChange>
 {
 
@@ -59,7 +61,7 @@ public sealed class EditFileChangeHandler(
                         match.Error));
             }
 
-            content = ApplyReplacement(
+            content = textChangeApplier.Apply(
                 content,
                 match,
                 textChange);
@@ -80,15 +82,5 @@ public sealed class EditFileChangeHandler(
         {
             Files = changedFileResults
         });
-    }
-
-    private static string ApplyReplacement(
-        string content,
-        TextChangeMatchResult match,
-        TextFileChange change)
-    {
-        return content
-            .Remove(match.StartIndex, match.Length)
-            .Insert(match.StartIndex, change.Replace);
     }
 }

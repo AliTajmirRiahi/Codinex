@@ -1,0 +1,249 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--vs-background, #1e1e1e);
+    color: var(--vs-foreground, #cccccc);
+    font-family: "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--vs-foreground, #cccccc);
+    opacity: 0.7;
+}
+
+.review-root {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--vs-border, #3f3f46);
+}
+
+.review-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.review-summary {
+    margin: 2px 0 0;
+    opacity: 0.75;
+}
+
+.review-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    border: 1px solid var(--vs-border, #3f3f46);
+    background: var(--vs-button-bg, #2d2d30);
+    color: var(--vs-foreground, #cccccc);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12.5px;
+}
+
+.btn:hover {
+    background: var(--vs-button-hover, #3e3e42);
+}
+
+.btn-primary {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.review-body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+.diff-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-right: 1px solid var(--vs-border, #3f3f46);
+}
+
+.diff-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--vs-border, #3f3f46);
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.diff-file-path {
+    font-weight: 600;
+}
+
+.diff-file-operation {
+    opacity: 0.7;
+    font-size: 11px;
+}
+
+.diff-content {
+    flex: 1;
+    overflow: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.diff-line {
+    display: flex;
+    white-space: pre;
+    padding: 0 8px;
+}
+
+.diff-line-num {
+    flex: 0 0 42px;
+    text-align: right;
+    padding-right: 10px;
+    opacity: 0.45;
+    user-select: none;
+}
+
+.diff-line-text {
+    flex: 1;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.diff-line-add {
+    background: rgba(46, 160, 67, 0.2);
+}
+
+.diff-line-add .diff-line-num {
+    background: rgba(46, 160, 67, 0.25);
+}
+
+.diff-line-remove {
+    background: rgba(248, 81, 73, 0.2);
+}
+
+.diff-line-remove .diff-line-num {
+    background: rgba(248, 81, 73, 0.25);
+}
+
+.review-sidebar {
+    width: 300px;
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.sidebar-section {
+    border-bottom: 1px solid var(--vs-border, #3f3f46);
+    padding: 10px 12px;
+}
+
+.sidebar-section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.6;
+    margin-bottom: 8px;
+}
+
+.sidebar-text {
+    opacity: 0.85;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+}
+
+.file-item:hover {
+    background: var(--vs-button-bg, #2d2d30);
+}
+
+.file-item.active {
+    background: var(--vs-button-hover, #3e3e42);
+}
+
+.file-item-path {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-item-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+
+.file-item-badge.op-CreateFile,
+.file-item-badge.op-CreateDirectory {
+    background: rgba(46, 160, 67, 0.25);
+    color: #4ade80;
+}
+
+.file-item-badge.op-DeleteFile,
+.file-item-badge.op-DeleteDirectory {
+    background: rgba(248, 81, 73, 0.25);
+    color: #f87171;
+}
+
+.file-item-badge.op-EditFile {
+    background: rgba(212, 168, 44, 0.25);
+    color: #eab308;
+}
+
+.file-item-badge.op-RenameFile,
+.file-item-badge.op-MoveFile,
+.file-item-badge.op-RenameDirectory,
+.file-item-badge.op-MoveDirectory {
+    background: rgba(96, 165, 250, 0.25);
+    color: #60a5fa;
+}

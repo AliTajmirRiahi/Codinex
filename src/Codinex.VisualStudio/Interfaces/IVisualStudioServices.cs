@@ -55,5 +55,10 @@ namespace Codinex.VisualStudio.Interfaces
 
         
         Task<IVsSolutionBuildManager> GetSolutionBuildManagerAsync();
+
+        /// <summary>
+        /// Finds (creating it if necessary) and shows the tool window registered with the given GUID.
+        /// </summary>
+        Task<IVsWindowFrame> ShowToolWindowAsync(Guid toolWindowGuid);
     }
 }

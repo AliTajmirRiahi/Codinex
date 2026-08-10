@@ -83,6 +83,8 @@
     <Compile Include="WorkspaceChanges\Handlers\CreateFileChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Handlers\DeleteFileChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Handlers\EditFileChangeHandler.cs" />
+    <Compile Include="WorkspaceChanges\ITextChangeApplier.cs" />
+    <Compile Include="WorkspaceChanges\TextChangeApplier.cs" />
     <Compile Include="WorkspaceChanges\Handlers\MoveFileChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Handlers\RenameFileChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Mapping\IWorkspaceChangeMapper.cs" />

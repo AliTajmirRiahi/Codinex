@@ -3,11 +3,18 @@
         "path":  ".claude",
         "name":  ".claude",
         "type":  "folder",
-        "children":  {
-                         "path":  ".claude/settings.local.json",
-                         "name":  "settings.local.json",
-                         "type":  "file"
-                     }
+        "children":  [
+                         {
+                             "path":  ".claude/launch.json",
+                             "name":  "launch.json",
+                             "type":  "file"
+                         },
+                         {
+                             "path":  ".claude/settings.local.json",
+                             "name":  "settings.local.json",
+                             "type":  "file"
+                         }
+                     ]
     },
     {
         "path":  "assets",
@@ -1382,6 +1389,16 @@
                                                                                     ]
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.Infrastructure/WorkspaceChanges/ITextChangeApplier.cs",
+                                                                       "name":  "ITextChangeApplier.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.Infrastructure/WorkspaceChanges/TextChangeApplier.cs",
+                                                                       "name":  "TextChangeApplier.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.Infrastructure/WorkspaceChanges/TextChangeMatcher.cs",
                                                                        "name":  "TextChangeMatcher.cs",
                                                                        "type":  "file"
@@ -1684,6 +1701,87 @@
                                                                        "name":  "Resources",
                                                                        "type":  "folder",
                                                                        "children":  [
+                                                                                        {
+                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview",
+                                                                                            "name":  "ChangeReview",
+                                                                                            "type":  "folder",
+                                                                                            "children":  [
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/css",
+                                                                                                                 "name":  "css",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  {
+                                                                                                                                  "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/css/change-review.css",
+                                                                                                                                  "name":  "change-review.css",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js",
+                                                                                                                 "name":  "js",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  [
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/constants",
+                                                                                                                                      "name":  "constants",
+                                                                                                                                      "type":  "folder",
+                                                                                                                                      "children":  {
+                                                                                                                                                       "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/constants/events.js",
+                                                                                                                                                       "name":  "events.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                  },
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/controllers",
+                                                                                                                                      "name":  "controllers",
+                                                                                                                                      "type":  "folder",
+                                                                                                                                      "children":  {
+                                                                                                                                                       "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/controllers/changeReviewController.js",
+                                                                                                                                                       "name":  "changeReviewController.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                  },
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils",
+                                                                                                                                      "name":  "utils",
+                                                                                                                                      "type":  "folder",
+                                                                                                                                      "children":  {
+                                                                                                                                                       "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/lineDiff.js",
+                                                                                                                                                       "name":  "lineDiff.js",
+                                                                                                                                                       "type":  "file"
+                                                                                                                                                   }
+                                                                                                                                  }
+                                                                                                                              ]
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/test",
+                                                                                                                 "name":  "test",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  [
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/test/sampleChangeset.js",
+                                                                                                                                      "name":  "sampleChangeset.js",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  },
+                                                                                                                                  {
+                                                                                                                                      "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/test/test-harness.html",
+                                                                                                                                      "name":  "test-harness.html",
+                                                                                                                                      "type":  "file"
+                                                                                                                                  }
+                                                                                                                              ]
+                                                                                                             },
+                                                                                                             {
+                                                                                                                 "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/view",
+                                                                                                                 "name":  "view",
+                                                                                                                 "type":  "folder",
+                                                                                                                 "children":  {
+                                                                                                                                  "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/view/change-review-view.html",
+                                                                                                                                  "name":  "change-review-view.html",
+                                                                                                                                  "type":  "file"
+                                                                                                                              }
+                                                                                                             }
+                                                                                                         ]
+                                                                                        },
                                                                                         {
                                                                                             "path":  "src/Codinex.UI/ToolWindows/Resources/Chat",
                                                                                             "name":  "Chat",
@@ -2838,6 +2936,16 @@
                                                                                     ]
                                                                    },
                                                                    {
+                                                                       "path":  "src/Codinex.UI/ToolWindows/CodeChangesToolWindowControl.xaml",
+                                                                       "name":  "CodeChangesToolWindowControl.xaml",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.UI/ToolWindows/CodeChangesToolWindowControl.xaml.cs",
+                                                                       "name":  "CodeChangesToolWindowControl.xaml.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
                                                                        "path":  "src/Codinex.UI/ToolWindows/CodinexToolWindowControl.xaml",
                                                                        "name":  "CodinexToolWindowControl.xaml",
                                                                        "type":  "file"
@@ -2958,6 +3066,16 @@
                                                                    {
                                                                        "path":  "src/Codinex.VisualStudio/Interfaces/IBuildService.cs",
                                                                        "name":  "IBuildService.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/Interfaces/IChangeReviewMessageRouter.cs",
+                                                                       "name":  "IChangeReviewMessageRouter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/Interfaces/IChangeReviewWebViewClient.cs",
+                                                                       "name":  "IChangeReviewWebViewClient.cs",
                                                                        "type":  "file"
                                                                    },
                                                                    {
@@ -3454,6 +3572,11 @@
                                                                                                                  "type":  "file"
                                                                                                              },
                                                                                                              {
+                                                                                                                 "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/WorkspaceApprovalService.cs",
+                                                                                                                 "name":  "WorkspaceApprovalService.cs",
+                                                                                                                 "type":  "file"
+                                                                                                             },
+                                                                                                             {
                                                                                                                  "path":  "src/Codinex.VisualStudio/Tools/BuiltIn/Workspace/WorkspacePreviewModel.cs",
                                                                                                                  "name":  "WorkspacePreviewModel.cs",
                                                                                                                  "type":  "file"
@@ -3479,6 +3602,16 @@
                                                   "name":  "WebView",
                                                   "type":  "folder",
                                                   "children":  [
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/WebView/ChangeReviewMessageRouter.cs",
+                                                                       "name":  "ChangeReviewMessageRouter.cs",
+                                                                       "type":  "file"
+                                                                   },
+                                                                   {
+                                                                       "path":  "src/Codinex.VisualStudio/WebView/ChangeReviewWebViewClient.cs",
+                                                                       "name":  "ChangeReviewWebViewClient.cs",
+                                                                       "type":  "file"
+                                                                   },
                                                                    {
                                                                        "path":  "src/Codinex.VisualStudio/WebView/WebViewClient.cs",
                                                                        "name":  "WebViewClient.cs",
@@ -3615,6 +3748,11 @@
                                                   "type":  "file"
                                               },
                                               {
+                                                  "path":  "src/Codinex.VisualStudio/ToolWindowGuids.cs",
+                                                  "name":  "ToolWindowGuids.cs",
+                                                  "type":  "file"
+                                              },
+                                              {
                                                   "path":  "src/Codinex.VisualStudio/VsActiveDocumentWatcher.cs",
                                                   "name":  "VsActiveDocumentWatcher.cs",
                                                   "type":  "file"
@@ -3686,6 +3824,11 @@
                                                                        "type":  "file"
                                                                    }
                                                                ]
+                                              },
+                                              {
+                                                  "path":  "src/Codinex.VSIX/CodeChangesToolWindow.cs",
+                                                  "name":  "CodeChangesToolWindow.cs",
+                                                  "type":  "file"
                                               },
                                               {
                                                   "path":  "src/Codinex.VSIX/Codinex.VSIX.csproj",

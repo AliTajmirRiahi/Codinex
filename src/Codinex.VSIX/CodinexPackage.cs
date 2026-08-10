@@ -37,6 +37,7 @@ namespace Codinex.VSIX
     [Guid(CodinexPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(CodinexToolWindow))]
+    [ProvideToolWindow(typeof(CodeChangesToolWindow))]
     public sealed class CodinexPackage : AsyncPackage
     {
         /// <summary>

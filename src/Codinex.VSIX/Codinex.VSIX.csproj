@@ -72,6 +72,7 @@
     <Compile Include="Bootstrap\ServiceCollectionExtensions.cs" />
     <Compile Include="CodinexToolWindow.cs" />
     <Compile Include="CodinexToolWindowCommand.cs" />
+    <Compile Include="CodeChangesToolWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CodinexPackage.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

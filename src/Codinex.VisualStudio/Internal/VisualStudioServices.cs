@@ -80,6 +80,29 @@ namespace Codinex.VisualStudio.Internal
             return await Provider.GetServiceAsync(typeof(SVsSolutionBuildManager))
                 as IVsSolutionBuildManager;
         }
+
+        public async Task<IVsWindowFrame> ShowToolWindowAsync(Guid toolWindowGuid)
+        {
+            await uiThreadDispatcher.SwitchToMainThreadAsync();
+
+            var uiShell = await GetUiShellAsync();
+
+            if (uiShell == null)
+                return null;
+
+            var persistenceSlot = toolWindowGuid;
+
+            var hr = uiShell.FindToolWindow(
+                (uint)__VSFINDTOOLWIN.FTW_fForceCreate,
+                ref persistenceSlot,
+                out var frame);
+
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(hr);
+
+            frame?.Show();
+
+            return frame;
+        }
     }
 }
 #pragma warning restore VSTHRD010
