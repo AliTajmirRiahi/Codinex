@@ -156,7 +156,12 @@ namespace Codinex.Infrastructure.Conversation
                                 {
                                     Role = "tool",
                                     ToolCallId = result.Id,
-                                    Content = jsonSerializer.Serialize(result.Data),
+                                    Content = jsonSerializer.Serialize(new
+                                    {
+                                        success = result.Success,
+                                        error = result.Error,
+                                        data = result.Data
+                                    }),
                                 });
 
                                 yield return ConversationEvent.ToolCompleted(result);

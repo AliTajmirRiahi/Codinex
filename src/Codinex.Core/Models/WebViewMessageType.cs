@@ -27,6 +27,8 @@ public static class WebViewMessageType
     public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";
     public const string SaveSettings = "SAVE_SETTINGS";
     public const string SaveSolutionInstruction = "SAVE_SOLUTION_INSTRUCTION";
+    public const string ChangesetDecision = "CHANGESET_DECISION";
+    public const string ChangesetViewReady = "CHANGESET_VIEW_READY";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -50,5 +52,6 @@ public static class WebViewMessageType
     public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
     public const string SettingsSaved = "SETTINGS_SAVED";
     public const string SolutionInstructionSaved = "SOLUTION_INSTRUCTION_SAVED";
+    public const string ChangesetShow = "CHANGESET_SHOW";
 
 }

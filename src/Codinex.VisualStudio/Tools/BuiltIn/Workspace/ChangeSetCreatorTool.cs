@@ -17,8 +17,8 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 public sealed class ChangeSetCreatorTool(
     IWorkspaceChangeParser parser,
     IWorkspaceChangeValidator validator,
-    //IWorkspacePreviewService previewService,
-    //IWorkspaceApprovalService approvalService,
+    IWorkspacePreviewService previewService,
+    IWorkspaceApprovalService approvalService,
     IWorkspaceChangeApplier applier)
     : IAiTool
 {
@@ -75,12 +75,16 @@ public sealed class ChangeSetCreatorTool(
             return ToolResult.Failed(request.Id, validationResult.Errors);
         }
 
-        // await previewService.ShowAsync(changeSet, cancellationToken);
+        var changesetId = await previewService.ShowAsync(changeSet, cancellationToken);
 
-        // if (!await approvalService.WaitForApprovalAsync(cancellationToken))
-        // {
-        //     return ToolResult.Fail("Workspace changes were rejected.");
-        // }
+        if (!await approvalService.WaitForApprovalAsync(changesetId, cancellationToken))
+        {
+            return ToolResult.Failed(
+                request.Id,
+                "The user rejected the proposed changes in the review window. " +
+                "No files were created, edited, deleted, renamed, or moved. " +
+                "Do not tell the user the change was made. Tell the user the change was rejected and not applied.");
+        }
 
         var result = await applier.ApplyAsync(
              changeSet,

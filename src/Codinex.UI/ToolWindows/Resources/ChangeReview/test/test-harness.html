@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Changes - Standalone Test</title>
+
+    <!--
+        Standalone browser test harness for the Code Changes review view.
+        This is a copy of ../view/change-review-view.html without the WebView2
+        Content-Security-Policy (which locks script/style loading to the
+        http://codinex.resources virtual host and would block everything when
+        served from a plain local HTTP server). Not used by Visual Studio.
+    -->
+    <link rel="stylesheet" href="../css/change-review.css">
+</head>
+<body>
+    <div id="empty-state" class="empty-state">
+        <h2>No changes to review</h2>
+        <p>Proposed code changes will appear here.</p>
+    </div>
+
+    <div id="review-root" class="review-root hidden">
+        <header class="review-header">
+            <div class="review-header-info">
+                <h1 id="review-title" class="review-title">Codinex AI - Code Changes</h1>
+                <p id="review-summary" class="review-summary"></p>
+            </div>
+            <div class="review-header-actions">
+                <button id="reject-btn" class="btn btn-secondary">Reject All</button>
+                <button id="accept-btn" class="btn btn-primary">Accept All Changes</button>
+            </div>
+        </header>
+
+        <div class="review-body">
+            <main class="diff-panel">
+                <div class="diff-panel-header">
+                    <span id="diff-file-path" class="diff-file-path"></span>
+                    <span id="diff-file-operation" class="diff-file-operation"></span>
+                </div>
+                <div class="diff-columns-header">
+                    <div class="diff-column-title">Original (Base)</div>
+                    <div class="diff-column-title">AI Suggestion (Modified)</div>
+                </div>
+                <div id="diff-content" class="diff-content"></div>
+            </main>
+
+            <aside class="review-sidebar">
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Changed Files</div>
+                    <div id="file-list" class="file-list"></div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Change Summary</div>
+                    <div id="change-summary" class="sidebar-text"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script type="module" src="../js/controllers/changeReviewController.js"></script>
+</body>
+</html>

@@ -68,6 +68,8 @@
     <Compile Include="Interfaces\ISourceFileElementService.cs" />
     <Compile Include="Interfaces\IWebViewClient.cs" />
     <Compile Include="Interfaces\IWebViewMessageRouter.cs" />
+    <Compile Include="Interfaces\IChangeReviewWebViewClient.cs" />
+    <Compile Include="Interfaces\IChangeReviewMessageRouter.cs" />
     <Compile Include="Interfaces\IVsOutputLogger.cs" />
     <Compile Include="Interfaces\IVisualStudioServices.cs" />
     <Compile Include="Interfaces\IWorkspaceIgnoreService.cs" />
@@ -133,11 +135,15 @@
     <Compile Include="Tools\BuiltIn\Workspace\Schemas\WorkspaceToolSchemas.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspacePreviewModel.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspacePreviewService.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\WorkspaceApprovalService.cs" />
+    <Compile Include="ToolWindowGuids.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
     <Compile Include="VsUserNotificationService.cs" />
     <Compile Include="WebView\WebViewClient.cs" />
     <Compile Include="WebView\WebViewMessageRouter.cs" />
+    <Compile Include="WebView\ChangeReviewWebViewClient.cs" />
+    <Compile Include="WebView\ChangeReviewMessageRouter.cs" />
     <Compile Include="WebView\WebViewResourceServer.cs" />
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
