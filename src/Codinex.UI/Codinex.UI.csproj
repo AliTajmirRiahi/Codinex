@@ -69,6 +69,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\css\change-review.css" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\js\constants\events.js" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\js\utils\lineDiff.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\js\utils\syntaxHighlight.js" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\js\controllers\changeReviewController.js" />
     <Content Include="ToolWindows\Resources\babel.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\projectListView.js" />
