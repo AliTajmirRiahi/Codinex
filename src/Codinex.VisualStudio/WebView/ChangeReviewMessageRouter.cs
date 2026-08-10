@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
@@ -43,7 +44,11 @@ public sealed class ChangeReviewMessageRouter(
                 {
                     var payload = payloadBinder.Bind<ChangesetDecisionDto>(request.Payload);
 
-                    approvalService.SetDecision(payload.Id, payload.Approved);
+                    approvalService.SetDecision(payload.Id, new ChangesetDecision
+                    {
+                        FileDecisions = payload.Files ?? new Dictionary<string, bool>(),
+                        Reason = payload.Reason
+                    });
 
                     return Task.CompletedTask;
                 }
@@ -58,5 +63,8 @@ public sealed class ChangesetDecisionDto
 {
     public Guid Id { get; set; }
 
-    public bool Approved { get; set; }
+    /// <summary>Change path (see <see cref="WorkspaceChangePathResolver"/>) -> approved.</summary>
+    public Dictionary<string, bool> Files { get; set; } = new();
+
+    public string Reason { get; set; }
 }

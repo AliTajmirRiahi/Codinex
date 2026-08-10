@@ -229,9 +229,12 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        DeleteDirectory(directoryPath, recursive);
+        return Task.Run(() =>
+        {
+            cancellationToken.ThrowIfCancellationRequested();
 
-        return Task.CompletedTask;
+            DeleteDirectory(directoryPath, recursive);
+        }, cancellationToken);
     }
 
     public void Copy(string sourcePath, string destinationPath, bool overwrite = false)

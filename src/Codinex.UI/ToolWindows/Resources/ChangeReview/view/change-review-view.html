@@ -25,8 +25,9 @@
                 <p id="review-summary" class="review-summary"></p>
             </div>
             <div class="review-header-actions">
-                <button id="reject-btn" class="btn btn-secondary">Reject All</button>
-                <button id="accept-btn" class="btn btn-primary">Accept All Changes</button>
+                <button id="reject-all-btn" class="btn btn-secondary" title="Mark every file rejected">Reject All</button>
+                <button id="accept-all-btn" class="btn btn-secondary" title="Mark every file accepted">Accept All</button>
+                <button id="submit-btn" class="btn btn-primary" disabled>Submit Decision</button>
             </div>
         </header>
 
@@ -64,6 +65,12 @@
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Change Summary</div>
                     <div id="change-summary" class="sidebar-text"></div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Rejection Reason (optional)</div>
+                    <textarea id="reject-reason" class="reject-reason-input" rows="3"
+                              placeholder="Explain why, so the AI can adjust on its next attempt..."></textarea>
                 </div>
             </aside>
         </div>
