@@ -1752,6 +1752,11 @@
                                                                                                                                                            "type":  "file"
                                                                                                                                                        },
                                                                                                                                                        {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/resizer.js",
+                                                                                                                                                           "name":  "resizer.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
                                                                                                                                                            "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/syntaxHighlight.js",
                                                                                                                                                            "name":  "syntaxHighlight.js",
                                                                                                                                                            "type":  "file"

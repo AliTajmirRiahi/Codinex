@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -55,6 +55,13 @@ namespace Codinex.Core.Interfaces
         void Delete(string filePath);
 
         Task DeleteAsync(string filePath, CancellationToken cancellationToken = default);
+
+        void DeleteDirectory(string directoryPath, bool recursive = true);
+
+        Task DeleteDirectoryAsync(
+            string directoryPath,
+            bool recursive = true,
+            CancellationToken cancellationToken = default);
 
         // Copy / Move
 

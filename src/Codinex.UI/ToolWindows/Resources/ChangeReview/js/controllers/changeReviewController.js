@@ -8,6 +8,7 @@ import { webViewTransport } from '../../../Shared/bridge/webViewTransport.js';
 import { EVENTS } from '../constants/events.js';
 import { diffLines } from '../utils/lineDiff.js';
 import { highlightLine, detectLanguage } from '../utils/syntaxHighlight.js';
+import { initDragResizer } from '../utils/resizer.js';
 
 const pick = (obj, camelKey, pascalKey) =>
     obj?.[camelKey] ?? obj?.[pascalKey];
@@ -183,6 +184,10 @@ function initChangeReviewController(transport) {
     const diffAdditionsBadgeEl = document.getElementById('diff-additions-badge');
     const diffPrevBtn = document.getElementById('diff-prev-change');
     const diffNextBtn = document.getElementById('diff-next-change');
+    const diffColumnsEl = document.getElementById('diff-columns');
+    const diffColResizerEl = document.getElementById('diff-col-resizer');
+    const sidebarResizerEl = document.getElementById('sidebar-resizer');
+    const reviewSidebarEl = document.getElementById('review-sidebar');
     const acceptBtn = document.getElementById('accept-btn');
     const rejectBtn = document.getElementById('reject-btn');
 
@@ -273,6 +278,27 @@ function initChangeReviewController(transport) {
     rejectBtn.addEventListener('click', () => sendDecision(false));
     diffPrevBtn.addEventListener('click', () => goToHunk(currentHunk - 1));
     diffNextBtn.addEventListener('click', () => goToHunk(currentHunk + 1));
+
+    // Drag the boundary between the Original/Modified columns.
+    initDragResizer(diffColResizerEl, (e) => {
+        const rect = diffColumnsEl.getBoundingClientRect();
+        const pct = ((e.clientX - rect.left) / rect.width) * 100;
+
+        diffColumnsEl.style.setProperty('--diff-split', Math.min(85, Math.max(15, pct)).toFixed(2));
+    });
+    diffColResizerEl.addEventListener('dblclick', () => {
+        diffColumnsEl.style.setProperty('--diff-split', '50');
+    });
+
+    // Drag the boundary between the diff panel and the file list sidebar.
+    initDragResizer(sidebarResizerEl, (e) => {
+        const width = reviewSidebarEl.parentElement.getBoundingClientRect().right - e.clientX;
+
+        reviewSidebarEl.style.width = `${Math.min(640, Math.max(180, width))}px`;
+    });
+    sidebarResizerEl.addEventListener('dblclick', () => {
+        reviewSidebarEl.style.width = '300px';
+    });
 
     transport.onMessage((message) => {
         if (!message || message.type !== EVENTS.CHANGESET_SHOW) return;

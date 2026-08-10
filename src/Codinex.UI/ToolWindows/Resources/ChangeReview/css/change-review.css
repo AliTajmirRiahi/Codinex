@@ -16,6 +16,11 @@ html, body {
     display: none !important;
 }
 
+body.resizing-col {
+    cursor: col-resize;
+    user-select: none;
+}
+
 .empty-state {
     height: 100%;
     display: flex;
@@ -92,7 +97,31 @@ html, body {
     display: flex;
     flex-direction: column;
     min-width: 0;
-    border-right: 1px solid var(--vs-border, #3f3f46);
+}
+
+.sidebar-resizer {
+    flex: 0 0 6px;
+    width: 6px;
+    cursor: col-resize;
+    position: relative;
+    background: transparent;
+}
+
+.sidebar-resizer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 2px;
+    width: 1px;
+    background: var(--vs-border, #3f3f46);
+}
+
+.sidebar-resizer:hover::after,
+.sidebar-resizer.resizing::after {
+    left: 1px;
+    width: 3px;
+    background: #569cd6;
 }
 
 .diff-panel-header {
@@ -174,9 +203,22 @@ html, body {
     opacity: 0.7;
 }
 
+.diff-columns {
+    --diff-split: 50;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.diff-columns-header,
+.diff-content {
+    grid-template-columns: calc(var(--diff-split) * 1%) calc((100 - var(--diff-split)) * 1%);
+}
+
 .diff-columns-header {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     border-bottom: 1px solid var(--vs-border, #3f3f46);
 }
 
@@ -195,13 +237,30 @@ html, body {
 
 .diff-content {
     flex: 1;
+    min-height: 0;
     overflow: auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-auto-rows: min-content;
     font-family: Consolas, "Courier New", monospace;
     font-size: 12.5px;
     line-height: 1.5;
+}
+
+.diff-col-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--diff-split) * 1%);
+    width: 6px;
+    margin-left: -3px;
+    cursor: col-resize;
+    z-index: 5;
+    background: transparent;
+}
+
+.diff-col-resizer:hover,
+.diff-col-resizer.resizing {
+    background: rgba(86, 156, 214, 0.35);
 }
 
 .diff-cell {
@@ -284,7 +343,9 @@ html, body {
 
 .review-sidebar {
     width: 300px;
-    flex: 0 0 300px;
+    min-width: 180px;
+    max-width: 640px;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     overflow: auto;

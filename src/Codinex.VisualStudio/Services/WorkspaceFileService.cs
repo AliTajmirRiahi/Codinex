@@ -220,6 +220,20 @@ public sealed class WorkspaceFileService(IFileSystem fileSystem,
         return Task.CompletedTask;
     }
 
+    public void DeleteDirectory(string directoryPath, bool recursive = true)
+    {
+        fileSystem.Directory.Delete(directoryPath, recursive);
+    }
+
+    public Task DeleteDirectoryAsync(string directoryPath, bool recursive = true, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        DeleteDirectory(directoryPath, recursive);
+
+        return Task.CompletedTask;
+    }
+
     public void Copy(string sourcePath, string destinationPath, bool overwrite = false)
     {
         fileSystem.File.Copy(sourcePath, destinationPath, overwrite);
