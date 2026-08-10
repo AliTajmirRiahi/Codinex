@@ -7,6 +7,7 @@
 import { webViewTransport } from '../../../Shared/bridge/webViewTransport.js';
 import { EVENTS } from '../constants/events.js';
 import { diffLines } from '../utils/lineDiff.js';
+import { highlightLine, detectLanguage } from '../utils/syntaxHighlight.js';
 
 const pick = (obj, camelKey, pascalKey) =>
     obj?.[camelKey] ?? obj?.[pascalKey];
@@ -50,45 +51,122 @@ function renderFileList(container, files, selectedIndex, onSelect) {
     });
 }
 
+/**
+ * Pairs up a sequential diff (equal/add/remove lines) into left/right rows so
+ * the original and modified text can be rendered side by side, aligned like
+ * a two-pane diff viewer: unchanged lines line up, and a run of removed lines
+ * is paired against the run of added lines that replaced it. Each row from a
+ * changed run is tagged with a `hunk` index (contiguous change group) so the
+ * UI can jump between changes.
+ */
+function buildSideBySideRows(diffResult) {
+    const rows = [];
+    let i = 0;
+    let hunkIndex = -1;
+
+    while (i < diffResult.length) {
+        const line = diffResult[i];
+
+        if (line.type === 'equal') {
+            rows.push({ left: line, right: line, hunk: null });
+            i++;
+            continue;
+        }
+
+        hunkIndex++;
+
+        const removes = [];
+        while (i < diffResult.length && diffResult[i].type === 'remove') {
+            removes.push(diffResult[i]);
+            i++;
+        }
+
+        const adds = [];
+        while (i < diffResult.length && diffResult[i].type === 'add') {
+            adds.push(diffResult[i]);
+            i++;
+        }
+
+        const pairCount = Math.max(removes.length, adds.length);
+        for (let j = 0; j < pairCount; j++) {
+            rows.push({ left: removes[j] || null, right: adds[j] || null, hunk: hunkIndex });
+        }
+    }
+
+    return rows;
+}
+
+function createDiffCell(line, lineNo, changeClass, language) {
+    const cell = document.createElement('div');
+    const lineNum = document.createElement('span');
+    const text = document.createElement('span');
+
+    lineNum.className = 'diff-line-num';
+    text.className = 'diff-line-text';
+
+    if (line) {
+        cell.className = `diff-cell${changeClass ? ' ' + changeClass : ''}`;
+        lineNum.textContent = lineNo;
+        text.innerHTML = highlightLine(line.text, language);
+    } else {
+        cell.className = 'diff-cell diff-cell-empty';
+        lineNum.textContent = '';
+        text.textContent = ' ';
+    }
+
+    cell.appendChild(lineNum);
+    cell.appendChild(text);
+
+    return cell;
+}
+
+/**
+ * Renders the side-by-side diff for a file and returns navigation info: the
+ * first cell of each hunk (change group), for scrolling to it, plus +/- counts.
+ */
 function renderDiff(container, file) {
     container.innerHTML = '';
 
-    if (!file) return;
+    const empty = { hunkElements: [], stats: { hunkCount: 0, additions: 0, deletions: 0 } };
 
-    const lines = diffLines(file.originalText, file.modifiedText);
+    if (!file) return empty;
+
+    const language = detectLanguage(file.filePath);
+    const rows = buildSideBySideRows(diffLines(file.originalText, file.modifiedText));
 
     const fragment = document.createDocumentFragment();
+    const hunkElements = [];
     let oldLineNo = 1;
     let newLineNo = 1;
+    let additions = 0;
+    let deletions = 0;
 
-    for (const line of lines) {
-        const row = document.createElement('div');
-        const lineNum = document.createElement('span');
-        const text = document.createElement('span');
+    for (const row of rows) {
+        const leftClass = row.left ? (row.left.type === 'remove' ? 'diff-cell-remove' : '') : '';
+        const rightClass = row.right ? (row.right.type === 'add' ? 'diff-cell-add' : '') : '';
 
-        lineNum.className = 'diff-line-num';
-        text.className = 'diff-line-text';
-        text.textContent = line.text;
+        const leftCell = createDiffCell(row.left, row.left ? oldLineNo : null, leftClass, language);
+        const rightCell = createDiffCell(row.right, row.right ? newLineNo : null, rightClass, language);
 
-        if (line.type === 'add') {
-            row.className = 'diff-line diff-line-add';
-            lineNum.textContent = newLineNo++;
-        } else if (line.type === 'remove') {
-            row.className = 'diff-line diff-line-remove';
-            lineNum.textContent = oldLineNo++;
-        } else {
-            row.className = 'diff-line';
-            lineNum.textContent = newLineNo;
-            oldLineNo++;
-            newLineNo++;
+        if (row.hunk !== null && hunkElements[row.hunk] === undefined) {
+            hunkElements[row.hunk] = leftCell;
         }
 
-        row.appendChild(lineNum);
-        row.appendChild(text);
-        fragment.appendChild(row);
+        fragment.appendChild(leftCell);
+        fragment.appendChild(rightCell);
+
+        if (row.left) oldLineNo++;
+        if (row.right) newLineNo++;
+        if (row.left && row.left.type === 'remove') deletions++;
+        if (row.right && row.right.type === 'add') additions++;
     }
 
     container.appendChild(fragment);
+
+    return {
+        hunkElements,
+        stats: { hunkCount: hunkElements.length, additions, deletions }
+    };
 }
 
 function initChangeReviewController(transport) {
@@ -100,11 +178,47 @@ function initChangeReviewController(transport) {
     const diffContentEl = document.getElementById('diff-content');
     const diffFilePathEl = document.getElementById('diff-file-path');
     const diffFileOperationEl = document.getElementById('diff-file-operation');
+    const diffChangeCountEl = document.getElementById('diff-change-count');
+    const diffPrevBtn = document.getElementById('diff-prev-change');
+    const diffNextBtn = document.getElementById('diff-next-change');
     const acceptBtn = document.getElementById('accept-btn');
     const rejectBtn = document.getElementById('reject-btn');
 
     let currentChangeset = null;
     let selectedIndex = 0;
+    let diffInfo = { hunkElements: [], stats: { hunkCount: 0, additions: 0, deletions: 0 } };
+    let currentHunk = -1;
+
+    function updateChangeNav() {
+        const { hunkCount, additions, deletions } = diffInfo.stats;
+
+        if (hunkCount === 0) {
+            diffChangeCountEl.textContent = 'No changes';
+            diffPrevBtn.disabled = true;
+            diffNextBtn.disabled = true;
+            return;
+        }
+
+        diffChangeCountEl.textContent =
+            `${hunkCount} change${hunkCount === 1 ? '' : 's'}  -${deletions} +${additions}`;
+        diffPrevBtn.disabled = false;
+        diffNextBtn.disabled = false;
+    }
+
+    function goToHunk(index) {
+        const count = diffInfo.stats.hunkCount;
+        if (count === 0) return;
+
+        diffInfo.hunkElements[currentHunk]?.classList.remove('diff-cell-current-hunk');
+
+        currentHunk = ((index % count) + count) % count;
+
+        const target = diffInfo.hunkElements[currentHunk];
+        if (target) {
+            target.classList.add('diff-cell-current-hunk');
+            target.scrollIntoView({ block: 'center' });
+        }
+    }
 
     function selectFile(index) {
         selectedIndex = index;
@@ -116,7 +230,9 @@ function initChangeReviewController(transport) {
         diffFilePathEl.textContent = file?.filePath || '';
         diffFileOperationEl.textContent = file?.operation || '';
 
-        renderDiff(diffContentEl, file);
+        diffInfo = renderDiff(diffContentEl, file);
+        currentHunk = -1;
+        updateChangeNav();
     }
 
     function showChangeset(payload) {
@@ -153,6 +269,8 @@ function initChangeReviewController(transport) {
 
     acceptBtn.addEventListener('click', () => sendDecision(true));
     rejectBtn.addEventListener('click', () => sendDecision(false));
+    diffPrevBtn.addEventListener('click', () => goToHunk(currentHunk - 1));
+    diffNextBtn.addEventListener('click', () => goToHunk(currentHunk + 1));
 
     transport.onMessage((message) => {
         if (!message || message.type !== EVENTS.CHANGESET_SHOW) return;

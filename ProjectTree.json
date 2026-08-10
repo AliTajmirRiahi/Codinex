@@ -1745,11 +1745,18 @@
                                                                                                                                       "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils",
                                                                                                                                       "name":  "utils",
                                                                                                                                       "type":  "folder",
-                                                                                                                                      "children":  {
-                                                                                                                                                       "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/lineDiff.js",
-                                                                                                                                                       "name":  "lineDiff.js",
-                                                                                                                                                       "type":  "file"
-                                                                                                                                                   }
+                                                                                                                                      "children":  [
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/lineDiff.js",
+                                                                                                                                                           "name":  "lineDiff.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       },
+                                                                                                                                                       {
+                                                                                                                                                           "path":  "src/Codinex.UI/ToolWindows/Resources/ChangeReview/js/utils/syntaxHighlight.js",
+                                                                                                                                                           "name":  "syntaxHighlight.js",
+                                                                                                                                                           "type":  "file"
+                                                                                                                                                       }
+                                                                                                                                                   ]
                                                                                                                                   }
                                                                                                                               ]
                                                                                                              },
