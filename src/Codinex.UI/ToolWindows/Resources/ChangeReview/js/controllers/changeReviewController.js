@@ -178,7 +178,9 @@ function initChangeReviewController(transport) {
     const diffContentEl = document.getElementById('diff-content');
     const diffFilePathEl = document.getElementById('diff-file-path');
     const diffFileOperationEl = document.getElementById('diff-file-operation');
-    const diffChangeCountEl = document.getElementById('diff-change-count');
+    const diffChangeLabelEl = document.getElementById('diff-change-label');
+    const diffDeletionsBadgeEl = document.getElementById('diff-deletions-badge');
+    const diffAdditionsBadgeEl = document.getElementById('diff-additions-badge');
     const diffPrevBtn = document.getElementById('diff-prev-change');
     const diffNextBtn = document.getElementById('diff-next-change');
     const acceptBtn = document.getElementById('accept-btn');
@@ -189,20 +191,20 @@ function initChangeReviewController(transport) {
     let diffInfo = { hunkElements: [], stats: { hunkCount: 0, additions: 0, deletions: 0 } };
     let currentHunk = -1;
 
+    function setBadge(el, sign, count) {
+        el.textContent = `${sign}${count}`;
+        el.classList.toggle('diff-badge-zero', count === 0);
+    }
+
     function updateChangeNav() {
         const { hunkCount, additions, deletions } = diffInfo.stats;
 
-        if (hunkCount === 0) {
-            diffChangeCountEl.textContent = 'No changes';
-            diffPrevBtn.disabled = true;
-            diffNextBtn.disabled = true;
-            return;
-        }
+        diffChangeLabelEl.textContent = `${hunkCount} change${hunkCount === 1 ? '' : 's'}`;
+        setBadge(diffDeletionsBadgeEl, '-', deletions);
+        setBadge(diffAdditionsBadgeEl, '+', additions);
 
-        diffChangeCountEl.textContent =
-            `${hunkCount} change${hunkCount === 1 ? '' : 's'}  -${deletions} +${additions}`;
-        diffPrevBtn.disabled = false;
-        diffNextBtn.disabled = false;
+        diffPrevBtn.disabled = hunkCount === 0;
+        diffNextBtn.disabled = hunkCount === 0;
     }
 
     function goToHunk(index) {
