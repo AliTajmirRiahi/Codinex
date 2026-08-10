@@ -29,6 +29,7 @@ public static class WebViewMessageType
     public const string SaveSolutionInstruction = "SAVE_SOLUTION_INSTRUCTION";
     public const string ChangesetDecision = "CHANGESET_DECISION";
     public const string ChangesetViewReady = "CHANGESET_VIEW_READY";
+    public const string ReopenChangesetReview = "REOPEN_CHANGESET_REVIEW";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -53,5 +54,7 @@ public static class WebViewMessageType
     public const string SettingsSaved = "SETTINGS_SAVED";
     public const string SolutionInstructionSaved = "SOLUTION_INSTRUCTION_SAVED";
     public const string ChangesetShow = "CHANGESET_SHOW";
+    public const string ChatBlocked = "CHAT_BLOCKED";
+    public const string ChatUnblocked = "CHAT_UNBLOCKED";
 
 }

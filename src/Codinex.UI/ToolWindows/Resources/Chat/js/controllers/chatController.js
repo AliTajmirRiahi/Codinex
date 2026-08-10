@@ -136,6 +136,9 @@ export function initChatController(transport) {
         // Prevent sending while AI is generating
         if (state.isLoading) return;
 
+        // Prevent sending while a code-changes review is pending decision
+        if (state.isChatBlocked) return;
+
         chatView.clearStatus();
         chatView.resetThinking();
 

@@ -18,7 +18,9 @@ public interface IWorkspaceApprovalService
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Records the user's decision, unblocking the matching <see cref="WaitForApprovalAsync"/> call.
+    /// Resolves the matching <see cref="WaitForApprovalAsync"/> call for this changeset id, if one is
+    /// currently awaiting it. Returns false (no-op) when nothing is waiting — e.g. the changeset was
+    /// restored from disk after a Visual Studio restart, so no live call is blocked on it.
     /// </summary>
-    void SetDecision(Guid changesetId, ChangesetDecision decision);
+    bool TryResolveIfWaiting(Guid changesetId, ChangesetDecision decision);
 }

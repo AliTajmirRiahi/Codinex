@@ -31,12 +31,13 @@ public sealed class WorkspacePreviewService(
 {
     public async Task<Guid> ShowAsync(
         WorkspaceChangeSet changeSet,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        Guid? existingId = null)
     {
         if (changeSet == null)
             throw new ArgumentNullException(nameof(changeSet));
 
-        var id = Guid.NewGuid();
+        var id = existingId ?? Guid.NewGuid();
 
         var files = new List<ChangesetFileDiff>();
 
@@ -156,6 +157,7 @@ public sealed class WorkspacePreviewService(
         var originalContent = await ReadSafeAsync(change.FilePath, cancellationToken);
 
         var modifiedContent = originalContent;
+        string previewWarning = null;
 
         foreach (var textChange in change.TextChanges.OrderBy(x => x.Order))
         {
@@ -163,8 +165,13 @@ public sealed class WorkspacePreviewService(
 
             if (match.Status != TextChangeMatchStatus.Success)
             {
-                // Show whatever was resolved so far rather than failing the whole preview;
-                // the applier will surface the real error when the change is actually applied.
+                // Stop applying further edits, but say so — leaving this silent would render as
+                // "no changes" for a file that actually has pending edits, which is misleading.
+                previewWarning =
+                    $"Could not preview edit #{textChange.Order}: {match.Status} " +
+                    $"({match.Error ?? "the expected text was not found"}). " +
+                    "The diff below reflects only the edits applied before this point; " +
+                    "applying may fail or produce different results than shown.";
                 break;
             }
 
@@ -176,7 +183,8 @@ public sealed class WorkspacePreviewService(
             FilePath = change.FilePath,
             Operation = "EditFile",
             OriginalText = originalContent,
-            ModifiedText = modifiedContent
+            ModifiedText = modifiedContent,
+            PreviewWarning = previewWarning
         };
     }
 

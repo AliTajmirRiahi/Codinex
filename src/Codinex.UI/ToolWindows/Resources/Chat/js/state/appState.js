@@ -11,6 +11,7 @@ const _state = {
     isLoading: false,
     isScreenLoading: true,
     isInputLoading : false,
+    isChatBlocked: false,
     chatList: [],
     currentChat: null,
     groupList: [],
@@ -176,6 +177,13 @@ export function setScreenLoading(isScreenLoading) {
  */
 export function setInputLoading(isInputLoading) {
     updateState({ isInputLoading: !!isInputLoading });
+}
+
+/**
+ * Set whether chat is locked because a changeset review is pending.
+ */
+export function setChatBlocked(isChatBlocked) {
+    updateState({ isChatBlocked: !!isChatBlocked });
 }
 /**
  * Add message to history.

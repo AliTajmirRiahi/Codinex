@@ -17,6 +17,7 @@ using Codinex.Storage.Models;
 using Codinex.Storage.Models.DTO;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References;
+using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 
 namespace Codinex.VisualStudio.WebView;
 
@@ -42,6 +43,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IVisualStudioServices _visualStudio;
     private readonly IWorkspaceFileService _workspaceFileService;
     private readonly IInputLanguageWatcher _inputLanguageWatcher;
+    private readonly IChangesetSessionService _changesetSessionService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -62,7 +64,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IErrorHandler errorHandler,
         IVisualStudioServices visualStudio,
         IWorkspaceFileService workspaceFileService,
-        IInputLanguageWatcher inputLanguageWatcher)
+        IInputLanguageWatcher inputLanguageWatcher,
+        IChangesetSessionService changesetSessionService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -80,6 +83,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _visualStudio = visualStudio;
         _workspaceFileService = workspaceFileService;
         _inputLanguageWatcher = inputLanguageWatcher;
+        _changesetSessionService = changesetSessionService;
 
 
         RegisterEventHandlers();
@@ -123,8 +127,23 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
             case WebViewMessageType.SendMessage:
                 {
+                    if (_changesetSessionService.HasPending)
+                    {
+                        // Re-show the pending review rather than just refusing — otherwise a user who
+                        // closed it without deciding has no way back to it.
+                        await _changesetSessionService.ReopenPendingReviewAsync(cancellationToken: default);
+                        await SendChatBlockedAsync();
+                        return;
+                    }
+
                     await AskAiAssistantAsync(request);
 
+                    return;
+                }
+
+            case WebViewMessageType.ReopenChangesetReview:
+                {
+                    await _changesetSessionService.ReopenPendingReviewAsync(cancellationToken: default);
                     return;
                 }
 
@@ -488,6 +507,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             ActiveDocument = activeDocumentTask?.Result,
             Settings = _settingsManager.Settings,
             WorkspaceSettings = _workspaceSettingsManager.Settings,
+            ChatBlocked = _changesetSessionService.HasPending,
             Timestamp = DateTime.Now
         };
 
@@ -498,6 +518,19 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         };
 
         await _webViewClient.PostMessageAsync(message);
+    }
+
+    /// <summary>
+    /// Reminds the UI that chat is locked because a changeset review is pending, in case a
+    /// message somehow got sent anyway (e.g. one already in flight when the block began).
+    /// </summary>
+    private Task SendChatBlockedAsync()
+    {
+        return _webViewClient.PostMessageAsync(new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.ChatBlocked,
+            Payload = new { }
+        });
     }
 
 

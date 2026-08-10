@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Codinex.Core.Interfaces;
 using Codinex.VisualStudio.Diagnostics.Errors;
 using Codinex.VisualStudio.Interfaces;
+using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 
 namespace Codinex.UI.ToolWindows
 {
@@ -233,6 +234,10 @@ namespace Codinex.UI.ToolWindows
             _isDisposed = true;
 
             if (!disposing) return;
+
+            // The tool window closing does not mean the pending review was decided — it's still
+            // pending (persisted, chat still blocked), it just has no live wait to resolve anymore.
+            _serviceProvider?.GetService<IChangesetSessionService>()?.MarkUndecidedIfPending();
 
             Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;

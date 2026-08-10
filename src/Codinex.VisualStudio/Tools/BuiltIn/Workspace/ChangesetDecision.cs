@@ -13,4 +13,14 @@ public sealed class ChangesetDecision
     public Dictionary<string, bool> FileDecisions { get; set; } = new();
 
     public string Reason { get; set; }
+
+    /// <summary>
+    /// True when this "decision" is not actually a decision — it was produced
+    /// because the review's tool window or Visual Studio itself closed before
+    /// the user chose. The review stays pending (nothing is applied or
+    /// discarded, persistence is untouched) so it can be picked up again later.
+    /// </summary>
+    public bool IsUndecided { get; set; }
+
+    public static ChangesetDecision Undecided() => new() { IsUndecided = true };
 }

@@ -17,7 +17,7 @@ namespace Codinex.VisualStudio.WebView;
 public sealed class ChangeReviewMessageRouter(
     IJsonSerializer serializer,
     IPayloadBinder payloadBinder,
-    IWorkspaceApprovalService approvalService,
+    IChangesetSessionService changesetSessionService,
     IChangeReviewWebViewClient changeReviewWebViewClient)
     : IChangeReviewMessageRouter
 {
@@ -44,13 +44,11 @@ public sealed class ChangeReviewMessageRouter(
                 {
                     var payload = payloadBinder.Bind<ChangesetDecisionDto>(request.Payload);
 
-                    approvalService.SetDecision(payload.Id, new ChangesetDecision
+                    return changesetSessionService.SubmitDecisionAsync(payload.Id, new ChangesetDecision
                     {
                         FileDecisions = payload.Files ?? new Dictionary<string, bool>(),
                         Reason = payload.Reason
                     });
-
-                    return Task.CompletedTask;
                 }
 
             default:

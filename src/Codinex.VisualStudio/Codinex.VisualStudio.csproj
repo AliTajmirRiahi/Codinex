@@ -137,6 +137,11 @@
     <Compile Include="Tools\BuiltIn\Workspace\WorkspacePreviewService.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspaceApprovalService.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\WorkspaceChangePathResolver.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\PendingChangesetRecord.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\ChangesetOutcome.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\IChangesetSessionService.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\ChangesetSessionService.cs" />
+    <Compile Include="Tools\BuiltIn\Workspace\PendingChangesetRestoreStartupTask.cs" />
     <Compile Include="Tools\BuiltIn\Workspace\ChangesetDecision.cs" />
     <Compile Include="ToolWindowGuids.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />

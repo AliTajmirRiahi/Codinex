@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
@@ -77,7 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
             subscribe(() => {
                 var state = getState();
                 togglePanelHidden('#input-loading-screen', state.isInputLoading);
+                togglePanelHidden('#chat-blocked-banner', state.isChatBlocked);
+                // A body-level class (rather than toggling the shared 'disable' class directly)
+                // avoids fighting with composerView.js's own draft-text-driven send-btn state.
+                document.body.classList.toggle('chat-blocked', state.isChatBlocked);
             })
+
+            const chatBlocked = data.chatBlocked ?? data.ChatBlocked ?? false;
+            setChatBlocked(chatBlocked);
 
             if (data.providers != null && data.providers.current) {
                 setProvider(data.providers.current);
@@ -239,6 +246,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onError: (error) => {
             chatController.handleAIError(error);
+        },
+        onChatBlocked: () => {
+            setChatBlocked(true);
+        },
+        onChatUnblocked: () => {
+            setChatBlocked(false);
         }
     });
 
@@ -248,6 +261,23 @@ document.addEventListener('DOMContentLoaded', () => {
     webViewTransport.onMessage((data) => {
         dispatcher(data);
     });
+
+    /**
+     * Clicking the "pending review" banner re-shows the Code Changes window —
+     * otherwise a user who closed it without deciding has no way back to it.
+     */
+    const chatBlockedBanner = $('#chat-blocked-banner');
+    if (chatBlockedBanner) {
+        const reopenPendingReview = () => webViewTransport.send(EVENTS.REOPEN_CHANGESET_REVIEW, {});
+
+        chatBlockedBanner.addEventListener('click', reopenPendingReview);
+        chatBlockedBanner.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                reopenPendingReview();
+            }
+        });
+    }
 
     /**
      * Notify .NET backend that the UI is ready
