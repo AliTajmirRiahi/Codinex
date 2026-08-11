@@ -108,6 +108,7 @@
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
     <Compile Include="Interfaces\IWorkspaceFileService.cs" />
     <Compile Include="Interfaces\IWorkspaceInitializer.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IEditFileChangeResolver.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\ITextChangeMatcher.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeApplier.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeErrorFactory.cs" />
@@ -156,6 +157,9 @@
     <Compile Include="Models\WebViewMessageRequest.cs" />
     <Compile Include="Models\WebViewMessageResponse.cs" />
     <Compile Include="Models\WebViewMessageType.cs" />
+    <Compile Include="Models\WorkspaceChanges\ChangeOperation.cs" />
+    <Compile Include="Models\WorkspaceChanges\ChangeValidationError.cs" />
+    <Compile Include="Models\WorkspaceChanges\ChangeValidationResult.cs" />
     <Compile Include="Models\WorkspaceChanges\CreateDirectoryChange.cs" />
     <Compile Include="Models\WorkspaceChanges\CreateFileChange.cs" />
     <Compile Include="Models\WorkspaceChanges\DeleteDirectoryChange.cs" />
@@ -164,8 +168,11 @@
     <Compile Include="Models\WorkspaceChanges\MoveFileChange.cs" />
     <Compile Include="Models\WorkspaceChanges\RenameDirectoryChange.cs" />
     <Compile Include="Models\WorkspaceChanges\RenameFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\ResolvedFileChange.cs" />
+    <Compile Include="Models\WorkspaceChanges\ResolvedTextChange.cs" />
     <Compile Include="Models\WorkspaceChanges\TextChangeMatchResult.cs" />
     <Compile Include="Models\WorkspaceChanges\TextChangeOperations.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextRange.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChange.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeConverter.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeError.cs" />

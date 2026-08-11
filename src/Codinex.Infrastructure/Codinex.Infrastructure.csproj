@@ -79,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\JsonSerializationService.cs" />
     <Compile Include="Serialization\NewtonsoftPayloadBinder.cs" />
+    <Compile Include="WorkspaceChanges\Resolution\EditFileChangeResolver.cs" />
     <Compile Include="WorkspaceChanges\Handlers\CreateDirectoryChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Handlers\CreateFileChangeHandler.cs" />
     <Compile Include="WorkspaceChanges\Handlers\DeleteFileChangeHandler.cs" />

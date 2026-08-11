@@ -154,6 +154,11 @@
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_GuardClauses.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_Result.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_Search.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_MatchText.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\Resolution\EditFileChangeResolverTests\Base\EditFileChangeResolverBaseTests.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\Resolution\EditFileChangeResolverTests\EditFileChangeResolverTests_Search.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\Resolution\EditFileChangeResolverTests\EditFileChangeResolverTests_Target.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\Resolution\EditFileChangeResolverTests\EditFileChangeResolverTests_Failure.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Validation\Rules\ConflictValidationRuleTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Validation\Rules\FileSystemValidationRuleTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Validation\Rules\StructuralValidationRuleTests.cs" />

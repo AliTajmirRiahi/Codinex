@@ -15,6 +15,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 public sealed class ChangeSetCreatorTool(
     IWorkspaceChangeParser parser,
     IWorkspaceChangeValidator validator,
+    IEditFileChangeResolver changeResolver,
     IChangesetSessionService changesetSessionService)
     : IAiTool
 {
@@ -69,6 +70,15 @@ public sealed class ChangeSetCreatorTool(
         if (!validationResult.Success)
         {
             return ToolResult.Failed(request.Id, validationResult.Errors);
+        }
+
+        var resolutionResult = await changeResolver.ResolveAsync(
+            changeSet,
+            cancellationToken);
+
+        if (!resolutionResult.Success)
+        {
+            return ToolResult.Failed(request.Id, resolutionResult.Errors);
         }
 
         var outcome = await changesetSessionService.RunReviewAsync(changeSet, cancellationToken);

@@ -115,4 +115,29 @@ public sealed class ToolResult
             })
         };
     }
+
+    /// <summary>
+    /// Creates a failed tool result.
+    /// </summary>
+    public static ToolResult Failed(
+        string id,
+        IReadOnlyList<ChangeValidationError> errors)
+    {
+        return new ToolResult
+        {
+            Id = id,
+            Success = false,
+            Error = "Workspace validation failed.",
+            Data = JObject.FromObject(new
+            {
+                errors = errors.Select(x => new
+                {
+                    changeId = x.ChangeId,
+                    code = x.Code.ToString(),
+                    category = x.Category.ToString(),
+                    message = x.Message
+                })
+            })
+        };
+    }
 }
