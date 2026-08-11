@@ -365,3 +365,5 @@ FodyWeavers.xsd
 *.ps1
 *.zip
 /.claude
+/graphify-out
+/CLAUDE.md
