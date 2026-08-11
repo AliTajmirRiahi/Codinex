@@ -22,8 +22,6 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
 public sealed class WorkspacePreviewService(
     IWorkspaceFileService workspaceFileService,
-    ITextChangeMatcher textChangeMatcher,
-    ITextChangeApplier textChangeApplier,
     IStringHelper stringHelper,
     IChangeReviewWebViewClient changeReviewWebViewClient,
     IVisualStudioServices visualStudioServices)
@@ -31,11 +29,15 @@ public sealed class WorkspacePreviewService(
 {
     public async Task<Guid> ShowAsync(
         WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult,
         CancellationToken cancellationToken,
         Guid? existingId = null)
     {
         if (changeSet == null)
             throw new ArgumentNullException(nameof(changeSet));
+
+        if (resolutionResult == null)
+            throw new ArgumentNullException(nameof(resolutionResult));
 
         var id = existingId ?? Guid.NewGuid();
 
@@ -43,7 +45,7 @@ public sealed class WorkspacePreviewService(
 
         foreach (var change in changeSet.Changes)
         {
-            files.Add(await BuildDiffAsync(change, cancellationToken));
+            files.Add(await BuildDiffAsync(change, resolutionResult, cancellationToken));
         }
 
         var model = new WorkspacePreviewModel
@@ -66,12 +68,13 @@ public sealed class WorkspacePreviewService(
 
     private async Task<ChangesetFileDiff> BuildDiffAsync(
         WorkspaceChange change,
+        ChangeValidationResult resolutionResult,
         CancellationToken cancellationToken)
     {
         switch (change)
         {
             case EditFileChange edit:
-                return await BuildEditFileDiffAsync(edit, cancellationToken);
+                return await BuildEditFileDiffAsync(edit, resolutionResult, cancellationToken);
 
             case CreateFileChange create:
                 return new ChangesetFileDiff
@@ -152,30 +155,49 @@ public sealed class WorkspacePreviewService(
 
     private async Task<ChangesetFileDiff> BuildEditFileDiffAsync(
         EditFileChange change,
+        ChangeValidationResult resolutionResult,
         CancellationToken cancellationToken)
     {
         var originalContent = await ReadSafeAsync(change.FilePath, cancellationToken);
 
+        var resolvedFile = resolutionResult.Changes.FirstOrDefault(x =>
+            string.Equals(x.FilePath, change.FilePath, StringComparison.OrdinalIgnoreCase));
+
+        if (resolvedFile == null)
+        {
+            // Resolution is mandatory before Review opens, so this should never happen — but
+            // surface it instead of silently rendering as if nothing changed.
+            return new ChangesetFileDiff
+            {
+                FilePath = change.FilePath,
+                Operation = "EditFile",
+                OriginalText = originalContent,
+                ModifiedText = originalContent,
+                PreviewWarning = "No resolved plan was found for this file; the diff cannot be shown."
+            };
+        }
+
         var modifiedContent = originalContent;
         string previewWarning = null;
 
-        foreach (var textChange in change.TextChanges.OrderBy(x => x.Order))
+        try
         {
-            var match = textChangeMatcher.Match(modifiedContent, textChange);
-
-            if (match.Status != TextChangeMatchStatus.Success)
+            foreach (var resolvedChange in resolvedFile.TextChanges.OrderBy(x => x.Order))
             {
-                // Stop applying further edits, but say so — leaving this silent would render as
-                // "no changes" for a file that actually has pending edits, which is misleading.
-                previewWarning =
-                    $"Could not preview edit #{textChange.Order}: {match.Status} " +
-                    $"({match.Error ?? "the expected text was not found"}). " +
-                    "The diff below reflects only the edits applied before this point; " +
-                    "applying may fail or produce different results than shown.";
-                break;
+                modifiedContent = modifiedContent
+                    .Remove(resolvedChange.Range.Start, resolvedChange.Range.Length)
+                    .Insert(resolvedChange.Range.Start, resolvedChange.ResultText);
             }
-
-            modifiedContent = textChangeApplier.Apply(modifiedContent, match, textChange);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // The file changed on disk since it was resolved — stop where the plan no longer
+            // lines up, but say so rather than silently rendering a stale or partial diff.
+            modifiedContent = originalContent;
+            previewWarning =
+                "This file changed since the proposed edits were validated; the resolved " +
+                "locations no longer line up. Applying may fail or produce different results " +
+                "than shown.";
         }
 
         return new ChangesetFileDiff

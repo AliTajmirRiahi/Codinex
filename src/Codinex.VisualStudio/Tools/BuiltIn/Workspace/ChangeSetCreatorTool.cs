@@ -81,7 +81,7 @@ public sealed class ChangeSetCreatorTool(
             return ToolResult.Failed(request.Id, resolutionResult.Errors);
         }
 
-        var outcome = await changesetSessionService.RunReviewAsync(changeSet, cancellationToken);
+        var outcome = await changesetSessionService.RunReviewAsync(changeSet, resolutionResult, cancellationToken);
 
         return outcome.Kind switch
         {

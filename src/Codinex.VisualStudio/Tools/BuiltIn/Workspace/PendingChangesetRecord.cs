@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Codinex.Core.Models.WorkspaceChanges;
 
 namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace;
@@ -16,6 +17,8 @@ public sealed class PendingChangesetRecord
     public string Summary { get; set; }
 
     public WorkspaceChangeSet Changes { get; set; }
+
+    public IReadOnlyList<ResolvedFileChange> ResolvedChanges { get; set; } = [];
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }

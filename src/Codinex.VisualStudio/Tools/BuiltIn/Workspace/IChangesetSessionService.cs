@@ -22,7 +22,10 @@ public interface IChangesetSessionService
     /// undecided via <see cref="MarkUndecidedIfPending"/>), applies the approved subset, and returns
     /// the outcome for the caller (normally <see cref="ChangeSetCreatorTool"/>) to report.
     /// </summary>
-    Task<ChangesetOutcome> RunReviewAsync(WorkspaceChangeSet changeSet, CancellationToken cancellationToken);
+    Task<ChangesetOutcome> RunReviewAsync(
+        WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Called when a decision arrives from the review UI. If a live <see cref="RunReviewAsync"/> call
