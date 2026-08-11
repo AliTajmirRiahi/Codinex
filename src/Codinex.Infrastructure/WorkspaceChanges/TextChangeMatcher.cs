@@ -15,13 +15,20 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
         string content,
         TextFileChange change)
     {
-        if (content == null)
-            throw new ArgumentNullException(nameof(content));
-
         if (change == null)
             throw new ArgumentNullException(nameof(change));
 
-        if (string.IsNullOrWhiteSpace(change.Search))
+        return MatchText(content, change.Search);
+    }
+
+    public TextChangeMatchResult MatchText(
+        string content,
+        string text)
+    {
+        if (content == null)
+            throw new ArgumentNullException(nameof(content));
+
+        if (string.IsNullOrWhiteSpace(text))
             return new TextChangeMatchResult
             {
                 Status = TextChangeMatchStatus.NoUniqueMatch,
@@ -29,7 +36,7 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
                 Error = "Unable to search with empty text."
             };
 
-        var matches = FindMatches(content, change.Search);
+        var matches = FindMatches(content, text);
 
         if (matches.Count == 0)
         {
