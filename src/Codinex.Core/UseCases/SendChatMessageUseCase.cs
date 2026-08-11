@@ -389,7 +389,8 @@ public sealed class SendChatMessageUseCase(
         var userMessage = messages.LastOrDefault(x =>
             string.Equals(x.Role, "user", StringComparison.OrdinalIgnoreCase));
 
-        userMessage?.Context = context;
+        if (userMessage != null)
+            userMessage.Context = context;
 
         return new ChatMessageBuildResult
         {

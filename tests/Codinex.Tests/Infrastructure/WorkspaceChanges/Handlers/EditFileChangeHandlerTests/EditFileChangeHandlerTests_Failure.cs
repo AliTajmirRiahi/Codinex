@@ -26,7 +26,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codinex"
+            Content = "Codinex"
         };
 
         var change = new EditFileChange
@@ -85,7 +85,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codinex"
+            Content = "Codinex"
         };
 
         var change = new EditFileChange
@@ -144,7 +144,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = "Codinex"
+            Content = "Codinex"
         };
 
         var change = new EditFileChange
@@ -203,7 +203,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "A",
-            Replace = "B"
+            Content = "B"
         };
 
         var second = new TextFileChange
@@ -211,7 +211,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 2,
             Search = "C",
-            Replace = "D"
+            Content = "D"
         };
 
         var change = new EditFileChange
@@ -270,7 +270,7 @@ public sealed class EditFileChangeHandlerTests_Failure
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "A",
-            Replace = "B"
+            Content = "B"
         };
 
         var change = new EditFileChange

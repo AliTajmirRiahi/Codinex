@@ -150,9 +150,6 @@
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\RenameFileChangeHandlerTests\RenameFileChangeHandlerTests_GuardClauses.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\RenameFileChangeHandlerTests\RenameFileChangeHandlerTests_Success.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\Base\TextChangeMatcherBaseTests.cs" />
-    <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_After.cs" />
-    <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_Before.cs" />
-    <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_BeforeAndAfter.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_EdgeCases.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_GuardClauses.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\TextChangeMatcherTests\TextChangeMatcherTests_Result.cs" />

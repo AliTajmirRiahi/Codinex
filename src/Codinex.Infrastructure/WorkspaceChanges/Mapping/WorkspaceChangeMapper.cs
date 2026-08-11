@@ -135,10 +135,11 @@ internal sealed class WorkspaceChangeMapper(IStringHelper stringHelper) : IWorks
         {
             Id = dto.Id,
             Order = dto.Order,
-            Before = _stringHelper.Normalize(dto.Before),
+            FilePath = dto.FilePath,
+            Operation = dto.Operation,
+            Target = dto.Target,
             Search = _stringHelper.Normalize(dto.Search),
-            Replace = _stringHelper.Normalize(dto.Replace),
-            After = _stringHelper.Normalize(dto.After)
+            Content = _stringHelper.Normalize(dto.Content)
         };
     }
 }
