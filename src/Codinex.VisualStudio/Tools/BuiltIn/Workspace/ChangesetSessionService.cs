@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models;
+using Codinex.Core.Models.Tools;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Services;
@@ -19,6 +22,8 @@ public sealed class ChangesetSessionService(
     IWorkspacePreviewService previewService,
     IWorkspaceApprovalService approvalService,
     IWorkspaceChangeApplier applier,
+    IWorkspaceFileService workspaceFileService,
+    IStringHelper stringHelper,
     IStorageService storage,
     IWorkspaceContext workspaceContext,
     IUiThreadDispatcher uiThreadDispatcher,
@@ -28,24 +33,28 @@ public sealed class ChangesetSessionService(
 {
     private Guid? _pendingId;
     private WorkspaceChangeSet _pendingChangeSet;
+    private ChangeValidationResult _pendingResolution;
 
     public bool HasPending { get; private set; }
 
     public async Task<ChangesetOutcome> RunReviewAsync(
         WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult,
         CancellationToken cancellationToken)
     {
-        var id = await previewService.ShowAsync(changeSet, cancellationToken);
+        var id = await previewService.ShowAsync(changeSet, resolutionResult, cancellationToken);
 
         await PersistAsync(new PendingChangesetRecord
         {
             Id = id,
             Summary = $"{changeSet.Changes.Count} change(s)",
-            Changes = changeSet
+            Changes = changeSet,
+            ResolvedChanges = resolutionResult.Changes
         });
 
         _pendingId = id;
         _pendingChangeSet = changeSet;
+        _pendingResolution = resolutionResult;
         HasPending = true;
 
         await NotifyChatBlockedAsync();
@@ -58,7 +67,7 @@ public sealed class ChangesetSessionService(
             return ChangesetOutcome.Undecided();
         }
 
-        return await FinalizeAsync(id, changeSet, decision);
+        return await FinalizeAsync(id, changeSet, resolutionResult, decision);
     }
 
     public async Task SubmitDecisionAsync(Guid changesetId, ChangesetDecision decision)
@@ -73,7 +82,7 @@ public sealed class ChangesetSessionService(
         if (_pendingChangeSet == null || _pendingId != changesetId)
             return;
 
-        var outcome = await FinalizeAsync(changesetId, _pendingChangeSet, decision);
+        var outcome = await FinalizeAsync(changesetId, _pendingChangeSet, _pendingResolution, decision);
 
         NotifyResumeOutcome(outcome);
     }
@@ -85,10 +94,13 @@ public sealed class ChangesetSessionService(
         if (record == null)
             return;
 
-        var id = await previewService.ShowAsync(record.Changes, cancellationToken, record.Id);
+        var resolutionResult = ChangeValidationResult.Successful(record.ResolvedChanges);
+
+        var id = await previewService.ShowAsync(record.Changes, resolutionResult, cancellationToken, record.Id);
 
         _pendingId = id;
         _pendingChangeSet = record.Changes;
+        _pendingResolution = resolutionResult;
         HasPending = true;
 
         await NotifyChatBlockedAsync();
@@ -109,12 +121,13 @@ public sealed class ChangesetSessionService(
 
         // Re-shows the window and re-posts the diff (recomputed against current disk content) using
         // the same id — this doesn't touch the approval wait, so it's safe whether or not one exists.
-        await previewService.ShowAsync(_pendingChangeSet, cancellationToken, _pendingId);
+        await previewService.ShowAsync(_pendingChangeSet, _pendingResolution, cancellationToken, _pendingId);
     }
 
     private async Task<ChangesetOutcome> FinalizeAsync(
         Guid id,
         WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult,
         ChangesetDecision decision)
     {
         var approvedChanges = changeSet.Changes
@@ -136,7 +149,7 @@ public sealed class ChangesetSessionService(
         }
         else
         {
-            var result = await applier.ApplyAsync(new WorkspaceChangeSet { Changes = approvedChanges });
+            var result = await ApplyApprovedChangesAsync(approvedChanges, resolutionResult);
 
             if (!result.Success)
             {
@@ -163,6 +176,85 @@ public sealed class ChangesetSessionService(
         await ClearPendingAsync();
 
         return outcome;
+    }
+
+    /// <summary>
+    /// Applies the approved subset of a changeset. EditFileChange entries are applied directly
+    /// from <paramref name="resolutionResult"/>'s plan — the exact range and result text found
+    /// during Find + Validate + Plan — rather than re-deriving the location from Search. Every
+    /// other change kind still goes through the generic <see cref="IWorkspaceChangeApplier"/>.
+    /// </summary>
+    private async Task<WorkspaceChangeResult> ApplyApprovedChangesAsync(
+        List<WorkspaceChange> approvedChanges,
+        ChangeValidationResult resolutionResult)
+    {
+        var editChanges = approvedChanges.OfType<EditFileChange>().ToList();
+        var otherChanges = approvedChanges.Except(editChanges).ToList();
+
+        var changedFiles = new List<ChangedFileResult>();
+
+        foreach (var editChange in editChanges)
+        {
+            var resolvedFile = resolutionResult.Changes.FirstOrDefault(x =>
+                string.Equals(x.FilePath, editChange.FilePath, StringComparison.OrdinalIgnoreCase));
+
+            if (resolvedFile == null)
+            {
+                return WorkspaceChangeResult.Failed(new WorkspaceChangeError
+                {
+                    Code = WorkspaceChangeErrorCode.SearchNotFound,
+                    FilePath = editChange.FilePath,
+                    ChangeId = editChange.Id,
+                    Message = $"No resolved plan was found for '{editChange.FilePath}'."
+                });
+            }
+
+            var content = stringHelper.Normalize(await workspaceFileService.ReadAsync(editChange.FilePath));
+
+            try
+            {
+                foreach (var resolvedChange in resolvedFile.TextChanges.OrderBy(x => x.Order))
+                {
+                    content = content
+                        .Remove(resolvedChange.Range.Start, resolvedChange.Range.Length)
+                        .Insert(resolvedChange.Range.Start, resolvedChange.ResultText);
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                return WorkspaceChangeResult.Failed(new WorkspaceChangeError
+                {
+                    Code = WorkspaceChangeErrorCode.SearchNotFound,
+                    FilePath = editChange.FilePath,
+                    ChangeId = editChange.Id,
+                    Message = $"'{editChange.FilePath}' changed since the edits were validated: {ex.Message}"
+                });
+            }
+
+            await workspaceFileService.WriteAsync(editChange.FilePath, content);
+
+            changedFiles.Add(new ChangedFileResult
+            {
+                Operation = "EditFile",
+                Path = editChange.FilePath
+            });
+        }
+
+        if (otherChanges.Count > 0)
+        {
+            var otherResult = await applier.ApplyAsync(new WorkspaceChangeSet { Changes = otherChanges });
+
+            if (!otherResult.Success)
+                return otherResult;
+
+            if (otherResult.ChangeSuccess?.Files != null)
+                changedFiles.AddRange(otherResult.ChangeSuccess.Files);
+        }
+
+        return WorkspaceChangeResult.Successful(new WorkspaceChangeSuccess
+        {
+            Files = changedFiles
+        });
     }
 
     private async Task ClearPendingAsync()
