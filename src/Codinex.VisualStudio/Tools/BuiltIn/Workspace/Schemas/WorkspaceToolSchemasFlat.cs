@@ -40,30 +40,42 @@ internal static class WorkspaceToolSchemasFlat
                     ToolPropertyType.Integer,
                     "The execution order of this text change."),
 
-                [nameof(TextFileChange.Before)] = new(
+                [nameof(TextFileChange.FilePath)] = new(
                     ToolPropertyType.String,
-                    "Text expected immediately before the search match."),
+                    "The path of the file to modify."),
+
+                [nameof(TextFileChange.Operation)] = new(
+                    ToolPropertyType.String,
+                    "The kind of text modification to perform.")
+                {
+                    Enum =
+                    [
+                        TextChangeOperations.Replace,
+                        TextChangeOperations.InsertBefore,
+                        TextChangeOperations.InsertAfter,
+                        TextChangeOperations.Delete
+                    ]
+                },
+
+                [nameof(TextFileChange.Target)] = new(
+                    ToolPropertyType.String,
+                    "A short human-readable description of what is being targeted."),
 
                 [nameof(TextFileChange.Search)] = new(
                     ToolPropertyType.String,
                     "The unique text to search for."),
 
-                [nameof(TextFileChange.Replace)] = new(
+                [nameof(TextFileChange.Content)] = new(
                     ToolPropertyType.String,
-                    "The replacement text."),
-
-                [nameof(TextFileChange.After)] = new(
-                    ToolPropertyType.String,
-                    "Text expected immediately after the search match.")
+                    "The text to insert or use as a replacement.")
             },
 
             Required =
             [
                 nameof(TextFileChange.Order),
+                nameof(TextFileChange.Operation),
                 nameof(TextFileChange.Search),
-                nameof(TextFileChange.Replace),
-                nameof(TextFileChange.Before),
-                nameof(TextFileChange.After),
+                nameof(TextFileChange.Content),
             ]
         };
 

@@ -53,7 +53,7 @@ namespace Codinex.VisualStudio.Services
             return files
                 .Where(f => f.RelativePath
                     .Replace('\\', '/')
-                    .Contains(query, StringComparison.OrdinalIgnoreCase))
+                    .IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
         }
 
@@ -111,7 +111,7 @@ namespace Codinex.VisualStudio.Services
 
                     for (var i = 0; i < lines.Length; i++)
                     {
-                        if (!lines[i].Contains(text, StringComparison.OrdinalIgnoreCase))
+                        if (lines[i].IndexOf(text, StringComparison.OrdinalIgnoreCase) < 0)
                             continue;
 
                         result.Add(new WorkspaceFile

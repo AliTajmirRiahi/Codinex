@@ -165,6 +165,7 @@
     <Compile Include="Models\WorkspaceChanges\RenameDirectoryChange.cs" />
     <Compile Include="Models\WorkspaceChanges\RenameFileChange.cs" />
     <Compile Include="Models\WorkspaceChanges\TextChangeMatchResult.cs" />
+    <Compile Include="Models\WorkspaceChanges\TextChangeOperations.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChange.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeConverter.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeError.cs" />

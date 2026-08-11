@@ -25,7 +25,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 2,
             Search = "World",
-            Replace = "Codinex"
+            Content = "Codinex"
         };
 
         var first = new TextFileChange
@@ -33,7 +33,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "Hello",
-            Replace = "Hi"
+            Content = "Hi"
         };
 
         var change = new EditFileChange
@@ -147,7 +147,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Replace = string.Empty
+            Content = string.Empty
         };
 
         var change = new EditFileChange
@@ -193,7 +193,7 @@ public sealed class EditFileChangeHandlerTests_EdgeCases
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "Hello World",
-            Replace = "Codinex"
+            Content = "Codinex"
         };
 
         var change = new EditFileChange

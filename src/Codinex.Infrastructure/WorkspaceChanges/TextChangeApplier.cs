@@ -15,8 +15,20 @@ public sealed class TextChangeApplier : ITextChangeApplier
         TextChangeMatchResult match,
         TextFileChange change)
     {
-        return content
-            .Remove(match.StartIndex, match.Length)
-            .Insert(match.StartIndex, change.Replace);
+        return change.Operation switch
+        {
+            TextChangeOperations.InsertBefore => content
+                .Insert(match.StartIndex, change.Content),
+
+            TextChangeOperations.InsertAfter => content
+                .Insert(match.StartIndex + match.Length, change.Content),
+
+            TextChangeOperations.Delete => content
+                .Remove(match.StartIndex, match.Length),
+
+            _ => content
+                .Remove(match.StartIndex, match.Length)
+                .Insert(match.StartIndex, change.Content)
+        };
     }
 }

@@ -41,9 +41,6 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
             };
         }
 
-        matches = FilterByBefore(content, matches, change.Before);
-        matches = FilterByAfter(content, matches, change.After);
-
         return matches.Count switch
         {
             0 => new TextChangeMatchResult
@@ -90,52 +87,6 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
         }
 
         return matches;
-    }
-
-    private static List<TextMatch> FilterByBefore(
-        string content,
-        IReadOnlyList<TextMatch> matches,
-        string before)
-    {
-        if (string.IsNullOrEmpty(before))
-            return matches.ToList();
-
-        return matches
-            .Where(match =>
-            {
-                if (match.Start < before.Length)
-                    return false;
-
-                return string.Equals(
-                    content.Substring(match.Start - before.Length, before.Length),
-                    before,
-                    StringComparison.Ordinal);
-            })
-            .ToList();
-    }
-
-    private static List<TextMatch> FilterByAfter(
-        string content,
-        IReadOnlyList<TextMatch> matches,
-        string after)
-    {
-        if (string.IsNullOrEmpty(after))
-            return matches.ToList();
-
-        return matches
-            .Where(match =>
-            {
-                var start = match.Start + match.Length;
-
-                if (start + after.Length > content.Length)
-                    return false;
-
-                return string.Equals(
-                    content.Substring(start, after.Length),
-                    after,
-                    StringComparison.Ordinal);
-            })
-            .ToList();
     }
 
     private static TextChangeMatchResult BuildSuccessResult(
