@@ -57,6 +57,15 @@ public sealed class WorkspaceChangeConverter : JsonConverter<WorkspaceChange>
 
     public override void WriteJson(JsonWriter writer, WorkspaceChange value, JsonSerializer serializer)
     {
-        serializer.Serialize(writer, value, value.GetType());
+        throw new NotSupportedException(
+            "Workspace change serialization is not supported.");
     }
+
+    // [JsonConverter] on the abstract base is inherited by every concrete subtype, and
+    // JsonConverter<T>.CanConvert matches subtypes too — so writing would otherwise
+    // re-enter this same converter forever ("self referencing loop detected"). CanWrite
+    // = false tells Newtonsoft to skip the converter for writes and fall back to normal
+    // reflection-based serialization of the concrete type; only reads need the 'kind'
+    // discriminator logic above.
+    public override bool CanWrite => false;
 }
