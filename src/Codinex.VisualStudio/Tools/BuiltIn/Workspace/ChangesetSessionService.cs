@@ -22,8 +22,7 @@ public sealed class ChangesetSessionService(
     IWorkspacePreviewService previewService,
     IWorkspaceApprovalService approvalService,
     IWorkspaceChangeApplier applier,
-    IWorkspaceFileService workspaceFileService,
-    IStringHelper stringHelper,
+    IEditFileChangeResolutionContext resolutionContext,
     IStorageService storage,
     IWorkspaceContext workspaceContext,
     IUiThreadDispatcher uiThreadDispatcher,
@@ -179,82 +178,27 @@ public sealed class ChangesetSessionService(
     }
 
     /// <summary>
-    /// Applies the approved subset of a changeset. EditFileChange entries are applied directly
-    /// from <paramref name="resolutionResult"/>'s plan — the exact range and result text found
-    /// during Find + Validate + Plan — rather than re-deriving the location from Search. Every
-    /// other change kind still goes through the generic <see cref="IWorkspaceChangeApplier"/>.
+    /// Applies the approved subset of a changeset through the generic
+    /// <see cref="IWorkspaceChangeApplier"/>, unchanged for every change kind. For
+    /// EditFileChange specifically, <c>EditFileChangeHandler</c> still matches on Search
+    /// first, against the freshly-read file; <paramref name="resolutionResult"/> is made
+    /// available to it (via <see cref="IEditFileChangeResolutionContext"/>) purely as a
+    /// fallback for when that no longer finds a unique match.
     /// </summary>
     private async Task<WorkspaceChangeResult> ApplyApprovedChangesAsync(
         List<WorkspaceChange> approvedChanges,
         ChangeValidationResult resolutionResult)
     {
-        var editChanges = approvedChanges.OfType<EditFileChange>().ToList();
-        var otherChanges = approvedChanges.Except(editChanges).ToList();
+        resolutionContext.Current = resolutionResult;
 
-        var changedFiles = new List<ChangedFileResult>();
-
-        foreach (var editChange in editChanges)
+        try
         {
-            var resolvedFile = resolutionResult.Changes.FirstOrDefault(x =>
-                string.Equals(x.FilePath, editChange.FilePath, StringComparison.OrdinalIgnoreCase));
-
-            if (resolvedFile == null)
-            {
-                return WorkspaceChangeResult.Failed(new WorkspaceChangeError
-                {
-                    Code = WorkspaceChangeErrorCode.SearchNotFound,
-                    FilePath = editChange.FilePath,
-                    ChangeId = editChange.Id,
-                    Message = $"No resolved plan was found for '{editChange.FilePath}'."
-                });
-            }
-
-            var content = stringHelper.Normalize(await workspaceFileService.ReadAsync(editChange.FilePath));
-
-            try
-            {
-                foreach (var resolvedChange in resolvedFile.TextChanges.OrderBy(x => x.Order))
-                {
-                    content = content
-                        .Remove(resolvedChange.Range.Start, resolvedChange.Range.Length)
-                        .Insert(resolvedChange.Range.Start, resolvedChange.ResultText);
-                }
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                return WorkspaceChangeResult.Failed(new WorkspaceChangeError
-                {
-                    Code = WorkspaceChangeErrorCode.SearchNotFound,
-                    FilePath = editChange.FilePath,
-                    ChangeId = editChange.Id,
-                    Message = $"'{editChange.FilePath}' changed since the edits were validated: {ex.Message}"
-                });
-            }
-
-            await workspaceFileService.WriteAsync(editChange.FilePath, content);
-
-            changedFiles.Add(new ChangedFileResult
-            {
-                Operation = "EditFile",
-                Path = editChange.FilePath
-            });
+            return await applier.ApplyAsync(new WorkspaceChangeSet { Changes = approvedChanges });
         }
-
-        if (otherChanges.Count > 0)
+        finally
         {
-            var otherResult = await applier.ApplyAsync(new WorkspaceChangeSet { Changes = otherChanges });
-
-            if (!otherResult.Success)
-                return otherResult;
-
-            if (otherResult.ChangeSuccess?.Files != null)
-                changedFiles.AddRange(otherResult.ChangeSuccess.Files);
+            resolutionContext.Current = null;
         }
-
-        return WorkspaceChangeResult.Successful(new WorkspaceChangeSuccess
-        {
-            Files = changedFiles
-        });
     }
 
     private async Task ClearPendingAsync()

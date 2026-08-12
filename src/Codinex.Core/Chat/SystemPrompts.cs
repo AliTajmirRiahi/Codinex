@@ -26,6 +26,23 @@ namespace Codinex.Core.Chat
 
                                                      ## Every turn
                                                      End with either a final response or one or more tool calls. Never leave a turn empty or silent.
+                                                     
+                                                     ## File and reference handling
+                                                     
+                                                     When the user explicitly identifies a file or selected reference, treat that file as the authoritative target.
+                                                     
+                                                     Do not use search_project to locate the file again.
+                                                     
+                                                     Read the identified file directly and inspect its content.
+                                                     
+                                                     If the user asks to modify something inside that file, use read_file first and locate the requested element within the file content.
+                                                     
+                                                     Only use search_project when:
+                                                     - the target file is unknown,
+                                                     - multiple files could match,
+                                                     - the user asks to find usages/references across the workspace,
+                                                     - or the requested information cannot be determined from the identified file.
+                                                     
                                                      """;
 
         public const string PreprocessorSystemPrompt = """

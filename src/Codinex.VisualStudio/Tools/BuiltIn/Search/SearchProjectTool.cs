@@ -23,7 +23,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Search;
 [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchService) : IAiTool
 {
-    private const int DefaultMaxResults = 20;
+    private const int DefaultCount = 5;
 
     public string Name => "search_project";
 
@@ -63,11 +63,15 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 ToolPropertyType.String,
                 "Search type. Valid values: fileName, extension, pattern, text, regex."),
 
-            ["maxResults"] = new(
+            ["skip"] = new(
                 ToolPropertyType.Integer,
-                "Maximum number of results to return. Default is 20.")
+                "Skip is A factor of 5. Default is 5."),
+
+            ["take"] = new(
+                ToolPropertyType.Integer,
+                "Take number of results to return. Max is 5.")
         },
-        ["query", "type"]);
+        ["query", "type", "skip", "take"]);
 
     public Task<ToolResult> ExecuteAsync(
         ToolRequest request,
@@ -92,20 +96,23 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                         $"Unsupported search type '{type}'."));
             }
 
-            var maxResults = request.GetInt32("maxResults");
+            var skip = request.GetInt32("skip");
 
-            if (maxResults <= 0)
-            {
-                maxResults = DefaultMaxResults;
-            }
+            var take = request.GetInt32("take");
+
+            if (take <= 0)
+                take = DefaultCount;
 
             var results = workspaceSearchService.Search(query, searchType);
 
             var totalCount = results.Count;
 
             var limitedResults = results
-                .Take(maxResults)
+                .Skip(skip)
+                .Take(take)
                 .ToList();
+
+            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(limitedResults);
 
             var data = new JObject
             {

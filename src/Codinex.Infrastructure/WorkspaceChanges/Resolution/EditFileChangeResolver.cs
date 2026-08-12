@@ -158,13 +158,13 @@ public sealed class EditFileChangeResolver(
                 return (searchMatch, textChange.Search);
         }
 
-        if (!string.IsNullOrWhiteSpace(textChange.Target))
-        {
-            var targetMatch = textChangeMatcher.MatchText(content, textChange.Target);
+        //if (!string.IsNullOrWhiteSpace(textChange.Target))
+        //{
+        //    var targetMatch = textChangeMatcher.MatchText(content, textChange.Target);
 
-            if (targetMatch.Status == TextChangeMatchStatus.Success)
-                return (targetMatch, textChange.Target);
-        }
+        //    if (targetMatch.Status == TextChangeMatchStatus.Success)
+        //        return (targetMatch, textChange.Target);
+        //}
 
         return null;
     }

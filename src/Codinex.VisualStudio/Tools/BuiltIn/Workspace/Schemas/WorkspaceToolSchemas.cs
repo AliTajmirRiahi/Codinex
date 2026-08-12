@@ -53,7 +53,12 @@ internal static class WorkspaceToolSchemas
 
                 [nameof(TextFileChange.Target)] = new(
                     ToolPropertyType.String,
-                    "A short human-readable description of what is being targeted."),
+                    "Optional fallback anchor, used only if Search does not uniquely match. Must be an " +
+                    "exact, literal fragment of the current source text — e.g. a method name like " +
+                    "'Subtract', a class name, a property name, or a short unique code snippet — copied " +
+                    "character-for-character from the file, the same way Search is. " +
+                    "NEVER a description, summary, or paraphrase of the code (e.g. do not write " +
+                    "'Subtract method expression-bodied implementation' — write 'Subtract')."),
 
                 [nameof(TextFileChange.Search)] = new(
                     ToolPropertyType.String,
