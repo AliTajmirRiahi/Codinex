@@ -24,11 +24,11 @@ public sealed class ToolRequest
     public JObject Arguments { get; set; } = new JObject();
 
 
-    public string GetRequiredString(string name)
+    public string GetRequiredString(string name, bool openFailed = false)
     {
         var value = Arguments.Value<string>(name);
 
-        return string.IsNullOrWhiteSpace(value) ? throw new ToolRequestValidationException(Name, name) : value;
+        return string.IsNullOrWhiteSpace(value) && !openFailed ? throw new ToolRequestValidationException(Name, name) : value;
     }
 
     public string? GetString(string name)

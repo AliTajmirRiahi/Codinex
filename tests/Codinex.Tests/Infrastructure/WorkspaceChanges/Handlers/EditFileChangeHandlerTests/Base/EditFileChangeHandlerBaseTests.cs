@@ -3,6 +3,7 @@ using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges.Handlers;
+using Codinex.Infrastructure.WorkspaceChanges.Resolution;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -15,6 +16,7 @@ public abstract class EditFileChangeHandlerBaseTests
     protected IWorkspaceChangeErrorFactory WorkspaceChangeErrorFactory = null!;
     protected IStringHelper StringHelper = null!;
     protected ITextChangeApplier TextChangeApplier = null!;
+    protected IEditFileChangeResolutionContext ResolutionContext = null!;
 
     [SetUp]
     public virtual void SetUp()
@@ -25,6 +27,7 @@ public abstract class EditFileChangeHandlerBaseTests
         StringHelper = Substitute.For<IStringHelper>();
         StringHelper.Normalize(Arg.Any<string>()).Returns(call => call.Arg<string>());
         TextChangeApplier = new TextChangeApplier();
+        ResolutionContext = new EditFileChangeResolutionContext();
     }
 
     protected virtual EditFileChangeHandler CreateSut()
@@ -34,6 +37,7 @@ public abstract class EditFileChangeHandlerBaseTests
             TextChangeMatcher,
             WorkspaceChangeErrorFactory,
             StringHelper,
-            TextChangeApplier);
+            TextChangeApplier,
+            ResolutionContext);
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="DependencyInjection\Models\ServiceLifetimeWrapper.cs" />
     <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
+    <Compile Include="MathTest.cs" />
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
     <Compile Include="Interfaces\IAiPreprocessorProvider.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Interfaces\IWorkspaceContext.cs" />
     <Compile Include="Interfaces\IWorkspaceFileService.cs" />
     <Compile Include="Interfaces\IWorkspaceInitializer.cs" />
+    <Compile Include="Interfaces\WorkspaceChanges\IEditFileChangeResolutionContext.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\IEditFileChangeResolver.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\ITextChangeMatcher.cs" />
     <Compile Include="Interfaces\WorkspaceChanges\IWorkspaceChangeApplier.cs" />

@@ -145,6 +145,7 @@
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\EditFileChangeHandlerTests\Base\EditFileChangeHandlerBaseTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\EditFileChangeHandlerTests\EditFileChangeHandlerTests_EdgeCases.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\EditFileChangeHandlerTests\EditFileChangeHandlerTests_Failure.cs" />
+    <Compile Include="Infrastructure\WorkspaceChanges\Handlers\EditFileChangeHandlerTests\EditFileChangeHandlerTests_ResolutionFallback.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\EditFileChangeHandlerTests\EditFileChangeHandlerTests_Success.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\RenameFileChangeHandlerTests\Base\RenameFileChangeHandlerBaseTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\RenameFileChangeHandlerTests\RenameFileChangeHandlerTests_GuardClauses.cs" />
