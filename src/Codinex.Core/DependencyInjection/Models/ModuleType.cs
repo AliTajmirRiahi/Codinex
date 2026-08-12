@@ -28,4 +28,6 @@ public static class Modules
     public const string JSON = "JSON";
 
     public const string MissionEngine = "Mission Engine";
+
+    public const string Search = "Search";
 }
