@@ -64,8 +64,12 @@
     <Compile Include="DependencyInjection\Models\ServiceLifetimeWrapper.cs" />
     <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
-    <Compile Include="MathTest.cs" />
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
+    <Compile Include="Interfaces\Search\ICodeSearchEngine.cs" />
+    <Compile Include="Interfaces\Search\IFuzzyStringSearchAlgorithm.cs" />
+    <Compile Include="Interfaces\Search\IMultiPatternStringSearchAlgorithm.cs" />
+    <Compile Include="Interfaces\Search\ISearchAlgorithmSelector.cs" />
+    <Compile Include="Interfaces\Search\IStringSearchAlgorithm.cs" />
     <Compile Include="Interfaces\IAiPreprocessorProvider.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
     <Compile Include="Interfaces\IBuildContextProvider.cs" />
@@ -152,6 +156,13 @@
     <Compile Include="Models\PromptProfileResult.cs" />
     <Compile Include="Models\PromptSectionProfile.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
+    <Compile Include="Models\Search\CodeSearchResult.cs" />
+    <Compile Include="Models\Search\MatchType.cs" />
+    <Compile Include="Models\Search\SearchAlgorithmType.cs" />
+    <Compile Include="Models\Search\SearchMatch.cs" />
+    <Compile Include="Models\Search\SearchMode.cs" />
+    <Compile Include="Models\Search\SearchRequest.cs" />
+    <Compile Include="Models\Search\StringSearchOptions.cs" />
     <Compile Include="Models\Tools\ChangeSetCreatorToolResult.cs" />
     <Compile Include="Models\Tools\ToolDefinition.cs" />
     <Compile Include="Models\Tools\ToolProperty.cs" />

@@ -135,6 +135,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Search\Algorithms\Base\ExactAlgorithmContractTestBase.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\AhoCorasickStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\BitapStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\BndmStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\BoyerMooreHorspoolStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\BoyerMooreStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\FuzzyStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\KmpStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\NaiveStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\RabinKarpStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\Algorithms\TwoWayStringSearchAlgorithmTests.cs" />
+    <Compile Include="Infrastructure\Search\ChatViewHtmlSearchTests.cs" />
+    <Compile Include="Infrastructure\Search\CodeSearchEngineTests.cs" />
+    <Compile Include="Infrastructure\Search\SearchAlgorithmSelectorTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\CreateFileChangeHandlerTests\Base\CreateFileChangeHandlerBaseTests.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\CreateFileChangeHandlerTests\CreateFileChangeHandlerTests_EdgeCases.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Handlers\CreateFileChangeHandlerTests\CreateFileChangeHandlerTests_Failure.cs" />
