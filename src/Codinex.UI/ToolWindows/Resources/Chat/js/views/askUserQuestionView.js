@@ -7,6 +7,7 @@
  * picking a suggestion.
  */
 import { createElement } from '../utils/dom.js';
+import { isRtlText } from '../utils/languageDirection.js';
 
 const MAX_VISIBLE_OFFSET = 3;
 const OFFSET_STEP_PX = 34;
@@ -65,9 +66,18 @@ export class AskUserQuestionView {
         this.activeCardIndex = 0;
         this.cardElements = [];
 
-        const panel = createElement('div', 'ask-user-question');
+        // Direction is derived from the question's own text, not the OS keyboard layout —
+        // this content is AI-generated, not typed by the user. The stage (arrows/track) is
+        // deliberately left untouched by this (see CSS): only the header and card text flip,
+        // so the arrows always keep their fixed left/right meaning and never invert.
+        const isRtl = isRtlText(question.question) ||
+            isRtlText(question.header) ||
+            question.options.some((o) => isRtlText(o.label) || isRtlText(o.description));
+
+        const panel = createElement('div', `ask-user-question${isRtl ? ' ask-user-question--rtl' : ''}`);
 
         const header = createElement('div', 'ask-user-question__header');
+        header.dir = isRtl ? 'rtl' : 'ltr';
         const progress = this.questions.length > 1
             ? `<span class="ask-user-question__progress">${this.currentIndex + 1}/${this.questions.length}</span>`
             : '';
@@ -91,12 +101,12 @@ export class AskUserQuestionView {
         const track = createElement('div', 'ask-user-question__track');
 
         question.options.forEach((option, index) => {
-            const card = this.createOptionCard(option, index);
+            const card = this.createOptionCard(option, index, isRtl);
             track.appendChild(card);
             this.cardElements.push(card);
         });
 
-        const customCard = this.createCustomCard();
+        const customCard = this.createCustomCard(isRtl);
         track.appendChild(customCard);
         this.cardElements.push(customCard);
 
@@ -151,10 +161,11 @@ export class AskUserQuestionView {
         });
     }
 
-    createOptionCard(option, index) {
+    createOptionCard(option, index, isRtl) {
         const card = createElement('div', `ask-user-question__card${option.recommended ? ' ask-user-question__card--recommended' : ''}`);
         card.setAttribute('role', 'button');
         card.setAttribute('tabindex', '0');
+        card.dir = isRtl ? 'rtl' : 'ltr';
 
         card.innerHTML = `
             <div class="ask-user-question__card-number">${index + 1}</div>
@@ -177,8 +188,9 @@ export class AskUserQuestionView {
         return card;
     }
 
-    createCustomCard() {
+    createCustomCard(isRtl) {
         const card = createElement('div', 'ask-user-question__card ask-user-question__card--custom');
+        card.dir = isRtl ? 'rtl' : 'ltr';
 
         card.innerHTML = `
             <div class="ask-user-question__card-footer ask-user-question__card-footer--top">
@@ -190,6 +202,7 @@ export class AskUserQuestionView {
         `;
 
         const textarea = card.querySelector('.ask-user-question__custom-input');
+        textarea.dir = isRtl ? 'rtl' : 'ltr';
         const submitBtn = card.querySelector('.ask-user-question__custom-submit');
 
         const submit = () => {
