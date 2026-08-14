@@ -246,7 +246,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     await _workspaceSettingsManager.SaveAsync(new WorkspaceSettings
                     {
-                        SolutionInstruction = payload.SolutionInstruction ?? string.Empty
+                        SolutionInstruction = payload.SolutionInstruction ?? string.Empty,
+                        ExcludeDirectories = payload.ExcludeDirectories ?? string.Empty,
+                        ExcludeFiles = payload.ExcludeFiles ?? string.Empty
                     });
 
                     await SendSolutionInstructionSavedAsync();
