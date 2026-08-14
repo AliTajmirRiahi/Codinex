@@ -99,6 +99,8 @@ namespace Codinex.UI.ToolWindows
 
             webViewClient.Initialize(WebView);
 
+            WebViewChromeSettings.DisableBrowserChrome(WebView.CoreWebView2);
+
             // Set up the resource server mapping
             _resourceServer.Attach(WebView.CoreWebView2);
 

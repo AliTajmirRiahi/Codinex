@@ -90,6 +90,8 @@ namespace Codinex.UI.ToolWindows
 
             webViewClient.Initialize(WebView);
 
+            WebViewChromeSettings.DisableBrowserChrome(WebView.CoreWebView2);
+
             _resourceServer.Attach(WebView.CoreWebView2);
 
             await RegisterWebViewHandlersAsync();
