@@ -435,7 +435,9 @@ export const chatView = {
         togglePanelHidden('#chat-welcome', chatMessages.length === 0);
 
         for (const message of chatMessages) {
-            this.appendMessage(message.content, message.role, this.getMessageDate(message), true);
+            const context = message.context || message.Context;
+
+            this.appendMessage(message.content, message.role, this.getMessageDate(message), true, context ? { context } : undefined);
         }
 
         if (this.floatingDateSeparator) {
