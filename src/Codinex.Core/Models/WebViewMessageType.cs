@@ -31,6 +31,7 @@ public static class WebViewMessageType
     public const string ChangesetViewReady = "CHANGESET_VIEW_READY";
     public const string ReopenChangesetReview = "REOPEN_CHANGESET_REVIEW";
     public const string AskUserAnswer = "ASK_USER_ANSWER";
+    public const string RewindChat = "REWIND_CHAT";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -58,5 +59,6 @@ public static class WebViewMessageType
     public const string ChatBlocked = "CHAT_BLOCKED";
     public const string ChatUnblocked = "CHAT_UNBLOCKED";
     public const string AskUserQuestion = "ASK_USER_QUESTION";
+    public const string RewindChatApproved = "REWIND_CHAT_APPROVED";
 
 }

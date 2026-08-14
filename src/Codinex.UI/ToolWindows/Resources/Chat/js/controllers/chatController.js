@@ -7,7 +7,7 @@ import { createStreamingMessage, chatView } from '../views/chatView.js';
 import { chatListView } from '../views/chatListView.js';
 import { projectListView } from '../views/projectListView.js';
 import { aiService } from '../services/aiService.js';
-import { getState, setLoading, setCurrentModel, setInputLoading } from '../state/appState.js';
+import { getState, setLoading, setCurrentModel, setInputLoading, setCurrentChat } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 import { STATICS } from '../constants/statics.js';
 import { reportError } from '../../../Shared/bridge/errorReporter.js';
@@ -96,6 +96,18 @@ export function initChatController(transport) {
         if (!filePath) return;
 
         transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath });
+    });
+
+    document.addEventListener('chat:rewind-to-message', (e) => {
+        const messageIndex = e.detail?.messageIndex;
+
+        if (!Number.isInteger(messageIndex)) return;
+
+        const state = getState();
+
+        if (state.isLoading || state.isChatBlocked || state.isAwaitingClarification) return;
+
+        transport.send(EVENTS.REWIND_CHAT, { messageIndex });
     });
 
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat);
@@ -394,6 +406,25 @@ export function initChatController(transport) {
         },
         handleChatTitleChanged: () => {
             chatListView.setCurrentChatName();
+        },
+        handleRewindChatApproved: (payload) => {
+            const chat = payload?.chat || payload?.Chat;
+            const rewindText = payload?.rewindText ?? payload?.RewindText ?? '';
+
+            if (chat) {
+                setCurrentChat(chat);
+                chatView.clearMessages();
+                chatView.renderMessages(chat.messages || chat.Messages);
+            }
+
+            composerController.resetComposer();
+            chatView.composer.setText(rewindText);
+
+            if (typeof composerController.handleInput === 'function') {
+                composerController.handleInput({ trigger: null });
+            }
+
+            chatView.composer.input.focus();
         },
         handleActiveDocument: () => {
             const state = getState();

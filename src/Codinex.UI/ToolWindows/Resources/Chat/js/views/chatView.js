@@ -369,7 +369,11 @@ export const chatView = {
         if (statusElement) parent.removeChild(statusElement);
         parent.removeChild(element);
 
-        const messageDiv = messageView.createMessageElement(text, sender, options);
+        const messageOptions = sender === 'user'
+            ? { ...options, messageIndex: container.querySelectorAll('.chat-message').length }
+            : options;
+
+        const messageDiv = messageView.createMessageElement(text, sender, messageOptions);
 
         this.tagMessageElement(messageDiv, createdAt || new Date(), deferDateSeparatorRefresh);
 
