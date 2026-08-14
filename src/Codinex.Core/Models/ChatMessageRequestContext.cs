@@ -21,7 +21,7 @@ namespace Codinex.Core.Models
 
         public AiPreprocessorResult PreprocessorResult { get; set; }
 
-        public IReadOnlyList<string> PlannedTools { get; set; }
+        public IReadOnlyList<string> PlannedTools { get; set; } = [];
 
         public static ChatMessageRequestContext CreateChatMessageRequestContextWithoutMetaData(ChatMessageRequestContext context)
         {

@@ -12,6 +12,7 @@ const _state = {
     isScreenLoading: true,
     isInputLoading : false,
     isChatBlocked: false,
+    isAwaitingClarification: false,
     chatList: [],
     currentChat: null,
     groupList: [],
@@ -184,6 +185,13 @@ export function setInputLoading(isInputLoading) {
  */
 export function setChatBlocked(isChatBlocked) {
     updateState({ isChatBlocked: !!isChatBlocked });
+}
+/**
+ * Set whether chat is locked because the assistant is waiting on an
+ * ask_user_question answer.
+ */
+export function setAwaitingClarification(isAwaitingClarification) {
+    updateState({ isAwaitingClarification: !!isAwaitingClarification });
 }
 /**
  * Add message to history.

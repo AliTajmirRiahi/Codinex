@@ -163,6 +163,9 @@
     <Compile Include="Models\Search\SearchMode.cs" />
     <Compile Include="Models\Search\SearchRequest.cs" />
     <Compile Include="Models\Search\StringSearchOptions.cs" />
+    <Compile Include="Models\Tools\AskUserQuestion\ClarificationAnswer.cs" />
+    <Compile Include="Models\Tools\AskUserQuestion\ClarificationOption.cs" />
+    <Compile Include="Models\Tools\AskUserQuestion\ClarificationQuestion.cs" />
     <Compile Include="Models\Tools\ChangeSetCreatorToolResult.cs" />
     <Compile Include="Models\Tools\ToolDefinition.cs" />
     <Compile Include="Models\Tools\ToolProperty.cs" />

@@ -3,12 +3,13 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
+import { AskUserQuestionView } from './views/askUserQuestionView.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
 import { initAboutController } from './controllers/aboutController.js';
 import { initSettingsController } from './controllers/settingsController.js';
@@ -44,6 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const manageModelsController = initManageModelsController(webViewTransport);
     initAboutController();
     const settingsController = initSettingsController(webViewTransport);
+
+    const askUserQuestionView = new AskUserQuestionView({
+        container: $('#ask-user-question-panel'),
+        onAnswer: ({ requestId, answers }) => {
+            webViewTransport.send(EVENTS.ASK_USER_ANSWER, { requestId, answers });
+            askUserQuestionView.hide();
+            setAwaitingClarification(false);
+        }
+    });
 
     function getChatsPayload(payload) {
         const chats = payload?.chats || payload?.Chats;
@@ -81,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // A body-level class (rather than toggling the shared 'disable' class directly)
                 // avoids fighting with composerView.js's own draft-text-driven send-btn state.
                 document.body.classList.toggle('chat-blocked', state.isChatBlocked);
+                document.body.classList.toggle('awaiting-clarification', state.isAwaitingClarification);
             })
 
             const chatBlocked = data.chatBlocked ?? data.ChatBlocked ?? false;
@@ -252,6 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onChatUnblocked: () => {
             setChatBlocked(false);
+        },
+        onAskUserQuestion: (payload) => {
+            setAwaitingClarification(true);
+            askUserQuestionView.show(payload);
         }
     });
 

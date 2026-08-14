@@ -1,0 +1,195 @@
+/* Ask User Question — clarification carousel shown above the composer while the
+   "ask_user_question" tool is waiting for the user's answer. One card is centered
+   and active; the rest are stacked behind it, faded and scaled down. Navigation
+   is arrow-only — no scrolling or dragging. */
+
+.ask-user-question-panel {
+    margin: 0 10px 8px;
+}
+
+body.awaiting-clarification #input-container {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.ask-user-question {
+    padding: 10px 14px;
+    border: 1px solid var(--vs-border, #3f3f46);
+    border-radius: 10px;
+    background: var(--vs-input-bg, #252526);
+}
+
+.ask-user-question__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.ask-user-question__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--vs-foreground);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.ask-user-question__title codinex-icon {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    color: #a855f7;
+}
+
+.ask-user-question__progress {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: var(--vs-foreground);
+    opacity: 0.6;
+}
+
+.ask-user-question__stage {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ask-user-question__track {
+    position: relative;
+    flex: 1;
+    height: 170px;
+    overflow: hidden;
+}
+
+.ask-user-question__card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 220px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid rgba(168, 85, 247, 0.55);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(168, 85, 247, 0.08), var(--vs-input-bg, #1e1e1e) 60%);
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35), 0 10px 26px rgba(168, 85, 247, 0.28);
+    cursor: pointer;
+    transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    will-change: transform, opacity;
+}
+
+.ask-user-question__card--active:hover {
+    border-color: #c084fc;
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.55), 0 12px 30px rgba(168, 85, 247, 0.38);
+}
+
+.ask-user-question__card-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.45);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ask-user-question__card-body {
+    flex: 1;
+    color: var(--vs-foreground);
+    font-size: 12.5px;
+    line-height: 1.5;
+}
+
+.ask-user-question__card-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--vs-border, #3f3f46);
+    font-size: 11.5px;
+    color: #c4b5fd;
+}
+
+.ask-user-question__card-footer codinex-icon {
+    width: 13px;
+    height: 13px;
+}
+
+.ask-user-question__card--custom {
+    cursor: default;
+}
+
+.ask-user-question__card-footer--top {
+    padding-top: 0;
+    border-top: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--vs-border, #3f3f46);
+}
+
+.ask-user-question__custom-input {
+    flex: 1;
+    resize: none;
+    background: var(--vs-input-bg, #1e1e1e);
+    border: 1px solid var(--vs-border, #3f3f46);
+    border-radius: 6px;
+    color: var(--vs-foreground);
+    font-size: 12.5px;
+    font-family: inherit;
+    padding: 6px 8px;
+}
+
+.ask-user-question__custom-input:focus {
+    outline: none;
+    border-color: #a855f7;
+}
+
+.ask-user-question__custom-submit {
+    align-self: flex-end;
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.ask-user-question__custom-submit:hover {
+    background: #9333ea;
+}
+
+.ask-user-question__nav-btn {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--vs-border, #3f3f46);
+    background: var(--vs-input-bg, #252526);
+    color: var(--vs-foreground);
+    cursor: pointer;
+    z-index: 200;
+}
+
+.ask-user-question__nav-btn:hover {
+    border-color: #a855f7;
+}
+
+.ask-user-question__nav-btn--prev codinex-icon {
+    transform: rotate(90deg);
+}
+
+.ask-user-question__nav-btn--next codinex-icon {
+    transform: rotate(-90deg);
+}

@@ -17,6 +17,7 @@ using Codinex.Storage.Models;
 using Codinex.Storage.Models.DTO;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References;
+using Codinex.VisualStudio.Tools.BuiltIn.Clarification;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 
 namespace Codinex.VisualStudio.WebView;
@@ -44,6 +45,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IWorkspaceFileService _workspaceFileService;
     private readonly IInputLanguageWatcher _inputLanguageWatcher;
     private readonly IChangesetSessionService _changesetSessionService;
+    private readonly IClarificationSessionService _clarificationSessionService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -65,7 +67,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IVisualStudioServices visualStudio,
         IWorkspaceFileService workspaceFileService,
         IInputLanguageWatcher inputLanguageWatcher,
-        IChangesetSessionService changesetSessionService)
+        IChangesetSessionService changesetSessionService,
+        IClarificationSessionService clarificationSessionService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -84,6 +87,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _workspaceFileService = workspaceFileService;
         _inputLanguageWatcher = inputLanguageWatcher;
         _changesetSessionService = changesetSessionService;
+        _clarificationSessionService = clarificationSessionService;
 
 
         RegisterEventHandlers();
@@ -146,6 +150,15 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             case WebViewMessageType.ReopenChangesetReview:
                 {
                     await _changesetSessionService.ReopenPendingReviewAsync(cancellationToken: default);
+                    return;
+                }
+
+            case WebViewMessageType.AskUserAnswer:
+                {
+                    var payload = _payloadBinder.Bind<AskUserAnswerDto>(request.Payload);
+
+                    _clarificationSessionService.SubmitAnswers(payload.RequestId, payload.Answers);
+
                     return;
                 }
 

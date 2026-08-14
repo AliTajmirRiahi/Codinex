@@ -227,6 +227,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\manageModelsView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\dropDownView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\composerView.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\askUserQuestionView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\chatView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\chatListView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\dom.js" />
@@ -247,6 +248,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_manageModels.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_about.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_inputArea.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_askUserQuestion.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\views\_chat.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\main.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\css\layout\_wrapper.css" />
