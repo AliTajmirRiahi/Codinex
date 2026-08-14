@@ -19,6 +19,7 @@ import { reportError } from '../../Shared/bridge/errorReporter.js'
 // Register Custom Elements
 import '../../Shared/components/codinex-icon.js';
 import '../../Shared/components/codinex-image.js';
+import { initContextMenu } from '../../Shared/components/contextMenu.js';
 
 window.addEventListener('error', (event) => {
     debugger;
@@ -37,6 +38,9 @@ window.addEventListener('unhandledrejection', (event) => {
 document.addEventListener('DOMContentLoaded', () => {
 
     setLoading(true);
+
+    initContextMenu();
+
     /**
      * Initialize Controllers
      */
