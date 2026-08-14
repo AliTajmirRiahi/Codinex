@@ -309,6 +309,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.RewindChat:
+                {
+                    var payload = _payloadBinder.Bind<RewindChatDto>(request.Payload);
+
+                    await RewindChatAsync(payload.MessageIndex);
+
+                    return;
+                }
             case WebViewMessageType.UiError:
                 {
                     var payload = _payloadBinder.Bind<UiErrorModel>(request.Payload);
@@ -869,6 +877,46 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         );
 
         await SendNewChatMessageAsync(chatList, currentChat);
+    }
+
+    /// <summary>
+    /// Deletes the given user message and every message after it from the active chat,
+    /// then hands the deleted user message's text back to the UI so it can be restored
+    /// into the composer for editing/resending.
+    /// </summary>
+    public async Task RewindChatAsync(int messageIndex)
+    {
+        var chatId = _sessionService.ActiveSession.SessionId;
+        var chat = await _chatManager.LoadChatAsync(chatId);
+
+        if (chat == null || messageIndex < 0 || messageIndex >= chat.Messages.Count)
+            return;
+
+        var targetMessage = chat.Messages[messageIndex];
+
+        if (!string.Equals(targetMessage.Role, "user", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var rewindText = targetMessage.Content;
+
+        chat.Messages = chat.Messages.Take(messageIndex).ToList();
+
+        await _chatManager.SaveChatAsync(chat);
+
+        await _sessionService.LoadSessionAsync(chatId);
+
+        var message = new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.RewindChatApproved,
+            Payload = new
+            {
+                Chat = chat,
+                RewindText = rewindText,
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
     }
 
     public async Task SendActiveDocumentAsync(ReferenceItem activeDocument)

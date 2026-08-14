@@ -110,6 +110,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onAskUserQuestion) handlers.onAskUserQuestion(payload);
                 break;
 
+            case EVENTS.REWIND_CHAT_APPROVED:
+                if (handlers.onRewindChatApproved) handlers.onRewindChatApproved(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }

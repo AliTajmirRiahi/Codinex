@@ -267,6 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
         onAskUserQuestion: (payload) => {
             setAwaitingClarification(true);
             askUserQuestionView.show(payload);
+        },
+        onRewindChatApproved: (payload) => {
+            chatController.handleRewindChatApproved(payload);
         }
     });
 

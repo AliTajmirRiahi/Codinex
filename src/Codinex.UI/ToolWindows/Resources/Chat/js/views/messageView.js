@@ -101,12 +101,42 @@ function createUserMessageCopyButton(text) {
     return buttonEl;
 }
 
-function createUserMessageElement(messageDiv, text) {
+function createRewindToHereButton(messageIndex) {
+    const buttonEl = document.createElement('button');
+    buttonEl.type = 'button';
+    buttonEl.className = 'message-rewind-btn';
+    buttonEl.title = 'Rewind to here';
+    buttonEl.setAttribute('aria-label', 'Rewind to here');
+    buttonEl.innerHTML = '<codinex-icon name="refresh-cw" aria-hidden="true"></codinex-icon><span>Rewind to here</span>';
+
+    buttonEl.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('chat:rewind-to-message', {
+            detail: { messageIndex }
+        }));
+    });
+
+    return buttonEl;
+}
+
+function createUserMessageActions(text, messageIndex) {
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'message-actions';
+
+    actionsEl.appendChild(createUserMessageCopyButton(text));
+
+    if (Number.isInteger(messageIndex)) {
+        actionsEl.appendChild(createRewindToHereButton(messageIndex));
+    }
+
+    return actionsEl;
+}
+
+function createUserMessageElement(messageDiv, text, messageIndex) {
     const messageGroupEl = document.createElement('div');
     messageGroupEl.className = 'chat-message-group user-message-group';
 
     messageGroupEl.appendChild(messageDiv);
-    messageGroupEl.appendChild(createUserMessageCopyButton(text));
+    messageGroupEl.appendChild(createUserMessageActions(text, messageIndex));
 
     return messageGroupEl;
 }
@@ -138,7 +168,7 @@ export const messageView = {
         }
 
         if (sender === 'user') {
-            return createUserMessageElement(messageDiv, text);
+            return createUserMessageElement(messageDiv, text, options?.messageIndex);
         }
 
         return messageDiv;

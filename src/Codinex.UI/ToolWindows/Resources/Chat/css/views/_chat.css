@@ -296,11 +296,17 @@
         width:100%;
     }
 
+.message-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 4px;
+}
+
 .message-copy-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-top: 4px;
     padding: 3px;
     border: 1px solid transparent;
     border-radius: 4px;
@@ -310,6 +316,38 @@
     opacity: 0.65;
     transition: all 0.2s ease;
 }
+
+.message-rewind-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 6px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--vs-foreground);
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.65;
+    transition: all 0.2s ease;
+}
+
+.message-rewind-btn codinex-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.message-rewind-btn codinex-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+}
+
+    .message-rewind-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        opacity: 1;
+    }
 
 .message-copy-btn codinex-icon {
     width: 14px;
