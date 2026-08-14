@@ -323,6 +323,15 @@
                             data-settings-tab="solution-instruction">
                         Solution Instructions
                     </button>
+                    <button id="settings-tab-exclusions"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-exclusions"
+                            data-settings-tab="exclusions">
+                        Exclusions
+                    </button>
                 </div>
 
                 <div class="settings-tab-panels">
@@ -416,6 +425,27 @@
                             <div class="form-group">
                                 <label>Instruction Prompt</label>
                                 <textarea id="setting-solution-instruction" rows="8" placeholder="Add solution-wide instructions for Codinex AI..."></textarea>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-exclusions"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-exclusions"
+                             data-settings-panel="exclusions">
+                        <div class="settings-section">
+                            <h3>Exclusions</h3>
+                            <p class="settings-section-description">Exclude directories and files from workspace search in the current solution. Separate multiple entries with a semicolon (;).</p>
+
+                            <div class="form-group">
+                                <label for="setting-exclude-directories">Excluded Directories</label>
+                                <input id="setting-exclude-directories" type="text" placeholder="bin;obj;node_modules">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="setting-exclude-files">Excluded Files</label>
+                                <input id="setting-exclude-files" type="text" placeholder="*.dll;secrets.json">
                             </div>
                         </div>
                     </section>

@@ -14,6 +14,8 @@ export function initSettingsController(transport) {
     const enableStreamingChatInput = $('#setting-enable-streaming-chat');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const solutionInstructionInput = $('#setting-solution-instruction');
+    const excludeDirectoriesInput = $('#setting-exclude-directories');
+    const excludeFilesInput = $('#setting-exclude-files');
     const preprocessorProviderSelect = $('#setting-preprocessor-provider');
     const preprocessorProviderButton = $('#setting-preprocessor-provider-selector-btn');
     const preprocessorProviderWrapper = preprocessorProviderButton?.closest('.provider-selector-wrapper');
@@ -272,6 +274,22 @@ export function initSettingsController(transport) {
                 'SolutionInstruction',
                 '');
         }
+
+        if (excludeDirectoriesInput) {
+            excludeDirectoriesInput.value = getValue(
+                currentWorkspaceSettings,
+                'excludeDirectories',
+                'ExcludeDirectories',
+                '');
+        }
+
+        if (excludeFilesInput) {
+            excludeFilesInput.value = getValue(
+                currentWorkspaceSettings,
+                'excludeFiles',
+                'ExcludeFiles',
+                '');
+        }
     };
 
     const openSettingsModal = () => {
@@ -365,10 +383,14 @@ export function initSettingsController(transport) {
         currentWorkspaceSettings = {
             ...currentWorkspaceSettings,
             solutionInstruction: solutionInstructionInput?.value || '',
+            excludeDirectories: excludeDirectoriesInput?.value || '',
+            excludeFiles: excludeFilesInput?.value || '',
         };
 
         transport?.send(EVENTS.SAVE_SOLUTION_INSTRUCTION, {
             solutionInstruction: currentWorkspaceSettings.solutionInstruction,
+            excludeDirectories: currentWorkspaceSettings.excludeDirectories,
+            excludeFiles: currentWorkspaceSettings.excludeFiles,
         });
     });
 
