@@ -51,10 +51,19 @@ body.awaiting-clarification #input-container {
     opacity: 0.6;
 }
 
+/* The stage (arrows + track) is intentionally kept LTR-only, regardless of the
+   question's language/direction. The header and each card get their own `dir`
+   set individually in JS (from the question/option text), which flips their
+   text and internal layout via inherited CSS `direction` — but that `dir` is
+   never set on the panel/stage/track themselves, so it can't cascade down into
+   here. That keeps the arrow buttons' positions and meaning (prev = left,
+   next = right) and the card stack's offset math fixed either way, so the
+   arrows never end up reversed relative to what they visually do. */
 .ask-user-question__stage {
     display: flex;
     align-items: center;
     gap: 4px;
+    direction: ltr;
 }
 
 .ask-user-question__track {
