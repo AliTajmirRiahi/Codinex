@@ -131,6 +131,76 @@ function createUserMessageActions(text, messageIndex) {
     return actionsEl;
 }
 
+function getMessageReferences(options) {
+    const context = options?.context || options?.Context;
+
+    return context?.selectedReferences || context?.SelectedReferences || [];
+}
+
+function openReference(ref) {
+    document.dispatchEvent(new CustomEvent('composer:ref-click', {
+        detail: { id: ref.id || ref.Id, reference: ref }
+    }));
+}
+
+function createReferenceItem(ref) {
+    const refName = ref.name || ref.Name || '';
+    const refIcon = ref.icon || ref.Icon;
+    const refColor = ref.color || ref.Color;
+    const metadata = ref.metadata || ref.Metadata || {};
+    const filePath = metadata.filePath || metadata.FilePath || ref.value || ref.Value || '';
+
+    const itemEl = document.createElement('button');
+    itemEl.type = 'button';
+    itemEl.className = 'message-reference-item';
+    itemEl.title = filePath || refName;
+
+    itemEl.innerHTML = `
+        ${refIcon ? `<span class="item-icon" style="${refColor ? `color: var(${refColor});` : ''}"><codinex-icon name="${refIcon}"></codinex-icon></span>` : ''}
+        <span class="message-reference-name">${refName}</span>
+        ${filePath ? `<span class="message-reference-path">${filePath}</span>` : ''}
+    `;
+
+    itemEl.addEventListener('click', () => openReference(ref));
+
+    return itemEl;
+}
+
+function createReferencesBox(references) {
+    if (!references || references.length === 0) return null;
+
+    const wrapperEl = document.createElement('div');
+    wrapperEl.className = 'message-references';
+
+    const toggleEl = document.createElement('button');
+    toggleEl.type = 'button';
+    toggleEl.className = 'message-references-toggle';
+    toggleEl.setAttribute('aria-expanded', 'false');
+    toggleEl.innerHTML = `
+        <codinex-icon name="folder" aria-hidden="true"></codinex-icon>
+        <span>${references.length} reference${references.length > 1 ? 's' : ''}</span>
+        <codinex-icon name="chevron-down" class="message-references-chevron" aria-hidden="true"></codinex-icon>
+    `;
+
+    const listEl = document.createElement('div');
+    listEl.className = 'message-references-list hidden';
+
+    references.forEach((ref) => listEl.appendChild(createReferenceItem(ref)));
+
+    toggleEl.addEventListener('click', () => {
+        const isExpanded = !listEl.classList.contains('hidden');
+
+        listEl.classList.toggle('hidden');
+        toggleEl.classList.toggle('expanded', !isExpanded);
+        toggleEl.setAttribute('aria-expanded', String(!isExpanded));
+    });
+
+    wrapperEl.appendChild(toggleEl);
+    wrapperEl.appendChild(listEl);
+
+    return wrapperEl;
+}
+
 function createUserMessageElement(messageDiv, text, messageIndex) {
     const messageGroupEl = document.createElement('div');
     messageGroupEl.className = 'chat-message-group user-message-group';
@@ -157,6 +227,15 @@ export const messageView = {
         CodeRenderer.bindCopyEvents(contentEl);
 
         messageDiv.appendChild(createMessageHeader(sender));
+
+        if (sender === 'user') {
+            const referencesBox = createReferencesBox(getMessageReferences(options));
+
+            if (referencesBox) {
+                messageDiv.appendChild(referencesBox);
+            }
+        }
+
         messageDiv.appendChild(contentEl);
 
         if (sender === 'assistant') {

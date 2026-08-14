@@ -158,7 +158,9 @@ export function initChatController(transport) {
         chatView.resetThinking();
 
         // Show user message immediately
-        chatView.appendMessage(state.composer.draftText, 'user');
+        chatView.appendMessage(state.composer.draftText, 'user', null, false, {
+            context: { selectedReferences: state.composer.selectedReferences }
+        });
 
         // Set loading state
         setLoading(true);

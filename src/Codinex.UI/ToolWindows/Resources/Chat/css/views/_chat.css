@@ -393,6 +393,107 @@
     filter: brightness(0.8);
 }
 
+/* References attached to a user message */
+.message-references {
+    margin-bottom: 8px;
+}
+
+.message-references-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border: 1px solid var(--vs-border);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: all 0.15s ease;
+}
+
+    .message-references-toggle:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .message-references-toggle codinex-icon {
+        width: 12px;
+        height: 12px;
+    }
+
+    .message-references-toggle codinex-icon svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        stroke: currentColor;
+    }
+
+.message-references-chevron {
+    transition: transform 0.15s ease;
+}
+
+.message-references-toggle.expanded .message-references-chevron {
+    transform: rotate(180deg);
+}
+
+.message-references-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 6px;
+    padding: 4px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: var(--vs-input-bg);
+}
+
+    .message-references-list.hidden {
+        display: none;
+    }
+
+.message-reference-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--vs-foreground);
+    font-size: 11.5px;
+    text-align: left;
+    cursor: pointer;
+    max-width: 100%;
+}
+
+    .message-reference-item:hover {
+        background: var(--vs-command-bar-hover-over-selected-icon-border-color);
+    }
+
+    .message-reference-item .item-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        width: 14px;
+        height: 14px;
+    }
+
+.message-reference-name {
+    flex: 0 0 auto;
+    font-weight: 600;
+}
+
+.message-reference-path {
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    color: var(--vs-descriptionForeground, currentColor);
+    opacity: 0.65;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* Content spacing */
 .message-content {
     white-space: pre-wrap;
