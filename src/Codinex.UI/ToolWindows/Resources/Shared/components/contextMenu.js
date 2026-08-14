@@ -135,21 +135,6 @@ function buildMessageItems(messageEl) {
 
                 copyText(text);
             }
-        },
-        {
-            label: 'Cut',
-            disabled: !hasSelection,
-            action: () => {
-                const selection = window.getSelection();
-                const text = selection.toString();
-
-                copyText(text);
-
-                // Messages are read-only/persisted — "cut" only removes the
-                // selected text from the on-screen rendering, not the stored chat.
-                selection.getRangeAt(0).deleteContents();
-                selection.removeAllRanges();
-            }
         }
     ];
 }
