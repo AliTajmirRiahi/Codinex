@@ -14,6 +14,7 @@ namespace Codinex.UI.ToolWindows
         /// </summary>
         public static void DisableBrowserChrome(CoreWebView2 coreWebView)
         {
+#if RELEASE
             coreWebView.Settings.AreDefaultContextMenusEnabled = false;
 
             coreWebView.PermissionRequested += (s, e) =>
@@ -23,6 +24,7 @@ namespace Codinex.UI.ToolWindows
                     e.State = CoreWebView2PermissionState.Allow;
                 }
             };
+#endif
         }
     }
 }

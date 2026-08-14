@@ -27,7 +27,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;RELEASE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -53,6 +53,7 @@
     <Compile Include="ToolWindows\CodeChangesToolWindowControl.xaml.cs">
       <DependentUpon>CodeChangesToolWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ToolWindows\WebViewChromeSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ToolWindows\CodinexToolWindowControl.xaml">
@@ -65,6 +66,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\contextMenu.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\contextMenu.js" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\view\change-review-view.html" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\css\change-review.css" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\js\constants\events.js" />
