@@ -149,7 +149,7 @@ public class StructuralValidationRuleTests
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "old",
-            Content = "new"
+            Replace = "new"
         });
 
         var changeSet = new WorkspaceChangeSet();

@@ -24,7 +24,7 @@ public sealed class EditFileChangeHandlerTests_ResolutionFallback
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "stale search text",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -56,9 +56,8 @@ public sealed class EditFileChangeHandlerTests_ResolutionFallback
                     {
                         Id = textChange.Id,
                         Order = 1,
-                        Operation = ChangeOperation.Replace,
                         Search = "World",
-                        Content = "Codinex",
+                        Replace = "Codinex",
                         Range = new TextRange { Start = 6, Length = 5 },
                         OriginalText = "World",
                         ResultText = "Codinex"
@@ -92,7 +91,7 @@ public sealed class EditFileChangeHandlerTests_ResolutionFallback
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "stale search text",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -144,7 +143,7 @@ public sealed class EditFileChangeHandlerTests_ResolutionFallback
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "stale search text",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -205,7 +204,7 @@ public sealed class EditFileChangeHandlerTests_ResolutionFallback
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "World",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange

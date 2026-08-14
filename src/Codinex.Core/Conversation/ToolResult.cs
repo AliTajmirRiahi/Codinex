@@ -23,27 +23,12 @@ public sealed class ToolResult
     /// <summary>
     /// Structured result payload.
     /// </summary>
-    public JObject Data { get; set; } = new JObject();
+    public object Data { get; set; }
 
     /// <summary>
     /// Error message when execution fails.
     /// </summary>
     public string Error { get; set; }
-
-    /// <summary>
-    /// Creates a successful tool result.
-    /// </summary>
-    public static ToolResult Successful(
-        string id,
-        JObject data = null)
-    {
-        return new ToolResult
-        {
-            Id = id,
-            Success = true,
-            Data = data ?? new JObject()
-        };
-    }
 
     /// <summary>
     /// Creates a successful tool result.
@@ -56,7 +41,7 @@ public sealed class ToolResult
         {
             Id = id,
             Success = true,
-            Data = JObject.FromObject(data)
+            Data = data
         };
     }
 
@@ -72,7 +57,6 @@ public sealed class ToolResult
             Id = id,
             Success = false,
             Error = error,
-            Data = new JObject()
         };
     }
     /// <summary>
@@ -88,7 +72,7 @@ public sealed class ToolResult
             Id = id,
             Success = false,
             Error = error,
-            Data = JObject.FromObject(data)
+            Data = data
         };
     }
     /// <summary>
@@ -103,7 +87,7 @@ public sealed class ToolResult
             Id = id,
             Success = false,
             Error = "Workspace validation failed.",
-            Data = JObject.FromObject(new
+            Data = new
             {
                 errors = errors.Select(x => new
                 {
@@ -112,7 +96,7 @@ public sealed class ToolResult
                     category = x.Category.ToString(),
                     message = x.Message
                 })
-            })
+            }
         };
     }
 
@@ -128,7 +112,7 @@ public sealed class ToolResult
             Id = id,
             Success = false,
             Error = "Workspace validation failed.",
-            Data = JObject.FromObject(new
+            Data = new
             {
                 errors = errors.Select(x => new
                 {
@@ -137,7 +121,7 @@ public sealed class ToolResult
                     category = x.Category.ToString(),
                     message = x.Message
                 })
-            })
+            }
         };
     }
 }

@@ -11,13 +11,11 @@ public sealed class TextFileChange
 
     public int Order { get; set; }
 
-    public string FilePath { get; set; }
-
-    public string Operation { get; set; }
-
-    public string Target { get; set; }
+    public string Before { get; set; }
 
     public string Search { get; set; }
 
-    public string Content { get; set; }
+    public string Replace { get; set; }
+
+    public string After { get; set; }
 }
