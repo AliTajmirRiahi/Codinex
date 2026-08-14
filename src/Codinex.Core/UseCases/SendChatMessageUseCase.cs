@@ -132,8 +132,6 @@ public sealed class SendChatMessageUseCase(
             // Get last 10 messages for context
             request.ConversationHistory = chatSession.GetRecentMessages(10);
 
-
-
             var preprocessorResult = await RunPreprocessorStreamingAsync(
                 request,
                 onMessage,
@@ -173,7 +171,9 @@ public sealed class SendChatMessageUseCase(
 
             buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
-            ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
+
+            if (preprocessorResult != null)
+                ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
 
             // Persist the exchange only after a successful AI response.
             // Provider errors must not be saved into message history.
@@ -332,7 +332,7 @@ public sealed class SendChatMessageUseCase(
 
         if (preprocessorProvider == null)
         {
-            return AiPreprocessorResult.CreateForwardFallback(request.DraftText);
+            return null;
         }
 
         var preprocessorText = string.Empty;

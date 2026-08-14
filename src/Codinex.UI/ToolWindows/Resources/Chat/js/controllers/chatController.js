@@ -139,6 +139,9 @@ export function initChatController(transport) {
         // Prevent sending while a code-changes review is pending decision
         if (state.isChatBlocked) return;
 
+        // Prevent sending while the assistant is waiting on an ask_user_question answer
+        if (state.isAwaitingClarification) return;
+
         chatView.clearStatus();
         chatView.resetThinking();
 

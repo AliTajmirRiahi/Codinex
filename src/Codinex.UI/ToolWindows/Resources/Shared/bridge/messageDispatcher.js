@@ -106,6 +106,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onChatUnblocked) handlers.onChatUnblocked(payload);
                 break;
 
+            case EVENTS.ASK_USER_QUESTION:
+                if (handlers.onAskUserQuestion) handlers.onAskUserQuestion(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }

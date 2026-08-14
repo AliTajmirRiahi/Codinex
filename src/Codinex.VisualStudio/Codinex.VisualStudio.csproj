@@ -112,6 +112,9 @@
     <Compile Include="Services\WorkspaceFileService.cs" />
     <Compile Include="Theme\VsThemeService.cs" />
     <Compile Include="Tools\AiToolRegistry.cs" />
+    <Compile Include="Tools\BuiltIn\Clarification\AskUserQuestionTool.cs" />
+    <Compile Include="Tools\BuiltIn\Clarification\ClarificationSessionService.cs" />
+    <Compile Include="Tools\BuiltIn\Clarification\IClarificationSessionService.cs" />
     <Compile Include="Tools\BuiltIn\Build\BuildProjectTool.cs" />
     <Compile Include="Tools\BuiltIn\Build\BuildSolutionTool.cs" />
     <Compile Include="Tools\BuiltIn\Diagnostics\GetDiagnosticsTool.cs" />
