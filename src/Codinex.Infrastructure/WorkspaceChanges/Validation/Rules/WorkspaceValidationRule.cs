@@ -1,12 +1,13 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.WorkspaceChanges;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 
@@ -16,12 +17,16 @@ public sealed class WorkspaceStateValidationRule(
     : IWorkspaceChangeValidationRule
 {
 
+    private static IWorkspaceContext _workspaceContext = null;
+
     public Task<WorkspaceValidationResult> ValidateAsync(
         WorkspaceChangeSet workspaceChangeSet,
         CancellationToken cancellationToken = default)
     {
         if (workspaceChangeSet == null)
             throw new ArgumentNullException(nameof(workspaceChangeSet));
+
+        _workspaceContext = workspaceContext;
 
         var result = WorkspaceValidationResult.Successful();
 
@@ -161,7 +166,7 @@ public sealed class WorkspaceStateValidationRule(
             return;
         }
 
-        if (Path.IsPathRooted(path))
+        if (Path.IsPathRooted(path) && !path.Contains(_workspaceContext.SolutionPath) && !path.Contains(_workspaceContext.SolutionDirectory))
         {
             result.AddError(CreateError(
                 changeId,

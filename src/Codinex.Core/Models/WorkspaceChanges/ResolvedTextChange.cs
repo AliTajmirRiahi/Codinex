@@ -12,14 +12,10 @@ public sealed class ResolvedTextChange
 
     public int Order { get; set; }
 
-    public ChangeOperation Operation { get; set; }
-
-    public string Target { get; set; }
-
-    /// <summary>The locator text that won resolution (either the original Search or, when it failed, Target).</summary>
+    /// <summary>The Search text that uniquely resolved this change.</summary>
     public string Search { get; set; }
 
-    public string Content { get; set; }
+    public string Replace { get; set; }
 
     /// <summary>Exact location in the current document.</summary>
     public TextRange Range { get; set; }

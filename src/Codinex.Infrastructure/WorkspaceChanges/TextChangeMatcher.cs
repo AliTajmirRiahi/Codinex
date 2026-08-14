@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Codinex.Core.DependencyInjection.Attributes;
@@ -15,12 +15,59 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
         string content,
         TextFileChange change)
     {
+        if (content == null)
+            throw new ArgumentNullException(nameof(content));
+
         if (change == null)
             throw new ArgumentNullException(nameof(change));
 
-        return MatchText(content, change.Search);
+        if (string.IsNullOrWhiteSpace(change.Search))
+            return new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.NoUniqueMatch,
+                MatchCount = 0,
+                Error = "Unable to search with empty text."
+            };
+
+        var matches = FindMatches(content, change.Search);
+
+        if (matches.Count == 0)
+        {
+            return new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.SearchNotFound,
+                MatchCount = 0,
+                Error = "Search text was not found."
+            };
+        }
+
+        matches = FilterByBefore(content, matches, change.Before);
+        matches = FilterByAfter(content, matches, change.After);
+
+        return matches.Count switch
+        {
+            0 => new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.NoUniqueMatch,
+                MatchCount = 0,
+                Error = "Unable to uniquely identify the requested text."
+            },
+
+            1 => BuildSuccessResult(content, matches[0]),
+
+            _ => new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.MultipleMatches,
+                MatchCount = matches.Count,
+                Error = "Multiple matching locations were found."
+            }
+        };
     }
 
+    /// <summary>
+    /// Matches arbitrary locator text (e.g. a TextFileChange's Search value) against file content,
+    /// independent of any specific TextFileChange — so no Before/After disambiguation is applied.
+    /// </summary>
     public TextChangeMatchResult MatchText(
         string content,
         string text)
@@ -94,6 +141,52 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
         }
 
         return matches;
+    }
+
+    private static List<TextMatch> FilterByBefore(
+        string content,
+        IReadOnlyList<TextMatch> matches,
+        string before)
+    {
+        if (string.IsNullOrEmpty(before))
+            return matches.ToList();
+
+        return matches
+            .Where(match =>
+            {
+                if (match.Start < before.Length)
+                    return false;
+
+                return string.Equals(
+                    content.Substring(match.Start - before.Length, before.Length),
+                    before,
+                    StringComparison.Ordinal);
+            })
+            .ToList();
+    }
+
+    private static List<TextMatch> FilterByAfter(
+        string content,
+        IReadOnlyList<TextMatch> matches,
+        string after)
+    {
+        if (string.IsNullOrEmpty(after))
+            return matches.ToList();
+
+        return matches
+            .Where(match =>
+            {
+                var start = match.Start + match.Length;
+
+                if (start + after.Length > content.Length)
+                    return false;
+
+                return string.Equals(
+                    content.Substring(start, after.Length),
+                    after,
+                    StringComparison.Ordinal);
+            })
+            .ToList();
     }
 
     private static TextChangeMatchResult BuildSuccessResult(

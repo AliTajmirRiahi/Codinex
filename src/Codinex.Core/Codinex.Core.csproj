@@ -184,7 +184,6 @@
     <Compile Include="Models\WorkspaceChanges\ResolvedFileChange.cs" />
     <Compile Include="Models\WorkspaceChanges\ResolvedTextChange.cs" />
     <Compile Include="Models\WorkspaceChanges\TextChangeMatchResult.cs" />
-    <Compile Include="Models\WorkspaceChanges\TextChangeOperations.cs" />
     <Compile Include="Models\WorkspaceChanges\TextRange.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChange.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeConverter.cs" />

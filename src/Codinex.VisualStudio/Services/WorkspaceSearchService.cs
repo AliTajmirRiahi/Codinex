@@ -20,6 +20,11 @@ namespace Codinex.VisualStudio.Services
         IWorkspaceIgnoreService workspaceFileFilter)
         : IWorkspaceSearchService
     {
+
+        private static readonly List<string> ExcludeDirectory = [".claude", ".git", ".vs", "graphify-out", "packages", "scripts1"];
+
+        private static readonly List<string> ExcludeDFiles = [];
+
         public IReadOnlyList<WorkspaceFile> FindFiles(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -221,6 +226,8 @@ namespace Codinex.VisualStudio.Services
             return workspaceFileService
                 .EnumerateFiles(root, "*", SearchOption.AllDirectories)
                 .Where(path => !workspaceFileFilter.ShouldIgnore(path))
+                .Where(path => !IsExcludedDirectory(root, path))
+                .Where(path => !IsExcludedFile(path))
                 .Select(path => new WorkspaceFile
                 {
                     Name = Path.GetFileName(path),
@@ -230,6 +237,44 @@ namespace Codinex.VisualStudio.Services
                 .ToList();
         }
 
-        
+        private static bool IsExcludedDirectory(string root, string fullPath)
+        {
+            if (ExcludeDirectory.Count == 0)
+                return false;
+
+            var relativePath = PathExtensions.GetRelativePath(root, fullPath);
+
+            var segments = relativePath.Split(
+                ['\\', '/'],
+                StringSplitOptions.RemoveEmptyEntries);
+
+            return segments.Any(segment => ExcludeDirectory
+                .Any(excluded => string.Equals(excluded, segment, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        private static bool IsExcludedFile(string fullPath)
+        {
+            if (ExcludeDFiles.Count == 0)
+                return false;
+
+            var fileName = Path.GetFileName(fullPath);
+
+            return ExcludeDFiles.Any(pattern => MatchesFilePattern(fileName, pattern));
+        }
+
+        private static bool MatchesFilePattern(string fileName, string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern))
+                return false;
+
+            if (!pattern.Contains('*') && !pattern.Contains('?'))
+                return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
+
+            var regexPattern = "^" + Regex.Escape(pattern)
+                .Replace("\\*", ".*")
+                .Replace("\\?", ".") + "$";
+
+            return Regex.IsMatch(fileName, regexPattern, RegexOptions.IgnoreCase);
+        }
     }
 }

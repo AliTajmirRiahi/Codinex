@@ -40,48 +40,30 @@ internal static class WorkspaceToolSchemasFlat
                     ToolPropertyType.Integer,
                     "The execution order of this text change."),
 
-                [nameof(TextFileChange.FilePath)] = new(
+                [nameof(TextFileChange.Before)] = new(
                     ToolPropertyType.String,
-                    "The path of the file to modify."),
-
-                [nameof(TextFileChange.Operation)] = new(
-                    ToolPropertyType.String,
-                    "The kind of text modification to perform.")
-                {
-                    Enum =
-                    [
-                        TextChangeOperations.Replace,
-                        TextChangeOperations.InsertBefore,
-                        TextChangeOperations.InsertAfter,
-                        TextChangeOperations.Delete
-                    ]
-                },
-
-                [nameof(TextFileChange.Target)] = new(
-                    ToolPropertyType.String,
-                    "Required fallback anchor, used only if Search does not uniquely match. Must be an " +
-                    "exact, literal fragment of the current source text — e.g. a method name like " +
-                    "'Subtract', a class name, a property name, or a short unique code snippet — copied " +
-                    "character-for-character from the file, the same way Search is. " +
-                    "NEVER a description, summary, or paraphrase of the code (e.g. do not write " +
-                    "'Subtract method expression-bodied implementation' — write 'Subtract')."),
+                    "Text expected immediately before the search match."),
 
                 [nameof(TextFileChange.Search)] = new(
                     ToolPropertyType.String,
                     "The unique text to search for."),
 
-                [nameof(TextFileChange.Content)] = new(
+                [nameof(TextFileChange.Replace)] = new(
                     ToolPropertyType.String,
-                    "The text to insert or use as a replacement.")
+                    "The replacement text."),
+
+                [nameof(TextFileChange.After)] = new(
+                    ToolPropertyType.String,
+                    "Text expected immediately after the search match.")
             },
 
             Required =
             [
                 nameof(TextFileChange.Order),
-                nameof(TextFileChange.Operation),
                 nameof(TextFileChange.Search),
-                nameof(TextFileChange.Content),
-                nameof(TextFileChange.Target),
+                nameof(TextFileChange.Replace),
+                nameof(TextFileChange.Before),
+                nameof(TextFileChange.After),
             ]
         };
 

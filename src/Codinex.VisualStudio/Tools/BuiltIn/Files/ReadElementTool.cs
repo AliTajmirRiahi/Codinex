@@ -38,7 +38,7 @@ public sealed class ReadElementTool(
 
     public string StatusMessage => "Reading element...";
 
-    public ToolVisibility Visibility { get; } = ToolVisibility.Debug;
+    public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
     public ToolDefinition Definition { get; } =
         new ToolDefinition(

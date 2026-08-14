@@ -13,7 +13,7 @@ namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Resolution.EditFileChang
 public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolverBaseTests
 {
     [Test]
-    public async Task ResolveAsync_ShouldFail_WhenSearchNotFoundAndNoTargetGivenAsync()
+    public async Task ResolveAsync_ShouldFail_WhenSearchNotFoundAsync()
     {
         // Arrange
         const string filePath = @"C:\Test\File.cs";
@@ -23,7 +23,7 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "does not exist",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -54,46 +54,7 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
     }
 
     [Test]
-    public async Task ResolveAsync_ShouldFail_WhenSearchAndTargetBothFailToResolveAsync()
-    {
-        // Arrange
-        const string filePath = @"C:\Test\File.cs";
-
-        var textChange = new TextFileChange
-        {
-            Id = Guid.NewGuid(),
-            Order = 1,
-            Search = "does not exist",
-            Target = "also does not exist",
-            Content = "Codinex"
-        };
-
-        var change = new EditFileChange
-        {
-            Id = Guid.NewGuid(),
-            FilePath = filePath,
-            TextChanges = [textChange]
-        };
-
-        WorkspaceFileService
-            .ReadAsync(filePath, Arg.Any<CancellationToken>())
-            .Returns("Hello World");
-
-        var changeSet = new WorkspaceChangeSet();
-        changeSet.Changes.Add(change);
-
-        var sut = CreateSut();
-
-        // Act
-        var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
-
-        // Assert
-        result.Success.Should().BeFalse();
-        result.Errors[0].Code.Should().Be(WorkspaceChangeErrorCode.SearchNotFound);
-    }
-
-    [Test]
-    public async Task ResolveAsync_ShouldFail_WhenSearchMatchesMultipleTimesAndTargetAlsoAmbiguousAsync()
+    public async Task ResolveAsync_ShouldPickEarliestOccurrence_WhenSearchMatchesMultipleTimes_AndBeforeAfterDontDisambiguateAsync()
     {
         // Arrange
         const string filePath = @"C:\Test\File.cs";
@@ -103,8 +64,7 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "abc",
-            Target = "abc",
-            Content = "xyz"
+            Replace = "xyz"
         };
 
         var change = new EditFileChange
@@ -126,8 +86,51 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
         // Act
         var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
 
+        // Assert: still ambiguous by position, but resolution now picks the earliest occurrence
+        // instead of failing the whole changeset.
+        result.Success.Should().BeTrue();
+
+        var resolvedChange = result.Changes[0].TextChanges[0];
+        resolvedChange.Range.Start.Should().Be(0);
+    }
+
+    [Test]
+    public async Task ResolveAsync_ShouldFail_WhenBeforeDoesNotMatchAnyCandidateAsync()
+    {
+        // Arrange
+        const string filePath = @"C:\Test\File.cs";
+
+        var textChange = new TextFileChange
+        {
+            Id = Guid.NewGuid(),
+            Order = 1,
+            Before = "never present ",
+            Search = "abc",
+            Replace = "xyz"
+        };
+
+        var change = new EditFileChange
+        {
+            Id = Guid.NewGuid(),
+            FilePath = filePath,
+            TextChanges = [textChange]
+        };
+
+        WorkspaceFileService
+            .ReadAsync(filePath, Arg.Any<CancellationToken>())
+            .Returns("abc");
+
+        var changeSet = new WorkspaceChangeSet();
+        changeSet.Changes.Add(change);
+
+        var sut = CreateSut();
+
+        // Act
+        var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
+
         // Assert
         result.Success.Should().BeFalse();
+        result.Errors[0].Code.Should().Be(WorkspaceChangeErrorCode.SearchNotFound);
     }
 
     [Test]
@@ -141,7 +144,7 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             Id = Guid.NewGuid(),
             Order = 1,
             Search = "A",
-            Content = "B"
+            Replace = "B"
         };
 
         var change = new EditFileChange

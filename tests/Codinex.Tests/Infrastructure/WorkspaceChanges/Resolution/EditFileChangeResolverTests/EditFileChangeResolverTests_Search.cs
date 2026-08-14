@@ -22,9 +22,8 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
         {
             Id = Guid.NewGuid(),
             Order = 1,
-            Operation = TextChangeOperations.Replace,
             Search = "World",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange
@@ -53,7 +52,6 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
         resolvedFile.FilePath.Should().Be(filePath);
 
         var resolvedChange = resolvedFile.TextChanges.Should().ContainSingle().Subject;
-        resolvedChange.Operation.Should().Be(ChangeOperation.Replace);
         resolvedChange.Search.Should().Be("World");
         resolvedChange.OriginalText.Should().Be("World");
         resolvedChange.ResultText.Should().Be("Codinex");
@@ -67,51 +65,7 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
     }
 
     [Test]
-    public async Task ResolveAsync_ShouldPlanInsertAfter_WithZeroLengthRangeAsync()
-    {
-        // Arrange
-        const string filePath = @"C:\Test\File.html";
-
-        var textChange = new TextFileChange
-        {
-            Id = Guid.NewGuid(),
-            Order = 1,
-            Operation = TextChangeOperations.InsertAfter,
-            Search = "<div id=\"anchor\"></div>",
-            Content = "<span>New</span>"
-        };
-
-        var change = new EditFileChange
-        {
-            Id = Guid.NewGuid(),
-            FilePath = filePath,
-            TextChanges = [textChange]
-        };
-
-        WorkspaceFileService
-            .ReadAsync(filePath, Arg.Any<CancellationToken>())
-            .Returns("<div id=\"anchor\"></div>");
-
-        var changeSet = new WorkspaceChangeSet();
-        changeSet.Changes.Add(change);
-
-        var sut = CreateSut();
-
-        // Act
-        var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
-
-        // Assert
-        result.Success.Should().BeTrue();
-
-        var resolvedChange = result.Changes[0].TextChanges[0];
-        resolvedChange.Range.Length.Should().Be(0);
-        resolvedChange.Range.Start.Should().Be("<div id=\"anchor\"></div>".Length);
-        resolvedChange.OriginalText.Should().BeEmpty();
-        resolvedChange.ResultText.Should().Be("<span>New</span>");
-    }
-
-    [Test]
-    public async Task ResolveAsync_ShouldPlanDelete_WithEmptyResultTextAsync()
+    public async Task ResolveAsync_ShouldPlanReplace_WithEmptyReplaceText_ActsAsADeleteAsync()
     {
         // Arrange
         const string filePath = @"C:\Test\File.cs";
@@ -120,7 +74,6 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
         {
             Id = Guid.NewGuid(),
             Order = 1,
-            Operation = TextChangeOperations.Delete,
             Search = "World"
         };
 
@@ -152,6 +105,48 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
     }
 
     [Test]
+    public async Task ResolveAsync_ShouldDisambiguate_UsingBeforeAndAfterAsync()
+    {
+        // Arrange
+        const string filePath = @"C:\Test\File.cs";
+
+        var textChange = new TextFileChange
+        {
+            Id = Guid.NewGuid(),
+            Order = 1,
+            Before = "one ",
+            Search = "cat",
+            After = " here",
+            Replace = "dog"
+        };
+
+        var change = new EditFileChange
+        {
+            Id = Guid.NewGuid(),
+            FilePath = filePath,
+            TextChanges = [textChange]
+        };
+
+        WorkspaceFileService
+            .ReadAsync(filePath, Arg.Any<CancellationToken>())
+            .Returns("cat elsewhere, one cat here, cat too");
+
+        var changeSet = new WorkspaceChangeSet();
+        changeSet.Changes.Add(change);
+
+        var sut = CreateSut();
+
+        // Act
+        var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
+
+        // Assert
+        result.Success.Should().BeTrue();
+
+        var resolvedChange = result.Changes[0].TextChanges[0];
+        resolvedChange.Range.Start.Should().Be("cat elsewhere, one ".Length);
+    }
+
+    [Test]
     public async Task ResolveAsync_ShouldResolveSequentialChanges_AgainstEvolvingContentAsync()
     {
         // Arrange
@@ -161,18 +156,16 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
         {
             Id = Guid.NewGuid(),
             Order = 1,
-            Operation = TextChangeOperations.Replace,
             Search = "Hello",
-            Content = "Hi"
+            Replace = "Hi"
         };
 
         var second = new TextFileChange
         {
             Id = Guid.NewGuid(),
             Order = 2,
-            Operation = TextChangeOperations.Replace,
             Search = "World",
-            Content = "Codinex"
+            Replace = "Codinex"
         };
 
         var change = new EditFileChange

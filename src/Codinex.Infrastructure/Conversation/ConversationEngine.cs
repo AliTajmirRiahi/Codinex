@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Codinex.Infrastructure.Conversation
 {
@@ -161,7 +162,7 @@ namespace Codinex.Infrastructure.Conversation
                                         success = result.Success,
                                         error = result.Error,
                                         data = result.Data
-                                    }),
+                                    })
                                 });
 
                                 yield return ConversationEvent.ToolCompleted(result);

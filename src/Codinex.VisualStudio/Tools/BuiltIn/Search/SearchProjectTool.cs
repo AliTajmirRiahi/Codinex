@@ -23,7 +23,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Search;
 [AutoDiRegister(Modules.Tool, RegistrationOrder.Platform)]
 public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchService) : IAiTool
 {
-    private const int DefaultCount = 5;
+    private const int DefaultCount = 20;
 
     public string Name => "search_project";
 
@@ -65,11 +65,11 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
 
             ["skip"] = new(
                 ToolPropertyType.Integer,
-                "Skip is A factor of 5. Default is 5."),
+                $"Skip is A factor of {DefaultCount}. Default is {DefaultCount}."),
 
             ["take"] = new(
                 ToolPropertyType.Integer,
-                "Take number of results to return. Max is 5.")
+                $"Take number of results to return. Max is {DefaultCount}.")
         },
         ["query", "type", "skip", "take"]);
 
@@ -112,16 +112,14 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 .Take(take)
                 .ToList();
 
-            var tt = Newtonsoft.Json.JsonConvert.SerializeObject(limitedResults);
-
-            var data = new JObject
+            var data = new 
             {
-                ["query"] = query,
-                ["type"] = type,
-                ["totalCount"] = totalCount,
-                ["returnedCount"] = limitedResults.Count,
-                ["isTruncated"] = totalCount > limitedResults.Count,
-                ["results"] = JArray.FromObject(limitedResults)
+                Query = query,
+                Type = type,
+                TotalCount = totalCount,
+                ReturnedCount = limitedResults.Count,
+                IsTruncated = totalCount > limitedResults.Count,
+                Results = limitedResults
             };
 
             return Task.FromResult(
