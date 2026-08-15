@@ -415,6 +415,7 @@ export class ComposerView {
     setText(text) {
 
         this.input.innerText = text || '';
+        this.updatePlaceholder();
         this.resize();
         this.updateSendState();
 

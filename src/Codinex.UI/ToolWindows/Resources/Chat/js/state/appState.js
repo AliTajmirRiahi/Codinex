@@ -20,6 +20,7 @@ const _state = {
     composerReferences: [],
     activeDocument: null,
     settings: {},
+    solutionDirectory: '',
 
     composer: {
         draftText: "",
@@ -302,5 +303,11 @@ export function setActiveDocument(doc) {
 export function setSettings(settings) {
     updateState({
         settings: settings || {}
+    });
+}
+
+export function setSolutionDirectory(solutionDirectory) {
+    updateState({
+        solutionDirectory: solutionDirectory || ''
     });
 }

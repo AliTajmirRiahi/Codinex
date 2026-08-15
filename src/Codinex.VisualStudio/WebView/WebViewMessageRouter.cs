@@ -46,6 +46,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IInputLanguageWatcher _inputLanguageWatcher;
     private readonly IChangesetSessionService _changesetSessionService;
     private readonly IClarificationSessionService _clarificationSessionService;
+    private readonly IWorkspaceContext _workspaceContext;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -68,7 +69,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IWorkspaceFileService workspaceFileService,
         IInputLanguageWatcher inputLanguageWatcher,
         IChangesetSessionService changesetSessionService,
-        IClarificationSessionService clarificationSessionService)
+        IClarificationSessionService clarificationSessionService,
+        IWorkspaceContext workspaceContext)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -88,6 +90,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _inputLanguageWatcher = inputLanguageWatcher;
         _changesetSessionService = changesetSessionService;
         _clarificationSessionService = clarificationSessionService;
+        _workspaceContext = workspaceContext;
 
 
         RegisterEventHandlers();
@@ -533,6 +536,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Settings = _settingsManager.Settings,
             WorkspaceSettings = _workspaceSettingsManager.Settings,
             ChatBlocked = _changesetSessionService.HasPending,
+            SolutionDirectory = _workspaceContext.SolutionDirectory,
             Timestamp = DateTime.Now
         };
 
@@ -898,6 +902,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             return;
 
         var rewindText = targetMessage.Content;
+        var rewindReferences = targetMessage.Context?.SelectedReferences;
 
         chat.Messages = chat.Messages.Take(messageIndex).ToList();
 
@@ -912,6 +917,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             {
                 Chat = chat,
                 RewindText = rewindText,
+                RewindReferences = rewindReferences,
                 Timestamp = DateTime.Now
             }
         };
