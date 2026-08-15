@@ -4,6 +4,7 @@
  * the view layer and the service layer.
  */
 import { createStreamingMessage, chatView } from '../views/chatView.js';
+import { extractQuoteFromText } from '../views/messageView.js';
 import { chatListView } from '../views/chatListView.js';
 import { projectListView } from '../views/projectListView.js';
 import { aiService } from '../services/aiService.js';
@@ -439,7 +440,15 @@ export function initChatController(transport) {
             }
 
             composerController.resetComposer();
-            chatView.composer.setText(rewindText);
+            chatView.composer.clearQuote();
+
+            const extracted = extractQuoteFromText(rewindText);
+
+            chatView.composer.setText(extracted.text);
+
+            if (extracted.quote) {
+                chatView.composer.setQuote(extracted.quote);
+            }
 
             setSelectedReferences(rewindReferences);
             chatView.composer.updateReferenceChips(rewindReferences);
