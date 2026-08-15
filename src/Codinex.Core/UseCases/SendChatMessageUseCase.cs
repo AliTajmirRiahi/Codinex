@@ -275,9 +275,12 @@ public sealed class SendChatMessageUseCase(
         {
             var titleChanged = false;
 
+            // The user message was already persisted before the streaming loop
+            // started (see chatSession.AddUserMessage above) — only the assistant's
+            // partial reply still needs saving here. Re-adding the user message
+            // would duplicate it in history.
             if (!string.IsNullOrWhiteSpace(fullText) && buildResult != null)
             {
-                chatSession.AddUserMessage(request.DraftText, buildResult.Context);
                 chatSession.AddAssistantMessage(fullText);
                 titleChanged = await chatSession.SaveAsync();
             }

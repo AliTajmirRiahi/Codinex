@@ -143,6 +143,41 @@ function getMessageQuote(options) {
     return context?.quotedMessage || context?.QuotedMessage || null;
 }
 
+const QUOTE_HEADER = '> Quoted message:';
+
+/**
+ * A freshly sent message carries its quote in options.context.quotedMessage,
+ * but that context isn't persisted server-side — reloading a chat (switch,
+ * rewind, app restart) only has the raw text, which still has the "> Quoted
+ * message:" blockquote chatController prepended before sending. Parse it back
+ * out so history renders the quote card instead of literal "> " markdown.
+ */
+export function extractQuoteFromText(text) {
+    if (typeof text !== 'string' || !text.startsWith(QUOTE_HEADER)) {
+        return { text, quote: null };
+    }
+
+    const lines = text.split('\n');
+    let index = 1;
+    const quoteLines = [];
+
+    while (index < lines.length && lines[index].startsWith('> ')) {
+        quoteLines.push(lines[index].slice(2));
+        index++;
+    }
+
+    if (quoteLines.length === 0) {
+        return { text, quote: null };
+    }
+
+    if (lines[index] === '') index++;
+
+    return {
+        text: lines.slice(index).join('\n'),
+        quote: quoteLines.join('\n')
+    };
+}
+
 function createQuoteBox(quote) {
     if (!quote || !quote.text) return null;
 
@@ -277,15 +312,27 @@ export const messageView = {
         // Add base and sender-specific classes
         messageDiv.className = `chat-message ${sender}`;
 
+        let displayText = text;
+        let quote = getMessageQuote(options);
+
+        if (sender === 'user' && !quote) {
+            const extracted = extractQuoteFromText(text);
+
+            if (extracted.quote) {
+                displayText = extracted.text;
+                quote = { text: extracted.quote, author: 'You', time: '' };
+            }
+        }
+
         const contentEl = document.createElement('div');
         contentEl.className = 'message-content';
-        contentEl.innerHTML = CodeRenderer.render(text);
+        contentEl.innerHTML = CodeRenderer.render(displayText);
         CodeRenderer.bindCopyEvents(contentEl);
 
         messageDiv.appendChild(createMessageHeader(sender));
 
         if (sender === 'user') {
-            const quoteBox = createQuoteBox(getMessageQuote(options));
+            const quoteBox = createQuoteBox(quote);
 
             if (quoteBox) {
                 messageDiv.appendChild(quoteBox);
@@ -309,7 +356,7 @@ export const messageView = {
         }
 
         if (sender === 'user') {
-            return createUserMessageElement(messageDiv, text, options?.messageIndex);
+            return createUserMessageElement(messageDiv, displayText, options?.messageIndex);
         }
 
         return messageDiv;
