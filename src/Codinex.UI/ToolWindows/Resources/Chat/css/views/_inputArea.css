@@ -62,6 +62,92 @@ body.chat-blocked #input-container {
     }
 
 
+/* Preview of a quoted assistant selection, attached to the next outgoing message */
+.composer-quote-preview {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 8px;
+    background: var(--vs-input-bg);
+}
+
+    .composer-quote-preview.hidden {
+        display: none;
+    }
+
+.composer-quote-preview__accent {
+    flex: 0 0 auto;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--vs-focus-border, rgba(255, 255, 255, 0.35));
+}
+
+.composer-quote-preview__body {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.composer-quote-preview__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    color: var(--vs-foreground);
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+.composer-quote-preview__mark {
+    font-size: 15px;
+    line-height: 1;
+    opacity: 0.6;
+}
+
+.composer-quote-preview__text {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow-wrap: anywhere;
+    color: var(--vs-foreground);
+    font-size: 12.5px;
+    line-height: 1.4;
+    opacity: 0.85;
+}
+
+.composer-quote-preview__dismiss {
+    display: flex;
+    align-items: flex-start;
+    flex: 0 0 auto;
+    padding: 2px;
+    border: none;
+    background: transparent;
+    color: var(--vs-foreground);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+    .composer-quote-preview__dismiss:hover {
+        opacity: 1;
+    }
+
+    .composer-quote-preview__dismiss codinex-icon {
+        width: 15px;
+        height: 15px;
+    }
+
+    .composer-quote-preview__dismiss codinex-icon svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+        stroke: currentColor;
+    }
+
 /* Top row: add context + active document chip */
 .input-context-row {
     display: flex;

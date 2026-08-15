@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="/Shared/components/toastify.css">
     <link rel="stylesheet" href="/Shared/components/contextMenu.css">
+    <link rel="stylesheet" href="/Shared/components/selectionToolbar.css">
     <!--<link rel="stylesheet" href="/Chat/chat-view.style.css">-->
 </head>
 <body>
@@ -157,6 +158,20 @@
                 <codinex-image name="loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="input-box-wrapper">
+                <!-- Preview of a quoted assistant selection, attached to the next outgoing message -->
+                <div id="composer-quote-preview" class="composer-quote-preview hidden">
+                    <div class="composer-quote-preview__accent"></div>
+                    <div class="composer-quote-preview__body">
+                        <div class="composer-quote-preview__header">
+                            <span class="composer-quote-preview__mark" aria-hidden="true">&rdquo;</span>
+                            <span>Replying to Codinex AI</span>
+                        </div>
+                        <div id="composer-quote-preview-text" class="composer-quote-preview__text"></div>
+                    </div>
+                    <button id="composer-quote-preview-dismiss" type="button" class="composer-quote-preview__dismiss" title="Remove quote">
+                        <codinex-icon name="circle-x"></codinex-icon>
+                    </button>
+                </div>
                 <!-- Top row: context / file selector -->
                 <div class="input-context-row">
                     <button id="contextBtn" class="context-add-btn" title="Add Context" data-placeholder=" References">

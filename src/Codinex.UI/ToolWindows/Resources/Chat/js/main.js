@@ -20,6 +20,7 @@ import { reportError } from '../../Shared/bridge/errorReporter.js'
 import '../../Shared/components/codinex-icon.js';
 import '../../Shared/components/codinex-image.js';
 import { initContextMenu } from '../../Shared/components/contextMenu.js';
+import { initSelectionToolbar } from '../../Shared/components/selectionToolbar.js';
 
 window.addEventListener('error', (event) => {
     debugger;
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setLoading(true);
 
     initContextMenu();
+    initSelectionToolbar();
 
     /**
      * Initialize Controllers
