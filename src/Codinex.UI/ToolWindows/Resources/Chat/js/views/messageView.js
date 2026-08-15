@@ -107,7 +107,7 @@ function createRewindToHereButton(messageIndex) {
     buttonEl.className = 'message-rewind-btn';
     buttonEl.title = 'Rewind to here';
     buttonEl.setAttribute('aria-label', 'Rewind to here');
-    buttonEl.innerHTML = '<codinex-icon name="refresh-cw" aria-hidden="true"></codinex-icon><span>Rewind to here</span>';
+    buttonEl.innerHTML = '<codinex-icon name="refresh-cw" aria-hidden="true"></codinex-icon>';
 
     buttonEl.addEventListener('click', () => {
         document.dispatchEvent(new CustomEvent('chat:rewind-to-message', {
@@ -122,11 +122,11 @@ function createUserMessageActions(text, messageIndex) {
     const actionsEl = document.createElement('div');
     actionsEl.className = 'message-actions';
 
-    actionsEl.appendChild(createUserMessageCopyButton(text));
-
     if (Number.isInteger(messageIndex)) {
         actionsEl.appendChild(createRewindToHereButton(messageIndex));
     }
+
+    actionsEl.appendChild(createUserMessageCopyButton(text));
 
     return actionsEl;
 }
@@ -143,12 +143,35 @@ function openReference(ref) {
     }));
 }
 
+/**
+ * Shortens an absolute file path down to a solution-relative path for display,
+ * e.g. "P:\Solution\src\Foo.cs" -> "src\Foo.cs". Falls back to the original
+ * path when it isn't under the known solution directory.
+ */
+function toSolutionRelativePath(filePath) {
+    if (!filePath) return filePath;
+
+    const solutionDirectory = getState().solutionDirectory;
+
+    if (!solutionDirectory) return filePath;
+
+    const normalizedPath = filePath.replace(/\//g, '\\');
+    const normalizedRoot = solutionDirectory.replace(/\//g, '\\').replace(/\\+$/, '');
+
+    if (normalizedPath.toLowerCase().startsWith(normalizedRoot.toLowerCase() + '\\')) {
+        return normalizedPath.slice(normalizedRoot.length + 1);
+    }
+
+    return filePath;
+}
+
 function createReferenceItem(ref) {
     const refName = ref.name || ref.Name || '';
     const refIcon = ref.icon || ref.Icon;
     const refColor = ref.color || ref.Color;
     const metadata = ref.metadata || ref.Metadata || {};
     const filePath = metadata.filePath || metadata.FilePath || ref.value || ref.Value || '';
+    const displayPath = toSolutionRelativePath(filePath);
 
     const itemEl = document.createElement('button');
     itemEl.type = 'button';
@@ -158,7 +181,7 @@ function createReferenceItem(ref) {
     itemEl.innerHTML = `
         ${refIcon ? `<span class="item-icon" style="${refColor ? `color: var(${refColor});` : ''}"><codinex-icon name="${refIcon}"></codinex-icon></span>` : ''}
         <span class="message-reference-name">${refName}</span>
-        ${filePath ? `<span class="message-reference-path">${filePath}</span>` : ''}
+        ${displayPath ? `<span class="message-reference-path">${displayPath}</span>` : ''}
     `;
 
     itemEl.addEventListener('click', () => openReference(ref));

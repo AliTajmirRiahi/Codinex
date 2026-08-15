@@ -16,9 +16,9 @@ html, body {
     /* Optional: Disable the default touch highlighting on mobile/touch devices */
     -webkit-tap-highlight-color: transparent;
 }
-/* Allow selection specifically for code blocks or input fields if needed */
-/* Usually, we want users to be able to copy code */
-pre, code, input, textarea {
+/* Allow selection specifically for code blocks, input fields, or message text if needed */
+/* Usually, we want users to be able to copy code and chat messages */
+pre, code, input, textarea, .message-content, .message-content * {
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;

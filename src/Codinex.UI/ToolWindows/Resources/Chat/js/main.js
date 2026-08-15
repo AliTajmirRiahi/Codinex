@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification, setSolutionDirectory } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
@@ -100,6 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const chatBlocked = data.chatBlocked ?? data.ChatBlocked ?? false;
             setChatBlocked(chatBlocked);
+
+            setSolutionDirectory(data.solutionDirectory ?? data.SolutionDirectory);
 
             if (data.providers != null && data.providers.current) {
                 setProvider(data.providers.current);

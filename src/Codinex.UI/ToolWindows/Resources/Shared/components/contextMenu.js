@@ -4,9 +4,10 @@
  * extension with a themed menu that only exposes the actions that make sense
  * for the element under the cursor:
  *   - Editable composer inputs (#userInput / #contextInput): Cut, Copy, Paste, Select All
- *   - Chat messages: Select Message, Copy, Cut (of the current text selection)
+ *   - Chat messages: Select Message, Copy (of the current text selection)
  * Right-clicking anywhere else simply suppresses the native menu.
  */
+import { CodeRenderer } from './code-renderer.js';
 
 const EDITABLE_SELECTOR = '#userInput, #contextInput, [contenteditable="true"]';
 const MESSAGE_SELECTOR = '.chat-message';
@@ -36,7 +37,7 @@ async function copyText(text) {
     if (!text) return;
 
     try {
-        await navigator.clipboard.writeText(text);
+        await CodeRenderer.copyToClipboard(text);
     } catch {
         // Clipboard access denied/unavailable — silently ignore, nothing else we can do.
     }
