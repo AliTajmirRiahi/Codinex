@@ -37,12 +37,12 @@ body.awaiting-clarification #input-container {
     line-height: 1.4;
 }
 
-.ask-user-question__title codinex-icon {
-    flex: 0 0 auto;
-    width: 16px;
-    height: 16px;
-    color: #a855f7;
-}
+    .ask-user-question__title codinex-icon {
+        flex: 0 0 auto;
+        width: 16px;
+        height: 16px;
+        color: #a855f7;
+    }
 
 .ask-user-question__progress {
     flex: 0 0 auto;
@@ -77,16 +77,16 @@ body.awaiting-clarification #input-container {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 220px;
+    width: 400px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 14px;
-    border: 1px solid rgba(168, 85, 247, 0.55);
+    border: 1px solid color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 55%, transparent);
     border-radius: 14px;
-    background: linear-gradient(180deg, rgba(168, 85, 247, 0.08), var(--vs-input-bg, #1e1e1e) 60%);
-    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35), 0 10px 26px rgba(168, 85, 247, 0.28);
+    background: linear-gradient(310deg, color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 45%, transparent), var(--vs-input-bg, #1e1e1e) 60%);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 35%, transparent), 0 10px 26px color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 28%, transparent);
     cursor: pointer;
     transition: transform 0.22s ease, opacity 0.22s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     will-change: transform, opacity;
@@ -94,7 +94,7 @@ body.awaiting-clarification #input-container {
 
 .ask-user-question__card--active:hover {
     border-color: #c084fc;
-    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.55), 0 12px 30px rgba(168, 85, 247, 0.38);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 55%, transparent), 0 12px 30px color-mix(in srgb, var(--vs-main-window-inactive-caption-color) 38%, transparent);
 }
 
 .ask-user-question__card-number {
@@ -116,6 +116,7 @@ body.awaiting-clarification #input-container {
     color: var(--vs-foreground);
     font-size: 12.5px;
     line-height: 1.5;
+    min-height: 35px;
 }
 
 .ask-user-question__card-footer {
@@ -128,10 +129,10 @@ body.awaiting-clarification #input-container {
     color: #c4b5fd;
 }
 
-.ask-user-question__card-footer codinex-icon {
-    width: 13px;
-    height: 13px;
-}
+    .ask-user-question__card-footer codinex-icon {
+        width: 13px;
+        height: 13px;
+    }
 
 .ask-user-question__card--custom {
     cursor: default;
@@ -152,14 +153,12 @@ body.awaiting-clarification #input-container {
     border-radius: 6px;
     color: var(--vs-foreground);
     font-size: 12.5px;
-    font-family: inherit;
-    padding: 6px 8px;
 }
 
-.ask-user-question__custom-input:focus {
-    outline: none;
-    border-color: #a855f7;
-}
+    .ask-user-question__custom-input:focus {
+        outline: none;
+        border-color: #a855f7;
+    }
 
 .ask-user-question__custom-submit {
     align-self: flex-end;
@@ -172,9 +171,9 @@ body.awaiting-clarification #input-container {
     cursor: pointer;
 }
 
-.ask-user-question__custom-submit:hover {
-    background: #9333ea;
-}
+    .ask-user-question__custom-submit:hover {
+        background: #9333ea;
+    }
 
 .ask-user-question__nav-btn {
     flex: 0 0 auto;
@@ -191,9 +190,9 @@ body.awaiting-clarification #input-container {
     z-index: 200;
 }
 
-.ask-user-question__nav-btn:hover {
-    border-color: #a855f7;
-}
+    .ask-user-question__nav-btn:hover {
+        border-color: #a855f7;
+    }
 
 .ask-user-question__nav-btn--prev codinex-icon {
     transform: rotate(90deg);
