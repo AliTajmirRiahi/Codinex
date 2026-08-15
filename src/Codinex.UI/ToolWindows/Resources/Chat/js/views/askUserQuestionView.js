@@ -9,8 +9,11 @@
 import { createElement } from '../utils/dom.js';
 import { isRtlText } from '../utils/languageDirection.js';
 
-const MAX_VISIBLE_OFFSET = 3;
-const OFFSET_STEP_PX = 34;
+const CARD_TRANSFORMS = {
+    left: 'translate(-70%, -50%) translateX(-74px) scale(0.9)',
+    center: 'translate(-50%, -50%) translateX(0px) scale(1)',
+    right: 'translate(-30%, -50%) translateX(74px) scale(0.9)'
+};
 
 export class AskUserQuestionView {
     constructor({ container, onAnswer }) {
@@ -137,27 +140,24 @@ export class AskUserQuestionView {
     updateStack() {
         this.cardElements.forEach((card, index) => {
             const offset = index - this.activeCardIndex;
-            const absOffset = Math.abs(offset);
             const isActive = offset === 0;
 
             card.classList.toggle('ask-user-question__card--active', isActive);
 
-            if (absOffset > MAX_VISIBLE_OFFSET) {
-                card.style.opacity = '0';
+            if (offset < -1 || offset > 1) {
+                card.classList.add('hidden');
                 card.style.pointerEvents = 'none';
-                card.style.transform = `translate(-50%, -50%) translateX(${offset > 0 ? '999px' : '-999px'})`;
-                card.style.zIndex = '0';
                 return;
             }
 
-            const scale = 1 - absOffset * 0.1;
-            const opacity = isActive ? 1 : Math.max(0.18, 0.6 - absOffset * 0.15);
-            const shiftPx = offset * OFFSET_STEP_PX + (offset === 0 ? 0 : Math.sign(offset) * 40);
-
-            card.style.opacity = String(opacity);
+            card.classList.remove('hidden');
             card.style.pointerEvents = isActive ? 'auto' : 'none';
-            card.style.transform = `translate(-50%, -50%) translateX(${shiftPx}px) scale(${scale})`;
-            card.style.zIndex = String(100 - absOffset);
+            card.style.transform = offset === -1
+                ? CARD_TRANSFORMS.left
+                : offset === 1
+                    ? CARD_TRANSFORMS.right
+                    : CARD_TRANSFORMS.center;
+            card.style.zIndex = isActive ? '100' : '90';
         });
     }
 
