@@ -98,6 +98,14 @@ export function initChatController(transport) {
         transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath });
     });
 
+    document.addEventListener('composer:quote-message', (e) => {
+        const text = e.detail?.text;
+
+        if (!text) return;
+
+        chatView.composer.setQuote(text);
+    });
+
     document.addEventListener('chat:rewind-to-message', (e) => {
         const messageIndex = e.detail?.messageIndex;
 
@@ -157,9 +165,14 @@ export function initChatController(transport) {
         chatView.clearStatus();
         chatView.resetThinking();
 
+        const quotedText = chatView.composer.getQuote();
+        const quotedMessage = quotedText
+            ? { text: quotedText, author: 'You', time: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) }
+            : null;
+
         // Show user message immediately
         chatView.appendMessage(state.composer.draftText, 'user', null, false, {
-            context: { selectedReferences: state.composer.selectedReferences }
+            context: { selectedReferences: state.composer.selectedReferences, quotedMessage }
         });
 
         // Set loading state
@@ -167,13 +180,18 @@ export function initChatController(transport) {
 
         try {
 
+            const draftWithQuote = quotedText
+                ? `> Quoted message:\n${quotedText.split('\n').map(line => `> ${line}`).join('\n')}\n\n${state.composer.draftText}`
+                : state.composer.draftText;
+
             var messageModel = {
-                draftText: state.composer.draftText,
+                draftText: draftWithQuote,
                 selectedCommand: state.composer.selectedCommand,
                 selectedAgent: state.composer.selectedAgent,
                 selectedReferences: state.composer.selectedReferences,
             }
             composerController.resetComposer();
+            chatView.composer.clearQuote();
 
             await aiService.sendMessage(messageModel, transport);
 

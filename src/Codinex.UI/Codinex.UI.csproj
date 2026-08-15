@@ -66,6 +66,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\selectionToolbar.css" />
+    <EmbeddedResource Include="ToolWindows\Resources\Shared\components\selectionToolbar.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\contextMenu.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\contextMenu.js" />
     <EmbeddedResource Include="ToolWindows\Resources\ChangeReview\view\change-review-view.html" />

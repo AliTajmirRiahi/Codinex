@@ -24,7 +24,7 @@ namespace Codinex.VisualStudio.Workspace.Orchestrators
 
         public string Description => "Provides the active document as workspace context.";
 
-        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Model;
+        public WorkspaceContextVisibility Visibility { get; } = WorkspaceContextVisibility.Debug;
 
         public async Task<ContextProviderResult> GetContextAsync(
             WorkspaceContextRequest request,

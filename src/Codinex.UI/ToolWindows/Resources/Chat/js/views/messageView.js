@@ -137,6 +137,39 @@ function getMessageReferences(options) {
     return context?.selectedReferences || context?.SelectedReferences || [];
 }
 
+function getMessageQuote(options) {
+    const context = options?.context || options?.Context;
+
+    return context?.quotedMessage || context?.QuotedMessage || null;
+}
+
+function createQuoteBox(quote) {
+    if (!quote || !quote.text) return null;
+
+    const wrapperEl = document.createElement('div');
+    wrapperEl.className = 'message-quote';
+
+    wrapperEl.innerHTML = `
+        <div class="message-quote-accent"></div>
+        <div class="message-quote-body">
+            <div class="message-quote-header">
+                <span class="message-quote-mark" aria-hidden="true">&rdquo;</span>
+                <span class="message-quote-title">Quoted message</span>
+            </div>
+            <div class="message-quote-text"></div>
+            <div class="message-quote-meta">
+                <span class="message-quote-author">${quote.author || 'You'}</span>
+                <span class="message-quote-dot">·</span>
+                <span class="message-quote-time">${quote.time || ''}</span>
+            </div>
+        </div>
+    `;
+
+    wrapperEl.querySelector('.message-quote-text').textContent = quote.text;
+
+    return wrapperEl;
+}
+
 function openReference(ref) {
     document.dispatchEvent(new CustomEvent('composer:ref-click', {
         detail: { id: ref.id || ref.Id, reference: ref }
@@ -252,6 +285,12 @@ export const messageView = {
         messageDiv.appendChild(createMessageHeader(sender));
 
         if (sender === 'user') {
+            const quoteBox = createQuoteBox(getMessageQuote(options));
+
+            if (quoteBox) {
+                messageDiv.appendChild(quoteBox);
+            }
+
             const referencesBox = createReferencesBox(getMessageReferences(options));
 
             if (referencesBox) {

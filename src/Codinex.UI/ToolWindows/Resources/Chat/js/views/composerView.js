@@ -30,6 +30,15 @@ export class ComposerView {
         this.contextBtn = $('#contextBtn') || document.querySelector('#contextBtn');
         this.contextInput = $('#contextInput') || document.querySelector('#contextInput');
 
+        this.quote = null;
+        this.quotePreview = $('#composer-quote-preview');
+        this.quotePreviewText = $('#composer-quote-preview-text');
+        this.quotePreviewDismiss = $('#composer-quote-preview-dismiss');
+
+        if (this.quotePreviewDismiss) {
+            this.quotePreviewDismiss.addEventListener('click', () => this.clearQuote());
+        }
+
         this.selectedIndex = 0;
         this.filteredItems = [];
         this.currentType = null;
@@ -873,6 +882,33 @@ export class ComposerView {
         selection.addRange(range);
     }
 
+    /**
+     * Attaches a quoted assistant selection to the next outgoing message and
+     * shows a dismissible preview above the composer. Used by the "Ask Codinex"
+     * action on the assistant-message selection toolbar.
+     */
+    setQuote(text) {
+        const trimmed = (text || '').trim();
 
+        if (!trimmed) return;
 
-}   
+        this.quote = trimmed;
+
+        if (this.quotePreviewText) this.quotePreviewText.textContent = trimmed;
+        if (this.quotePreview) this.quotePreview.classList.remove('hidden');
+
+        this.input.focus();
+    }
+
+    clearQuote() {
+        this.quote = null;
+
+        if (this.quotePreviewText) this.quotePreviewText.textContent = '';
+        if (this.quotePreview) this.quotePreview.classList.add('hidden');
+    }
+
+    getQuote() {
+        return this.quote;
+    }
+
+}
