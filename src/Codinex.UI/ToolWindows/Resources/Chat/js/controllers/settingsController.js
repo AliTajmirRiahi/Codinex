@@ -16,6 +16,8 @@ export function initSettingsController(transport) {
     const solutionInstructionInput = $('#setting-solution-instruction');
     const excludeDirectoriesInput = $('#setting-exclude-directories');
     const excludeFilesInput = $('#setting-exclude-files');
+    const ignoredExtensionsInput = $('#setting-ignored-extensions');
+    const ignoredFileSuffixesInput = $('#setting-ignored-file-suffixes');
     const preprocessorProviderSelect = $('#setting-preprocessor-provider');
     const preprocessorProviderButton = $('#setting-preprocessor-provider-selector-btn');
     const preprocessorProviderWrapper = preprocessorProviderButton?.closest('.provider-selector-wrapper');
@@ -290,6 +292,22 @@ export function initSettingsController(transport) {
                 'ExcludeFiles',
                 '');
         }
+
+        if (ignoredExtensionsInput) {
+            ignoredExtensionsInput.value = getValue(
+                currentWorkspaceSettings,
+                'ignoredExtensions',
+                'IgnoredExtensions',
+                '');
+        }
+
+        if (ignoredFileSuffixesInput) {
+            ignoredFileSuffixesInput.value = getValue(
+                currentWorkspaceSettings,
+                'ignoredFileSuffixes',
+                'IgnoredFileSuffixes',
+                '');
+        }
     };
 
     const openSettingsModal = () => {
@@ -385,12 +403,16 @@ export function initSettingsController(transport) {
             solutionInstruction: solutionInstructionInput?.value || '',
             excludeDirectories: excludeDirectoriesInput?.value || '',
             excludeFiles: excludeFilesInput?.value || '',
+            ignoredExtensions: ignoredExtensionsInput?.value || '',
+            ignoredFileSuffixes: ignoredFileSuffixesInput?.value || '',
         };
 
         transport?.send(EVENTS.SAVE_SOLUTION_INSTRUCTION, {
             solutionInstruction: currentWorkspaceSettings.solutionInstruction,
             excludeDirectories: currentWorkspaceSettings.excludeDirectories,
             excludeFiles: currentWorkspaceSettings.excludeFiles,
+            ignoredExtensions: currentWorkspaceSettings.ignoredExtensions,
+            ignoredFileSuffixes: currentWorkspaceSettings.ignoredFileSuffixes,
         });
     });
 

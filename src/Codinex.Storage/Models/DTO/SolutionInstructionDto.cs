@@ -7,4 +7,8 @@ public class SolutionInstructionDto
     public string ExcludeDirectories { get; set; } = string.Empty;
 
     public string ExcludeFiles { get; set; } = string.Empty;
+
+    public string IgnoredExtensions { get; set; } = string.Empty;
+
+    public string IgnoredFileSuffixes { get; set; } = string.Empty;
 }
