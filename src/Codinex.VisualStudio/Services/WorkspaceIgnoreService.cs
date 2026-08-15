@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
+using Codinex.Storage.Interfaces;
 using Codinex.VisualStudio.Interfaces;
 
 namespace Codinex.VisualStudio.Services;
@@ -12,9 +14,11 @@ namespace Codinex.VisualStudio.Services;
 /// Filters generated and non-source files from workspace operations.
 /// </summary>
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
-public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceIgnoreService
+public sealed class WorkspaceIgnoreService(
+    IFileSystem fileSystem,
+    IWorkspaceSettingsManager workspaceSettingsManager) : IWorkspaceIgnoreService
 {
-    private static readonly HashSet<string> IgnoredDirectories =
+    private static readonly string[] DefaultIgnoredDirectories =
     [
         ".git",
         ".vs",
@@ -30,24 +34,27 @@ public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceI
         "project.assets.json"
     ];
 
-    private static readonly HashSet<string> IgnoredExtensions =
-    [
-        ".db",
-        ".dll",
-        ".exe",
-        ".pdb",
-        ".cache",
-        ".log"
-    ];
+    private HashSet<string> IgnoredDirectories
+    {
+        get
+        {
+            var directories = new HashSet<string>(DefaultIgnoredDirectories, StringComparer.OrdinalIgnoreCase);
 
-    private static readonly string[] IgnoredFileSuffixes =
-    [
-        ".nuget.dgspec.json",
-        ".deps.json",
-        ".runtimeconfig.json",
-        ".AssemblyInfo.cs",
-        ".AssemblyAttributes.cs"
-    ];
+            foreach (var entry in ParseList(workspaceSettingsManager.Settings?.ExcludeDirectories))
+                directories.Add(entry);
+
+            return directories;
+        }
+    }
+
+    private HashSet<string> IgnoredExtensions =>
+        new(ParseList(workspaceSettingsManager.Settings?.IgnoredExtensions), StringComparer.OrdinalIgnoreCase);
+
+    private IReadOnlyList<string> IgnoredFileSuffixes =>
+        ParseList(workspaceSettingsManager.Settings?.IgnoredFileSuffixes).ToList();
+
+    private IReadOnlyList<string> ExcludedFilePatterns =>
+        ParseList(workspaceSettingsManager.Settings?.ExcludeFiles).ToList();
 
     /// <inheritdoc/>
     public bool ShouldIgnore(string filePath)
@@ -72,13 +79,18 @@ public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceI
             return true;
         }
 
+        if (ExcludedFilePatterns.Any(pattern => MatchesFilePattern(fileName, pattern)))
+            return true;
+
         var current = fileSystem.Directory.Exists(filePath)
             ? fileSystem.DirectoryInfo.New(filePath)
             : fileSystem.DirectoryInfo.New(fileSystem.Path.GetDirectoryName(filePath)!);
 
+        var ignoredDirectories = IgnoredDirectories;
+
         while (current != null)
         {
-            if (IgnoredDirectories.Contains(current.Name))
+            if (ignoredDirectories.Contains(current.Name))
                 return true;
 
             current = current.Parent;
@@ -86,4 +98,26 @@ public sealed class WorkspaceIgnoreService(IFileSystem fileSystem) : IWorkspaceI
 
         return false;
     }
+
+    private static bool MatchesFilePattern(string fileName, string pattern)
+    {
+        if (string.IsNullOrWhiteSpace(pattern))
+            return false;
+
+        if (!pattern.Contains('*') && !pattern.Contains('?'))
+            return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
+
+        var regexPattern = "^" + Regex.Escape(pattern)
+            .Replace("\\*", ".*")
+            .Replace("\\?", ".") + "$";
+
+        return Regex.IsMatch(fileName, regexPattern, RegexOptions.IgnoreCase);
+    }
+
+    private static IEnumerable<string> ParseList(string value) =>
+        string.IsNullOrWhiteSpace(value)
+            ? []
+            : value.Split([';'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(entry => entry.Trim())
+                .Where(entry => entry.Length > 0);
 }

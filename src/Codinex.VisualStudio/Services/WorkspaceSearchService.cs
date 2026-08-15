@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
-using Codinex.Storage.Interfaces;
 using Codinex.VisualStudio.Extensions;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Models;
@@ -18,24 +17,9 @@ namespace Codinex.VisualStudio.Services
     public sealed class WorkspaceSearchService(
         IWorkspaceContext workspaceContext,
         IWorkspaceFileService workspaceFileService,
-        IWorkspaceIgnoreService workspaceFileFilter,
-        IWorkspaceSettingsManager workspaceSettingsManager)
+        IWorkspaceIgnoreService workspaceFileFilter)
         : IWorkspaceSearchService
     {
-
-        private IReadOnlyList<string> ExcludeDirectory =>
-            ParseExclusionList(workspaceSettingsManager.Settings.ExcludeDirectories).ToList();
-
-        private IReadOnlyList<string> ExcludeDFiles =>
-            ParseExclusionList(workspaceSettingsManager.Settings.ExcludeFiles).ToList();
-
-        private static IEnumerable<string> ParseExclusionList(string value) =>
-            string.IsNullOrWhiteSpace(value)
-                ? []
-                : value.Split([';'], StringSplitOptions.RemoveEmptyEntries)
-                    .Select(entry => entry.Trim())
-                    .Where(entry => entry.Length > 0);
-
         public IReadOnlyList<WorkspaceFile> FindFiles(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -237,8 +221,6 @@ namespace Codinex.VisualStudio.Services
             return workspaceFileService
                 .EnumerateFiles(root, "*", SearchOption.AllDirectories)
                 .Where(path => !workspaceFileFilter.ShouldIgnore(path))
-                .Where(path => !IsExcludedDirectory(root, path))
-                .Where(path => !IsExcludedFile(path))
                 .Select(path => new WorkspaceFile
                 {
                     Name = Path.GetFileName(path),
@@ -246,50 +228,6 @@ namespace Codinex.VisualStudio.Services
                     RelativePath = PathExtensions.GetRelativePath(root, path)
                 })
                 .ToList();
-        }
-
-        private bool IsExcludedDirectory(string root, string fullPath)
-        {
-            var excludeDirectory = ExcludeDirectory;
-
-            if (excludeDirectory.Count == 0)
-                return false;
-
-            var relativePath = PathExtensions.GetRelativePath(root, fullPath);
-
-            var segments = relativePath.Split(
-                ['\\', '/'],
-                StringSplitOptions.RemoveEmptyEntries);
-
-            return segments.Any(segment => excludeDirectory
-                .Any(excluded => string.Equals(excluded, segment, StringComparison.OrdinalIgnoreCase)));
-        }
-
-        private bool IsExcludedFile(string fullPath)
-        {
-            var excludeFiles = ExcludeDFiles;
-
-            if (excludeFiles.Count == 0)
-                return false;
-
-            var fileName = Path.GetFileName(fullPath);
-
-            return excludeFiles.Any(pattern => MatchesFilePattern(fileName, pattern));
-        }
-
-        private static bool MatchesFilePattern(string fileName, string pattern)
-        {
-            if (string.IsNullOrWhiteSpace(pattern))
-                return false;
-
-            if (!pattern.Contains('*') && !pattern.Contains('?'))
-                return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
-
-            var regexPattern = "^" + Regex.Escape(pattern)
-                .Replace("\\*", ".*")
-                .Replace("\\?", ".") + "$";
-
-            return Regex.IsMatch(fileName, regexPattern, RegexOptions.IgnoreCase);
         }
     }
 }

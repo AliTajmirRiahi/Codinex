@@ -264,7 +264,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     {
                         SolutionInstruction = payload.SolutionInstruction ?? string.Empty,
                         ExcludeDirectories = payload.ExcludeDirectories ?? string.Empty,
-                        ExcludeFiles = payload.ExcludeFiles ?? string.Empty
+                        ExcludeFiles = payload.ExcludeFiles ?? string.Empty,
+                        IgnoredExtensions = payload.IgnoredExtensions ?? string.Empty,
+                        IgnoredFileSuffixes = payload.IgnoredFileSuffixes ?? string.Empty
                     });
 
                     await SendSolutionInstructionSavedAsync();

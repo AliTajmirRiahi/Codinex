@@ -10,5 +10,11 @@ namespace Codinex.Storage.Models
 
         // Semicolon-separated file name patterns to exclude from workspace search in this solution (e.g. "*.dll;secrets.json").
         public string ExcludeFiles { get; set; } = string.Empty;
+
+        // Semicolon-separated file extensions to always ignore in workspace operations (e.g. ".dll;.exe").
+        public string IgnoredExtensions { get; set; } = ".db;.dll;.exe;.pdb;.cache;.log";
+
+        // Semicolon-separated file name suffixes to always ignore in workspace operations (e.g. ".deps.json").
+        public string IgnoredFileSuffixes { get; set; } = ".nuget.dgspec.json;.deps.json;.runtimeconfig.json;.AssemblyInfo.cs;.AssemblyAttributes.cs";
     }
 }
