@@ -118,8 +118,8 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onAddSelectedCodeReference) handlers.onAddSelectedCodeReference(payload);
                 break;
 
-            case EVENTS.RUN_DESCRIBE_ON_SELECTION:
-                if (handlers.onRunDescribeOnSelection) handlers.onRunDescribeOnSelection(payload);
+            case EVENTS.RUN_COMMAND_ON_SELECTION:
+                if (handlers.onRunCommandOnSelection) handlers.onRunCommandOnSelection(payload);
                 break;
 
             default:

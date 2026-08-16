@@ -29,8 +29,8 @@ public interface IWebViewMessageRouter
 
     /// <summary>
     /// Switches to the default conversation group, starts a new chat there, and asks the
-    /// WebView to attach the selection plus the "/describe" command and auto-send it.
-    /// Used by the "Describe" editor context menu command.
+    /// WebView to attach the selection plus the given slash command and auto-send it.
+    /// Used by the "Describe" / "Document" / "Make it Better" editor context menu commands.
     /// </summary>
-    Task RunDescribeOnSelectionAsync(ReferenceItem selection);
+    Task RunCommandOnSelectionAsync(ReferenceItem selection, string commandName);
 }

@@ -282,8 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
         onAddSelectedCodeReference: (payload) => {
             chatController.addSelectedCodeReference(payload);
         },
-        onRunDescribeOnSelection: (payload) => {
-            chatController.runDescribeOnSelection(payload);
+        onRunCommandOnSelection: (payload) => {
+            chatController.runCommandOnSelection(payload);
         }
     });
 

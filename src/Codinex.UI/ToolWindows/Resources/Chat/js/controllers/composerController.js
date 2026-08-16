@@ -135,7 +135,7 @@ export class ComposerController {
                 {
                     id: 'cmd1',
                     name: '/document',
-                    description: 'Generate documentation for the selected symbol or code'
+                    description: 'Generate comments for the selected symbol or code'
                 },
                 {
                     id: 'cmd2',
@@ -159,8 +159,8 @@ export class ComposerController {
                 },
                 {
                     id: 'cmd6',
-                    name: '/improve',
-                    description: 'Improve code quality, readability, and performance'
+                    name: '/makeItBetter',
+                    description: 'Generate suggestions to improve the selected code'
                 },
                 {
                     id: 'cmd7',
@@ -171,7 +171,7 @@ export class ComposerController {
                     id: 'cmd8',
                     name: '/createTests',
                     description: 'Generate tests for the selected code'
-                }
+                },
             ],
             agents: [
                 {

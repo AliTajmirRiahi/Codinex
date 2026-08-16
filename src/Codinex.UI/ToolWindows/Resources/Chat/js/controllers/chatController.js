@@ -493,17 +493,22 @@ export function initChatController(transport) {
 
             composerController.handleSpecialDocument('references', payload, payload.name || payload.Name);
         },
-        runDescribeOnSelection: (payload) => {
+        runCommandOnSelection: (payload) => {
             if (!payload) return;
 
-            composerController.handleSpecialDocument('references', payload, payload.name || payload.Name);
+            const selection = payload.selection || payload.Selection;
+            const commandName = payload.commandName || payload.CommandName;
 
-            const describeCommand = composerController.data.commands.find(c => c.name === '/describe');
+            if (!selection || !commandName) return;
 
-            if (describeCommand) {
+            composerController.handleSpecialDocument('references', selection, selection.name || selection.Name);
+
+            const command = composerController.data.commands.find(c => c.name === commandName);
+
+            if (command) {
                 // insertChip() requires a typed "/" trigger to replace, which doesn't exist here.
-                setSelectedCommand(describeCommand);
-                setDraftText(describeCommand.name);
+                setSelectedCommand(command);
+                setDraftText(command.name);
             }
 
             // Mirrors ComposerView.send(): clear the input DOM, then go through

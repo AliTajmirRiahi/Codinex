@@ -14,13 +14,16 @@ using Task = System.Threading.Tasks.Task;
 namespace Codinex.VSIX
 {
     /// <summary>
-    /// Handles the "Codinex Actions" editor context menu submenu ("Add to Chat" / "Describe").
+    /// Handles the "Codinex Actions" editor context menu submenu
+    /// ("Add to Chat" / "Describe" / "Document" / "Make it Better").
     /// The submenu is only visible while the Codinex tool window is already open.
     /// </summary>
     public sealed class CodinexActionsCommand
     {
         public const int AddToChatCommandId = 0x0112;
         public const int DescribeSelectionCommandId = 0x0113;
+        public const int DocumentSelectionCommandId = 0x0114;
+        public const int MakeItBetterSelectionCommandId = 0x0115;
 
         public static readonly Guid CommandSet = new Guid("f695020e-3b35-40ae-b466-57fc5bbe2d6c");
 
@@ -36,7 +39,9 @@ namespace Codinex.VSIX
             }
 
             AddCommand(commandService, AddToChatCommandId, OnAddToChat);
-            AddCommand(commandService, DescribeSelectionCommandId, OnDescribeSelection);
+            AddCommand(commandService, DescribeSelectionCommandId, (s, e) => OnRunCommandOnSelection("/describe"));
+            AddCommand(commandService, DocumentSelectionCommandId, (s, e) => OnRunCommandOnSelection("/document"));
+            AddCommand(commandService, MakeItBetterSelectionCommandId, (s, e) => OnRunCommandOnSelection("/makeItBetter"));
         }
 
         public static CodinexActionsCommand Instance { get; private set; }
@@ -100,7 +105,7 @@ namespace Codinex.VSIX
             }, nameof(OnAddToChat));
         }
 
-        private void OnDescribeSelection(object sender, EventArgs e)
+        private void OnRunCommandOnSelection(string commandName)
         {
             var pipeline = CodinexServiceContainer.Get<IExecutionPipeline>();
 
@@ -115,8 +120,8 @@ namespace Codinex.VSIX
 
                 var router = CodinexServiceContainer.Get<IWebViewMessageRouter>();
 
-                await router.RunDescribeOnSelectionAsync(selection);
-            }, nameof(OnDescribeSelection));
+                await router.RunCommandOnSelectionAsync(selection, commandName);
+            }, nameof(OnRunCommandOnSelection));
         }
 
         private async Task<ReferenceItem> BuildSelectionReferenceAsync()
