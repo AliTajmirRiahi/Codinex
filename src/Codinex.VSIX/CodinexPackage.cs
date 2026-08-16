@@ -89,6 +89,7 @@ namespace Codinex.VSIX
 
             // Initialize UI Commands
             await CodinexToolWindowCommand.InitializeAsync(this);
+            await CodinexActionsCommand.InitializeAsync(this);
 
             var pane = await CreateVsOutputWindowPaneAsync();
 

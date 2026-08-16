@@ -21,6 +21,7 @@ namespace Codinex.Core.Models
         Field = 11,
         OpenDocuments = 12,
         Image = 13,
+        SelectedCode = 14,
     }
 
     public sealed class ReferenceItem

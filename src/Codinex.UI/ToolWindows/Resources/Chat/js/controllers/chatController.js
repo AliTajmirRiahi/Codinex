@@ -8,7 +8,7 @@ import { extractQuoteFromText } from '../views/messageView.js';
 import { chatListView } from '../views/chatListView.js';
 import { projectListView } from '../views/projectListView.js';
 import { aiService } from '../services/aiService.js';
-import { getState, setLoading, setCurrentModel, setInputLoading, setCurrentChat, setSelectedReferences } from '../state/appState.js';
+import { getState, setLoading, setCurrentModel, setInputLoading, setCurrentChat, setSelectedReferences, setSelectedCommand, setDraftText } from '../state/appState.js';
 import { EVENTS } from '../constants/events.js';
 import { STATICS } from '../constants/statics.js';
 import { reportError } from '../../../Shared/bridge/errorReporter.js';
@@ -487,6 +487,29 @@ export function initChatController(transport) {
             }
 
             composerController.removeActiveDocumentReference();
+        },
+        addSelectedCodeReference: (payload) => {
+            if (!payload) return;
+
+            composerController.handleSpecialDocument('references', payload, payload.name || payload.Name);
+        },
+        runDescribeOnSelection: (payload) => {
+            if (!payload) return;
+
+            composerController.handleSpecialDocument('references', payload, payload.name || payload.Name);
+
+            const describeCommand = composerController.data.commands.find(c => c.name === '/describe');
+
+            if (describeCommand) {
+                // insertChip() requires a typed "/" trigger to replace, which doesn't exist here.
+                setSelectedCommand(describeCommand);
+                setDraftText(describeCommand.name);
+            }
+
+            // Mirrors ComposerView.send(): clear the input DOM, then go through
+            // handleSendMessage() so the chat-welcome screen gets hidden like a normal send.
+            chatView.composer.clear();
+            chatView.handleSendMessage();
         }
     };
 }

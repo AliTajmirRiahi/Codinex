@@ -278,6 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onRewindChatApproved: (payload) => {
             chatController.handleRewindChatApproved(payload);
+        },
+        onAddSelectedCodeReference: (payload) => {
+            chatController.addSelectedCodeReference(payload);
+        },
+        onRunDescribeOnSelection: (payload) => {
+            chatController.runDescribeOnSelection(payload);
         }
     });
 

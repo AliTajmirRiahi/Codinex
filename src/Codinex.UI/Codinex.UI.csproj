@@ -106,6 +106,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\puzzle.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\ollama.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\openai.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-code.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
