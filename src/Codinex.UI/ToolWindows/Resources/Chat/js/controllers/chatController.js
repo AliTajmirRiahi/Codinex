@@ -96,7 +96,10 @@ export function initChatController(transport) {
 
         if (!filePath) return;
 
-        transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath });
+        const startLine = metadata.startLine ?? metadata.StartLine;
+        const endLine = metadata.endLine ?? metadata.EndLine;
+
+        transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath, startLine, endLine });
     });
 
     document.addEventListener('composer:quote-message', (e) => {
