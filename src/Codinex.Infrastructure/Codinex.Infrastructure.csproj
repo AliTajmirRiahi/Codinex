@@ -63,6 +63,7 @@
     <Compile Include="AI\Providers\OllamaProvider.cs" />
     <Compile Include="AI\Providers\OpenAiCompatibleProvider.cs" />
     <Compile Include="AI\Providers\OpenCodeFreeProvider.cs" />
+    <Compile Include="AI\Providers\OpenCode\OpenCodeCatalog.cs" />
     <Compile Include="AI\Providers\OpenCode\OpenCodeDtos.cs" />
     <Compile Include="AI\Providers\OpenCode\OpenCodeSessionStore.cs" />
     <Compile Include="Chat\ChatSession.cs" />

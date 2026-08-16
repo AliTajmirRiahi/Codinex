@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Codinex.Infrastructure.AI.Providers.OpenCode
 {
@@ -32,6 +33,8 @@ namespace Codinex.Infrastructure.AI.Providers.OpenCode
         public OpenCodeModelCostDto Cost { get; set; }
 
         public OpenCodeModelLimitDto Limit { get; set; }
+
+        public OpenCodeModelCapabilitiesDto Capabilities { get; set; }
     }
 
     internal sealed class OpenCodeModelCostDto
@@ -46,6 +49,40 @@ namespace Codinex.Infrastructure.AI.Providers.OpenCode
         public int Context { get; set; }
 
         public int Output { get; set; }
+    }
+
+    /// <summary>
+    /// Mirrors OpenCode's Model.capabilities shape. Used by ProviderCapabilityChecker to derive
+    /// streaming/tool-calling/vision/reasoning support directly from provider metadata instead of
+    /// live-probing a chat endpoint that doesn't exist for OpenCode's session-based protocol.
+    /// </summary>
+    internal sealed class OpenCodeModelCapabilitiesDto
+    {
+        public bool? Temperature { get; set; }
+
+        public bool? Reasoning { get; set; }
+
+        public bool? Attachment { get; set; }
+
+        [JsonProperty("toolcall")]
+        public bool? ToolCall { get; set; }
+
+        public OpenCodeModelIoDto Input { get; set; }
+
+        public OpenCodeModelIoDto Output { get; set; }
+    }
+
+    internal sealed class OpenCodeModelIoDto
+    {
+        public bool? Text { get; set; }
+
+        public bool? Audio { get; set; }
+
+        public bool? Image { get; set; }
+
+        public bool? Video { get; set; }
+
+        public bool? Pdf { get; set; }
     }
 
     internal sealed class OpenCodeSessionDto

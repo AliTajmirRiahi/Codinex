@@ -10,6 +10,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
+using Codinex.Infrastructure.AI.Providers.OpenCode;
 using Codinex.Infrastructure.CustomeExceptions;
 
 namespace Codinex.Infrastructure.AI.Capabilities
@@ -22,8 +23,12 @@ namespace Codinex.Infrastructure.AI.Capabilities
     }
 
     [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
-    public sealed class ProviderCapabilityChecker(IProviderClient client) : IProviderCapabilityChecker
+    public sealed class ProviderCapabilityChecker(
+        IProviderClient client,
+        IJsonSerializer jsonSerializer) : IProviderCapabilityChecker
     {
+        private const string OpenCodeProtocol = "opendcodefree";
+
         public async Task CheckAsync(
             AiProvider provider,
             AiModel model,
@@ -31,6 +36,12 @@ namespace Codinex.Infrastructure.AI.Capabilities
         {
             if (model.CapabilitiesChecked)
                 return;
+
+            if (IsOpenCodeFreeProvider(provider))
+            {
+                await CheckOpenCodeCapabilitiesAsync(provider, model, cancellationToken);
+                return;
+            }
 
             var chatCapabilities = await ProbeChatCapabilitiesAsync(
                 provider,
@@ -47,6 +58,62 @@ namespace Codinex.Infrastructure.AI.Capabilities
                 chatCapabilities.SupportsToolCalling,
                 vision,
                 CapabilityProbeResult.Unsupported);
+        }
+
+        private static bool IsOpenCodeFreeProvider(AiProvider provider)
+        {
+            return string.Equals(provider.Protocol, OpenCodeProtocol, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// OpenCode has no OpenAI/Ollama-style chat endpoint to probe with synthetic requests, so
+        /// capabilities are read directly from the model metadata already returned by
+        /// "GET /provider" (the same endpoint model discovery uses) instead of live-probing.
+        /// Streaming is always supported: OpenCode's whole chat flow is driven by its SSE event
+        /// bus rather than an optional per-model streaming flag.
+        /// </summary>
+        private async Task CheckOpenCodeCapabilitiesAsync(
+            AiProvider provider,
+            AiModel model,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await client.GetAsync(
+                    provider,
+                    provider.ModelEndPoint,
+                    cancellationToken);
+
+                var payload = jsonSerializer.Deserialize<OpenCodeProviderListResponseDto>(response);
+
+                var upstreamModel = OpenCodeCatalog.FindModel(payload, model.Id);
+
+                var capabilities = upstreamModel?.Capabilities;
+
+                model.UpdateCapabilities(
+                    CapabilityProbeResult.Supported,
+                    ToProbeResult(capabilities?.ToolCall),
+                    ToProbeResult(capabilities?.Attachment ?? capabilities?.Input?.Image),
+                    ToProbeResult(capabilities?.Reasoning));
+            }
+            catch
+            {
+                model.UpdateCapabilities(
+                    CapabilityProbeResult.Supported,
+                    CapabilityProbeResult.Unknown,
+                    CapabilityProbeResult.Unknown,
+                    CapabilityProbeResult.Unknown);
+            }
+        }
+
+        private static CapabilityProbeResult ToProbeResult(bool? supported)
+        {
+            if (supported == null)
+                return CapabilityProbeResult.Unknown;
+
+            return supported.Value
+                ? CapabilityProbeResult.Supported
+                : CapabilityProbeResult.Unsupported;
         }
 
         private async Task<ChatCapabilityResult> ProbeChatCapabilitiesAsync(
