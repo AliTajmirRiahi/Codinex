@@ -36,6 +36,9 @@ namespace Codinex.Storage.Managers
             {
                 Providers = await storage.LoadAsync<List<AiProvider>>(StoragePaths.Providers)
                              ?? await GetDefaultProviders();
+
+                if (await MergeNewDefaultProvidersAsync())
+                    await SaveAsync();
             }
             else
             {
@@ -43,16 +46,49 @@ namespace Codinex.Storage.Managers
                 await SaveAsync();
             }
         }
+
+        /// <summary>
+        /// Adds any provider present in the bundled providers.json but missing from the
+        /// user's saved provider list (e.g. after an extension update introduced a new
+        /// provider). Existing saved providers (settings, API keys, selected models) are
+        /// left untouched.
+        /// </summary>
+        /// <returns>True if one or more new providers were added.</returns>
+        private async Task<bool> MergeNewDefaultProvidersAsync()
+        {
+            var defaultProviders = LoadResourceCollection<AiProvider>("providers.json");
+
+            var existingIds = new HashSet<string>(Providers.Select(p => p.Id), StringComparer.OrdinalIgnoreCase);
+
+            var newProviders = defaultProviders
+                .Where(p => !existingIds.Contains(p.Id))
+                .ToList();
+
+            if (newProviders.Count == 0)
+                return false;
+
+            await PopulateModelsAsync(newProviders);
+
+            Providers.AddRange(newProviders);
+
+            return true;
+        }
+
         private async Task<List<AiProvider>> GetDefaultProviders()
         {
             var providers = LoadResourceCollection<AiProvider>("providers.json");
 
+            await PopulateModelsAsync(providers);
+
+            return providers;
+        }
+
+        private async Task PopulateModelsAsync(IEnumerable<AiProvider> providers)
+        {
             foreach (var provider in providers)
             {
                 provider.SetModels(await providerModelService.GetModelsAsync(provider));
             }
-
-            return providers;
         }
 
         /// <summary>
