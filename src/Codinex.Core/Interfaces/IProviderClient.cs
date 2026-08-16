@@ -33,5 +33,14 @@ namespace Codinex.Core.Interfaces
             string endpoint,
             object payload,
             CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Opens a streaming GET request (Server-Sent Events) to a provider endpoint.
+        /// Returns raw provider data lines.
+        /// </summary>
+        IAsyncEnumerable<string> StreamGetAsync(
+            AiProvider provider,
+            string endpoint,
+            CancellationToken cancellationToken = default);
     }
 }

@@ -135,6 +135,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeModelRetrieverTests.cs" />
+    <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeProviderTests.cs" />
+    <Compile Include="Infrastructure\AI\Providers\OpenCodeSessionStoreTests.cs" />
     <Compile Include="Infrastructure\Search\Algorithms\Base\ExactAlgorithmContractTestBase.cs" />
     <Compile Include="Infrastructure\Search\Algorithms\AhoCorasickStringSearchAlgorithmTests.cs" />
     <Compile Include="Infrastructure\Search\Algorithms\BitapStringSearchAlgorithmTests.cs" />
@@ -243,6 +246,10 @@
     <ProjectReference Include="..\..\src\Codinex.Infrastructure\Codinex.Infrastructure.csproj">
       <Project>{1d853c03-bfd1-42b5-a53a-15b76d1b5c0b}</Project>
       <Name>Codinex.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Codinex.Storage\Codinex.Storage.csproj">
+      <Project>{7cfe5bdb-2d98-4e9a-9508-97b18367280c}</Project>
+      <Name>Codinex.Storage</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Codinex.VisualStudio\Codinex.VisualStudio.csproj">
       <Project>{1c3dfec9-5ab4-46a3-9041-7a3f87b50ea9}</Project>

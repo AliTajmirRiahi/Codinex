@@ -86,7 +86,10 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
 
-            return !string.IsNullOrWhiteSpace(provider.ModelEndPoint);
+            // OpenCode's free-model provider uses its own "GET /provider" discovery format,
+            // handled by OpenCodeFreeModelRetriever, not the OpenAI-compatible "/models" shape.
+            return !string.IsNullOrWhiteSpace(provider.ModelEndPoint)
+                   && !string.Equals(provider.Protocol, "opendcodefree", StringComparison.OrdinalIgnoreCase);
         }
 
         public async Task<IReadOnlyList<AiModel>> GetModelsAsync(

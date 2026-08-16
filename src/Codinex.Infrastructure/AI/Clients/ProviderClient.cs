@@ -111,6 +111,56 @@ namespace Codinex.Infrastructure.AI.Clients
             using var stream = await response.Content.ReadAsStreamAsync();
             using var reader = new StreamReader(stream);
 
+            await foreach (var line in ReadEventLinesAsync(reader, cancellationToken))
+            {
+                yield return line;
+            }
+        }
+
+        public async IAsyncEnumerable<string> StreamGetAsync(
+            AiProvider provider,
+            string endpoint,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            using var request = CreateRequest(
+                HttpMethod.Get,
+                provider,
+                endpoint);
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
+
+            using var response = await httpService.SendAsync(
+                request,
+                cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+
+                throw new OpenAiCompatibleException(
+                    response.StatusCode,
+                    body,
+                    response.Headers.RetryAfter?.Delta);
+            }
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var reader = new StreamReader(stream);
+
+            await foreach (var line in ReadEventLinesAsync(reader, cancellationToken))
+            {
+                yield return line;
+            }
+        }
+
+        /// <summary>
+        /// Shared Server-Sent-Events line reader used by both streaming POST and streaming GET.
+        /// Strips the "data:" prefix used by SSE payload lines and ignores SSE framing lines
+        /// ("event:", "id:", comments) that carry no payload of their own.
+        /// </summary>
+        private static async IAsyncEnumerable<string> ReadEventLinesAsync(
+            StreamReader reader,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
             while (!cancellationToken.IsCancellationRequested)
             {
                 var readTask = reader.ReadLineAsync();
@@ -140,6 +190,9 @@ namespace Codinex.Infrastructure.AI.Clients
                     yield return line.Substring(5).Trim();
                     continue;
                 }
+
+                if (line.StartsWith("event:") || line.StartsWith("id:") || line.StartsWith(":"))
+                    continue;
 
                 yield return line.Trim();
             }
