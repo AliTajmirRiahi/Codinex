@@ -98,6 +98,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\opendcodefree_models.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,18 @@
     "IsLocal": true,
     "ModelEndPoint": "/api/tags",
     "IsEnabled": false
+  },
+  {
+    "Id": "opendcodefree",
+    "Protocol": "opendcodefree",
+    "Name": "OpenCode.ai (Free Models)",
+    "Icon": "opencode-logo-light",
+    "ApiKey": "",
+    "BaseUrl": "http://127.0.0.1:4096",
+    "NeedApiKey": false,
+    "IsLocal": false,
+    "ModelEndPoint": "/provider",
+    "IsEnabled": false
   }
 ]
 

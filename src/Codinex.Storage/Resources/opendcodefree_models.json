@@ -1,0 +1,10 @@
+[
+  {
+    "Id": "deepseek-v4-flash-free",
+    "Name": "DeepSeek V4 Flash (Free)",
+    "TokenLimit": 128000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  }
+]
