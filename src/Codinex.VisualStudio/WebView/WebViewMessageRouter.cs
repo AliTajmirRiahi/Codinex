@@ -17,8 +17,10 @@ using Codinex.Storage.Models;
 using Codinex.Storage.Models.DTO;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References;
+using EnvDTE;
 using Codinex.VisualStudio.Tools.BuiltIn.Clarification;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
+using Process = System.Diagnostics.Process;
 
 namespace Codinex.VisualStudio.WebView;
 
@@ -401,6 +403,19 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var dte = await _visualStudio.GetDteAsync();
         dte?.ItemOperations.OpenFile(filePath);
+
+        var startLine = request.Payload?["startLine"]?.ToObject<int?>();
+        var endLine = request.Payload?["endLine"]?.ToObject<int?>();
+
+        if (startLine is null or <= 0)
+            return;
+
+        if (dte?.ActiveDocument?.Selection is not TextSelection selection)
+            return;
+
+        selection.MoveToLineAndOffset(startLine.Value, 1, false);
+        selection.MoveToLineAndOffset(endLine ?? startLine.Value, 1, true);
+        selection.EndOfLine(true);
     }
 #pragma warning restore VSTHRD010
 
