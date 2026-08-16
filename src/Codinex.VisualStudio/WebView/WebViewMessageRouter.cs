@@ -938,6 +938,40 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
+    public Task SendSelectedCodeReferenceAsync(ReferenceItem selection)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.AddSelectedCodeReference,
+            Payload = selection,
+            Timestamp = DateTime.Now
+        };
+
+        return _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task RunDescribeOnSelectionAsync(ReferenceItem selection)
+    {
+        var defaultGroup = await _conversationGroupManager.CreateDefaultGroupAsync();
+
+        if (_conversationGroupManager.CurrentGroup?.Id != defaultGroup.Id)
+        {
+            await _conversationGroupManager.SelectGroupAsync(defaultGroup.Id);
+            await _sessionService.InitializeAsync();
+        }
+
+        await EnsureActiveChatSessionAsync();
+
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.RunDescribeOnSelection,
+            Payload = selection,
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
     public async Task SendInputLanguageChangedAsync(InputLanguageChangedEventArgs inputLanguage)
     {
         var message = new WebViewMessageResponse()

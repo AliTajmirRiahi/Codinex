@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Codinex.Core.Models;
 
 namespace Codinex.VisualStudio.Interfaces;
 
@@ -19,4 +20,17 @@ public interface IWebViewMessageRouter
     /// This is triggered when the UI is ready. It now uses the correct message type from WebViewMessageType.
     /// </summary>
     Task SendInitialDataAsync(bool includeChats = false);
+
+    /// <summary>
+    /// Adds the given selection as a reference chip in the composer, without sending anything.
+    /// Used by the "Add to Chat" editor context menu command.
+    /// </summary>
+    Task SendSelectedCodeReferenceAsync(ReferenceItem selection);
+
+    /// <summary>
+    /// Switches to the default conversation group, starts a new chat there, and asks the
+    /// WebView to attach the selection plus the "/describe" command and auto-send it.
+    /// Used by the "Describe" editor context menu command.
+    /// </summary>
+    Task RunDescribeOnSelectionAsync(ReferenceItem selection);
 }

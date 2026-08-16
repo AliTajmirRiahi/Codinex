@@ -114,6 +114,14 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onRewindChatApproved) handlers.onRewindChatApproved(payload);
                 break;
 
+            case EVENTS.ADD_SELECTED_CODE_REFERENCE:
+                if (handlers.onAddSelectedCodeReference) handlers.onAddSelectedCodeReference(payload);
+                break;
+
+            case EVENTS.RUN_DESCRIBE_ON_SELECTION:
+                if (handlers.onRunDescribeOnSelection) handlers.onRunDescribeOnSelection(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }

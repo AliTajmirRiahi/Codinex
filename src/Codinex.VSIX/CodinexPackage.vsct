@@ -6,6 +6,26 @@
 
   <Commands package="guidCodinexPackage">
 
+    <Menus>
+      <Menu guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsMenu" priority="0x0500" type="Menu">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsTopGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Codinex Actions</ButtonText>
+          <CommandName>Codinex Actions</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+
+    <Groups>
+      <Group guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsTopGroup" priority="0x0001">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+      <Group guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsGroup" priority="0x0100">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsMenu" />
+      </Group>
+    </Groups>
+
     <Buttons>
       <Button guid="guidCodinexPackageCmdSet" id="cmdidCodinexToolWindowCommand" priority="0x0100" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
@@ -13,6 +33,22 @@
         <Strings>
           <ButtonText>Codinex AI</ButtonText>
           <LocCanonicalName>.View.CodinexAI</LocCanonicalName>
+        </Strings>
+      </Button>
+
+      <Button guid="guidCodinexPackageCmdSet" id="cmdidAddToChat" priority="0x0100" type="Button">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsGroup" />
+        <Strings>
+          <ButtonText>Add to Chat</ButtonText>
+          <CommandName>Add to Chat</CommandName>
+        </Strings>
+      </Button>
+
+      <Button guid="guidCodinexPackageCmdSet" id="cmdidDescribeSelection" priority="0x0200" type="Button">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsGroup" />
+        <Strings>
+          <ButtonText>Describe</ButtonText>
+          <CommandName>Describe</CommandName>
         </Strings>
       </Button>
     </Buttons>
@@ -40,6 +76,11 @@
     <!-- ✅ This is the command set GUID — keep as is -->
     <GuidSymbol name="guidCodinexPackageCmdSet" value="{f695020e-3b35-40ae-b466-57fc5bbe2d6c}">
       <IDSymbol name="cmdidCodinexToolWindowCommand" value="0x0100" />
+      <IDSymbol name="cmdidCodinexActionsTopGroup" value="0x010F" />
+      <IDSymbol name="cmdidCodinexActionsMenu" value="0x0110" />
+      <IDSymbol name="cmdidCodinexActionsGroup" value="0x0111" />
+      <IDSymbol name="cmdidAddToChat" value="0x0112" />
+      <IDSymbol name="cmdidDescribeSelection" value="0x0113" />
     </GuidSymbol>
 
     <!-- ✅ Icon GUID -->
