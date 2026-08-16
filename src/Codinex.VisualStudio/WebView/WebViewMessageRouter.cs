@@ -950,7 +950,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         return _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task RunDescribeOnSelectionAsync(ReferenceItem selection)
+    public async Task RunCommandOnSelectionAsync(ReferenceItem selection, string commandName)
     {
         var defaultGroup = await _conversationGroupManager.CreateDefaultGroupAsync();
 
@@ -964,8 +964,12 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
         var message = new WebViewMessageResponse()
         {
-            Type = WebViewMessageType.RunDescribeOnSelection,
-            Payload = selection,
+            Type = WebViewMessageType.RunCommandOnSelection,
+            Payload = new
+            {
+                Selection = selection,
+                CommandName = commandName
+            },
             Timestamp = DateTime.Now
         };
 

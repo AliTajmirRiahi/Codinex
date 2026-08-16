@@ -51,6 +51,22 @@
           <CommandName>Describe</CommandName>
         </Strings>
       </Button>
+
+      <Button guid="guidCodinexPackageCmdSet" id="cmdidDocumentSelection" priority="0x0300" type="Button">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsGroup" />
+        <Strings>
+          <ButtonText>Document</ButtonText>
+          <CommandName>Document</CommandName>
+        </Strings>
+      </Button>
+
+      <Button guid="guidCodinexPackageCmdSet" id="cmdidMakeItBetterSelection" priority="0x0400" type="Button">
+        <Parent guid="guidCodinexPackageCmdSet" id="cmdidCodinexActionsGroup" />
+        <Strings>
+          <ButtonText>Make it Better</ButtonText>
+          <CommandName>Make it Better</CommandName>
+        </Strings>
+      </Button>
     </Buttons>
 
     <Bitmaps>
@@ -81,6 +97,8 @@
       <IDSymbol name="cmdidCodinexActionsGroup" value="0x0111" />
       <IDSymbol name="cmdidAddToChat" value="0x0112" />
       <IDSymbol name="cmdidDescribeSelection" value="0x0113" />
+      <IDSymbol name="cmdidDocumentSelection" value="0x0114" />
+      <IDSymbol name="cmdidMakeItBetterSelection" value="0x0115" />
     </GuidSymbol>
 
     <!-- ✅ Icon GUID -->

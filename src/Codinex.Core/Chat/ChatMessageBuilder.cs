@@ -237,6 +237,13 @@ namespace Codinex.Core.Chat
             });
         }
 
+        /// <summary>
+        /// Formats the workspace prompt context sections and items as markdown content for the prompt profile.
+        /// </summary>
+        /// <param name="promptContext">The workspace prompt context to format.</param>
+        /// <returns>
+        /// A trimmed markdown representation of the workspace context, or an empty string when no context sections are available.
+        /// </returns>
         private static string BuildWorkspaceProfileContent(PromptContext promptContext)
         {
             if (promptContext == null || promptContext.Sections.Count == 0)

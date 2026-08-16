@@ -61,6 +61,6 @@ public static class WebViewMessageType
     public const string AskUserQuestion = "ASK_USER_QUESTION";
     public const string RewindChatApproved = "REWIND_CHAT_APPROVED";
     public const string AddSelectedCodeReference = "ADD_SELECTED_CODE_REFERENCE";
-    public const string RunDescribeOnSelection = "RUN_DESCRIBE_ON_SELECTION";
+    public const string RunCommandOnSelection = "RUN_COMMAND_ON_SELECTION";
 
 }
