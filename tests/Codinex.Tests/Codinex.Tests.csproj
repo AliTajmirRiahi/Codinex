@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeModelRetrieverTests.cs" />
     <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeProviderTests.cs" />
+    <Compile Include="Infrastructure\AI\Providers\OpenCodeProviderCapabilityCheckerTests.cs" />
     <Compile Include="Infrastructure\AI\Providers\OpenCodeSessionStoreTests.cs" />
     <Compile Include="Infrastructure\Search\Algorithms\Base\ExactAlgorithmContractTestBase.cs" />
     <Compile Include="Infrastructure\Search\Algorithms\AhoCorasickStringSearchAlgorithmTests.cs" />

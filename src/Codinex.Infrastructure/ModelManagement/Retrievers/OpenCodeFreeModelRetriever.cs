@@ -23,8 +23,6 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
     {
         private const string Protocol = "opendcodefree";
 
-        private const string UpstreamProviderId = "opencode";
-
         public bool CanHandle(AiProvider provider)
         {
             if (provider == null)
@@ -44,8 +42,7 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
 
             var payload = jsonSerializer.Deserialize<OpenCodeProviderListResponseDto>(response);
 
-            var upstreamProvider = payload?.All?.FirstOrDefault(p =>
-                string.Equals(p.Id, UpstreamProviderId, StringComparison.OrdinalIgnoreCase));
+            var upstreamProvider = OpenCodeCatalog.FindUpstreamProvider(payload);
 
             if (upstreamProvider?.Models == null)
                 return [];
