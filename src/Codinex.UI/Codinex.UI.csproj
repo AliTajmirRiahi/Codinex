@@ -108,6 +108,8 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\openai.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-code.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\opencode-logo-light.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\magic-wand-sparkles.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\check-compact.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
