@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Codinex.Core.Chat;
 using Codinex.Core.Interfaces;
 using Microsoft.VisualStudio.Shell;
@@ -78,7 +79,7 @@ namespace Codinex.VisualStudio.CommitMessages
                 Tag = MarkerTag,
                 VerticalAlignment = VerticalAlignment.Center,
                 Margin = _isIconRow ? new Thickness(2, 0, 0, 0) : new Thickness(4, 2, 4, 2),
-                HorizontalAlignment = _isIconRow ? HorizontalAlignment.Left : HorizontalAlignment.Stretch
+                HorizontalAlignment = _isIconRow ? HorizontalAlignment.Left : HorizontalAlignment.Stretch,
             };
 
             if (!_isIconRow && point.HostPanel is Grid grid)
@@ -152,12 +153,19 @@ namespace Codinex.VisualStudio.CommitMessages
 
             if (_isIconRow)
             {
-                // Icon-only, flat (no chrome) — same footprint and look as the native wand/'#'
-                // buttons beside it: just the glyph, no visible button background/border at rest.
-                button.Content = GitCommitIcons.CreateWandSparkles(14);
-                button.Padding = new Thickness(2);
+                button.Content = GitCommitIcons.CreateWandSparkles(16);
+                button.Padding = new Thickness(0);
+                button.Margin = new Thickness(0);
+                button.Background = Brushes.Transparent;
                 button.BorderThickness = new Thickness(0);
+
                 button.HorizontalAlignment = HorizontalAlignment.Left;
+                button.VerticalAlignment = VerticalAlignment.Center;
+
+                button.Width = 24;
+                button.MinWidth = 24;
+                button.MaxWidth = 24;
+
                 return button;
             }
 
