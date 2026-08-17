@@ -146,6 +146,7 @@
     <Compile Include="Models\DiagnosticItem.cs" />
     <Compile Include="Models\DiagnosticSeverity.cs" />
     <Compile Include="Models\DiagnosticsScope.cs" />
+    <Compile Include="Models\GitCommit.cs" />
     <Compile Include="Models\GitContext.cs" />
     <Compile Include="Models\GitFileItem.cs" />
     <Compile Include="Models\GitFileStatus.cs" />

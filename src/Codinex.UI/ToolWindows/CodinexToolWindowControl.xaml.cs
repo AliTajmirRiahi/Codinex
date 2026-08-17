@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Web.WebView2.Core;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,6 +108,10 @@ namespace Codinex.UI.ToolWindows
             await RegisterWebViewHandlersAsync();
 
             await InitializeWebViewZoomAsync();
+
+            var gitContextProvider = _serviceProvider.GetRequiredService<IGitContextProvider>();
+
+            var tt = await gitContextProvider.GetContextAsync(CancellationToken.None);
 
             WebView.CoreWebView2.Navigate(
                 "http://codinex.resources/Chat/view/chat-view.html"
