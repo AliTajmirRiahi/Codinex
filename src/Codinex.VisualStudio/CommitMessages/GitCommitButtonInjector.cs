@@ -153,7 +153,7 @@ namespace Codinex.VisualStudio.CommitMessages
 
             if (_isIconRow)
             {
-                button.Content = GitCommitIcons.CreateWandSparkles(16);
+                button.Content = GitCommitIcons.CreateWandSparkles(18);
                 button.Padding = new Thickness(0);
                 button.Margin = new Thickness(0);
                 button.Background = Brushes.Transparent;
@@ -171,7 +171,7 @@ namespace Codinex.VisualStudio.CommitMessages
 
             button.SetResourceReference(FrameworkElement.StyleProperty, VsResourceKeys.ButtonStyleKey);
 
-            var icon = GitCommitIcons.CreateWandSparkles();
+            var icon = GitCommitIcons.CreateWandSparkles(18);
             var label = new TextBlock
             {
                 Text = "Generate Commit Message",
