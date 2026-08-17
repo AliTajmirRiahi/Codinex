@@ -125,6 +125,104 @@ public class OpenCodeFreeProviderTests
     }
 
     [Test]
+    public async Task SendStreamAsync_ShouldDeriveDeltaFromCumulativeText_WhenDeltaFieldIsAbsent()
+    {
+        // Some OpenCode versions/models only send the cumulative "text" on each part update
+        // instead of an incremental "delta". The provider must still stream progressively.
+        SetUpSession("sess-1");
+        SetUpEvents(
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","type":"text","text":"Hel"}}}""",
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","type":"text","text":"Hello"}}}""",
+            """{"type":"session.idle","properties":{"sessionID":"sess-1"}}""");
+
+        var sut = CreateSut();
+
+        var events = await sut.SendStreamAsync(Messages("Hi")).ToListAsync();
+
+        var deltas = events.Where(e => e.Type == ConversationEventType.TextDelta).Select(e => e.Payload!.ToString()).ToList();
+
+        deltas.Should().Equal("Hel", "lo");
+    }
+
+    [Test]
+    public async Task SendStreamAsync_ShouldNotEmitDuplicateDelta_WhenCumulativeTextIsUnchanged()
+    {
+        SetUpSession("sess-1");
+        SetUpEvents(
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","type":"text","text":"Hi"}}}""",
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","type":"text","text":"Hi"}}}""",
+            """{"type":"session.idle","properties":{"sessionID":"sess-1"}}""");
+
+        var sut = CreateSut();
+
+        var events = await sut.SendStreamAsync(Messages("Hi")).ToListAsync();
+
+        var deltas = events.Where(e => e.Type == ConversationEventType.TextDelta).Select(e => e.Payload!.ToString()).ToList();
+
+        deltas.Should().Equal("Hi");
+    }
+
+    [Test]
+    public async Task SendStreamAsync_ShouldPreferExplicitDelta_OverCumulativeTextDiffing()
+    {
+        SetUpSession("sess-1");
+        SetUpEvents(
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","type":"text","text":"Hello"},"delta":"Hello"}}""",
+            """{"type":"session.idle","properties":{"sessionID":"sess-1"}}""");
+
+        var sut = CreateSut();
+
+        var events = await sut.SendStreamAsync(Messages("Hi")).ToListAsync();
+
+        var deltas = events.Where(e => e.Type == ConversationEventType.TextDelta).Select(e => e.Payload!.ToString()).ToList();
+
+        deltas.Should().Equal("Hello");
+    }
+
+    [Test]
+    public async Task SendStreamAsync_ShouldExcludeTheUsersOwnMessageEchoedBackOnTheEventBus()
+    {
+        // The event bus republishes parts for every message in the session, including the user
+        // message we just sent (it has parts too, same as the assistant's reply). A
+        // message.updated event marks "user-msg-1" as role "user" before its part arrives, so the
+        // provider must exclude that message's text and only surface the assistant's reply.
+        SetUpSession("sess-1");
+        SetUpEvents(
+            """{"type":"message.updated","properties":{"sessionID":"sess-1","info":{"id":"user-msg-1","sessionID":"sess-1","role":"user"}}}""",
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-user","messageID":"user-msg-1","type":"text","text":"hi"},"delta":"hi"}}""",
+            """{"type":"message.updated","properties":{"sessionID":"sess-1","info":{"id":"assistant-msg-1","sessionID":"sess-1","role":"assistant"}}}""",
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-assistant","messageID":"assistant-msg-1","type":"text","text":"Hi!"},"delta":"Hi!"}}""",
+            """{"type":"session.idle","properties":{"sessionID":"sess-1"}}""");
+
+        var sut = CreateSut();
+
+        var events = await sut.SendStreamAsync(Messages("hi")).ToListAsync();
+
+        var deltas = events.Where(e => e.Type == ConversationEventType.TextDelta).Select(e => e.Payload!.ToString()).ToList();
+
+        deltas.Should().Equal("Hi!");
+    }
+
+    [Test]
+    public async Task SendStreamAsync_ShouldTreatTextAsAssistant_WhenNoRoleHasBeenConfirmedYet()
+    {
+        // Fail-open: if a part's message id hasn't been (or never gets) tagged as role "user" via
+        // a message.updated event, its text is still surfaced rather than silently dropped.
+        SetUpSession("sess-1");
+        SetUpEvents(
+            """{"type":"message.part.updated","properties":{"sessionID":"sess-1","part":{"id":"part-1","messageID":"unknown-msg","type":"text","text":"Hi!"},"delta":"Hi!"}}""",
+            """{"type":"session.idle","properties":{"sessionID":"sess-1"}}""");
+
+        var sut = CreateSut();
+
+        var events = await sut.SendStreamAsync(Messages("hi")).ToListAsync();
+
+        var deltas = events.Where(e => e.Type == ConversationEventType.TextDelta).Select(e => e.Payload!.ToString()).ToList();
+
+        deltas.Should().Equal("Hi!");
+    }
+
+    [Test]
     public async Task SendStreamAsync_ShouldIgnoreEventsForOtherSessions()
     {
         SetUpSession("sess-1");

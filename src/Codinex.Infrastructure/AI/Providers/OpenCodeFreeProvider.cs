@@ -157,6 +157,18 @@ namespace Codinex.Infrastructure.AI.Providers
             var enumerator = client.StreamGetAsync(provider, EventsEndpoint, cancellationToken)
                 .GetAsyncEnumerator(cancellationToken);
 
+            // Some OpenCode versions/parts only carry the cumulative text on message.part.updated
+            // instead of an incremental "delta"; this tracks the last known text per part id so a
+            // delta can be derived either way (see ExtractTextDelta).
+            var knownTextByPartId = new Dictionary<string, string>(StringComparer.Ordinal);
+
+            // The event bus republishes parts for every message in the session, including the
+            // user's own message (it has parts too, same as the assistant's reply). message.updated
+            // events carry each message's role, so any message id confirmed as role "user" here is
+            // excluded from text output; anything not confirmed as "user" is treated as assistant
+            // text (fail open, so an ordering quirk never silently swallows a real reply).
+            var userMessageIds = new HashSet<string>(StringComparer.Ordinal);
+
             try
             {
                 // Open the SSE connection before sending the message, so no early events are missed.
@@ -210,16 +222,33 @@ namespace Codinex.Infrastructure.AI.Providers
                     switch (evt.Type)
                     {
                         case "message.part.updated":
+                        {
+                            var part = evt.Properties?.Part;
 
-                            if (string.Equals(evt.Properties?.Part?.Type, "text", StringComparison.OrdinalIgnoreCase)
-                                && !string.IsNullOrEmpty(evt.Properties?.Delta))
+                            if (string.Equals(part?.Type, "text", StringComparison.OrdinalIgnoreCase)
+                                && !IsKnownUserMessage(part?.MessageID, userMessageIds))
                             {
-                                yield return ConversationEvent.TextDelta(evt.Properties.Delta);
+                                var textDelta = ExtractTextDelta(
+                                    part,
+                                    evt.Properties.Delta,
+                                    knownTextByPartId);
+
+                                if (!string.IsNullOrEmpty(textDelta))
+                                {
+                                    yield return ConversationEvent.TextDelta(textDelta);
+                                }
                             }
 
                             continue;
+                        }
 
                         case "message.updated":
+
+                            if (string.Equals(evt.Properties?.Info?.Role, "user", StringComparison.OrdinalIgnoreCase)
+                                && !string.IsNullOrEmpty(evt.Properties.Info.Id))
+                            {
+                                userMessageIds.Add(evt.Properties.Info.Id);
+                            }
 
                             if (evt.Properties?.Info?.Error != null)
                             {
@@ -362,6 +391,45 @@ namespace Codinex.Infrastructure.AI.Providers
                 $"{SessionEndpoint}/{sessionId}/message",
                 payload,
                 cancellationToken);
+        }
+
+        private static bool IsKnownUserMessage(string messageId, ISet<string> userMessageIds)
+        {
+            return !string.IsNullOrEmpty(messageId) && userMessageIds.Contains(messageId);
+        }
+
+        /// <summary>
+        /// Derives the text chunk to emit for a message.part.updated event. Prefers the server's
+        /// own incremental "delta" when present; otherwise falls back to diffing the part's
+        /// cumulative "text" against what was last seen for that part id, so streaming still
+        /// works against OpenCode versions/models that only ever send the full text-so-far.
+        /// </summary>
+        private static string ExtractTextDelta(
+            OpenCodePartDto part,
+            string delta,
+            IDictionary<string, string> knownTextByPartId)
+        {
+            if (!string.IsNullOrEmpty(delta))
+                return delta;
+
+            var fullText = part?.Text;
+
+            if (string.IsNullOrEmpty(fullText))
+                return null;
+
+            var partId = part.Id ?? string.Empty;
+
+            knownTextByPartId.TryGetValue(partId, out var previousText);
+            previousText ??= string.Empty;
+
+            knownTextByPartId[partId] = fullText;
+
+            if (string.Equals(fullText, previousText, StringComparison.Ordinal))
+                return null;
+
+            return fullText.Length > previousText.Length && fullText.StartsWith(previousText, StringComparison.Ordinal)
+                ? fullText.Substring(previousText.Length)
+                : fullText;
         }
 
         private static string GetLatestUserText(IReadOnlyList<ChatMessage> messages)
