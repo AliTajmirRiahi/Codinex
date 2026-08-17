@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chat\ChatMessageBuilder.cs" />
+    <Compile Include="Chat\CommitMessageGenerator.cs" />
+    <Compile Include="Chat\NoGitChangesException.cs" />
     <Compile Include="Chat\PromptProfiler.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
     <Compile Include="Chat\ToolPromptBuilder.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Interfaces\IAiPreprocessorProvider.cs" />
     <Compile Include="Interfaces\IBuildContextFormatter.cs" />
     <Compile Include="Interfaces\IBuildContextProvider.cs" />
+    <Compile Include="Interfaces\ICommitMessageGenerator.cs" />
     <Compile Include="Interfaces\IDiagnosticsFormatter.cs" />
     <Compile Include="Interfaces\IDiagnosticsProvider.cs" />
     <Compile Include="Interfaces\IGitContextFormatter.cs" />
