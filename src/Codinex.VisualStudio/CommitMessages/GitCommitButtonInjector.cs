@@ -147,7 +147,8 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             var button = new Button
             {
-                ToolTip = "Generate Commit Message (Codinex AI)"
+                ToolTip = "Generate Commit Message (Codinex AI)",
+                Cursor = System.Windows.Input.Cursors.Hand
             };
             button.Click += (s, e) => StartGeneration();
 
@@ -200,13 +201,13 @@ namespace Codinex.VisualStudio.CommitMessages
                 VerticalAlignment = VerticalAlignment.Center
             };
 
-            var label = new TextBlock
-            {
-                Text = "Thinking on your changes...",
-                FontSize = 10,
-                Margin = new Thickness(4, 0, 0, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            };
+            //var label = new TextBlock
+            //{
+            //    Text = "Thinking on your changes...",
+            //    FontSize = 10,
+            //    Margin = new Thickness(4, 0, 0, 0),
+            //    VerticalAlignment = VerticalAlignment.Center
+            //};
 
             var row = new StackPanel
             {
@@ -215,7 +216,7 @@ namespace Codinex.VisualStudio.CommitMessages
                 VerticalAlignment = VerticalAlignment.Center
             };
             row.Children.Add(spinner);
-            row.Children.Add(label);
+            //row.Children.Add(label);
             return row;
         }
 
@@ -238,7 +239,8 @@ namespace Codinex.VisualStudio.CommitMessages
                 Content = approveContent,
                 ToolTip = "Keep the generated commit message",
                 Padding = new Thickness(4, 1, 4, 1),
-                Margin = new Thickness(0, 0, 2, 0)
+                Margin = new Thickness(0, 0, 2, 0),
+                Cursor = System.Windows.Input.Cursors.Hand
             };
             approveButton.SetResourceReference(FrameworkElement.StyleProperty, VsResourceKeys.ButtonStyleKey);
             approveButton.Click += (s, e) => Approve();
@@ -247,7 +249,8 @@ namespace Codinex.VisualStudio.CommitMessages
             {
                 Content = new TextBlock { Text = "Reject", FontSize = 10 },
                 ToolTip = "Discard the generated commit message",
-                Padding = new Thickness(4, 1, 4, 1)
+                Padding = new Thickness(4, 1, 4, 1),
+                Cursor = System.Windows.Input.Cursors.Hand
             };
             rejectButton.SetResourceReference(FrameworkElement.StyleProperty, VsResourceKeys.ButtonStyleKey);
             rejectButton.Click += (s, e) => Reject();
