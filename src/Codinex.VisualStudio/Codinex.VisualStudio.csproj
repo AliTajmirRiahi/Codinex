@@ -156,17 +156,20 @@
     <Compile Include="WebView\WebViewResourceServer.cs" />
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
+    <Compile Include="Workspace\Formatters\GitContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\MemoryFormatter.cs" />
     <Compile Include="Workspace\Formatters\OpenDocumentsFormatter.cs" />
     <Compile Include="Workspace\Formatters\ProjectContextFormatter.cs" />
     <Compile Include="Workspace\Orchestrators\BuildContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\CurrentDocumentContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\DiagnosticsContextOrchestrator.cs" />
+    <Compile Include="Workspace\Orchestrators\GitContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\MemoryContextOrchestrator.cs" />
     <Compile Include="Workspace\Orchestrators\OpenDocumentsContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\BuildContextProvider.cs" />
     <Compile Include="Workspace\Orchestrators\ProjectContextOrchestrator.cs" />
     <Compile Include="Workspace\Providers\DiagnosticsProvider.cs" />
+    <Compile Include="Workspace\Providers\GitContextProvider.cs" />
     <Compile Include="Workspace\Providers\MemoryContextProvider.cs" />
     <Compile Include="Workspace\Providers\OpenDocumentsProvider.cs" />
     <Compile Include="Workspace\Providers\ProjectContextProvider.cs" />
@@ -212,6 +215,7 @@
       <Version>20.0.15</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.ProjectSystem.Query" Version="17.14.145" />
+    <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\BuiltIn\Git\" />
