@@ -8,6 +8,9 @@ namespace Codinex.Storage.Models
         // Show assistant responses as they are generated.
         public bool EnableStreamingChat { get; set; } = true;
 
+        // Bypasses the Code Changes preview and applies workspace changes directly when the solution is under source control.
+        public bool ByPassPreviewChangeAndApplyChangeDirectly { get; set; }
+
         // Enables preprocessing prompts through a local AI provider before sending them to the main chat model.
         public bool EnablePreprocessorAi { get; set; }
 

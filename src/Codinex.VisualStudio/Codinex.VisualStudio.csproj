@@ -165,6 +165,7 @@
     <Compile Include="ToolWindowGuids.cs" />
     <Compile Include="VsActiveDocumentWatcher.cs" />
     <Compile Include="Services\VsWorkspaceContext.cs" />
+    <Compile Include="SourceControl\SourceControlStatusService.cs" />
     <Compile Include="VsUserNotificationService.cs" />
     <Compile Include="WebView\WebViewClient.cs" />
     <Compile Include="WebView\WebViewMessageRouter.cs" />

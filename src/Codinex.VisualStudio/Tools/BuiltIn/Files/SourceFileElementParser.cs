@@ -29,8 +29,42 @@ internal static class SourceFileElementParser
         ".h",
         ".hh",
         ".hpp",
-        ".hxx"
+        ".hxx",
+        ".html",
+        ".htm"
     ];
+
+    // Elements with none of these signals (no id, not one of the always-structural tags, and no
+    // named class on one of the class-gated tags) are left out of the outline entirely — HTML has
+    // no inherent semantic units, so listing every <div>/<span> would just reproduce the ambiguity
+    // (e.g. dozens of unlabeled </label> tags) this outline exists to avoid.
+    private static readonly HashSet<string> HtmlVoidTags = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "area", "base", "br", "col", "embed", "hr", "img", "input",
+        "link", "meta", "param", "source", "track", "wbr"
+    };
+
+    private static readonly HashSet<string> HtmlAlwaysStructuralTags = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "section", "form", "nav", "header", "footer", "main", "article", "aside"
+    };
+
+    private static readonly HashSet<string> HtmlClassGatedContainerTags = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "div", "ul", "ol", "table"
+    };
+
+    private static readonly Regex HtmlTagOpenRegex = new(
+        @"<(?<tag>[A-Za-z][A-Za-z0-9-]*)(?<attrs>(?:[^>""']|""[^""]*""|'[^']*')*)>",
+        RegexOptions.Compiled);
+
+    private static readonly Regex HtmlIdAttrRegex = new(
+        @"\bid\s*=\s*(?:""(?<value>[^""]*)""|'(?<value>[^']*)')",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+    private static readonly Regex HtmlClassAttrRegex = new(
+        @"\bclass\s*=\s*(?:""(?<value>[^""]*)""|'(?<value>[^']*)')",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     private static readonly HashSet<string> JavaScriptLikeControlKeywords = new(StringComparer.Ordinal)
     {
@@ -74,6 +108,7 @@ internal static class SourceFileElementParser
             ".java" => "java",
             ".c" or ".h" => "c",
             ".cc" or ".cpp" or ".cxx" or ".hh" or ".hpp" or ".hxx" => "cpp",
+            ".html" or ".htm" => "html",
             _ => "text"
         };
     }
@@ -113,6 +148,14 @@ internal static class SourceFileElementParser
                 language,
                 relativePath,
                 ParseBraceLanguage(content, language));
+        }
+
+        if (language == "html")
+        {
+            return FinalizeTextElementIds(
+                language,
+                relativePath,
+                ParseHtml(content));
         }
 
         return [];
@@ -679,6 +722,200 @@ internal static class SourceFileElementParser
             StripInlineComment(line).Trim().TrimEnd(';'),
             ExtractBraceOrStatementSource(content, start),
             order);
+    }
+
+    /// <summary>
+    /// HTML has no inherent semantic units, so instead of enumerating every node, only two kinds of
+    /// anchor are exposed: elements with an <c>id</c> attribute (the highest-value, most stable
+    /// anchors), and structural containers as a fallback — always for a fixed set of semantic tags
+    /// (section, form, nav, header, footer, main, article, aside), and for div/ul/ol/table only when
+    /// they carry a named class. Everything else (bare divs, spans, labels with neither) is left out;
+    /// the model is expected to anchor edits to those via a single verified line instead (see the
+    /// "Unsupported source file type" guidance in the system prompt, which still applies to any
+    /// element not covered by this outline).
+    /// </summary>
+    private static IReadOnlyList<SourceFileElement> ParseHtml(string content)
+    {
+        var elements = new List<SourceFileElement>();
+        var order = 0;
+        var pos = 0;
+
+        while (pos < content.Length)
+        {
+            if (IsCommentStart(content, pos))
+            {
+                pos = SkipComment(content, pos);
+                continue;
+            }
+
+            var tagMatch = HtmlTagOpenRegex.Match(content, pos);
+
+            if (!tagMatch.Success)
+            {
+                break;
+            }
+
+            var tagName = tagMatch.Groups["tag"].Value;
+            var attrs = tagMatch.Groups["attrs"].Value;
+            var isSelfClosing = attrs.TrimEnd().EndsWith("/", StringComparison.Ordinal);
+            var tagStart = tagMatch.Index;
+            var tagEnd = tagMatch.Index + tagMatch.Length;
+
+            var idMatch = HtmlIdAttrRegex.Match(attrs);
+            var classMatch = HtmlClassAttrRegex.Match(attrs);
+            var id = idMatch.Success ? idMatch.Groups["value"].Value : null;
+            var className = classMatch.Success ? classMatch.Groups["value"].Value : null;
+            var hasNamedClass = !string.IsNullOrWhiteSpace(className);
+
+            var isAnchor = !string.IsNullOrEmpty(id) ||
+                HtmlAlwaysStructuralTags.Contains(tagName) ||
+                (HtmlClassGatedContainerTags.Contains(tagName) && hasNamedClass);
+
+            if (isAnchor)
+            {
+                var blockEnd = tagEnd;
+
+                if (!isSelfClosing && !HtmlVoidTags.Contains(tagName))
+                {
+                    var closeEnd = FindMatchingHtmlCloseTag(content, tagEnd, tagName);
+                    blockEnd = closeEnd >= 0 ? closeEnd : tagEnd;
+                }
+
+                var name = !string.IsNullOrEmpty(id)
+                    ? id
+                    : hasNamedClass
+                        ? className.Split([' '], StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? tagName
+                        : tagName;
+
+                elements.Add(new SourceFileElement
+                {
+                    Kind = ToTitleCase(tagName),
+                    Name = name,
+                    Signature = Clean(tagMatch.Value),
+                    Source = content.Substring(tagStart, blockEnd - tagStart),
+                    Order = order++
+                });
+            }
+
+            if (!isSelfClosing && IsRawTextTag(tagName))
+            {
+                pos = SkipRawTextContent(content, tagEnd, tagName);
+                continue;
+            }
+
+            pos = tagEnd;
+        }
+
+        return elements;
+    }
+
+    private static readonly Regex HtmlAnyTagRegex = new(
+        @"<(?<close>/)?(?<name>[A-Za-z][A-Za-z0-9-]*)(?<attrs>(?:[^>""']|""[^""]*""|'[^']*')*)>",
+        RegexOptions.Compiled);
+
+    /// <summary>
+    /// Scans forward from just past a start tag's '&gt;' for the <c>&lt;/tagName&gt;</c> that closes
+    /// it, tracking every open/close tag it passes (not just same-name ones) so a nested
+    /// &lt;script&gt;/&lt;style&gt; block's raw content — which can contain '&lt;' characters that
+    /// look like markup, e.g. a JS comparison or CSS selector — is always skipped rather than only
+    /// when it happens to fall on a position this scan already stopped at. Same-name nesting (e.g. a
+    /// &lt;div&gt; containing another &lt;div&gt;) is tracked via <paramref name="tagName"/>'s depth so
+    /// the match closes on the correct, outer, close tag. Returns the index just past the matching
+    /// close tag's '&gt;', or -1 if the file has no matching close tag (malformed/truncated markup).
+    /// </summary>
+    private static int FindMatchingHtmlCloseTag(string content, int searchStart, string tagName)
+    {
+        var depth = 1;
+        var pos = searchStart;
+
+        while (pos < content.Length)
+        {
+            if (IsCommentStart(content, pos))
+            {
+                pos = SkipComment(content, pos);
+                continue;
+            }
+
+            var match = HtmlAnyTagRegex.Match(content, pos);
+
+            if (!match.Success)
+            {
+                return -1;
+            }
+
+            var name = match.Groups["name"].Value;
+            var isClose = match.Groups["close"].Success;
+            var isSelfClosing = match.Groups["attrs"].Value.TrimEnd().EndsWith("/", StringComparison.Ordinal);
+            var tagEnd = match.Index + match.Length;
+
+            if (isClose)
+            {
+                if (string.Equals(name, tagName, StringComparison.OrdinalIgnoreCase))
+                {
+                    depth--;
+
+                    if (depth == 0)
+                    {
+                        return tagEnd;
+                    }
+                }
+
+                pos = tagEnd;
+                continue;
+            }
+
+            if (!isSelfClosing &&
+                !HtmlVoidTags.Contains(name) &&
+                string.Equals(name, tagName, StringComparison.OrdinalIgnoreCase))
+            {
+                depth++;
+            }
+
+            if (!isSelfClosing && IsRawTextTag(name))
+            {
+                pos = SkipRawTextContent(content, tagEnd, name);
+                continue;
+            }
+
+            pos = tagEnd;
+        }
+
+        return -1;
+    }
+
+    private static bool IsRawTextTag(string tagName)
+    {
+        return tagName.Equals("script", StringComparison.OrdinalIgnoreCase) ||
+            tagName.Equals("style", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static int SkipRawTextContent(string content, int contentStart, string tagName)
+    {
+        var closeIndex = content.IndexOf(
+            "</" + tagName,
+            contentStart,
+            StringComparison.OrdinalIgnoreCase);
+
+        if (closeIndex < 0)
+        {
+            return content.Length;
+        }
+
+        var closeEnd = content.IndexOf('>', closeIndex);
+
+        return closeEnd < 0 ? content.Length : closeEnd + 1;
+    }
+
+    private static bool IsCommentStart(string content, int pos)
+    {
+        return pos + 4 <= content.Length && string.CompareOrdinal(content.Substring(pos, 4), "<!--") == 0;
+    }
+
+    private static int SkipComment(string content, int pos)
+    {
+        var end = content.IndexOf("-->", pos, StringComparison.Ordinal);
+
+        return end < 0 ? content.Length : end + 3;
     }
 
     private static IReadOnlyList<SourceFileElement> FinalizeTextElementIds(

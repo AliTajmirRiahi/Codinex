@@ -28,6 +28,14 @@ public interface IChangesetSessionService
         CancellationToken cancellationToken);
 
     /// <summary>
+    /// Applies every validated change directly without opening the Code Changes review window.
+    /// This is only intended for source-controlled solutions when the user explicitly enabled bypass mode.
+    /// </summary>
+    Task<ChangesetOutcome> ApplyDirectAsync(
+        WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult);
+
+    /// <summary>
     /// Called when a decision arrives from the review UI. If a live <see cref="RunReviewAsync"/> call
     /// is awaiting this id, resolves it and lets that call finalize. Otherwise (the review was restored
     /// after a restart, so nothing is awaiting it) finalizes it directly here.
