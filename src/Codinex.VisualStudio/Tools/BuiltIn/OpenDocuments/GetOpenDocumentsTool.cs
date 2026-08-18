@@ -55,6 +55,9 @@ public sealed class GetOpenDocumentsTool(
 
             documents ??= [];
 
+            // Name duplicates Metadata.FilePath's file name, Value duplicates Metadata.FilePath
+            // itself, and Description is always the static string "Open document" — none of
+            // that is worth repeating per row, so only the fields that actually vary go out.
             return ToolResult.Successful(
                 request.Id,
                 new
@@ -66,13 +69,7 @@ public sealed class GetOpenDocumentsTool(
                         .Select(document => new
                         {
                             document.Id,
-                            document.Name,
-                            document.Description,
-                            Type = document.Type.ToString(),
-                            document.Value,
                             document.Metadata.FilePath,
-                            document.Metadata.ProjectName,
-                            document.Metadata.ContainerName,
                             document.Metadata.StartLine,
                             document.Metadata.EndLine
                         })

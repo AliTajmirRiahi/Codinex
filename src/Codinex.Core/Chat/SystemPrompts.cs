@@ -18,8 +18,11 @@ namespace Codinex.Core.Chat
 
                                                      - Never invent file names, classes, methods, APIs, or other codebase details — verify against the workspace instead of assuming. Inspect the workspace before answering whenever something relevant is unverified.
                                                      - Minimize tool calls: check what's already in your current context before calling a tool, don't re-read a file already in context, and don't repeat a call once you have its result (e.g., no second search_project once you know the file path).
+                                                     - Never re-issue a search_project call with the same query and type you already ran in this conversation — check your own tool call history first and reuse the earlier result instead.
+                                                     - Never search_project for common language boilerplate (e.g. a using/import statement, a namespace declaration, a closing brace) to decide where to add one — just add it directly at the conventional location; the compiler/diagnostics will catch a mistake far cheaper than a broad text search.
                                                      - Call change_set_creator only once you've gathered everything needed to produce the complete change set.
                                                      - If a tool result includes "completed": true, that work is already done — don't call it again unless the user asks for further changes. Summarize the result instead.
+                                                     - Stop exploring once you've found a working integration point (e.g. an existing lifecycle hook like Loaded/Unloaded, a constructor/Dispose pair, an existing event subscription). Wire into it directly rather than continuing to search for alternate hooks "just in case" — only keep looking if the direct hook you found turns out to be unavailable or unsuitable.
 
                                                      ## Editing code
                                                      Preserve the existing coding style and architecture unless the user explicitly asks otherwise.
@@ -42,7 +45,16 @@ namespace Codinex.Core.Chat
                                                      - multiple files could match,
                                                      - the user asks to find usages/references across the workspace,
                                                      - or the requested information cannot be determined from the identified file.
-                                                     
+
+                                                     ## When get_file_elements reports "Unsupported source file type"
+
+                                                     This means the file's structure could not be parsed, so you have no verified element boundaries to build a multi-line Search from — you cannot see the file's exact whitespace, indentation, or line endings well enough to reconstruct a multi-line block from memory.
+
+                                                     - Never construct a multi-line Search by reconstructing several lines yourself; a guessed blank line, indent, or line ending will make it fail to match.
+                                                     - Instead, anchor each text change on a single line you have directly verified from the raw file content (via read_file), and chain edits using Before/After on other verified single lines rather than expanding Search across multiple lines.
+                                                     - Never guess the whitespace or content of any line between two anchors — if you need to change something spanning multiple lines, split it into a sequence of single-line-anchored changes instead of one multi-line Search.
+                                                     - This reduces failures but does not eliminate them, since you still cannot see the file directly — if a change still fails to resolve, narrow further with Before/After on the same verified line rather than re-guessing a multi-line block.
+
                                                      """;
 
         public const string PreprocessorSystemPrompt = """
