@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="Events\Build\BuildEventsListener.cs" />
     <Compile Include="CommitMessages\CommitTextBoxWriter.cs" />
+    <Compile Include="CommitMessages\GitChangesInfoBar.cs" />
     <Compile Include="CommitMessages\GitCommitButtonInjector.cs" />
     <Compile Include="CommitMessages\GitCommitButtonWatcher.cs" />
     <Compile Include="CommitMessages\GitCommitGenerationState.cs" />

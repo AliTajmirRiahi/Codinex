@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Chat\ChatMessageBuilder.cs" />
     <Compile Include="Chat\CommitMessageGenerator.cs" />
+    <Compile Include="Chat\CommitMessageProviderException.cs" />
     <Compile Include="Chat\NoGitChangesException.cs" />
     <Compile Include="Chat\PromptProfiler.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
