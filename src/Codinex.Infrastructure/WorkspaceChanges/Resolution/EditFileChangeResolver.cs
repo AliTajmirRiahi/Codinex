@@ -125,7 +125,8 @@ public sealed class EditFileChangeResolver(
                     WorkspaceValidationCategory.AiRecoverable,
                     $"Could not locate text change #{textChange.Order} in '{change.FilePath}'. " +
                     "Search did not match anywhere in the current file (optionally narrowed with " +
-                    "Before/After); retry with a corrected Search."));
+                    "Before/After); retry with a corrected Search." +
+                    BuildClosestMatchHint(content, textChange.Search)));
             }
 
             var (range, originalText, resultText) = Plan(content, match, textChange.Replace);
@@ -242,6 +243,53 @@ public sealed class EditFileChangeResolver(
             MatchedText = content.Substring(start, search.Length),
             Error = null
         };
+    }
+
+    /// <summary>
+    /// On a failed exact match, runs a fuzzy search to find the closest candidate location and
+    /// returns a short hint quoting the actual text there, so the caller can correct its Search
+    /// in one retry instead of guessing blindly against a bare "not found" message.
+    /// </summary>
+    private string BuildClosestMatchHint(string content, string search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return string.Empty;
+
+        try
+        {
+            var fuzzyMatches = codeSearchEngine.Search(new SearchRequest
+            {
+                Text = content,
+                Pattern = search,
+                Options = new StringSearchOptions
+                {
+                    ComparisonMode = SearchMode.Fuzzy
+                }
+            }).Matches;
+
+            var best = fuzzyMatches.OrderByDescending(m => m.Score).FirstOrDefault();
+
+            if (best == null)
+                return string.Empty;
+
+            var start = Math.Max(0, best.StartIndex);
+            var matchLength = best.EndIndex - best.StartIndex;
+            var length = Math.Min(matchLength > 0 ? matchLength : search.Length, content.Length - start);
+
+            if (length <= 0)
+                return string.Empty;
+
+            var snippet = content.Substring(start, length);
+
+            return $" The closest match found in the file (line {best.StartLine}) is:\n" +
+                $"---\n{snippet}\n---";
+        }
+        catch (Exception ex) when (ex is NotSupportedException or InvalidOperationException)
+        {
+            // No fuzzy-capable algorithm registered, or the pattern is unsupported — omit the hint
+            // rather than fail resolution over a best-effort diagnostic.
+            return string.Empty;
+        }
     }
 
     private static HashSet<int> FilterByBefore(string content, HashSet<int> starts, int searchLength, string before)

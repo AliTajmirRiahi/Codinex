@@ -112,14 +112,24 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 .Take(take)
                 .ToList();
 
-            var data = new 
+            // FullPath is intentionally omitted: it repeats the same workspace-root prefix on
+            // every row and is redundant with RelativePath, which is all downstream tools need.
+            var data = new
             {
                 Query = query,
                 Type = type,
                 TotalCount = totalCount,
                 ReturnedCount = limitedResults.Count,
                 IsTruncated = totalCount > limitedResults.Count,
-                Results = limitedResults
+                Results = limitedResults.Select(r => new
+                {
+                    r.Name,
+                    r.RelativePath,
+                    r.LineNumber,
+                    r.Column,
+                    r.Preview,
+                    r.MatchType
+                })
             };
 
             return Task.FromResult(

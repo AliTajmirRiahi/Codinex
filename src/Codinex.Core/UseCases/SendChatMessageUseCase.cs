@@ -416,7 +416,15 @@ public sealed class SendChatMessageUseCase(
 
         if (request.ConversationHistory != null)
         {
-            messages.AddRange(request.ConversationHistory.Select(CloneMessage));
+            // The preprocessor only needs to classify the user's intent, not replay tool calls
+            // and their (often large) result payloads — those are only relevant to the primary
+            // model doing the actual work, so they're dropped here rather than resent verbatim.
+            messages.AddRange(request.ConversationHistory
+                .Where(x =>
+                    (string.Equals(x.Role, "user", StringComparison.OrdinalIgnoreCase) ||
+                     string.Equals(x.Role, "assistant", StringComparison.OrdinalIgnoreCase)) &&
+                    !string.IsNullOrWhiteSpace(x.Content))
+                .Select(CloneMessage));
         }
 
         messages.Add(new ChatMessage

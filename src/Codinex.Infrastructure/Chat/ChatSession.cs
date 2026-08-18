@@ -144,9 +144,12 @@ namespace Codinex.Infrastructure.Chat
             if (count <= 0)
                 return new List<ChatMessage>();
 
+            // OrderBy+Take alone would return the OLDEST N messages; the most recent N must be
+            // selected first, then re-sorted back into chronological order for the caller.
             return _messages
-                .OrderBy(m => m.CreatedAt)
+                .OrderByDescending(m => m.CreatedAt)
                 .Take(count)
+                .OrderBy(m => m.CreatedAt)
                 .ToList();
         }
 
