@@ -17,6 +17,16 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             if (textBox == null) return false;
 
+            // Paste first: a real Ctrl+V goes through the textbox's own paste handling, which
+            // correctly preserves embedded newlines for multi-line commit messages. VS's private
+            // LabeledTextBox automation-peer implementation of IValueProvider.SetValue strips
+            // embedded newlines (title and body collapse onto one line with no separator at
+            // all), so ValuePattern is only used as a last-resort fallback below.
+            if (TryWriteViaKeyboard(textBox, text))
+            {
+                return true;
+            }
+
             try
             {
                 var peer = UIElementAutomationPeer.CreatePeerForElement(textBox)
@@ -31,10 +41,10 @@ namespace Codinex.VisualStudio.CommitMessages
             }
             catch
             {
-                // fall through to the keyboard/clipboard fallback
+                // give up — never let a UI write crash VS
             }
 
-            return TryWriteViaKeyboard(textBox, text);
+            return false;
         }
 
         private static bool TryWriteViaKeyboard(FrameworkElement textBox, string text)
@@ -54,8 +64,18 @@ namespace Codinex.VisualStudio.CommitMessages
 
                 if (previousClipboard != null)
                 {
-                    // Best-effort restore; never let clipboard cleanup fail the write.
-                    try { Clipboard.SetText(previousClipboard); } catch { /* ignore */ }
+                    // SendCtrlV() only queues the keystroke (via keybd_event) — it does not
+                    // process it. We're still running synchronously on the UI thread, so the
+                    // actual paste hasn't happened yet. Restoring the clipboard here races the
+                    // paste and silently pastes the OLD clipboard content instead of ours.
+                    // Defer the restore to ApplicationIdle so it runs only after the input
+                    // queue (including our injected keys) has actually been processed.
+                    textBox.Dispatcher.BeginInvoke(
+                        System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                        new System.Action(() =>
+                        {
+                            try { Clipboard.SetText(previousClipboard); } catch { /* ignore */ }
+                        }));
                 }
 
                 return true;

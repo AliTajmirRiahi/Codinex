@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
@@ -51,9 +52,35 @@ namespace Codinex.Core.Chat
 
             var provider = aiProviderRouter.GetCurrentProvider();
 
-            var response = await provider.SendAsync(messages, cancellationToken);
+            // SendAsync() silently swallows provider errors (network/auth/quota) and returns
+            // the error text as if it were a normal response, so it can be shown as a chat
+            // bubble. That would get written into the commit box as a fake commit message.
+            // SendStreamAsync() instead reports them as a distinct ConversationFailed event,
+            // so we can tell a real error apart from real generated content.
+            var builder = new StringBuilder();
 
-            return CleanUp(response);
+            await foreach (var conversationEvent in provider.SendStreamAsync(messages, cancellationToken))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                switch (conversationEvent.Type)
+                {
+                    case ConversationEventType.TextDelta:
+                        builder.Append(conversationEvent.Payload?.ToString());
+                        break;
+                    case ConversationEventType.ConversationFailed:
+                        throw new CommitMessageProviderException(
+                            string.IsNullOrWhiteSpace(conversationEvent.DisplayMessage)
+                                ? "The AI provider returned an error."
+                                : conversationEvent.DisplayMessage);
+                    case ConversationEventType.ConversationCancelled:
+                        throw new OperationCanceledException(cancellationToken);
+                    case ConversationEventType.ConversationCompleted:
+                        return CleanUp(builder.ToString());
+                }
+            }
+
+            return CleanUp(builder.ToString());
         }
 
         private static IReadOnlyList<GitFileItem> SelectDiffSource(IReadOnlyList<GitFileItem> files)
@@ -114,7 +141,52 @@ namespace Codinex.Core.Chat
                 trimmed = trimmed.Trim();
             }
 
-            return trimmed;
+            return NormalizeBulletStructure(trimmed);
+        }
+
+        /// <summary>
+        /// Some models don't reliably emit real newlines for the bullet list — they run the
+        /// summary and every bullet together separated by " - " instead. If that happens,
+        /// reconstruct the intended structure: summary line, blank line, one indented bullet
+        /// per line. Messages that already contain real newlines are left untouched.
+        /// </summary>
+        private static string NormalizeBulletStructure(string message)
+        {
+            if (string.IsNullOrEmpty(message) || message.Contains("\n"))
+            {
+                return message;
+            }
+
+            var segments = message.Split([" - "], StringSplitOptions.None);
+
+            if (segments.Length <= 1)
+            {
+                return message;
+            }
+
+            var builder = new StringBuilder();
+            builder.Append(segments[0].TrimEnd());
+            builder.AppendLine();
+            builder.AppendLine();
+
+            for (var i = 1; i < segments.Length; i++)
+            {
+                var bullet = segments[i].Trim();
+
+                if (bullet.Length == 0)
+                {
+                    continue;
+                }
+
+                builder.Append("       - ").Append(bullet);
+
+                if (i < segments.Length - 1)
+                {
+                    builder.AppendLine();
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }

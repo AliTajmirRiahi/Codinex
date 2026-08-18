@@ -72,6 +72,53 @@ namespace Codinex.VisualStudio.CommitMessages
             };
         }
 
+        public static Viewbox CreateCircleX(double size = 14)
+        {
+            // Lucide "circle-x": stroke-only glyph (viewBox 0 0 24 24, stroke-width 2).
+            var canvas = new Canvas { Width = 24, Height = 24 };
+
+            var circle = new System.Windows.Shapes.Ellipse
+            {
+                Width = 20,
+                Height = 20,
+                StrokeThickness = 2
+            };
+            Canvas.SetLeft(circle, 2);
+            Canvas.SetTop(circle, 2);
+            circle.SetBinding(System.Windows.Shapes.Shape.StrokeProperty, GetForegroundBinding());
+
+            var line1 = new System.Windows.Shapes.Line
+            {
+                X1 = 15, Y1 = 9, X2 = 9, Y2 = 15,
+                StrokeThickness = 2,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round
+            };
+            line1.SetBinding(System.Windows.Shapes.Shape.StrokeProperty, GetForegroundBinding());
+
+            var line2 = new System.Windows.Shapes.Line
+            {
+                X1 = 9, Y1 = 9, X2 = 15, Y2 = 15,
+                StrokeThickness = 2,
+                StrokeStartLineCap = PenLineCap.Round,
+                StrokeEndLineCap = PenLineCap.Round
+            };
+            line2.SetBinding(System.Windows.Shapes.Shape.StrokeProperty, GetForegroundBinding());
+
+            canvas.Children.Add(circle);
+            canvas.Children.Add(line1);
+            canvas.Children.Add(line2);
+
+            return new Viewbox
+            {
+                Width = size,
+                Height = size,
+                Stretch = Stretch.Uniform,
+                Child = canvas,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+        }
+
         private static System.Windows.Data.Binding GetForegroundBinding()
         {
             return new System.Windows.Data.Binding(nameof(Control.Foreground))

@@ -196,10 +196,15 @@ namespace Codinex.VisualStudio.CommitMessages
             var spinner = new ProgressBar
             {
                 IsIndeterminate = true,
-                Width = 32,
+                Width = 64,
                 Height = 3,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Stretch
             };
+            // Theme-aware moving indicator color — native equivalent of the WebView2 CSS
+            // variable --vs-access-tool-tip-color (VS auto-injects that from this same key).
+            spinner.SetResourceReference(
+                Control.ForegroundProperty,
+                Microsoft.VisualStudio.PlatformUI.EnvironmentColors.AccessKeyToolTipBrushKey);
 
             //var label = new TextBlock
             //{
@@ -209,6 +214,22 @@ namespace Codinex.VisualStudio.CommitMessages
             //    VerticalAlignment = VerticalAlignment.Center
             //};
 
+            var stopButton = new Button
+            {
+                Content = GitCommitIcons.CreateCircleX(18),
+                ToolTip = "Stop generating commit message",
+                Cursor = System.Windows.Input.Cursors.Hand,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                Padding = new Thickness(0),
+                Margin = new Thickness(4, 0, 0, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+                Width = 24,
+                MinWidth = 24,
+                MaxWidth = 24,
+            };
+            stopButton.Click += (s, e) => _cts?.Cancel();
+
             var row = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -216,6 +237,7 @@ namespace Codinex.VisualStudio.CommitMessages
                 VerticalAlignment = VerticalAlignment.Center
             };
             row.Children.Add(spinner);
+            row.Children.Add(stopButton);
             //row.Children.Add(label);
             return row;
         }
@@ -310,6 +332,12 @@ namespace Codinex.VisualStudio.CommitMessages
             {
                 errorText = "No changes to commit.";
             }
+            catch (CommitMessageProviderException ex)
+            {
+                // Real provider error (network/auth/quota/etc.) — show its actual message
+                // instead of writing it into the commit box as if it were a real message.
+                errorText = ex.Message;
+            }
             catch (Exception ex)
             {
                 errorHandler?.Handle(ex, nameof(GitCommitButtonInjector));
@@ -318,7 +346,12 @@ namespace Codinex.VisualStudio.CommitMessages
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            if (token.IsCancellationRequested) return;
+            if (token.IsCancellationRequested)
+            {
+                _state.Reset();
+                Render();
+                return;
+            }
 
             if (errorText == null && string.IsNullOrWhiteSpace(message))
             {
@@ -332,8 +365,17 @@ namespace Codinex.VisualStudio.CommitMessages
                     _state.Reset();
                     Render();
                 }
+                else if (GitChangesInfoBar.TryShowError(errorText))
+                {
+                    // Shown as a real VS InfoBar banner — go straight back to the idle wand
+                    // instead of also showing the compact inline error text.
+                    _state.Reset();
+                    Render();
+                }
                 else
                 {
+                    // InfoBar host not found (e.g. window not currently open) — fall back to
+                    // the compact inline error text in the icon row.
                     _state.SetError(errorText);
                     Render();
                     ScheduleErrorAutoReset();
