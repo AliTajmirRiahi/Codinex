@@ -46,6 +46,18 @@
     "IsLocal": false,
     "ModelEndPoint": "/provider",
     "IsEnabled": false
+  },
+  {
+    "Id": "openrouter",
+    "Protocol": "openai",
+    "Name": "OpenRouter",
+    "Icon": "openrouter",
+    "ApiKey": "",
+    "BaseUrl": "https://openrouter.ai/api/v1",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
   }
 ]
 

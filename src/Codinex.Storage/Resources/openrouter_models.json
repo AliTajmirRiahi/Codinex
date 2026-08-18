@@ -1,0 +1,102 @@
+[
+  {
+    "Id": "deepseek/deepseek-chat-v3.1:free",
+    "Name": "DeepSeek V3.1 (Free)",
+    "TokenLimit": 163840,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "deepseek/deepseek-r1:free",
+    "Name": "DeepSeek R1 (Free)",
+    "TokenLimit": 163840,
+    "SupportsImages": false,
+    "SupportsTools": false,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "meta-llama/llama-3.3-70b-instruct:free",
+    "Name": "Llama 3.3 70B Instruct (Free)",
+    "TokenLimit": 65536,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "google/gemini-2.0-flash-exp:free",
+    "Name": "Gemini 2.0 Flash Experimental (Free)",
+    "TokenLimit": 1048576,
+    "SupportsImages": true,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "google/gemma-3-27b-it:free",
+    "Name": "Gemma 3 27B IT (Free)",
+    "TokenLimit": 96000,
+    "SupportsImages": true,
+    "SupportsTools": false,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "qwen/qwen3-235b-a22b:free",
+    "Name": "Qwen3 235B A22B (Free)",
+    "TokenLimit": 40960,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "qwen/qwen-2.5-coder-32b-instruct:free",
+    "Name": "Qwen 2.5 Coder 32B Instruct (Free)",
+    "TokenLimit": 32768,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "mistralai/mistral-small-3.2-24b-instruct:free",
+    "Name": "Mistral Small 3.2 24B Instruct (Free)",
+    "TokenLimit": 96000,
+    "SupportsImages": true,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "moonshotai/kimi-k2:free",
+    "Name": "Kimi K2 (Free)",
+    "TokenLimit": 65536,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "z-ai/glm-4.5-air:free",
+    "Name": "GLM 4.5 Air (Free)",
+    "TokenLimit": 131072,
+    "SupportsImages": false,
+    "SupportsTools": true,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  }
+]
