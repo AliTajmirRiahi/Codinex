@@ -69,6 +69,23 @@ public sealed class ChangesetSessionService(
         return await FinalizeAsync(id, changeSet, resolutionResult, decision);
     }
 
+    public async Task<ChangesetOutcome> ApplyDirectAsync(
+        WorkspaceChangeSet changeSet,
+        ChangeValidationResult resolutionResult)
+    {
+        if (changeSet == null)
+            throw new ArgumentNullException(nameof(changeSet));
+
+        if (resolutionResult == null)
+            throw new ArgumentNullException(nameof(resolutionResult));
+
+        var result = await ApplyApprovedChangesAsync(changeSet.Changes.ToList(), resolutionResult);
+
+        return result.Success
+            ? ChangesetOutcome.Applied(result.ChangeSuccess)
+            : ChangesetOutcome.Failed(result.Error.Message, result.Error);
+    }
+
     public async Task SubmitDecisionAsync(Guid changesetId, ChangesetDecision decision)
     {
         if (approvalService.TryResolveIfWaiting(changesetId, decision))

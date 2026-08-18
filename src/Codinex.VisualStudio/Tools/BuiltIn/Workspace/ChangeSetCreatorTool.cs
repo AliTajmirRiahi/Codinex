@@ -6,6 +6,8 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.Tools;
+using Codinex.Storage.Managers;
+using Codinex.VisualStudio.SourceControl;
 using Codinex.Core.Tools;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace.Schemas;
 
@@ -16,7 +18,9 @@ public sealed class ChangeSetCreatorTool(
     IWorkspaceChangeParser parser,
     IWorkspaceChangeValidator validator,
     IEditFileChangeResolver changeResolver,
-    IChangesetSessionService changesetSessionService)
+    IChangesetSessionService changesetSessionService,
+    SettingsManager settingsManager,
+    ISourceControlStatusService sourceControlStatusService)
     : IAiTool
 {
 
@@ -81,7 +85,12 @@ public sealed class ChangeSetCreatorTool(
             return ToolResult.Failed(request.Id, resolutionResult.Errors);
         }
 
-        var outcome = await changesetSessionService.RunReviewAsync(changeSet, resolutionResult, cancellationToken);
+        var bypassPreview = settingsManager.Settings.ByPassPreviewChangeAndApplyChangeDirectly &&
+                            await sourceControlStatusService.IsSolutionUnderSourceControlAsync(cancellationToken);
+
+        var outcome = bypassPreview
+            ? await changesetSessionService.ApplyDirectAsync(changeSet, resolutionResult)
+            : await changesetSessionService.RunReviewAsync(changeSet, resolutionResult, cancellationToken);
 
         return outcome.Kind switch
         {

@@ -89,9 +89,23 @@
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 
+    .setting-checkbox-option.disable {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+        .setting-checkbox-option.disable input {
+            cursor: not-allowed;
+        }
+
     .setting-checkbox-option:hover {
         background: rgba(255, 255, 255, 0.04);
         border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .setting-checkbox-option.disable:hover {
+        background: transparent;
+        border-color: var(--vs-border);
     }
 
     .setting-checkbox-option input {

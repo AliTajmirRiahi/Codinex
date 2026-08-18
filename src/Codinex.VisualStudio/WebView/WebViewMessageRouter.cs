@@ -20,6 +20,7 @@ using Codinex.VisualStudio.References;
 using EnvDTE;
 using Codinex.VisualStudio.Tools.BuiltIn.Clarification;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
+using Codinex.VisualStudio.SourceControl;
 using Process = System.Diagnostics.Process;
 
 namespace Codinex.VisualStudio.WebView;
@@ -49,6 +50,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IChangesetSessionService _changesetSessionService;
     private readonly IClarificationSessionService _clarificationSessionService;
     private readonly IWorkspaceContext _workspaceContext;
+    private readonly ISourceControlStatusService _sourceControlStatusService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -72,7 +74,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IInputLanguageWatcher inputLanguageWatcher,
         IChangesetSessionService changesetSessionService,
         IClarificationSessionService clarificationSessionService,
-        IWorkspaceContext workspaceContext)
+        IWorkspaceContext workspaceContext,
+        ISourceControlStatusService sourceControlStatusService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -93,6 +96,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _changesetSessionService = changesetSessionService;
         _clarificationSessionService = clarificationSessionService;
         _workspaceContext = workspaceContext;
+        _sourceControlStatusService = sourceControlStatusService;
 
 
         RegisterEventHandlers();
@@ -251,6 +255,12 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             case WebViewMessageType.SaveSettings:
                 {
                     var payload = _payloadBinder.Bind<CodinexSettings>(request.Payload);
+
+                    if (payload.ByPassPreviewChangeAndApplyChangeDirectly &&
+                        !await _sourceControlStatusService.IsSolutionUnderSourceControlAsync(CancellationToken.None))
+                    {
+                        payload.ByPassPreviewChangeAndApplyChangeDirectly = false;
+                    }
 
                     await _settingsManager.SaveSettingsAsync(payload);
 
@@ -508,6 +518,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     {
         // Get all configured providers
         var providers = _providerManager.Providers;
+        var isSolutionUnderSourceControl = await _sourceControlStatusService.IsSolutionUnderSourceControlAsync(CancellationToken.None);
 
         Task<List<ChatSessionDocument>> chatListTask = null;
         Task<ChatSessionDocument> currentChatTask = null;
@@ -554,6 +565,10 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             WorkspaceSettings = _workspaceSettingsManager.Settings,
             ChatBlocked = _changesetSessionService.HasPending,
             SolutionDirectory = _workspaceContext.SolutionDirectory,
+            SourceControl = new
+            {
+                IsSolutionUnderSourceControl = isSolutionUnderSourceControl
+            },
             Timestamp = DateTime.Now
         };
 

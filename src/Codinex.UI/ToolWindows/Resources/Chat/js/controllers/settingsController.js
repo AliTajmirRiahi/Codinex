@@ -12,6 +12,7 @@ export function initSettingsController(transport) {
     const saveButton = $('#save-settings-modal');
     const autoAddActiveDocumentInput = $('#setting-auto-add-active-document');
     const enableStreamingChatInput = $('#setting-enable-streaming-chat');
+    const bypassPreviewChangeInput = $('#setting-bypass-preview-change');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const solutionInstructionInput = $('#setting-solution-instruction');
     const excludeDirectoriesInput = $('#setting-exclude-directories');
@@ -33,6 +34,7 @@ export function initSettingsController(transport) {
     const panels = Array.from(document.querySelectorAll('.settings-tab-panel'));
     let currentSettings = {};
     let currentWorkspaceSettings = {};
+    let canBypassPreviewChange = false;
     let localProviders = [];
     let preprocessorProviderDropDown = null;
     const preprocessorModelPaginationService = new PaginationService([], 5);
@@ -42,6 +44,28 @@ export function initSettingsController(transport) {
         if (settings[camelCaseName] !== undefined) return settings[camelCaseName];
         if (settings[pascalCaseName] !== undefined) return settings[pascalCaseName];
         return defaultValue;
+    };
+
+    const getSourceControlValue = (sourceControl) => {
+        if (!sourceControl) return false;
+        return !!(sourceControl.isSolutionUnderSourceControl ?? sourceControl.IsSolutionUnderSourceControl ?? false);
+    };
+
+    const updateBypassPreviewAvailability = () => {
+        if (!bypassPreviewChangeInput) return;
+
+        const option = bypassPreviewChangeInput.closest('.setting-checkbox-option');
+        bypassPreviewChangeInput.disabled = !canBypassPreviewChange;
+        option?.classList.toggle('disable', !canBypassPreviewChange);
+        option?.setAttribute(
+            'title',
+            canBypassPreviewChange
+                ? 'Apply workspace changes directly without preview.'
+                : 'Available only when the solution is under source control such as Git or TFS.');
+
+        if (!canBypassPreviewChange) {
+            bypassPreviewChangeInput.checked = false;
+        }
     };
 
     const getProviderValue = (provider, camelCaseName, pascalCaseName, defaultValue = '') => {
@@ -260,6 +284,15 @@ export function initSettingsController(transport) {
                 true);
         }
 
+        if (bypassPreviewChangeInput) {
+            bypassPreviewChangeInput.checked = canBypassPreviewChange && !!getValue(
+                currentSettings,
+                'byPassPreviewChangeAndApplyChangeDirectly',
+                'ByPassPreviewChangeAndApplyChangeDirectly');
+
+            updateBypassPreviewAvailability();
+        }
+
         if (enablePreprocessorAiInput) {
             enablePreprocessorAiInput.checked = !!getValue(
                 currentSettings,
@@ -391,6 +424,7 @@ export function initSettingsController(transport) {
             ...currentSettings,
             autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
             enableStreamingChat: !!enableStreamingChatInput?.checked,
+            byPassPreviewChangeAndApplyChangeDirectly: !!bypassPreviewChangeInput?.checked && canBypassPreviewChange,
             enablePreprocessorAi: data.enablePreprocessorAi,
             preprocessorAiProviderId: data.preprocessorAiProviderId,
             preprocessorAiModelId: data.preprocessorAiModelId,
@@ -437,7 +471,11 @@ export function initSettingsController(transport) {
     });
 
     return {
-        updateUI(settings, providers, workspaceSettings) {
+        updateUI(settings, providers, workspaceSettings, sourceControl) {
+            if (sourceControl) {
+                canBypassPreviewChange = getSourceControlValue(sourceControl);
+            }
+
             if (settings) {
                 currentSettings = settings;
             }
