@@ -70,6 +70,7 @@
     <Compile Include="CommitMessages\GitCommitButtonInjector.cs" />
     <Compile Include="CommitMessages\GitCommitButtonWatcher.cs" />
     <Compile Include="CommitMessages\GitCommitGenerationState.cs" />
+    <Compile Include="CommitMessages\GitCommitButtonVisibility.cs" />
     <Compile Include="CommitMessages\GitCommitIcons.cs" />
     <Compile Include="CommitMessages\GitCommitVisualTreeLocator.cs" />
     <Compile Include="Diagnostics\Errors\ErrorHandler.cs" />

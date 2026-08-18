@@ -29,6 +29,8 @@ namespace Codinex.VisualStudio.CommitMessages
         private readonly GitCommitGenerationState _state = new();
 
         private ContentControl _host;
+        private Panel _hostPanel;
+        private int? _insertedGridRow;
         private CancellationTokenSource _cts;
         private bool _isIconRow;
 
@@ -39,6 +41,12 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             try
             {
+                if (!GitCommitButtonVisibility.IsCodinexOpen)
+                {
+                    Remove();
+                    return;
+                }
+
                 var mainWindow = Application.Current?.MainWindow;
                 if (mainWindow == null) return;
 
@@ -70,9 +78,60 @@ namespace Codinex.VisualStudio.CommitMessages
             return false;
         }
 
+        public void Remove()
+        {
+            try
+            {
+                _cts?.Cancel();
+                _cts?.Dispose();
+                _cts = null;
+
+                if (_host == null) return;
+
+                if (_host.Parent is Grid grid)
+                {
+                    var row = Grid.GetRow(_host);
+                    grid.Children.Remove(_host);
+
+                    if (_insertedGridRow.HasValue && _insertedGridRow.Value >= 0 && _insertedGridRow.Value < grid.RowDefinitions.Count)
+                    {
+                        foreach (UIElement child in grid.Children)
+                        {
+                            var childRow = Grid.GetRow(child);
+                            if (childRow > row)
+                            {
+                                Grid.SetRow(child, childRow - 1);
+                            }
+                        }
+
+                        grid.RowDefinitions.RemoveAt(_insertedGridRow.Value);
+                    }
+                }
+                else if (_host.Parent is Panel panel)
+                {
+                    panel.Children.Remove(_host);
+                }
+                else
+                {
+                    _hostPanel?.Children.Remove(_host);
+                }
+
+                _host = null;
+                _hostPanel = null;
+                _insertedGridRow = null;
+                _state.Reset();
+            }
+            catch
+            {
+                // Never disrupt Visual Studio.
+            }
+        }
+
         private void Inject(GitCommitInjectionPoint point)
         {
             _isIconRow = point.IsIconRow;
+            _hostPanel = point.HostPanel;
+            _insertedGridRow = null;
 
             _host = new ContentControl
             {
@@ -89,6 +148,7 @@ namespace Codinex.VisualStudio.CommitMessages
                 var colSpan = Grid.GetColumnSpan(point.Anchor);
 
                 grid.RowDefinitions.Insert(insertRow, new RowDefinition { Height = GridLength.Auto });
+                _insertedGridRow = insertRow;
 
                 foreach (UIElement child in grid.Children)
                 {

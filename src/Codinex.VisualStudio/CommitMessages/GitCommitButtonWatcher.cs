@@ -30,6 +30,18 @@ namespace Codinex.VisualStudio.CommitMessages
 
             var injector = new GitCommitButtonInjector(commitMessageGenerator, errorHandler);
 
+            GitCommitButtonVisibility.Changed += () =>
+            {
+                if (GitCommitButtonVisibility.IsCodinexOpen)
+                {
+                    injector.TryInject();
+                }
+                else
+                {
+                    injector.Remove();
+                }
+            };
+
             _timer = new DispatcherTimer(DispatcherPriority.Background)
             {
                 Interval = PollInterval

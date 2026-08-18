@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Codinex.Core.Interfaces;
+using Codinex.VisualStudio.CommitMessages;
 using Codinex.VisualStudio.Diagnostics.Errors;
 using Codinex.VisualStudio.Interfaces;
 
@@ -37,6 +38,7 @@ namespace Codinex.UI.ToolWindows
 
                 Loaded += OnLoaded;
                 Unloaded += OnUnloaded;
+                IsVisibleChanged += OnIsVisibleChanged;
             }
             catch (Exception ex)
             {
@@ -53,6 +55,8 @@ namespace Codinex.UI.ToolWindows
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
+            GitCommitButtonVisibility.SetCodinexOpen(true);
+
             try
             {
                 // Initialize services that don't depend on WebView
@@ -273,9 +277,16 @@ namespace Codinex.UI.ToolWindows
         }
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
+            GitCommitButtonVisibility.SetCodinexOpen(false);
+
             // Visual Studio can unload tool window content during docking, auto-hide,
             // or unpin operations. Do not dispose WebView here; dispose only when the
             // tool window pane is actually disposed.
+        }
+
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            GitCommitButtonVisibility.SetCodinexOpen(IsVisible);
         }
 
         public void Dispose()
@@ -294,6 +305,8 @@ namespace Codinex.UI.ToolWindows
 
             Loaded -= OnLoaded;
             Unloaded -= OnUnloaded;
+            IsVisibleChanged -= OnIsVisibleChanged;
+            GitCommitButtonVisibility.SetCodinexOpen(false);
 
             if (_themeService != null)
             {
