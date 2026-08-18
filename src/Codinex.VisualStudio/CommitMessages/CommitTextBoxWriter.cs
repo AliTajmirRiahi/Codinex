@@ -86,6 +86,36 @@ namespace Codinex.VisualStudio.CommitMessages
             }
         }
 
+        /// <summary>
+        /// Locks/unlocks the textbox for editing without disabling it (a disabled control looks
+        /// greyed out and won't accept a still-pending paste). VS's private LabeledTextBox has
+        /// its own public IsReadOnly property (confirmed via decompiled XAML — it's already
+        /// data-bound to IsCommitMessageReadOnly natively), found here by reflection since we
+        /// don't compile against that private assembly. Falls back to IsEnabled if the control
+        /// doesn't expose IsReadOnly.
+        /// </summary>
+        public static void SetReadOnly(FrameworkElement textBox, bool readOnly)
+        {
+            if (textBox == null) return;
+
+            try
+            {
+                var property = textBox.GetType().GetProperty("IsReadOnly");
+
+                if (property != null && property.CanWrite && property.PropertyType == typeof(bool))
+                {
+                    property.SetValue(textBox, readOnly);
+                    return;
+                }
+            }
+            catch
+            {
+                // fall through to the IsEnabled fallback
+            }
+
+            textBox.IsEnabled = !readOnly;
+        }
+
         private static string TryGetClipboardText()
         {
             try

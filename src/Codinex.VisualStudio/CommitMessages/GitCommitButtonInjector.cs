@@ -390,7 +390,17 @@ namespace Codinex.VisualStudio.CommitMessages
 
             if (point != null)
             {
-                CommitTextBoxWriter.TryWrite(point.Value.CommitTextBox, message);
+                var textBox = point.Value.CommitTextBox;
+                CommitTextBoxWriter.TryWrite(textBox, message);
+
+                // Lock the box (read-only, not disabled — disabled greys it out) while the
+                // suggestion is pending, so the user reviews it via Approve/Reject instead of
+                // editing it mid-review. Deferred to ApplicationIdle: TryWrite's paste is only
+                // queued, not yet processed, at this point — locking immediately races it and
+                // a read-only/disabled control silently drops the still-pending paste.
+                textBox.Dispatcher.BeginInvoke(
+                    System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                    new Action(() => CommitTextBoxWriter.SetReadOnly(textBox, true)));
             }
 
             _state.SetResultReady();
@@ -414,22 +424,36 @@ namespace Codinex.VisualStudio.CommitMessages
 
         private void Approve()
         {
+            ReenableCommitTextBox();
             _state.Reset();
             Render();
         }
 
         private void Reject()
         {
-            var mainWindow = Application.Current?.MainWindow;
-            var point = mainWindow != null ? GitCommitVisualTreeLocator.Find(mainWindow) : null;
+            // Unlock first — clearing the box while it's still read-only would silently drop
+            // the write (same reason locking has to wait for the write to land in the first
+            // place: a read-only/disabled control ignores a still-pending paste).
+            var textBox = ReenableCommitTextBox();
 
-            if (point != null)
+            if (textBox != null)
             {
-                CommitTextBoxWriter.TryWrite(point.Value.CommitTextBox, string.Empty);
+                CommitTextBoxWriter.TryWrite(textBox, string.Empty);
             }
 
             _state.Reset();
             Render();
+        }
+
+        private static FrameworkElement ReenableCommitTextBox()
+        {
+            var mainWindow = Application.Current?.MainWindow;
+            var point = mainWindow != null ? GitCommitVisualTreeLocator.Find(mainWindow) : null;
+
+            if (point == null) return null;
+
+            CommitTextBoxWriter.SetReadOnly(point.Value.CommitTextBox, false);
+            return point.Value.CommitTextBox;
         }
     }
 }
