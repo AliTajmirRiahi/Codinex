@@ -34,6 +34,7 @@ namespace Codinex.VisualStudio.CommitMessages
         private int? _insertedGridRow;
         private CancellationTokenSource _cts;
         private bool _isIconRow;
+        private FrameworkElement _commitTextBox;
 
         /// <summary>
         /// Attempts to (re)inject the control. Safe to call repeatedly (idempotent, never throws).
@@ -120,7 +121,9 @@ namespace Codinex.VisualStudio.CommitMessages
                 _host = null;
                 _hostPanel = null;
                 _insertedGridRow = null;
+                _commitTextBox = null;
                 _state.Reset();
+                SetCommitActionButtonsEnabled(true);
             }
             catch
             {
@@ -133,6 +136,7 @@ namespace Codinex.VisualStudio.CommitMessages
             _isIconRow = point.IsIconRow;
             _hostPanel = point.HostPanel;
             _insertedGridRow = null;
+            _commitTextBox = point.CommitTextBox;
 
             _host = new ContentControl
             {
@@ -186,6 +190,11 @@ namespace Codinex.VisualStudio.CommitMessages
         private void Render()
         {
             if (_host == null) return;
+
+            // A generated message is pending user review once we reach ResultReady — keep the
+            // native "Commit All"/"Commit Staged" buttons disabled until the user explicitly
+            // approves or rejects it, so they can't commit the still-unreviewed suggestion.
+            SetCommitActionButtonsEnabled(_state.Phase != GitCommitPhase.ResultReady);
 
             switch (_state.Phase)
             {
@@ -254,27 +263,6 @@ namespace Codinex.VisualStudio.CommitMessages
 
         private StackPanel BuildThinkingRow()
         {
-            var spinner = new ProgressBar
-            {
-                IsIndeterminate = true,
-                Width = 64,
-                Height = 3,
-                VerticalAlignment = VerticalAlignment.Stretch
-            };
-            // Theme-aware moving indicator color — native equivalent of the WebView2 CSS
-            // variable --vs-access-tool-tip-color (VS auto-injects that from this same key).
-            spinner.SetResourceReference(
-                Control.ForegroundProperty,
-                Microsoft.VisualStudio.PlatformUI.EnvironmentColors.AccessKeyToolTipBrushKey);
-
-            //var label = new TextBlock
-            //{
-            //    Text = "Thinking on your changes...",
-            //    FontSize = 10,
-            //    Margin = new Thickness(4, 0, 0, 0),
-            //    VerticalAlignment = VerticalAlignment.Center
-            //};
-
             var stopButton = new Button
             {
                 Content = GitCommitIcons.CreateCircleX(18),
@@ -297,10 +285,42 @@ namespace Codinex.VisualStudio.CommitMessages
                 Margin = _isIconRow ? new Thickness(2, 0, 0, 0) : new Thickness(2, 4, 2, 4),
                 VerticalAlignment = VerticalAlignment.Center
             };
-            row.Children.Add(spinner);
             row.Children.Add(stopButton);
-            //row.Children.Add(label);
-            return row;
+
+            // Progress bar sits outside/below the row above, sized to match the commit
+            // message textbox's width (via a live binding) instead of stretching the full
+            // width of the row it used to be embedded in.
+            var spinner = new ProgressBar
+            {
+                IsIndeterminate = true,
+                Height = 3,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Margin = new Thickness(2, 2, 2, 0)
+            };
+            // Theme-aware moving indicator color — native equivalent of the WebView2 CSS
+            // variable --vs-access-tool-tip-color (VS auto-injects that from this same key).
+            spinner.SetResourceReference(
+                Control.ForegroundProperty,
+                Microsoft.VisualStudio.PlatformUI.EnvironmentColors.AccessKeyToolTipBrushKey);
+
+            if (_commitTextBox != null)
+            {
+                spinner.SetBinding(FrameworkElement.WidthProperty, new System.Windows.Data.Binding(nameof(FrameworkElement.ActualWidth))
+                {
+                    Source = _commitTextBox,
+                    Mode = System.Windows.Data.BindingMode.OneWay
+                });
+            }
+            else
+            {
+                spinner.Width = 64;
+            }
+
+            var container = new StackPanel { Orientation = Orientation.Vertical };
+            container.Children.Add(row);
+            container.Children.Add(spinner);
+
+            return container;
         }
 
         private StackPanel BuildApproveRejectRow()
@@ -504,6 +524,24 @@ namespace Codinex.VisualStudio.CommitMessages
 
             _state.Reset();
             Render();
+        }
+
+        private static void SetCommitActionButtonsEnabled(bool enabled)
+        {
+            try
+            {
+                var mainWindow = Application.Current?.MainWindow;
+                if (mainWindow == null) return;
+
+                foreach (var button in GitCommitVisualTreeLocator.FindCommitActionButtons(mainWindow))
+                {
+                    button.IsEnabled = enabled;
+                }
+            }
+            catch
+            {
+                // Never disrupt Visual Studio.
+            }
         }
 
         private static FrameworkElement ReenableCommitTextBox()
