@@ -12,7 +12,6 @@ import { messageView } from '../views/messageView.js';
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 import { ComposerView } from './composerView.js';
 import { FloatingDateSeparatorView, defaultChatDateSeparatorFormatter } from './floatingDateSeparatorView.js';
-import { ThoughtGroupView } from './thoughtGroupView.js';
 
 const ISO_DATE_TIME_WITHOUT_TIMEZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
 const EXPLICIT_TIMEZONE = /(?:z|[+-]\d{2}:?\d{2})$/i;
@@ -256,10 +255,7 @@ export const chatView = {
             container.appendChild(box);
         }
 
-        const thinkingContent = box.querySelector('.thinking-content');
-
         this.currentThinkingBox = box;
-        this.currentThoughtGroup = thinkingContent ? new ThoughtGroupView(thinkingContent) : null;
         this.thinkingStartedAt = Date.now();
         this.stopThinkingTimer();
 
@@ -275,9 +271,12 @@ export const chatView = {
     },
 
     appendThinking(chunk) {
-        if (!this.currentThoughtGroup || !chunk) return;
+        const box = this.currentThinkingBox;
+        const content = box ? box.querySelector('.thinking-content') : null;
 
-        this.currentThoughtGroup.appendChunk(chunk);
+        if (!content || !chunk) return;
+
+        content.innerHTML += chunk;
 
         scrollToBottom();
     },
@@ -320,14 +319,12 @@ export const chatView = {
 
         this.thinkingStartedAt = null;
         this.currentThinkingBox = null;
-        this.currentThoughtGroup = null;
     },
 
     resetThinking() {
         this.stopThinkingTimer();
         this.thinkingStartedAt = null;
         this.currentThinkingBox = null;
-        this.currentThoughtGroup = null;
     },
 
     getMessageDate(message) {
@@ -481,7 +478,6 @@ export const chatView = {
         this.stopThinkingTimer();
         this.thinkingStartedAt = null;
         this.currentThinkingBox = null;
-        this.currentThoughtGroup = null;
 
         container.textContent = '';
 
