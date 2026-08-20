@@ -83,6 +83,8 @@
     <Compile Include="ModelManagement\Retrievers\OpenCodeFreeModelRetriever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\JsonSerializationService.cs" />
+    <Compile Include="ThirdParty\JsonRepairSharp\JsonRepair.cs" />
+    <Compile Include="ThirdParty\JsonRepairSharp\JsonStringUtils.cs" />
     <Compile Include="Serialization\NewtonsoftPayloadBinder.cs" />
     <Compile Include="WorkspaceChanges\Resolution\EditFileChangeResolutionContext.cs" />
     <Compile Include="WorkspaceChanges\Resolution\EditFileChangeResolver.cs" />

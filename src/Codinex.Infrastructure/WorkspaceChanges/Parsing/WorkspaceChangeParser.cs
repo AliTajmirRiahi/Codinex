@@ -38,11 +38,6 @@ public sealed class WorkspaceChangeParser(
         {
             NormalizeChanges(response);
 
-            var changesToken = response["changes"];
-
-            if (changesToken == null && response["raw"]?.Type == JTokenType.String)
-                response = JObject.Parse(response["raw"].Value<string>());
-
             var dto = response.ToObject<WorkspaceChangeSetDto>();
 
             if (dto is null)
