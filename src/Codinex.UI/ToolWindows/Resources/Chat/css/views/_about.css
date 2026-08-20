@@ -189,7 +189,7 @@
 
 .donate-modal-content {
     width: 70%;
-    max-width: 480px;
+    max-width: 500px;
     height: auto;
     min-height: 320px;
 }
@@ -229,7 +229,7 @@
 
 .donate-coin-name {
     flex: 0 0 auto;
-    min-width: 78px;
+    min-width: 100px;
     color: var(--vs-foreground);
     font-size: 12px;
     font-weight: 600;
