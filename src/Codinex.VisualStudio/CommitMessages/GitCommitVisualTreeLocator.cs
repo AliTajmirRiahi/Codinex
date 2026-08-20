@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace Codinex.VisualStudio.CommitMessages
@@ -142,6 +143,97 @@ namespace Codinex.VisualStudio.CommitMessages
 
                 current = up;
             }
+        }
+
+        // The native split-button commit controls in the Git Changes window — labeled "Commit
+        // All" (no staged changes) or "Commit Staged" (some changes staged). Matched by their
+        // visible text/automation name rather than a fixed AutomationId, since (unlike the
+        // commit textbox) no stable id has been confirmed for them.
+        private static readonly string[] CommitActionButtonNames = { "Commit All", "Commit Staged" };
+
+        /// <summary>
+        /// Finds the native "Commit All"/"Commit Staged" buttons so their enabled state can be
+        /// driven while a Codinex-generated commit message is pending approval.
+        /// </summary>
+        public static IReadOnlyList<Control> FindCommitActionButtons(Window mainWindow)
+        {
+            var results = new List<Control>();
+
+            if (mainWindow == null) return results;
+
+            CollectCommitActionButtons(mainWindow, results);
+
+            return results;
+        }
+
+        private static void CollectCommitActionButtons(DependencyObject root, List<Control> results)
+        {
+            var stack = new Stack<DependencyObject>();
+            stack.Push(root);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+
+                if (current is Control control && IsCommitActionButton(control))
+                {
+                    results.Add(control);
+                }
+
+                var count = VisualTreeHelper.GetChildrenCount(current);
+                for (var i = 0; i < count; i++)
+                {
+                    stack.Push(VisualTreeHelper.GetChild(current, i));
+                }
+            }
+        }
+
+        private static bool IsCommitActionButton(Control control)
+        {
+            if (!(control is ButtonBase)) return false;
+
+            // Never touch our own injected control.
+            if ((control as FrameworkElement)?.Tag as string == "Codinex_GitCommit_Injected") return false;
+
+            if (MatchesCommitActionName(AutomationProperties.GetName(control))) return true;
+
+            return MatchesCommitActionName(ExtractText(control));
+        }
+
+        private static bool MatchesCommitActionName(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return false;
+
+            var trimmed = text.Trim();
+
+            foreach (var name in CommitActionButtonNames)
+            {
+                if (trimmed.StartsWith(name, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+
+            return false;
+        }
+
+        private static string ExtractText(DependencyObject element)
+        {
+            switch (element)
+            {
+                case TextBlock textBlock:
+                    return textBlock.Text;
+                case ContentControl { Content: string text }:
+                    return text;
+                case ContentControl { Content: TextBlock innerTextBlock }:
+                    return innerTextBlock.Text;
+            }
+
+            var count = VisualTreeHelper.GetChildrenCount(element);
+            for (var i = 0; i < count; i++)
+            {
+                var text = ExtractText(VisualTreeHelper.GetChild(element, i));
+                if (!string.IsNullOrWhiteSpace(text)) return text;
+            }
+
+            return null;
         }
 
         private static DependencyObject FindByAutomationId(DependencyObject root, string id)
