@@ -161,6 +161,122 @@
     display: none;
 }
 
+/* Grouped/collapsing thought items rendered inside .thinking-content */
+.thought-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4px;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.thought-group.hidden {
+    display: none;
+}
+
+.thought-group-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 5px 8px;
+    border: none;
+    background: transparent;
+    color: var(--vs-access-tool-tip-color);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.thought-group-toggle:hover {
+    color: var(--vs-foreground);
+}
+
+.thought-group .thinking-chevron {
+    transition: transform 0.15s ease;
+}
+
+.thought-group.collapsed .thinking-chevron {
+    transform: rotate(-90deg);
+}
+
+.thought-group-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px 6px;
+}
+
+.thought-group.collapsed .thought-group-list {
+    display: none;
+}
+
+.thought-group-list .thought-item {
+    border: none;
+    border-top: 1px solid var(--vs-border);
+    border-radius: 0;
+}
+
+.thought-item {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 400px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+
+.thought-item.thought-item-enter {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.thought-item.thought-item-folding {
+    opacity: 0.6;
+}
+
+.thought-item-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    color: var(--vs-access-tool-tip-color);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.thought-item-toggle:hover {
+    color: var(--vs-foreground);
+}
+
+.thought-item .thinking-chevron {
+    transition: transform 0.15s ease;
+}
+
+.thought-item.collapsed .thinking-chevron {
+    transform: rotate(-90deg);
+}
+
+.thought-item-text {
+    padding: 0 8px 6px 26px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--vs-class-designer-typedef-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.thought-item.collapsed .thought-item-text {
+    display: none;
+}
+
 
 .message {
     max-width: 85%;
