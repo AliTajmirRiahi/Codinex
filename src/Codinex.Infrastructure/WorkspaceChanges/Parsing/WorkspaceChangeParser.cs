@@ -39,6 +39,12 @@ public sealed class WorkspaceChangeParser(
 
         var changesToken = response["changes"];
 
+        if (changesToken == null && response["raw"]?.Type == JTokenType.String)
+        {
+            var rawObject = JObject.Parse(response["raw"].Value<string>());
+            changesToken = rawObject["changes"];
+        }
+
         System.Diagnostics.Debug.WriteLine(
             $"Changes token type: {changesToken?.Type}");
 

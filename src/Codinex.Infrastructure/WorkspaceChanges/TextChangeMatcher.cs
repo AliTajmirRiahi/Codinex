@@ -31,15 +31,8 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
 
         var matches = FindMatches(content, change.Search);
 
-        if (matches.Count == 0)
-        {
-            return new TextChangeMatchResult
-            {
-                Status = TextChangeMatchStatus.SearchNotFound,
-                MatchCount = 0,
-                Error = "Search text was not found."
-            };
-        }
+        if (matches.Count == 1)
+            return BuildSuccessResult(content, matches[0]);
 
         matches = FilterByBefore(content, matches, change.Before);
         matches = FilterByAfter(content, matches, change.After);
@@ -50,7 +43,7 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
             {
                 Status = TextChangeMatchStatus.NoUniqueMatch,
                 MatchCount = 0,
-                Error = "Unable to uniquely identify the requested text."
+                Error = "Search text was not found."
             },
 
             1 => BuildSuccessResult(content, matches[0]),
