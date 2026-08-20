@@ -23,7 +23,7 @@ public sealed class WorkspaceChangeConverter : JsonConverter<WorkspaceChange>
 
         if (kindToken is null)
         {
-            throw new JsonSerializationException(
+            throw new WorkspaceChangeParseException(
                 "Required property 'kind' was not found.");
         }
 
@@ -32,7 +32,7 @@ public sealed class WorkspaceChangeConverter : JsonConverter<WorkspaceChange>
                 ignoreCase: true,
                 out WorkspaceChangeKind kind))
         {
-            throw new JsonSerializationException(
+            throw new WorkspaceChangeParseException(
                 $"Unknown workspace change kind '{kindToken}'.");
         }
 
@@ -47,7 +47,7 @@ public sealed class WorkspaceChangeConverter : JsonConverter<WorkspaceChange>
             WorkspaceChangeKind.DeleteDirectory => new DeleteDirectoryChange(),
             WorkspaceChangeKind.RenameDirectory => new RenameDirectoryChange(),
             WorkspaceChangeKind.MoveDirectory => new MoveDirectoryChange(),
-            _ => throw new JsonSerializationException($"Unhandled workspace change kind '{kind}'.")
+            _ => throw new WorkspaceChangeParseException($"Unhandled workspace change kind '{kind}'.")
         };
 
         serializer.Populate(json.CreateReader(), change);
