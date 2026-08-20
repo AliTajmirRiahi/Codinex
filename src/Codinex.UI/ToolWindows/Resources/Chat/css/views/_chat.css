@@ -120,7 +120,7 @@
     color: var(--vs-foreground);
 }
 
-.thinking-box:not(.collapsed) .thinking-label {
+.thinking-box.streaming .thinking-label {
     background: linear-gradient( 90deg, var(--vs-control-link-text-color) 0%, var(--vs-system-highlight-color) 50%, var(--vs-control-link-text-color) 100% );
     background-size: 300% 100%;
     background-clip: text;
