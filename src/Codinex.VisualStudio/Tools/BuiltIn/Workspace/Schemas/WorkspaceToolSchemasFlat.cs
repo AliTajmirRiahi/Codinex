@@ -62,8 +62,6 @@ internal static class WorkspaceToolSchemasFlat
                 nameof(TextFileChange.Order),
                 nameof(TextFileChange.Search),
                 nameof(TextFileChange.Replace),
-                nameof(TextFileChange.Before),
-                nameof(TextFileChange.After),
             ]
         };
 
