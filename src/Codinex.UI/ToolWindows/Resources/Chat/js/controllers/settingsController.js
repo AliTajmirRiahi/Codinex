@@ -19,6 +19,7 @@ export function initSettingsController(transport) {
     const excludeFilesInput = $('#setting-exclude-files');
     const ignoredExtensionsInput = $('#setting-ignored-extensions');
     const ignoredFileSuffixesInput = $('#setting-ignored-file-suffixes');
+    const commitMessagePromptInput = $('#setting-commit-message-prompt');
     const preprocessorProviderSelect = $('#setting-preprocessor-provider');
     const preprocessorProviderButton = $('#setting-preprocessor-provider-selector-btn');
     const preprocessorProviderWrapper = preprocessorProviderButton?.closest('.provider-selector-wrapper');
@@ -44,6 +45,13 @@ export function initSettingsController(transport) {
         if (settings[camelCaseName] !== undefined) return settings[camelCaseName];
         if (settings[pascalCaseName] !== undefined) return settings[pascalCaseName];
         return defaultValue;
+    };
+
+    const getCommitMessagePromptValue = (settings) => {
+        if (!settings) return '';
+        if (settings.commitMessageSystemPrompt !== undefined) return settings.commitMessageSystemPrompt;
+        if (settings.CommitMessageSystemPrompt !== undefined) return settings.CommitMessageSystemPrompt;
+        return '';
     };
 
     const getSourceControlValue = (sourceControl) => {
@@ -341,6 +349,10 @@ export function initSettingsController(transport) {
                 'IgnoredFileSuffixes',
                 '');
         }
+
+        if (commitMessagePromptInput) {
+            commitMessagePromptInput.value = getCommitMessagePromptValue(currentSettings);
+        }
     };
 
     const openSettingsModal = () => {
@@ -428,6 +440,7 @@ export function initSettingsController(transport) {
             enablePreprocessorAi: data.enablePreprocessorAi,
             preprocessorAiProviderId: data.preprocessorAiProviderId,
             preprocessorAiModelId: data.preprocessorAiModelId,
+            commitMessageSystemPrompt: commitMessagePromptInput?.value || '',
         };
 
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);

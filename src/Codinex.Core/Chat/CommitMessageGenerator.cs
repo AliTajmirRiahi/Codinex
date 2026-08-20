@@ -41,7 +41,7 @@ namespace Codinex.Core.Chat
                 new()
                 {
                     Role = "system",
-                    Content = CommitMessageSystemPrompt
+                    Content = "YOU WRITE GIT COMMIT MESSAGES FROM A UNIFIED DIFF.\n" + CommitMessageSystemPrompt
                 },
                 new()
                 {
