@@ -104,18 +104,6 @@ export const chatView = {
         });
 
         this.bindLoadingState();
-        this.bindThinkingToggle();
-    },
-
-    bindThinkingToggle() {
-        const toggleBtn = $('#thinking-toggle');
-        const box = $('#thinking-box');
-
-        if (!toggleBtn || !box) return;
-
-        toggleBtn.addEventListener('click', () => {
-            box.classList.toggle('collapsed');
-        });
     },
 
     initializeFloatingDateSeparator() {
@@ -229,28 +217,45 @@ export const chatView = {
         this.setStatus('');
     },
 
+    /**
+     * Creates a brand-new thinking box for this turn and appends it to the
+     * timeline right above where the assistant's answer is about to land.
+     * Previous turns' boxes are left untouched so they keep their place in order.
+     */
     showThinking() {
-        const box = $('#thinking-box');
-        const content = $('#thinking-content');
-        const label = $('#thinking-label');
+        const template = $('#thinking-box-template');
         const container = $('#chat-container');
         const statusElement = $('#response-status');
 
-        if (!box || !content) return;
+        if (!template || !container) return;
 
-        // Re-anchor the box right above the status/loading sentinels so it
-        // sits after the newest message instead of wherever it was left
-        // from a previous turn.
-        if (container && statusElement) {
-            container.insertBefore(box, statusElement);
+        const box = template.cloneNode(true);
+
+        box.removeAttribute('id');
+        box.classList.remove('hidden');
+        // Closed by default — the user opts in to see the reasoning.
+        box.classList.add('collapsed');
+        box.classList.add('streaming');
+
+        const label = box.querySelector('.thinking-label');
+        const toggleBtn = box.querySelector('.thinking-toggle');
+
+        if (toggleBtn) {
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.addEventListener('click', () => {
+                const collapsed = box.classList.toggle('collapsed');
+
+                toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+            });
         }
 
-        box.classList.remove('hidden');
-        box.classList.remove('collapsed');
-        content.innerHTML = '';
+        if (statusElement) {
+            container.insertBefore(box, statusElement);
+        } else {
+            container.appendChild(box);
+        }
 
-        if (label) label.textContent = 'Thinking...';
-
+        this.currentThinkingBox = box;
         this.thinkingStartedAt = Date.now();
         this.stopThinkingTimer();
 
@@ -266,7 +271,8 @@ export const chatView = {
     },
 
     appendThinking(chunk) {
-        const content = $('#thinking-content');
+        const box = this.currentThinkingBox;
+        const content = box ? box.querySelector('.thinking-content') : null;
 
         if (!content || !chunk) return;
 
@@ -291,18 +297,17 @@ export const chatView = {
     },
 
     completeThinking() {
-        const box = $('#thinking-box');
-        const label = $('#thinking-label');
-
-        if (!box || box.classList.contains('hidden')) return;
+        const box = this.currentThinkingBox;
 
         // Already finalized this turn (e.g. real ThinkingCompleted event already
         // ran) — don't let the defensive call from handleAIResponse/handleAIError
         // clobber the duration label.
-        if (box.classList.contains('collapsed')) return;
+        if (!box || !box.classList.contains('streaming')) return;
 
         this.stopThinkingTimer();
-        box.classList.add('collapsed');
+        box.classList.remove('streaming');
+
+        const label = box.querySelector('.thinking-label');
 
         if (label) {
             const duration = this.thinkingStartedAt
@@ -313,23 +318,13 @@ export const chatView = {
         }
 
         this.thinkingStartedAt = null;
+        this.currentThinkingBox = null;
     },
 
     resetThinking() {
-        const box = $('#thinking-box');
-        const content = $('#thinking-content');
-        const label = $('#thinking-label');
-
-        if (!box) return;
-
         this.stopThinkingTimer();
         this.thinkingStartedAt = null;
-
-        box.classList.add('hidden');
-        box.classList.remove('collapsed');
-
-        if (content) content.innerHTML = '';
-        if (label) label.textContent = 'Thinking...';
+        this.currentThinkingBox = null;
     },
 
     getMessageDate(message) {
@@ -360,7 +355,6 @@ export const chatView = {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
         const statusElement = document.getElementById('response-status');
-        const thinkingBox = document.getElementById('thinking-box');
 
         if (!container || !element) return null;
 
@@ -377,11 +371,10 @@ export const chatView = {
 
         this.tagMessageElement(messageDiv, createdAt || new Date(), deferDateSeparatorRefresh);
 
+        // The current turn's thinking box (if any) was already placed right
+        // before this insertion point by showThinking(), so it naturally ends
+        // up directly above this message.
         container.appendChild(messageDiv);
-
-        // Keep the thinking box directly above the assistant answer it belongs to.
-        // User messages must not push it around.
-        if (thinkingBox && sender === 'assistant') container.insertBefore(thinkingBox, messageDiv);
 
         if (statusElement) parent.appendChild(statusElement);
         parent.appendChild(element);
@@ -396,7 +389,6 @@ export const chatView = {
         const container = document.getElementById('chat-container');
         const element = document.getElementById('response-loading');
         const statusElement = document.getElementById('response-status');
-        const thinkingBox = document.getElementById('thinking-box');
         const parent = element.parentElement;
 
         if (statusElement) parent.removeChild(statusElement);
@@ -411,8 +403,6 @@ export const chatView = {
         messageEl.textContent = text;
 
         container.appendChild(errorBox);
-
-        if (thinkingBox) container.insertBefore(thinkingBox, errorBox);
 
         if (statusElement) parent.appendChild(statusElement);
         parent.appendChild(element);
@@ -483,21 +473,25 @@ export const chatView = {
         const statusElement = document.getElementById('response-status');
         const loadingElement = document.getElementById('response-loading');
         const errorBox = document.getElementById('error-box');
-        const thinkingBox = document.getElementById('thinking-box');
+        const thinkingBoxTemplate = document.getElementById('thinking-box-template');
+
+        this.stopThinkingTimer();
+        this.thinkingStartedAt = null;
+        this.currentThinkingBox = null;
 
         container.textContent = '';
 
-        if (thinkingBox) {
-            thinkingBox.classList.add('hidden');
-            thinkingBox.classList.remove('collapsed');
+        if (thinkingBoxTemplate) {
+            thinkingBoxTemplate.classList.add('hidden');
+            thinkingBoxTemplate.classList.remove('collapsed', 'streaming');
 
-            const thinkingContent = thinkingBox.querySelector('#thinking-content');
-            const thinkingLabel = thinkingBox.querySelector('#thinking-label');
+            const thinkingContent = thinkingBoxTemplate.querySelector('.thinking-content');
+            const thinkingLabel = thinkingBoxTemplate.querySelector('.thinking-label');
 
             if (thinkingContent) thinkingContent.innerHTML = '';
             if (thinkingLabel) thinkingLabel.textContent = 'Thinking...';
 
-            container.appendChild(thinkingBox);
+            container.appendChild(thinkingBoxTemplate);
         }
 
         if (statusElement) {
@@ -534,7 +528,6 @@ export function createStreamingMessage(options) {
 
     const element = document.getElementById('response-loading');
     const statusElement = document.getElementById('response-status');
-    const thinkingBox = document.getElementById('thinking-box');
     const parent = element.parentElement;
 
     if (statusElement) parent.removeChild(statusElement);
@@ -543,10 +536,6 @@ export function createStreamingMessage(options) {
     const contentEl = messageView.createStreamingMessage(options);
 
     chatView.tagMessageElement(contentEl.parentElement, new Date());
-
-    // Keep the thinking box directly above the answer it belongs to,
-    // instead of trailing it behind the status/loading sentinels.
-    if (thinkingBox) container.insertBefore(thinkingBox, contentEl.parentElement);
 
     if (statusElement) parent.appendChild(statusElement);
     parent.appendChild(element);
