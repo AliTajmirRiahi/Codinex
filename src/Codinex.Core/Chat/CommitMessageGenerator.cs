@@ -21,7 +21,7 @@ namespace Codinex.Core.Chat
         IAiProviderRouter aiProviderRouter)
         : ICommitMessageGenerator
     {
-        public async Task<string> GenerateAsync(CancellationToken cancellationToken)
+        public async Task<string> GenerateAsync(string CommitMessageSystemPrompt, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -41,7 +41,7 @@ namespace Codinex.Core.Chat
                 new()
                 {
                     Role = "system",
-                    Content = SystemPrompts.CommitMessageSystemPrompt
+                    Content = CommitMessageSystemPrompt
                 },
                 new()
                 {

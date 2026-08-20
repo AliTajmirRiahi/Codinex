@@ -14,6 +14,6 @@ namespace Codinex.Core.Interfaces
         /// Prefers staged changes; falls back to all changes when nothing is staged.
         /// </summary>
         /// <exception cref="NoGitChangesException">There are no pending Git changes.</exception>
-        Task<string> GenerateAsync(CancellationToken cancellationToken);
+        Task<string> GenerateAsync(string CommitMessageSystemPrompt, CancellationToken cancellationToken);
     }
 }

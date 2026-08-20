@@ -351,6 +351,15 @@
                             data-settings-tab="exclusions">
                         Exclusions
                     </button>
+                    <button id="settings-tab-commit-prompt"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-commit-prompt"
+                            data-settings-tab="commit-prompt">
+                        Commit Prompt
+                    </button>
                 </div>
 
                 <div class="settings-tab-panels">
@@ -483,6 +492,22 @@
                             <div class="form-group">
                                 <label for="setting-ignored-file-suffixes">Ignored File Suffixes</label>
                                 <input id="setting-ignored-file-suffixes" type="text" placeholder=".deps.json;.runtimeconfig.json">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-commit-prompt"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-commit-prompt"
+                             data-settings-panel="commit-prompt">
+                        <div class="settings-section">
+                            <h3>Commit Prompt</h3>
+                            <p class="settings-section-description">Configure the system prompt used for generating Git commit messages. This prompt defines the format and rules for commit messages.</p>
+
+                            <div class="form-group">
+                                <label for="setting-commit-message-prompt">Commit Message System Prompt</label>
+                                <textarea id="setting-commit-message-prompt" rows="12" placeholder="Configure the system prompt used for generating Git commit messages..." style="font-family: monospace; font-size: 12px;"></textarea>
                             </div>
                         </div>
                     </section>

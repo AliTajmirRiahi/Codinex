@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Codinex.Core.Chat;
 using Codinex.Core.Interfaces;
+using Codinex.Storage.Managers;
 using Microsoft.VisualStudio.Shell;
 
 namespace Codinex.VisualStudio.CommitMessages
@@ -21,7 +22,7 @@ namespace Codinex.VisualStudio.CommitMessages
     /// silently stop working on a VS update. It fails soft: if injection or writing ever fails,
     /// nothing is shown and VS is never disrupted.
     /// </summary>
-    internal sealed class GitCommitButtonInjector(ICommitMessageGenerator generator, IErrorHandler errorHandler)
+    internal sealed class GitCommitButtonInjector(SettingsManager settingsManager, ICommitMessageGenerator generator, IErrorHandler errorHandler)
     {
         private const string MarkerTag = "Codinex_GitCommit_Injected";
         private static readonly TimeSpan ErrorAutoResetDelay = TimeSpan.FromSeconds(3);
@@ -382,7 +383,7 @@ namespace Codinex.VisualStudio.CommitMessages
 
             try
             {
-                message = await generator.GenerateAsync(token);
+                message = await generator.GenerateAsync(settingsManager.GetCommitMessageSystemPrompt(), token);
             }
             catch (OperationCanceledException)
             {
