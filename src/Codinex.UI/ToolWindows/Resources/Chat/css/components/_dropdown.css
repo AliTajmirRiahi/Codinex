@@ -280,6 +280,17 @@
     justify-content: space-between;
 }
 
+.settings-selector-wrapper {
+    position: relative;
+}
+
+#settings-dropdown-menu.com-dropdown {
+    bottom: calc(100% + 4px);
+    right: 0;
+    flex-direction: column;
+    min-width: 190px;
+}
+
 #provider-dropdown.com-dropdown,
 #setting-preprocessor-provider-dropdown.com-dropdown {
     top: calc(100% + 4px);

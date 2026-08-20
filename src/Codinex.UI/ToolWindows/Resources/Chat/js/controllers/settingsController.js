@@ -3,13 +3,26 @@ import { EVENTS } from '../constants/events.js';
 import { DropDownView } from '../views/dropDownView.js';
 import { validationService } from '../services/validationService.js';
 import { PaginationService } from '../services/paginationService.js';
+import { getState } from '../state/appState.js';
 
 export function initSettingsController(transport) {
     const settingsButton = $('#settings-btn');
-    const settingsModal = $('#settings-modal');
-    const closeButton = $('#close-settings-modal');
-    const cancelButton = $('#cancel-settings-modal');
-    const saveButton = $('#save-settings-modal');
+    const settingsDropdownMenu = $('#settings-dropdown-menu');
+    const openCodinexSettingsAction = $('#open-codinex-settings-action');
+    const openSolutionSettingsAction = $('#open-solution-settings-action');
+    const solutionSettingsMenuLabel = $('#solution-settings-menu-label');
+
+    const codinexSettingsModal = $('#codinex-settings-modal');
+    const closeCodinexSettingsButton = $('#close-codinex-settings-modal');
+    const cancelCodinexSettingsButton = $('#cancel-codinex-settings-modal');
+    const saveCodinexSettingsButton = $('#save-codinex-settings-modal');
+
+    const solutionSettingsModal = $('#solution-settings-modal');
+    const solutionSettingsModalTitle = $('#solution-settings-modal-title');
+    const closeSolutionSettingsButton = $('#close-solution-settings-modal');
+    const cancelSolutionSettingsButton = $('#cancel-solution-settings-modal');
+    const saveSolutionSettingsButton = $('#save-solution-settings-modal');
+
     const autoAddActiveDocumentInput = $('#setting-auto-add-active-document');
     const enableStreamingChatInput = $('#setting-enable-streaming-chat');
     const bypassPreviewChangeInput = $('#setting-bypass-preview-change');
@@ -31,8 +44,10 @@ export function initSettingsController(transport) {
     const preprocessorPrevPageButton = $('#setting-preprocessor-prev-page');
     const preprocessorNextPageButton = $('#setting-preprocessor-next-page');
     const preprocessorPageInfo = $('#setting-preprocessor-page-info');
-    const tabs = Array.from(document.querySelectorAll('.settings-tab'));
-    const panels = Array.from(document.querySelectorAll('.settings-tab-panel'));
+    // Scoped to the solution-settings modal — the Codinex-settings modal has its own
+    // single, always-active panel and no tabs of its own.
+    const tabs = Array.from(solutionSettingsModal?.querySelectorAll('.settings-tab') || []);
+    const panels = Array.from(solutionSettingsModal?.querySelectorAll('.settings-tab-panel') || []);
     let currentSettings = {};
     let currentWorkspaceSettings = {};
     let canBypassPreviewChange = false;
@@ -355,13 +370,46 @@ export function initSettingsController(transport) {
         }
     };
 
-    const openSettingsModal = () => {
-        applySettingsToForm();
-        settingsModal?.classList.remove('hidden');
+    const updateSolutionSettingsLabel = () => {
+        const solutionName = getState().solutionName;
+        const label = solutionName ? `${solutionName} Settings` : 'Solution Settings';
+
+        if (solutionSettingsMenuLabel) solutionSettingsMenuLabel.textContent = label;
+        if (solutionSettingsModalTitle) solutionSettingsModalTitle.textContent = label;
     };
 
-    const closeSettingsModal = () => {
-        settingsModal?.classList.add('hidden');
+    let isSettingsMenuOpen = false;
+
+    const closeSettingsMenu = () => {
+        isSettingsMenuOpen = false;
+        settingsDropdownMenu?.classList.remove('show');
+    };
+
+    const toggleSettingsMenu = (event) => {
+        event.stopPropagation();
+        window.dispatchEvent(new CustomEvent('ui:close-all-dropdowns'));
+        updateSolutionSettingsLabel();
+        isSettingsMenuOpen = !isSettingsMenuOpen;
+        settingsDropdownMenu?.classList.toggle('show', isSettingsMenuOpen);
+    };
+
+    const openCodinexSettingsModal = () => {
+        applySettingsToForm();
+        codinexSettingsModal?.classList.remove('hidden');
+    };
+
+    const closeCodinexSettingsModal = () => {
+        codinexSettingsModal?.classList.add('hidden');
+    };
+
+    const openSolutionSettingsModal = () => {
+        updateSolutionSettingsLabel();
+        applySettingsToForm();
+        solutionSettingsModal?.classList.remove('hidden');
+    };
+
+    const closeSolutionSettingsModal = () => {
+        solutionSettingsModal?.classList.add('hidden');
     };
 
     const selectTab = (tabName) => {
@@ -377,9 +425,30 @@ export function initSettingsController(transport) {
         });
     };
 
-    settingsButton?.addEventListener('click', openSettingsModal);
-    closeButton?.addEventListener('click', closeSettingsModal);
-    cancelButton?.addEventListener('click', closeSettingsModal);
+    settingsButton?.addEventListener('click', toggleSettingsMenu);
+    openCodinexSettingsAction?.addEventListener('click', () => {
+        closeSettingsMenu();
+        openCodinexSettingsModal();
+    });
+    openSolutionSettingsAction?.addEventListener('click', () => {
+        closeSettingsMenu();
+        openSolutionSettingsModal();
+    });
+    document.addEventListener('click', (event) => {
+        if (isSettingsMenuOpen
+            && !settingsDropdownMenu?.contains(event.target)
+            && !settingsButton?.contains(event.target)) {
+            closeSettingsMenu();
+        }
+    });
+    window.addEventListener('ui:close-all-dropdowns', closeSettingsMenu);
+
+    closeCodinexSettingsButton?.addEventListener('click', closeCodinexSettingsModal);
+    cancelCodinexSettingsButton?.addEventListener('click', closeCodinexSettingsModal);
+
+    closeSolutionSettingsButton?.addEventListener('click', closeSolutionSettingsModal);
+    cancelSolutionSettingsButton?.addEventListener('click', closeSolutionSettingsModal);
+
     preprocessorPrevPageButton?.addEventListener('click', () => {
         if (preprocessorModelPaginationService.currentPage <= 1) return;
 
@@ -392,7 +461,24 @@ export function initSettingsController(transport) {
         preprocessorModelPaginationService.nextPage();
         renderPreprocessorModelPage();
     });
-    saveButton?.addEventListener('click', () => {
+
+    // Codinex Settings — global, app-level behavior. Sends the full settings object
+    // (SaveSettingsAsync replaces it wholesale) so fields owned by the Solution Settings
+    // modal are preserved as-is.
+    saveCodinexSettingsButton?.addEventListener('click', () => {
+        currentSettings = {
+            ...currentSettings,
+            autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
+            enableStreamingChat: !!enableStreamingChatInput?.checked,
+            byPassPreviewChangeAndApplyChangeDirectly: !!bypassPreviewChangeInput?.checked && canBypassPreviewChange,
+        };
+
+        transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);
+    });
+
+    // Solution Settings — provider/model preprocessing config, the commit message prompt,
+    // and the per-solution workspace settings (instruction/exclusions).
+    saveSolutionSettingsButton?.addEventListener('click', () => {
         const data = {
             enablePreprocessorAi: !!enablePreprocessorAiInput?.checked,
             preprocessorAiProviderId: preprocessorProviderSelect?.value || '',
@@ -434,9 +520,6 @@ export function initSettingsController(transport) {
 
         currentSettings = {
             ...currentSettings,
-            autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
-            enableStreamingChat: !!enableStreamingChatInput?.checked,
-            byPassPreviewChangeAndApplyChangeDirectly: !!bypassPreviewChangeInput?.checked && canBypassPreviewChange,
             enablePreprocessorAi: data.enablePreprocessorAi,
             preprocessorAiProviderId: data.preprocessorAiProviderId,
             preprocessorAiModelId: data.preprocessorAiModelId,
@@ -471,15 +554,27 @@ export function initSettingsController(transport) {
         });
     });
 
-    settingsModal?.addEventListener('click', (event) => {
-        if (event.target === settingsModal) {
-            closeSettingsModal();
+    codinexSettingsModal?.addEventListener('click', (event) => {
+        if (event.target === codinexSettingsModal) {
+            closeCodinexSettingsModal();
+        }
+    });
+
+    solutionSettingsModal?.addEventListener('click', (event) => {
+        if (event.target === solutionSettingsModal) {
+            closeSolutionSettingsModal();
         }
     });
 
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && settingsModal && !settingsModal.classList.contains('hidden')) {
-            closeSettingsModal();
+        if (event.key !== 'Escape') return;
+
+        if (codinexSettingsModal && !codinexSettingsModal.classList.contains('hidden')) {
+            closeCodinexSettingsModal();
+        }
+
+        if (solutionSettingsModal && !solutionSettingsModal.classList.contains('hidden')) {
+            closeSolutionSettingsModal();
         }
     });
 
@@ -503,6 +598,9 @@ export function initSettingsController(transport) {
 
             applySettingsToForm();
         },
-        closeSettingsModal,
+        closeSettingsModal() {
+            closeCodinexSettingsModal();
+            closeSolutionSettingsModal();
+        },
     };
 }
