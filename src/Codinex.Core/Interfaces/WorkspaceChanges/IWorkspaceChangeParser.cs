@@ -10,7 +10,7 @@ namespace Codinex.Core.Interfaces.WorkspaceChanges;
 /// </summary>
 public interface IWorkspaceChangeParser
 {
-    Task<WorkspaceChangeSet> ParseAsync(
+    Task<WorkspaceChangeParseResult> ParseAsync(
         JObject response,
         CancellationToken cancellationToken);
 }

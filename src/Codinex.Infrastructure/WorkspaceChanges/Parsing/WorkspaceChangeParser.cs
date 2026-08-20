@@ -22,7 +22,7 @@ public sealed class WorkspaceChangeParser(
     IWorkspaceChangeMapper mapper)
     : IWorkspaceChangeParser
 {
-    public Task<WorkspaceChangeSet> ParseAsync(
+    public Task<WorkspaceChangeParseResult> ParseAsync(
         JObject response,
         CancellationToken cancellationToken)
     {
@@ -30,40 +30,47 @@ public sealed class WorkspaceChangeParser(
 
         if (response == null)
         {
-            throw new ArgumentException(
-                "Response cannot be null or empty.",
-                nameof(response));
+            return Task.FromResult(
+                WorkspaceChangeParseResult.Failed(ParseError("Response cannot be null or empty.")));
         }
 
-        NormalizeChanges(response);
-
-        var changesToken = response["changes"];
-
-        if (changesToken == null && response["raw"]?.Type == JTokenType.String)
+        try
         {
-            var rawObject = JObject.Parse(response["raw"].Value<string>());
-            changesToken = rawObject["changes"];
+            NormalizeChanges(response);
+
+            var changesToken = response["changes"];
+
+            if (changesToken == null && response["raw"]?.Type == JTokenType.String)
+                response = JObject.Parse(response["raw"].Value<string>());
+
+            var dto = response.ToObject<WorkspaceChangeSetDto>();
+
+            if (dto is null)
+            {
+                return Task.FromResult(
+                    WorkspaceChangeParseResult.Failed(
+                        ParseError("Failed to deserialize workspace change set.")));
+            }
+
+            var changeSet = mapper.Map(dto);
+
+            return Task.FromResult(WorkspaceChangeParseResult.Successful(changeSet));
         }
-
-        System.Diagnostics.Debug.WriteLine(
-            $"Changes token type: {changesToken?.Type}");
-
-        System.Diagnostics.Debug.WriteLine(
-            $"Changes value: {changesToken}");
-
-        var tt = Newtonsoft.Json.JsonConvert.SerializeObject(response);
-
-        var dto = response.ToObject<WorkspaceChangeSetDto>();
-
-        if (dto is null)
+        catch (Exception ex) when (ex is JsonException or WorkspaceChangeParseException)
         {
-            throw new InvalidOperationException(
-                "Failed to deserialize workspace change set.");
+            return Task.FromResult(
+                WorkspaceChangeParseResult.Failed(
+                    ParseError($"Failed to parse workspace change set: {ex.Message}")));
         }
+    }
 
-        var changeSet = mapper.Map(dto);
-
-        return Task.FromResult(changeSet);
+    private static WorkspaceValidationError ParseError(string message)
+    {
+        return new WorkspaceValidationError(
+            Guid.Empty,
+            WorkspaceChangeErrorCode.InvalidChange,
+            WorkspaceValidationCategory.AiRecoverable,
+            message);
     }
 
     private static void NormalizeChanges(JObject response)

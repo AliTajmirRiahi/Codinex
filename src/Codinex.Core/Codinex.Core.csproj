@@ -198,6 +198,8 @@
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeConverter.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeError.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeKind.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeParseException.cs" />
+    <Compile Include="Models\WorkspaceChanges\WorkspaceChangeParseResult.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeResult.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeSet.cs" />
     <Compile Include="Models\WorkspaceChanges\WorkspaceChangeValidationError.cs" />
