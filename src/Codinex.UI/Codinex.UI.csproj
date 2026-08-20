@@ -83,6 +83,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\settingsController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\floatingDateSeparatorView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\languageDirection.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\thoughtGroupView.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />
@@ -111,6 +112,11 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\magic-wand-sparkles.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\check-compact.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\openrouter.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\bnb.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\btc.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\eth.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\trx.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\usdt.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
