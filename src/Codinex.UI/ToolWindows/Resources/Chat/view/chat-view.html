@@ -557,9 +557,66 @@
                     <a class="about-external-link" href="https://github.com/AliTajmirRiahi" target="_blank" rel="noopener noreferrer">GitHub: AliTajmirRiahi</a>
                 </div>
 
-                <a class="donate-button about-external-link" href="mailto:riahi.tajmir@gmail.com?subject=Donate%20to%20Codinex%20AI" target="_blank" rel="noopener noreferrer" title="Contact Ali Tajmir Riahi to donate">
+                <button id="open-donate-modal" type="button" class="donate-button" title="Donate to Codinex AI">
                     <img src="http://codinex.resources/Icons/donate.png" alt="Donate">
-                </a>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donate Modal -->
+    <div id="donate-modal" class="modal hidden">
+        <div class="modal-content donate-modal-content">
+            <div class="modal-header">
+                <h2>Donate</h2>
+                <button id="close-donate-modal">✕</button>
+            </div>
+
+            <div class="modal-body donate-modal-body">
+                <p class="donate-intro">If Codinex AI has been useful to you, consider supporting its development with a crypto donation.</p>
+
+                <div class="donate-list">
+                    <div class="donate-row" data-coin="BTC">
+                        <!-- <img class="donate-coin-icon" src="http://codinex.resources/Icons/coin-btc.png" alt="BTC"> -->
+                        <span class="donate-coin-name">BTC</span>
+                        <span class="donate-address" title="bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39">bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39</span>
+                        <button type="button" class="donate-copy-btn" data-address="bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="USDT">
+                        <!-- <img class="donate-coin-icon" src="http://codinex.resources/Icons/coin-usdt.png" alt="USDT"> -->
+                        <span class="donate-coin-name">USDT (BEP20)</span>
+                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
+                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="BNB">
+                        <!-- <img class="donate-coin-icon" src="http://codinex.resources/Icons/coin-bnb.png" alt="BNB"> -->
+                        <span class="donate-coin-name">BNB</span>
+                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
+                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="ETH">
+                        <!-- <img class="donate-coin-icon" src="http://codinex.resources/Icons/coin-eth.png" alt="ETH"> -->
+                        <span class="donate-coin-name">ETH</span>
+                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
+                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="TRX">
+                        <!-- <img class="donate-coin-icon" src="http://codinex.resources/Icons/coin-trx.png" alt="TRX"> -->
+                        <span class="donate-coin-name">TRX</span>
+                        <span class="donate-address" title="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv">TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv</span>
+                        <button type="button" class="donate-copy-btn" data-address="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
