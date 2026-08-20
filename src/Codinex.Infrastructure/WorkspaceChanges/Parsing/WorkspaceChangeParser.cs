@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
@@ -8,7 +5,11 @@ using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges.Mapping;
 using Codinex.Infrastructure.WorkspaceChanges.Parsing.Dtos;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Codinex.Infrastructure.WorkspaceChanges.Parsing;
 
@@ -34,6 +35,18 @@ public sealed class WorkspaceChangeParser(
                 nameof(response));
         }
 
+        NormalizeChanges(response);
+
+        var changesToken = response["changes"];
+
+        System.Diagnostics.Debug.WriteLine(
+            $"Changes token type: {changesToken?.Type}");
+
+        System.Diagnostics.Debug.WriteLine(
+            $"Changes value: {changesToken}");
+
+        var tt = Newtonsoft.Json.JsonConvert.SerializeObject(response);
+
         var dto = response.ToObject<WorkspaceChangeSetDto>();
 
         if (dto is null)
@@ -45,5 +58,31 @@ public sealed class WorkspaceChangeParser(
         var changeSet = mapper.Map(dto);
 
         return Task.FromResult(changeSet);
+    }
+
+    private static void NormalizeChanges(JObject response)
+    {
+        var changesToken = response["changes"];
+
+        if (changesToken == null || changesToken.Type != JTokenType.String)
+        {
+            return;
+        }
+
+        var changesJson = changesToken.Value<string>();
+
+        if (string.IsNullOrWhiteSpace(changesJson))
+        {
+            return;
+        }
+
+        var changesArray = JsonConvert.DeserializeObject<JArray>(changesJson);
+
+        if (changesArray == null)
+        {
+            return;
+        }
+
+        response["changes"] = changesArray;
     }
 }
