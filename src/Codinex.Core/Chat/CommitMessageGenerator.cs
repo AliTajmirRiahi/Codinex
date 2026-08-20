@@ -141,7 +141,7 @@ namespace Codinex.Core.Chat
                 trimmed = trimmed.Trim();
             }
 
-            return NormalizeBulletStructure(trimmed);
+            return NormalizeBulletStructure(trimmed) + '\n';
         }
 
         /// <summary>
