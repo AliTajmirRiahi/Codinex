@@ -33,6 +33,11 @@ namespace Codinex.Storage.Managers
                 if (loaded != null)
                 {
                     _currentSettings = loaded;
+                    // Load CommitMessageSystemPrompt from settings if available
+                    if (!string.IsNullOrEmpty(loaded.CommitMessageSystemPrompt))
+                    {
+                        _currentSettings.CommitMessageSystemPrompt = "You write Git commit messages from a unified diff.\r\n" + loaded.CommitMessageSystemPrompt;
+                    }
                     return;
                 }
             }
@@ -49,13 +54,17 @@ namespace Codinex.Storage.Managers
         /// </summary>
         public async Task SaveSettingsAsync(CodinexSettings newSettings)
         {
-            if (newSettings == null)
-                throw new ArgumentNullException(nameof(newSettings));
+            _currentSettings = newSettings ?? throw new ArgumentNullException(nameof(newSettings));
 
-            _currentSettings = newSettings;
             await storage.SaveAsync(StoragePaths.Settings, _currentSettings);
+        }
 
-            // Note: Here we can notify the WebView to update its UI
+        /// <summary>
+        /// Gets the current commit message system prompt from settings.
+        /// </summary>
+        public string GetCommitMessageSystemPrompt()
+        {
+            return _currentSettings.CommitMessageSystemPrompt;
         }
     }
 }

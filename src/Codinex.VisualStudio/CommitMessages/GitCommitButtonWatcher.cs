@@ -4,6 +4,7 @@ using System.Windows.Threading;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
+using Codinex.Storage.Managers;
 
 namespace Codinex.VisualStudio.CommitMessages
 {
@@ -17,7 +18,8 @@ namespace Codinex.VisualStudio.CommitMessages
     public sealed class GitCommitButtonWatcher(
         IUiThreadDispatcher uiThreadDispatcher,
         ICommitMessageGenerator commitMessageGenerator,
-        IErrorHandler errorHandler)
+        IErrorHandler errorHandler,
+        SettingsManager settingsManager)
         : IStartupTask
     {
         private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(2);
@@ -28,7 +30,7 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             await uiThreadDispatcher.SwitchToMainThreadAsync();
 
-            var injector = new GitCommitButtonInjector(commitMessageGenerator, errorHandler);
+            var injector = new GitCommitButtonInjector(settingsManager, commitMessageGenerator, errorHandler);
 
             GitCommitButtonVisibility.Changed += () =>
             {
