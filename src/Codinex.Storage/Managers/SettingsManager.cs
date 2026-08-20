@@ -36,7 +36,7 @@ namespace Codinex.Storage.Managers
                     // Load CommitMessageSystemPrompt from settings if available
                     if (!string.IsNullOrEmpty(loaded.CommitMessageSystemPrompt))
                     {
-                        _currentSettings.CommitMessageSystemPrompt = "You write Git commit messages from a unified diff.\r\n" + loaded.CommitMessageSystemPrompt;
+                        _currentSettings.CommitMessageSystemPrompt = loaded.CommitMessageSystemPrompt;
                     }
                     return;
                 }

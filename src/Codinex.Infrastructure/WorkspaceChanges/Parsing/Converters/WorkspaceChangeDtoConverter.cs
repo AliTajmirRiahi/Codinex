@@ -24,7 +24,7 @@ public sealed class WorkspaceChangeDtoConverter : JsonConverter<WorkspaceChangeD
     {
         var json = JObject.Load(reader);
 
-        var kindToken = json["kind"];
+        var kindToken = json["kind"] ?? json["Kind"];
 
         if (kindToken is null)
         {
