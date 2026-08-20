@@ -227,9 +227,22 @@
                         </div>
                     </div>
                     <div class="input-actions">
-                        <button id="settings-btn" title="Change Settings">
-                            <codinex-icon name="wrench"></codinex-icon>
-                        </button>
+                        <div class="settings-selector-wrapper">
+                            <button id="settings-btn" title="Change Settings">
+                                <codinex-icon name="wrench"></codinex-icon>
+                            </button>
+                            <div id="settings-dropdown-menu" class="com-dropdown">
+                                <div id="open-codinex-settings-action" class="menu-action">
+                                    <codinex-icon name="wrench"></codinex-icon>
+                                    <span>Codinex Settings</span>
+                                </div>
+                                <div class="menu-divider"></div>
+                                <div id="open-solution-settings-action" class="menu-action">
+                                    <codinex-icon name="wrench"></codinex-icon>
+                                    <span id="solution-settings-menu-label">Solution Settings</span>
+                                </div>
+                            </div>
+                        </div>
                         <button id="send-btn" class="disable" title="Send">
                             <codinex-icon name="send-horizontal"></codinex-icon>
                         </button>
@@ -308,29 +321,70 @@
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div id="codinex-settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="codinex-settings-modal-title">
         <div class="modal-content settings-modal-content">
             <div class="modal-header">
-                <h2 id="settings-modal-title">Settings</h2>
-                <button id="close-settings-modal" title="Close Settings">✕</button>
+                <h2 id="codinex-settings-modal-title">Codinex Settings</h2>
+                <button id="close-codinex-settings-modal" title="Close Settings">✕</button>
+            </div>
+
+            <div class="modal-body settings-modal-body">
+                <div class="settings-tab-panels">
+                    <section class="settings-tab-panel active">
+                        <div class="settings-section">
+                            <h3>General</h3>
+                            <p class="settings-section-description">Configure general chat behavior.</p>
+
+                            <label class="setting-checkbox-option" for="setting-auto-add-active-document">
+                                <input id="setting-auto-add-active-document" type="checkbox">
+                                <span>
+                                    <strong>Auto add Active Document to message</strong>
+                                    <small>Automatically include the current active document as message context.</small>
+                                </span>
+                            </label>
+
+                            <label class="setting-checkbox-option" for="setting-enable-streaming-chat">
+                                <input id="setting-enable-streaming-chat" type="checkbox">
+                                <span>
+                                    <strong>Enable streaming chat</strong>
+                                    <small>Show assistant responses as they are generated.</small>
+                                </span>
+                            </label>
+
+                            <label class="setting-checkbox-option" for="setting-bypass-preview-change">
+                                <input id="setting-bypass-preview-change" type="checkbox">
+                                <span>
+                                    <strong>ByPass Preview Change and apply change directly</strong>
+                                    <small>Apply workspace changes without the Code Changes preview. Available only when the solution is under source control such as Git or TFS.</small>
+                                </span>
+                            </label>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-codinex-settings-modal" class="secondary-button">Cancel</button>
+                <button id="save-codinex-settings-modal" class="primary-button">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solution Settings Modal -->
+    <div id="solution-settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="solution-settings-modal-title">
+        <div class="modal-content settings-modal-content">
+            <div class="modal-header">
+                <h2 id="solution-settings-modal-title">Solution Settings</h2>
+                <button id="close-solution-settings-modal" title="Close Settings">✕</button>
             </div>
 
             <div class="modal-body settings-modal-body">
                 <div class="settings-tabs" role="tablist" aria-label="Settings sections">
-                    <button id="settings-tab-general"
+                    <button id="settings-tab-prompt-preprocessor"
                             class="settings-tab active"
                             type="button"
                             role="tab"
                             aria-selected="true"
-                            aria-controls="settings-panel-general"
-                            data-settings-tab="general">
-                        General
-                    </button>
-                    <button id="settings-tab-prompt-preprocessor"
-                            class="settings-tab"
-                            type="button"
-                            role="tab"
-                            aria-selected="false"
                             aria-controls="settings-panel-prompt-preprocessor"
                             data-settings-tab="prompt-preprocessor">
                         Prompt Preprocessor
@@ -365,43 +419,8 @@
                 </div>
 
                 <div class="settings-tab-panels">
-                    <section id="settings-panel-general"
-                             class="settings-tab-panel active"
-                             role="tabpanel"
-                             aria-labelledby="settings-tab-general"
-                             data-settings-panel="general">
-                        <div class="settings-section">
-                            <h3>General</h3>
-                            <p class="settings-section-description">Configure general chat behavior.</p>
-
-                            <label class="setting-checkbox-option" for="setting-auto-add-active-document">
-                                <input id="setting-auto-add-active-document" type="checkbox">
-                                <span>
-                                    <strong>Auto add Active Document to message</strong>
-                                    <small>Automatically include the current active document as message context.</small>
-                                </span>
-                            </label>
-
-                            <label class="setting-checkbox-option" for="setting-enable-streaming-chat">
-                                <input id="setting-enable-streaming-chat" type="checkbox">
-                                <span>
-                                    <strong>Enable streaming chat</strong>
-                                    <small>Show assistant responses as they are generated.</small>
-                                </span>
-                            </label>
-
-                            <label class="setting-checkbox-option" for="setting-bypass-preview-change">
-                                <input id="setting-bypass-preview-change" type="checkbox">
-                                <span>
-                                    <strong>ByPass Preview Change and apply change directly</strong>
-                                    <small>Apply workspace changes without the Code Changes preview. Available only when the solution is under source control such as Git or TFS.</small>
-                                </span>
-                            </label>
-                        </div>
-                    </section>
-
                     <section id="settings-panel-prompt-preprocessor"
-                             class="settings-tab-panel"
+                             class="settings-tab-panel active"
                              role="tabpanel"
                              aria-labelledby="settings-tab-prompt-preprocessor"
                              data-settings-panel="prompt-preprocessor">
@@ -517,8 +536,8 @@
             </div>
 
             <div class="modal-footer">
-                <button id="cancel-settings-modal" class="secondary-button">Cancel</button>
-                <button id="save-settings-modal" class="primary-button">Save Changes</button>
+                <button id="cancel-solution-settings-modal" class="secondary-button">Cancel</button>
+                <button id="save-solution-settings-modal" class="primary-button">Save Changes</button>
             </div>
         </div>
     </div>

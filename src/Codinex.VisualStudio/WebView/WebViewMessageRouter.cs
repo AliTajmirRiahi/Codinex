@@ -565,6 +565,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             WorkspaceSettings = _workspaceSettingsManager.Settings,
             ChatBlocked = _changesetSessionService.HasPending,
             SolutionDirectory = _workspaceContext.SolutionDirectory,
+            SolutionName = _workspaceContext.SolutionName,
             SourceControl = new
             {
                 IsSolutionUnderSourceControl = isSolutionUnderSourceControl

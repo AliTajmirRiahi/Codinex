@@ -21,6 +21,7 @@ const _state = {
     activeDocument: null,
     settings: {},
     solutionDirectory: '',
+    solutionName: '',
 
     composer: {
         draftText: "",
@@ -309,5 +310,11 @@ export function setSettings(settings) {
 export function setSolutionDirectory(solutionDirectory) {
     updateState({
         solutionDirectory: solutionDirectory || ''
+    });
+}
+
+export function setSolutionName(solutionName) {
+    updateState({
+        solutionName: solutionName || ''
     });
 }
