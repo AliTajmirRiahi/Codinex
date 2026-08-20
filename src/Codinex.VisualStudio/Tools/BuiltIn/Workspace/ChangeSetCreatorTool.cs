@@ -55,7 +55,7 @@ public sealed class ChangeSetCreatorTool(
     public ToolDefinition Definition => new(
         new Dictionary<string, ToolProperty>
         {
-            ["changes"] = WorkspaceToolSchemasFlat.WorkspaceChangeSetProp
+            ["changes"] = WorkspaceToolSchemas.WorkspaceChangeSetProp
         },
         ["changes"],
         true);
@@ -65,7 +65,14 @@ public sealed class ChangeSetCreatorTool(
         ToolRequest request,
         CancellationToken cancellationToken)
     {
-        var changeSet = await parser.ParseAsync(request.Arguments, cancellationToken);
+        var parseResult = await parser.ParseAsync(request.Arguments, cancellationToken);
+
+        if (!parseResult.Success)
+        {
+            return ToolResult.Failed(request.Id, parseResult.Errors);
+        }
+
+        var changeSet = parseResult.ChangeSet;
 
         var validationResult = await validator.ValidateAsync(
             changeSet,
