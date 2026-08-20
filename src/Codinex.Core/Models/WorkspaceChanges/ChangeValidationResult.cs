@@ -40,4 +40,10 @@ public sealed class ChangeValidationResult
     {
         return error == null ? throw new ArgumentNullException(nameof(error)) : Failed([error]);
     }
+
+    public static ChangeValidationResult Failed(string error)
+    {
+        return error == null ? throw new ArgumentNullException(nameof(error)) : Failed([
+            new ChangeValidationError(Guid.NewGuid(), WorkspaceChangeErrorCode.SearchNotFound, WorkspaceValidationCategory.AiRecoverable, error)]);
+    }
 }
