@@ -41,7 +41,7 @@ namespace Codinex.Infrastructure.Chat
 
             var chatData = await ChatSessionDocumentAsync(sessionId);
 
-            _messages = chatData?.Messages;
+            _messages = chatData?.Messages ?? new List<ChatMessage>();
         }
 
         /// <summary>
@@ -78,6 +78,10 @@ namespace Codinex.Infrastructure.Chat
                 ToolCalls = message.ToolCalls,
                 ToolCallId = message.ToolCallId,
                 Context = CreatePersistableContext(message.Context),
+                ProviderId = message.ProviderId,
+                ProviderName = message.ProviderName,
+                ModelId = message.ModelId,
+                ModelName = message.ModelName,
                 CreatedAt = message.CreatedAt,
             };
         }
@@ -119,7 +123,12 @@ namespace Codinex.Infrastructure.Chat
         /// <summary>
         /// Adds an assistant message to the session.
         /// </summary>
-        public ChatMessage AddAssistantMessage(string content)
+        public ChatMessage AddAssistantMessage(
+            string content,
+            string providerId,
+            string modelId,
+            string providerName,
+            string modelName)
         {
             if (string.IsNullOrWhiteSpace(content))
                 throw new Exception("Ai message respones is null");
@@ -128,6 +137,10 @@ namespace Codinex.Infrastructure.Chat
             {
                 Role = "assistant",
                 Content = content,
+                ProviderId = providerId,
+                ProviderName = providerName,
+                ModelId = modelId,
+                ModelName = modelName,
                 CreatedAt = DateTime.UtcNow,
             };
 
@@ -150,7 +163,22 @@ namespace Codinex.Infrastructure.Chat
                 .OrderByDescending(m => m.CreatedAt)
                 .Take(count)
                 .OrderBy(m => m.CreatedAt)
+                .Select(CreateHistoryMessage)
                 .ToList();
+        }
+
+        private static ChatMessage CreateHistoryMessage(ChatMessage message)
+        {
+            return new ChatMessage
+            {
+                Role = message.Role,
+                Content = message.Content,
+                Data = message.Data,
+                ToolCalls = message.ToolCalls,
+                ToolCallId = message.ToolCallId,
+                Context = message.Context,
+                CreatedAt = message.CreatedAt,
+            };
         }
 
         /// <summary>

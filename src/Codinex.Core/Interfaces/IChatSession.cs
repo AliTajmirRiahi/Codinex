@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.Models;
 
@@ -11,7 +11,12 @@ namespace Codinex.Core.Interfaces
         Task LoadAsync(string id);
         Task<bool> SaveAsync();
         ChatMessage AddUserMessage(string content, ChatMessageRequestContext context);
-        ChatMessage AddAssistantMessage(string content);
+        ChatMessage AddAssistantMessage(
+            string content,
+            string providerId,
+            string modelId,
+            string providerName,
+            string modelName);
         IReadOnlyList<ChatMessage> GetRecentMessages(int count);
     }
 }

@@ -9,6 +9,14 @@ namespace Codinex.Core.Models
 
         public ConversationProviderRole ProviderRole { get; set; } = ConversationProviderRole.Primary;
 
+        public string ProviderId { get; set; }
+
+        public string ProviderName { get; set; }
+
+        public string ModelId { get; set; }
+
+        public string ModelName { get; set; }
+
         public ChatMessageRequestContext Context { get; set; } = new();
     }
 }

@@ -47,7 +47,7 @@ namespace Codinex.Core.Chat
 
             if (request.ConversationHistory.Count > 0)
             {
-                messages.AddRange(request.ConversationHistory);
+                messages.AddRange(request.ConversationHistory.Select(CreateHistoryMessage));
             }
 
             var userMessage = CreateMessage("user", BuildUserContent(request, promptContext));
@@ -78,6 +78,20 @@ namespace Codinex.Core.Chat
             {
                 Role = role,
                 Content = content,
+            };
+        }
+
+        private static ChatMessage CreateHistoryMessage(ChatMessage message)
+        {
+            return new ChatMessage
+            {
+                Role = message.Role,
+                Content = message.Content,
+                Data = message.Data,
+                ToolCalls = message.ToolCalls,
+                ToolCallId = message.ToolCallId,
+                Context = message.Context,
+                CreatedAt = message.CreatedAt,
             };
         }
 

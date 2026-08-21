@@ -50,10 +50,17 @@ public sealed class SendChatMessageUseCase(
             if (preprocessorResult?.IsAnswer == true)
             {
                 var directResult = CreateDirectResponseResult(request, preprocessorResult);
+                ApplyModelIdentity(directResult);
+
                 var directResponse = preprocessorResult.Response ?? string.Empty;
 
                 chatSession.AddUserMessage(request.DraftText, directResult.Context);
-                chatSession.AddAssistantMessage(directResponse);
+                chatSession.AddAssistantMessage(
+                    directResponse,
+                    directResult.ProviderId,
+                    directResult.ModelId,
+                    directResult.ProviderName,
+                    directResult.ModelName);
 
                 var directTitleChanged = await chatSession.SaveAsync();
 
@@ -79,6 +86,7 @@ public sealed class SendChatMessageUseCase(
             var buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
             ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
+            ApplyModelIdentity(buildResult);
 
             var aiResult = await conversationEngine.ExecuteTextAsync(
                 buildResult,
@@ -87,7 +95,12 @@ public sealed class SendChatMessageUseCase(
             // Persist the exchange only after a successful AI response.
             // Provider errors must not be saved into message history.
             chatSession.AddUserMessage(request.DraftText, buildResult.Context);
-            chatSession.AddAssistantMessage(aiResult);
+            chatSession.AddAssistantMessage(
+                aiResult,
+                buildResult.ProviderId,
+                buildResult.ModelId,
+                buildResult.ProviderName,
+                buildResult.ModelName);
 
             // Save session
             var titleChanged = await chatSession.SaveAsync();
@@ -140,10 +153,17 @@ public sealed class SendChatMessageUseCase(
             if (preprocessorResult?.IsAnswer == true)
             {
                 buildResult = CreateDirectResponseResult(request, preprocessorResult);
+                ApplyModelIdentity(buildResult);
+
                 fullText = preprocessorResult.Response ?? string.Empty;
 
                 chatSession.AddUserMessage(request.DraftText, buildResult.Context);
-                chatSession.AddAssistantMessage(fullText);
+                chatSession.AddAssistantMessage(
+                    fullText,
+                    buildResult.ProviderId,
+                    buildResult.ModelId,
+                    buildResult.ProviderName,
+                    buildResult.ModelName);
 
                 var directTitleChanged = await chatSession.SaveAsync();
 
@@ -174,6 +194,8 @@ public sealed class SendChatMessageUseCase(
 
             if (preprocessorResult != null)
                 ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
+
+            ApplyModelIdentity(buildResult);
 
             // Persist the exchange only after a successful AI response.
             // Provider errors must not be saved into message history.
@@ -261,7 +283,12 @@ public sealed class SendChatMessageUseCase(
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            chatSession.AddAssistantMessage(fullText);
+            chatSession.AddAssistantMessage(
+                fullText,
+                buildResult.ProviderId,
+                buildResult.ModelId,
+                buildResult.ProviderName,
+                buildResult.ModelName);
 
             await chatSession.SaveAsync();
 
@@ -281,7 +308,12 @@ public sealed class SendChatMessageUseCase(
             // would duplicate it in history.
             if (!string.IsNullOrWhiteSpace(fullText) && buildResult != null)
             {
-                chatSession.AddAssistantMessage(fullText);
+                chatSession.AddAssistantMessage(
+                    fullText,
+                    buildResult.ProviderId,
+                    buildResult.ModelId,
+                    buildResult.ProviderName,
+                    buildResult.ModelName);
                 titleChanged = await chatSession.SaveAsync();
             }
 
@@ -377,6 +409,21 @@ public sealed class SendChatMessageUseCase(
         }
 
         context.PlannedTools = intentToolPlanner.PlanTools(preprocessorResult.Intents);
+    }
+
+    private void ApplyModelIdentity(ChatMessageBuildResult buildResult)
+    {
+        if (buildResult == null)
+        {
+            return;
+        }
+
+        var identity = aiProviderRouter.GetCurrentModelIdentity(buildResult.ProviderRole);
+
+        buildResult.ProviderId = identity.ProviderId;
+        buildResult.ProviderName = identity.ProviderName;
+        buildResult.ModelId = identity.ModelId;
+        buildResult.ModelName = identity.ModelName;
     }
 
     private ChatMessageBuildResult CreatePreprocessorBuildResult(ChatMessageBuildRequest request)
@@ -665,6 +712,26 @@ public sealed class SendChatMessageUseCase(
         if (buildResult?.Context?.PreprocessorResult?.IsAnswer == true)
         {
             Add("isPreprocessorAnswer", true);
+        }
+
+        if (!string.IsNullOrWhiteSpace(buildResult?.ProviderId))
+        {
+            Add("providerId", buildResult.ProviderId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(buildResult?.ProviderName))
+        {
+            Add("providerName", buildResult.ProviderName);
+        }
+
+        if (!string.IsNullOrWhiteSpace(buildResult?.ModelId))
+        {
+            Add("modelId", buildResult.ModelId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(buildResult?.ModelName))
+        {
+            Add("modelName", buildResult.ModelName);
         }
 
         if (titleChanged)

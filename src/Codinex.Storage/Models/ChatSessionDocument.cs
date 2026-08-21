@@ -15,8 +15,6 @@ namespace Codinex.Storage.Models
             get => string.IsNullOrWhiteSpace(_title) ? Statics.NewChatTitle : _title;
             set => _title = value;
         }
-        public string ProviderId { get; set; }
-        public string ModelId { get; set; }
         public List<ChatMessage> Messages { get; set; } = [];
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

@@ -499,8 +499,24 @@ export const chatView = {
 
         for (const message of chatMessages) {
             const context = message.context || message.Context;
+            const options = {};
+            const providerId = message.providerId || message.ProviderId;
+            const providerName = message.providerName || message.ProviderName;
+            const modelId = message.modelId || message.ModelId;
+            const modelName = message.modelName || message.ModelName;
 
-            this.appendMessage(message.content, message.role, this.getMessageDate(message), true, context ? { context } : undefined);
+            if (context) options.context = context;
+            if (providerId) options.providerId = providerId;
+            if (providerName) options.providerName = providerName;
+            if (modelId) options.modelId = modelId;
+            if (modelName) options.modelName = modelName;
+
+            this.appendMessage(
+                message.content || message.Content,
+                message.role || message.Role,
+                this.getMessageDate(message),
+                true,
+                Object.keys(options).length > 0 ? options : undefined);
         }
 
         if (this.floatingDateSeparator) {

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
@@ -24,6 +24,14 @@ namespace Codinex.Core.Models
         public string ToolCallId { get; set; }
 
         public ChatMessageRequestContext Context { get; set; }
+
+        public string ProviderId { get; set; }
+
+        public string ProviderName { get; set; }
+
+        public string ModelId { get; set; }
+
+        public string ModelName { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }
