@@ -1,3 +1,5 @@
+import { webViewTransport } from '../bridge/webViewTransport.js';
+
 export class CodeRenderer {
 
     /**
@@ -102,6 +104,15 @@ export class CodeRenderer {
     }
 
     static copyToClipboard(text) {
+
+        // Routed through the .NET host so the write goes through the native Win32
+        // clipboard (System.Windows.Clipboard) instead of WebView2/Chromium's scripted
+        // clipboard APIs. Chromium's navigator.clipboard.writeText/execCommand writes are
+        // not picked up by Windows Clipboard History (Win+V) or Cloud Clipboard.
+        if (webViewTransport.isAvailable()) {
+            webViewTransport.send("COPY_TO_CLIPBOARD", { text });
+            return Promise.resolve();
+        }
 
         if (navigator.clipboard?.writeText) {
             return navigator.clipboard.writeText(text);

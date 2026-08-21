@@ -32,6 +32,7 @@ public static class WebViewMessageType
     public const string ReopenChangesetReview = "REOPEN_CHANGESET_REVIEW";
     public const string AskUserAnswer = "ASK_USER_ANSWER";
     public const string RewindChat = "REWIND_CHAT";
+    public const string CopyToClipboard = "COPY_TO_CLIPBOARD";
 
     // To JS
     public const string InitData = "INIT_DATA";

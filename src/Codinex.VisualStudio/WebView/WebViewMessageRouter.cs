@@ -51,6 +51,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IClarificationSessionService _clarificationSessionService;
     private readonly IWorkspaceContext _workspaceContext;
     private readonly ISourceControlStatusService _sourceControlStatusService;
+    private readonly IUiThreadDispatcher _uiThreadDispatcher;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -75,7 +76,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IChangesetSessionService changesetSessionService,
         IClarificationSessionService clarificationSessionService,
         IWorkspaceContext workspaceContext,
-        ISourceControlStatusService sourceControlStatusService)
+        ISourceControlStatusService sourceControlStatusService,
+        IUiThreadDispatcher uiThreadDispatcher)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -97,6 +99,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _clarificationSessionService = clarificationSessionService;
         _workspaceContext = workspaceContext;
         _sourceControlStatusService = sourceControlStatusService;
+        _uiThreadDispatcher = uiThreadDispatcher;
 
 
         RegisterEventHandlers();
@@ -340,6 +343,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     _errorHandler.HandleUiError(payload.Source, payload.Type, payload.Message, payload.Stack);
                     return;
                 }
+            case WebViewMessageType.CopyToClipboard:
+                {
+                    var text = request.Payload?["text"]?.ToString() ?? string.Empty;
+
+                    await CopyToClipboardAsync(text);
+
+                    return;
+                }
             case WebViewMessageType.OpenExternalLink:
                 {
                     OpenExternalLink(request);
@@ -379,6 +390,26 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 () => SendInputLanguageChangedAsync(e),
                 nameof(SendInputLanguageChangedAsync));
         };
+    }
+
+    /// <summary>
+    /// Writes text to the clipboard using the native WPF <see cref="System.Windows.Clipboard"/> API
+    /// instead of the WebView2 renderer's Async Clipboard API. Chromium's scripted clipboard writes
+    /// (navigator.clipboard.writeText / document.execCommand) do not register with Windows Clipboard
+    /// History (Win+V) or Cloud Clipboard, whereas writes made through the OS-level clipboard API do.
+    /// </summary>
+    private async Task CopyToClipboardAsync(string text)
+    {
+        await _uiThreadDispatcher.SwitchToMainThreadAsync();
+
+        try
+        {
+            System.Windows.Clipboard.SetDataObject(text ?? string.Empty, true);
+        }
+        catch
+        {
+            // Clipboard can be transiently locked by another process — nothing else we can do.
+        }
     }
 
     private void OpenExternalLink(WebViewMessageRequest request)
