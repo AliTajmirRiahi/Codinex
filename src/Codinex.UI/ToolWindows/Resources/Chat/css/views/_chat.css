@@ -94,8 +94,61 @@
     max-width: 85%;
     border: 1px solid var(--vs-border);
     border-radius: 6px;
-    background-color: var(--vs-access-tool-tip-disabled-text-color);
     overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* New thought entrance animation, removed on the next frame after insertion. */
+.thinking-box.thinking-enter {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+/* Applied briefly while an old thought is folded into the Total Thoughts group. */
+.thinking-box.thinking-fade-out {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+.total-thoughts-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.total-thoughts-content .thinking-box {
+    max-width: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+}
+
+.total-thoughts-content .thinking-box + .thinking-box {
+    border-top: 1px solid var(--vs-border);
+}
+
+.total-thoughts-content .thinking-toggle {
+    padding: 3px 10px;
+    min-height: 0;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.total-thoughts-content .thinking-chevron {
+    width: 10px;
+    height: 10px;
+}
+
+.total-thoughts-content .thinking-chevron svg {
+    width: 10px;
+    height: 10px;
+}
+
+.total-thoughts-content .thinking-content {
+    padding: 0 10px 8px 24px;
+    font-size: 11px;
 }
 
 .thinking-toggle {
@@ -153,7 +206,6 @@
     font-size: 12px;
     line-height: 1.5;
     color: var(--vs-class-designer-typedef-color);
-    white-space: pre-wrap;
     word-wrap: break-word;
 }
 

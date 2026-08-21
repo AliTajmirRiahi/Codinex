@@ -255,6 +255,12 @@ export const chatView = {
             container.appendChild(box);
         }
 
+        // Fade the new thought in instead of having it pop into place.
+        box.classList.add('thinking-enter');
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => box.classList.remove('thinking-enter'));
+        });
+
         this.currentThinkingBox = box;
         this.thinkingStartedAt = Date.now();
         this.stopThinkingTimer();
@@ -319,6 +325,73 @@ export const chatView = {
 
         this.thinkingStartedAt = null;
         this.currentThinkingBox = null;
+
+        this.trackCompletedThought(box);
+    },
+
+    /**
+     * Keeps only the 3 most recently completed thinking boxes visible on their
+     * own; older ones are folded into the persistent "Total Thoughts" group so
+     * a long run of thoughts doesn't clutter the timeline.
+     */
+    trackCompletedThought(box) {
+        if (!box) return;
+
+        if (!this.visibleThoughtBoxes) this.visibleThoughtBoxes = [];
+
+        this.visibleThoughtBoxes.push(box);
+
+        if (this.visibleThoughtBoxes.length > 3) {
+            this.foldOldestThought(this.visibleThoughtBoxes.shift());
+        }
+    },
+
+    foldOldestThought(box) {
+        if (!box || !box.parentNode) return;
+
+        const groupBox = document.getElementById('total-thoughts-box');
+
+        if (!groupBox) return;
+
+        if (groupBox.classList.contains('hidden')) {
+            groupBox.classList.remove('hidden');
+            box.parentNode.insertBefore(groupBox, box);
+            this.bindTotalThoughtsToggle(groupBox);
+        }
+
+        // Fade the thought out of its spot in the timeline, then re-parent it
+        // (collapsed) into the group once the transition has had time to run.
+        box.classList.add('thinking-fade-out');
+
+        setTimeout(() => {
+            box.classList.remove('thinking-fade-out', 'thinking-enter');
+            box.classList.add('collapsed');
+
+            const content = groupBox.querySelector('.total-thoughts-content');
+            const label = groupBox.querySelector('.total-thoughts-label');
+
+            if (content) content.appendChild(box);
+
+            this.totalThoughtsCount = (this.totalThoughtsCount || 0) + 1;
+
+            if (label) label.textContent = `Total Thoughts (${this.totalThoughtsCount})`;
+        }, 250);
+    },
+
+    bindTotalThoughtsToggle(groupBox) {
+        if (groupBox.dataset.toggleBound) return;
+
+        groupBox.dataset.toggleBound = 'true';
+
+        const toggleBtn = groupBox.querySelector('.thinking-toggle');
+
+        if (!toggleBtn) return;
+
+        toggleBtn.addEventListener('click', () => {
+            const collapsed = groupBox.classList.toggle('collapsed');
+
+            toggleBtn.setAttribute('aria-expanded', String(!collapsed));
+        });
     },
 
     resetThinking() {
@@ -474,10 +547,13 @@ export const chatView = {
         const loadingElement = document.getElementById('response-loading');
         const errorBox = document.getElementById('error-box');
         const thinkingBoxTemplate = document.getElementById('thinking-box-template');
+        const totalThoughtsBox = document.getElementById('total-thoughts-box');
 
         this.stopThinkingTimer();
         this.thinkingStartedAt = null;
         this.currentThinkingBox = null;
+        this.visibleThoughtBoxes = [];
+        this.totalThoughtsCount = 0;
 
         container.textContent = '';
 
@@ -492,6 +568,18 @@ export const chatView = {
             if (thinkingLabel) thinkingLabel.textContent = 'Thinking...';
 
             container.appendChild(thinkingBoxTemplate);
+        }
+
+        if (totalThoughtsBox) {
+            totalThoughtsBox.classList.add('hidden', 'collapsed');
+
+            const totalThoughtsContent = totalThoughtsBox.querySelector('.total-thoughts-content');
+            const totalThoughtsLabel = totalThoughtsBox.querySelector('.total-thoughts-label');
+
+            if (totalThoughtsContent) totalThoughtsContent.innerHTML = '';
+            if (totalThoughtsLabel) totalThoughtsLabel.textContent = 'Total Thoughts';
+
+            container.appendChild(totalThoughtsBox);
         }
 
         if (statusElement) {
