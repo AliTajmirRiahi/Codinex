@@ -121,6 +121,15 @@
                     </button>
                     <div class="thinking-content"></div>
                 </div>
+                <!-- Single persistent group that older, completed thinking boxes get
+                     folded into once more than 3 are visible at once. -->
+                <div id="total-thoughts-box" class="thinking-box total-thoughts-box hidden collapsed">
+                    <button class="thinking-toggle" type="button" aria-expanded="false">
+                        <codinex-image name="chevron-down.svg" class="thinking-chevron"></codinex-image>
+                        <span class="thinking-label total-thoughts-label">Total Thoughts</span>
+                    </button>
+                    <div class="thinking-content total-thoughts-content"></div>
+                </div>
                 <div id="response-status" class="response-status hidden"></div>
                 <div id="response-loading" class="response-loading hidden">
                     <codinex-image name="linear-loading.svg"></codinex-image>
@@ -603,14 +612,6 @@
                             <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
-                    <div class="donate-row" data-coin="USDT">
-                        <codinex-icon name="crypto/usdt" class="donate-coin-icon"></codinex-icon>
-                        <span class="donate-coin-name">USDT (BEP20)</span>
-                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
-                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
-                        </button>
-                    </div>
                     <div class="donate-row" data-coin="BNB">
                         <codinex-icon name="crypto/bnb" class="donate-coin-icon" style="color: #F3BA2F"></codinex-icon>
                         <span class="donate-coin-name">BNB</span>
@@ -619,19 +620,51 @@
                             <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
-                    <div class="donate-row" data-coin="ETH">
+                    <div class="donate-row" data-coin="USDT">
+                        <codinex-icon name="crypto/usdt" class="donate-coin-icon"></codinex-icon>
+                        <span class="donate-coin-name">USDT (BEP20)</span>
+                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
+                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="USDC">
+                        <codinex-icon name="crypto/usdt" class="donate-coin-icon"></codinex-icon>
+                        <span class="donate-coin-name">USDC (BEP20)</span>
+                        <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
+                        <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <!--<div class="donate-row" data-coin="ETH">
                         <codinex-icon name="crypto/eth" class="donate-coin-icon" style="color: #9fa8da"></codinex-icon>
                         <span class="donate-coin-name">ETH</span>
                         <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
                         <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
                             <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
                         </button>
-                    </div>
+                    </div>-->
                     <div class="donate-row" data-coin="TRX">
                         <codinex-icon name="crypto/trx" class="donate-coin-icon" style="color:red"></codinex-icon>
                         <span class="donate-coin-name">TRX</span>
                         <span class="donate-address" title="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv">TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv</span>
                         <button type="button" class="donate-copy-btn" data-address="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="USDT">
+                        <codinex-icon name="crypto/usdt" class="donate-coin-icon"></codinex-icon>
+                        <span class="donate-coin-name">USDT (TRON)</span>
+                        <span class="donate-address" title="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv">TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv</span>
+                        <button type="button" class="donate-copy-btn" data-address="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv" title="Copy address" aria-label="Copy address">
+                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                        </button>
+                    </div>
+                    <div class="donate-row" data-coin="GRAM">
+                        <codinex-icon name="crypto/ton" class="donate-coin-icon"></codinex-icon>
+                        <span class="donate-coin-name">GRAM</span>
+                        <span class="donate-address" title="UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ">UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ</span>
+                        <button type="button" class="donate-copy-btn" data-address="UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ" title="Copy address" aria-label="Copy address">
                             <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>

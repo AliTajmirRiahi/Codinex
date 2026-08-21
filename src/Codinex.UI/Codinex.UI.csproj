@@ -116,6 +116,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\eth.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\trx.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\usdt.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\ton.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
