@@ -101,7 +101,7 @@ namespace Codinex.VisualStudio.References.Providers
 
             return new ReferenceItem
             {
-                Id = $"file:{Guid.NewGuid()}",
+                Id = ReferenceIdBuilder.BuildSymbolId(ReferenceKind.Interface, filePath, containerName, signature),
                 Name = interfaceName,
                 Description = fileName,
                 Type = ReferenceKind.Interface,

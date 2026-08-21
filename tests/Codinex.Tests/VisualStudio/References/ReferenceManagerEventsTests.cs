@@ -39,6 +39,7 @@ namespace Codinex.Tests.VisualStudio.References
                 provider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 pipeline,
                 errorHandler);
 
@@ -91,6 +92,7 @@ namespace Codinex.Tests.VisualStudio.References
                 provider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 pipeline,
                 errorHandler);
 
@@ -149,6 +151,7 @@ namespace Codinex.Tests.VisualStudio.References
                 provider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -195,6 +198,7 @@ namespace Codinex.Tests.VisualStudio.References
                 provider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -252,6 +256,7 @@ namespace Codinex.Tests.VisualStudio.References
                 activeDocumentProvider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -284,6 +289,7 @@ namespace Codinex.Tests.VisualStudio.References
                 activeDocumentProvider,
                 Substitute.For<IWorkspaceFileWatcher>(),
                 Substitute.For<IFileReferenceBuilder>(),
+                Substitute.For<ISymbolReferenceWatcher>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 

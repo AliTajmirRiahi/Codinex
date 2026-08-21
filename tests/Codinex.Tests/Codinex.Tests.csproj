@@ -222,6 +222,7 @@
     <Compile Include="VisualStudio\References\ReferenceManagerActiveDocumentTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerEventsTests.cs" />
     <Compile Include="VisualStudio\References\ReferenceManagerGetReferencesTests.cs" />
+    <Compile Include="VisualStudio\References\RoslynSymbolReferenceWatcherTests.cs" />
     <Compile Include="VisualStudio\Workspace\FormatterTests\DiagnosticsFormatterTest\Base\DiagnosticsFormatterTestBase.cs" />
     <Compile Include="VisualStudio\Workspace\FormatterTests\DiagnosticsFormatterTest\DiagnosticsFormatter_FormatTests.cs" />
     <Compile Include="VisualStudio\Workspace\FormatterTests\OpenDocumentsFormatterTest\Base\OpenDocumentsFormatterTestBase.cs" />

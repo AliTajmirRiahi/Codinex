@@ -296,16 +296,19 @@ export function setComposerController(refs) {
 }
 
 /**
- * Adds a file reference to the composer's browsable list, or replaces the existing
- * entry for the same file path if one is already present. Used to keep the '@' file
- * picker in sync with add/edit events from the workspace file watcher.
+ * Adds a reference (file or symbol) to the composer's browsable list, or replaces the
+ * existing entry with the same id if one is already present. Ids are deterministic
+ * (built from file path, or from file+container+signature for symbols), so this keeps
+ * the '@' picker in sync with add/edit events from the workspace/Roslyn watchers.
  */
 export function upsertComposerReference(item) {
     if (!item) return;
 
-    const value = (item.value ?? item.Value ?? '').toLowerCase();
+    const id = (item.id ?? item.Id ?? '').toLowerCase();
+    if (!id) return;
+
     const withoutExisting = _state.composerReferences.filter(
-        r => (r.value ?? r.Value ?? '').toLowerCase() !== value
+        r => (r.id ?? r.Id ?? '').toLowerCase() !== id
     );
 
     updateState({
@@ -314,17 +317,18 @@ export function upsertComposerReference(item) {
 }
 
 /**
- * Removes the file reference matching the given file path from the composer's
- * browsable list. Used when the workspace file watcher reports a file deletion.
+ * Removes the reference matching the given id from the composer's browsable list.
+ * Used when a watcher reports a file deletion or a symbol (method/class/field/interface)
+ * disappearing from its document.
  */
-export function removeComposerReference(filePath) {
-    if (!filePath) return;
+export function removeComposerReference(id) {
+    if (!id) return;
 
-    const target = filePath.toLowerCase();
+    const target = id.toLowerCase();
 
     updateState({
         composerReferences: _state.composerReferences.filter(
-            r => (r.value ?? r.Value ?? '').toLowerCase() !== target
+            r => (r.id ?? r.Id ?? '').toLowerCase() !== target
         )
     });
 }

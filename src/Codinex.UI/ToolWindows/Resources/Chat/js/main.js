@@ -269,8 +269,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chatController.setComposerReferences();
         },
         onReferenceRemoved: (payload) => {
-            const filePath = payload?.filePath ?? payload?.FilePath;
-            removeComposerReference(filePath);
+            const id = payload?.id ?? payload?.Id;
+            removeComposerReference(id);
             chatController.setComposerReferences();
         },
         onReferenceUpdated: (payload) => {

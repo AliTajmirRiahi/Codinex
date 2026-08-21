@@ -167,7 +167,7 @@ namespace Codinex.VisualStudio.References.Providers
             {
                 return new ReferenceItem
                 {
-                    Id = $"file:{Guid.NewGuid()}",
+                    Id = ReferenceIdBuilder.BuildFileId(filePath),
                     Name = $"Active Document",
                     Description = fileName,
                     Type = ReferenceKind.File,
@@ -201,7 +201,7 @@ namespace Codinex.VisualStudio.References.Providers
 
             return new ReferenceItem
             {
-                Id = $"file:{Guid.NewGuid()}",
+                Id = ReferenceIdBuilder.BuildFileId(filePath),
                 Name = fileName,
                 Description = iconForFile.Description,
                 Type = ReferenceKind.File,
@@ -271,7 +271,7 @@ namespace Codinex.VisualStudio.References.Providers
 
                     items.Add(new ReferenceItem
                     {
-                        Id = $"file:{Guid.NewGuid()}",
+                        Id = ReferenceIdBuilder.BuildFileId(filePath),
                         Name = fileName,
                         Description = iconForFile.Description,
                         Type = ReferenceKind.File,
