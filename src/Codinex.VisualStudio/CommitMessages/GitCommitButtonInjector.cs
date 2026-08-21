@@ -485,20 +485,31 @@ namespace Codinex.VisualStudio.CommitMessages
             var mainWindow = Application.Current?.MainWindow;
             var point = mainWindow != null ? GitCommitVisualTreeLocator.Find(mainWindow) : null;
 
-            if (point != null)
+            if (point == null)
             {
-                var textBox = point.Value.CommitTextBox;
-                CommitTextBoxWriter.TryWrite(textBox, message);
-
-                // Lock the box (read-only, not disabled — disabled greys it out) while the
-                // suggestion is pending, so the user reviews it via Approve/Reject instead of
-                // editing it mid-review. Deferred to ApplicationIdle: TryWrite's paste is only
-                // queued, not yet processed, at this point — locking immediately races it and
-                // a read-only/disabled control silently drops the still-pending paste.
-                textBox.Dispatcher.BeginInvoke(
-                    System.Windows.Threading.DispatcherPriority.ApplicationIdle,
-                    new Action(() => CommitTextBoxWriter.SetReadOnly(textBox, true)));
+                _state.SetError("Couldn't find the Git commit message box.");
+                Render();
+                ScheduleErrorAutoReset();
+                return;
             }
+
+            var textBox = point.Value.CommitTextBox;
+            if (!CommitTextBoxWriter.TryWrite(textBox, message))
+            {
+                _state.SetError("Couldn't write the generated commit message.");
+                Render();
+                ScheduleErrorAutoReset();
+                return;
+            }
+
+            // Lock the box (read-only, not disabled — disabled greys it out) while the
+            // suggestion is pending, so the user reviews it via Approve/Reject instead of
+            // editing it mid-review. Deferred to ApplicationIdle: TryWrite's paste is only
+            // queued, not yet processed, at this point — locking immediately races it and
+            // a read-only/disabled control silently drops the still-pending paste.
+            textBox.Dispatcher.BeginInvoke(
+                System.Windows.Threading.DispatcherPriority.ApplicationIdle,
+                new Action(() => CommitTextBoxWriter.SetReadOnly(textBox, true)));
 
             _state.SetResultReady();
             Render();
@@ -535,11 +546,12 @@ namespace Codinex.VisualStudio.CommitMessages
 
             if (textBox != null)
             {
-                CommitTextBoxWriter.TryWrite(textBox, string.Empty);
+                CommitTextBoxWriter.TryClear(textBox);
             }
 
             _state.Reset();
             Render();
+            SetCommitActionButtonsEnabled(true);
         }
 
         private void TrackCommitActionButtons(Window mainWindow)

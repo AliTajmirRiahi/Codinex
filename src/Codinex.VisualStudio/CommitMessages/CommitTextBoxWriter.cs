@@ -27,6 +27,26 @@ namespace Codinex.VisualStudio.CommitMessages
                 return true;
             }
 
+            return TrySetValuePattern(textBox, text);
+        }
+
+        public static bool TryClear(FrameworkElement textBox)
+        {
+            if (textBox == null) return false;
+
+            // Clearing through UI Automation is synchronous and avoids racing the queued
+            // Ctrl+A/Ctrl+V paste used for generated text. Fall back to the keyboard path only
+            // when the native text box does not expose a writable value pattern.
+            if (TrySetValuePattern(textBox, string.Empty))
+            {
+                return true;
+            }
+
+            return TryWriteViaKeyboard(textBox, string.Empty);
+        }
+
+        private static bool TrySetValuePattern(FrameworkElement textBox, string text)
+        {
             try
             {
                 var peer = UIElementAutomationPeer.CreatePeerForElement(textBox)
