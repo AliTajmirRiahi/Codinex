@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Codinex.Core.Chat;
 using Codinex.Core.Interfaces;
 using Codinex.Storage.Managers;
@@ -35,6 +40,11 @@ namespace Codinex.VisualStudio.CommitMessages
         private CancellationTokenSource _cts;
         private bool _isIconRow;
         private FrameworkElement _commitTextBox;
+        private readonly Dictionary<Control, RoutedEventHandler> _commitActionButtonClickHandlers = new();
+        private DispatcherTimer _commitOperationMonitor;
+        private ICommand _commitOperationCommand;
+        private bool _isCommitOperationInProgress;
+        private bool _commitOperationObservedUnavailable;
 
         /// <summary>
         /// Attempts to (re)inject the control. Safe to call repeatedly (idempotent, never throws).
@@ -51,6 +61,8 @@ namespace Codinex.VisualStudio.CommitMessages
 
                 var mainWindow = Application.Current?.MainWindow;
                 if (mainWindow == null) return;
+
+                TrackCommitActionButtons(mainWindow);
 
                 var point = GitCommitVisualTreeLocator.Find(mainWindow);
                 if (point == null) return;
@@ -87,6 +99,9 @@ namespace Codinex.VisualStudio.CommitMessages
                 _cts?.Cancel();
                 _cts?.Dispose();
                 _cts = null;
+
+                CompleteCommitOperation();
+                DetachCommitActionButtonHandlers();
 
                 if (_host == null) return;
 
@@ -191,10 +206,11 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             if (_host == null) return;
 
-            // A generated message is pending user review once we reach ResultReady — keep the
-            // native "Commit All"/"Commit Staged" buttons disabled until the user explicitly
-            // approves or rejects it, so they can't commit the still-unreviewed suggestion.
-            SetCommitActionButtonsEnabled(_state.Phase != GitCommitPhase.ResultReady);
+            // A generated message is pending user review once we reach ResultReady, and a
+            // native commit may also already be running. Keep the native "Commit All"/"Commit
+            // Staged" buttons disabled in both cases so the user can't commit twice or commit
+            // the still-unreviewed suggestion.
+            SetCommitActionButtonsEnabled(!_isCommitOperationInProgress && _state.Phase != GitCommitPhase.ResultReady);
 
             switch (_state.Phase)
             {
@@ -526,6 +542,237 @@ namespace Codinex.VisualStudio.CommitMessages
             Render();
         }
 
+        private void TrackCommitActionButtons(Window mainWindow)
+        {
+            var buttons = GitCommitVisualTreeLocator.FindCommitActionButtons(mainWindow);
+            var currentButtons = new HashSet<Control>(buttons);
+
+            foreach (var button in buttons)
+            {
+                if (!_commitActionButtonClickHandlers.ContainsKey(button))
+                {
+                    RoutedEventHandler handler = OnCommitActionButtonClick;
+                    button.AddHandler(ButtonBase.ClickEvent, handler, true);
+                    _commitActionButtonClickHandlers[button] = handler;
+                }
+
+                button.Unloaded -= OnCommitActionButtonUnloaded;
+                button.Unloaded += OnCommitActionButtonUnloaded;
+
+                if (_isCommitOperationInProgress || _state.Phase == GitCommitPhase.ResultReady)
+                {
+                    SetCommitActionButtonEnabled(button, false);
+                }
+            }
+
+            var staleButtons = new List<Control>();
+            foreach (var button in _commitActionButtonClickHandlers.Keys)
+            {
+                if (!currentButtons.Contains(button))
+                {
+                    staleButtons.Add(button);
+                }
+            }
+
+            foreach (var button in staleButtons)
+            {
+                DetachCommitActionButtonHandler(button);
+            }
+        }
+
+        private void OnCommitActionButtonUnloaded(object sender, RoutedEventArgs e)
+        {
+            DetachCommitActionButtonHandler(sender as Control);
+        }
+
+        private void DetachCommitActionButtonHandlers()
+        {
+            var buttons = new List<Control>(_commitActionButtonClickHandlers.Keys);
+            foreach (var button in buttons)
+            {
+                DetachCommitActionButtonHandler(button);
+            }
+        }
+
+        private void DetachCommitActionButtonHandler(Control button)
+        {
+            if (button == null) return;
+
+            if (_commitActionButtonClickHandlers.TryGetValue(button, out var handler))
+            {
+                button.RemoveHandler(ButtonBase.ClickEvent, handler);
+                _commitActionButtonClickHandlers.Remove(button);
+            }
+
+            button.Unloaded -= OnCommitActionButtonUnloaded;
+        }
+
+        private void OnCommitActionButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is Control control)) return;
+
+            var commandButton = FindClickedCommitCommandButton(control, e.OriginalSource as DependencyObject);
+            if (commandButton == null) return;
+
+            if (_isCommitOperationInProgress)
+            {
+                e.Handled = true;
+                control.Dispatcher.BeginInvoke(
+                    DispatcherPriority.Send,
+                    new Action(() => SetCommitActionButtonsEnabled(false)));
+                return;
+            }
+
+            BeginCommitOperation(commandButton);
+        }
+
+        private void BeginCommitOperation(Control control)
+        {
+            _isCommitOperationInProgress = true;
+            _commitOperationObservedUnavailable = false;
+            ObserveCommitOperationCommand(FindCommitCommandButton(control)?.Command);
+            EnsureCommitOperationMonitor();
+
+            // Defer the actual IsEnabled write until the native Click handler has had a chance
+            // to execute its command. This still runs before another input event can trigger a
+            // second commit, but avoids interfering with Visual Studio's existing commit path.
+            control.Dispatcher.BeginInvoke(
+                DispatcherPriority.Send,
+                new Action(() =>
+                {
+                    SetCommitActionButtonsEnabled(false);
+                    _commitOperationMonitor?.Start();
+                }));
+        }
+
+        private void ObserveCommitOperationCommand(ICommand command)
+        {
+            if (_commitOperationCommand != null)
+            {
+                _commitOperationCommand.CanExecuteChanged -= OnCommitOperationCanExecuteChanged;
+            }
+
+            _commitOperationCommand = command;
+
+            if (_commitOperationCommand != null)
+            {
+                _commitOperationCommand.CanExecuteChanged += OnCommitOperationCanExecuteChanged;
+            }
+        }
+
+        private void OnCommitOperationCanExecuteChanged(object sender, EventArgs e)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null) return;
+
+            dispatcher.BeginInvoke(
+                DispatcherPriority.Background,
+                new Action(() =>
+                {
+                    if (!_isCommitOperationInProgress) return;
+
+                    if (CanAnyCommitActionExecute())
+                    {
+                        CompleteCommitOperation();
+                    }
+                    else
+                    {
+                        _commitOperationObservedUnavailable = true;
+                        SetCommitActionButtonsEnabled(false);
+                    }
+                }));
+        }
+
+        private void EnsureCommitOperationMonitor()
+        {
+            if (_commitOperationMonitor != null) return;
+
+            _commitOperationMonitor = new DispatcherTimer(DispatcherPriority.Background)
+            {
+                Interval = TimeSpan.FromMilliseconds(250)
+            };
+            _commitOperationMonitor.Tick += OnCommitOperationMonitorTick;
+        }
+
+        private void OnCommitOperationMonitorTick(object sender, EventArgs e)
+        {
+            if (!_isCommitOperationInProgress)
+            {
+                _commitOperationMonitor?.Stop();
+                return;
+            }
+
+            if (CanAnyCommitActionExecute())
+            {
+                if (_commitOperationObservedUnavailable)
+                {
+                    CompleteCommitOperation();
+                }
+                else
+                {
+                    SetCommitActionButtonsEnabled(false);
+                }
+            }
+            else
+            {
+                _commitOperationObservedUnavailable = true;
+                SetCommitActionButtonsEnabled(false);
+            }
+        }
+
+        private void CompleteCommitOperation()
+        {
+            _commitOperationMonitor?.Stop();
+            ObserveCommitOperationCommand(null);
+
+            if (!_isCommitOperationInProgress) return;
+
+            _isCommitOperationInProgress = false;
+            _commitOperationObservedUnavailable = false;
+            SetCommitActionButtonsEnabled(_state.Phase != GitCommitPhase.ResultReady);
+        }
+
+        private static bool CanAnyCommitActionExecute()
+        {
+            var mainWindow = Application.Current?.MainWindow;
+            if (mainWindow == null) return true;
+
+            var foundButton = false;
+            foreach (var button in GitCommitVisualTreeLocator.FindCommitActionButtons(mainWindow))
+            {
+                foundButton = true;
+
+                var commandButton = FindCommitCommandButton(button);
+                if (commandButton != null)
+                {
+                    if (CanExecuteCommitAction(commandButton))
+                    {
+                        return true;
+                    }
+                }
+                else if (button.IsEnabled)
+                {
+                    return true;
+                }
+            }
+
+            return !foundButton;
+        }
+
+        private static bool CanExecuteCommitAction(ButtonBase button)
+        {
+            var command = button.Command;
+            if (command == null) return button.IsEnabled;
+
+            var parameter = button.CommandParameter;
+            if (command is RoutedCommand routedCommand)
+            {
+                return routedCommand.CanExecute(parameter, button.CommandTarget ?? button);
+            }
+
+            return command.CanExecute(parameter);
+        }
+
         private static void SetCommitActionButtonsEnabled(bool enabled)
         {
             try
@@ -535,12 +782,91 @@ namespace Codinex.VisualStudio.CommitMessages
 
                 foreach (var button in GitCommitVisualTreeLocator.FindCommitActionButtons(mainWindow))
                 {
-                    button.IsEnabled = enabled;
+                    SetCommitActionButtonEnabled(button, enabled);
                 }
             }
             catch
             {
                 // Never disrupt Visual Studio.
+            }
+        }
+
+        private static void SetCommitActionButtonEnabled(Control button, bool enabled)
+        {
+            if (enabled)
+            {
+                button.IsEnabled = true;
+            }
+
+            var commandButton = FindCommitCommandButton(button);
+            if (commandButton != null)
+            {
+                commandButton.IsEnabled = enabled;
+            }
+            else if (!enabled && button is ButtonBase buttonBase)
+            {
+                buttonBase.IsEnabled = false;
+            }
+        }
+
+        private static ButtonBase FindClickedCommitCommandButton(Control trackedControl, DependencyObject originalSource)
+        {
+            var current = originalSource;
+            while (current != null)
+            {
+                if (current is ButtonBase clickedButton)
+                {
+                    return GitCommitVisualTreeLocator.IsCommitActionButton(clickedButton)
+                        ? clickedButton
+                        : null;
+                }
+
+                if (ReferenceEquals(current, trackedControl)) break;
+
+                current = System.Windows.Media.VisualTreeHelper.GetParent(current);
+            }
+
+            return FindCommitCommandButton(trackedControl);
+        }
+
+        private static ButtonBase FindCommitCommandButton(Control control)
+        {
+            if (control is ButtonBase buttonBase) return buttonBase;
+
+            var descendantButton = FindVisualDescendants<ButtonBase>(control)
+                .FirstOrDefault(GitCommitVisualTreeLocator.IsCommitActionButton);
+            if (descendantButton != null) return descendantButton;
+
+            return FindVisualDescendants<ButtonBase>(control)
+                .FirstOrDefault(button => button.Command != null)
+                ?? FindVisualDescendants<ButtonBase>(control).FirstOrDefault();
+        }
+
+        private static IEnumerable<T> FindVisualDescendants<T>(DependencyObject root) where T : DependencyObject
+        {
+            if (root == null) yield break;
+
+            var stack = new Stack<DependencyObject>();
+            var count = System.Windows.Media.VisualTreeHelper.GetChildrenCount(root);
+            for (var i = 0; i < count; i++)
+            {
+                stack.Push(System.Windows.Media.VisualTreeHelper.GetChild(root, i));
+            }
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+
+                if (current is T match)
+                {
+                    yield return match;
+                }
+
+                count = System.Windows.Media.VisualTreeHelper.GetChildrenCount(current);
+                for (var i = 0; i < count; i++)
+                {
+                    stack.Push(System.Windows.Media.VisualTreeHelper.GetChild(current, i));
+                }
             }
         }
 

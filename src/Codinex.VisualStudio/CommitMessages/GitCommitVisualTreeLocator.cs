@@ -188,10 +188,8 @@ namespace Codinex.VisualStudio.CommitMessages
             }
         }
 
-        private static bool IsCommitActionButton(Control control)
+        internal static bool IsCommitActionButton(Control control)
         {
-            if (!(control is ButtonBase)) return false;
-
             // Never touch our own injected control.
             if ((control as FrameworkElement)?.Tag as string == "Codinex_GitCommit_Injected") return false;
 
@@ -204,7 +202,7 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             if (string.IsNullOrWhiteSpace(text)) return false;
 
-            var trimmed = text.Trim();
+            var trimmed = text.Trim().Replace("_", string.Empty);
 
             foreach (var name in CommitActionButtonNames)
             {
@@ -220,10 +218,18 @@ namespace Codinex.VisualStudio.CommitMessages
             {
                 case TextBlock textBlock:
                     return textBlock.Text;
+                case AccessText accessText:
+                    return accessText.Text;
+                case HeaderedContentControl { Header: string header }:
+                    return header;
+                case HeaderedItemsControl { Header: string header }:
+                    return header;
                 case ContentControl { Content: string text }:
                     return text;
                 case ContentControl { Content: TextBlock innerTextBlock }:
                     return innerTextBlock.Text;
+                case ContentControl { Content: AccessText innerAccessText }:
+                    return innerAccessText.Text;
             }
 
             var count = VisualTreeHelper.GetChildrenCount(element);
