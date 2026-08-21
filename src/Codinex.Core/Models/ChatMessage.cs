@@ -33,6 +33,8 @@ namespace Codinex.Core.Models
 
         public string ModelName { get; set; }
 
+        public bool IsPreprocessorAnswer { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 

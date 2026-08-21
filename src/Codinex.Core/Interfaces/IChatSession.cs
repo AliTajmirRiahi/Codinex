@@ -16,7 +16,8 @@ namespace Codinex.Core.Interfaces
             string providerId,
             string modelId,
             string providerName,
-            string modelName);
+            string modelName,
+            bool isPreprocessorAnswer = false);
         IReadOnlyList<ChatMessage> GetRecentMessages(int count);
     }
 }

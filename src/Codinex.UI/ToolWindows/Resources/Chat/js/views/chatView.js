@@ -504,12 +504,14 @@ export const chatView = {
             const providerName = message.providerName || message.ProviderName;
             const modelId = message.modelId || message.ModelId;
             const modelName = message.modelName || message.ModelName;
+            const isPreprocessorAnswer = message.isPreprocessorAnswer || message.IsPreprocessorAnswer;
 
             if (context) options.context = context;
             if (providerId) options.providerId = providerId;
             if (providerName) options.providerName = providerName;
             if (modelId) options.modelId = modelId;
             if (modelName) options.modelName = modelName;
+            if (isPreprocessorAnswer) options.isPreprocessorAnswer = isPreprocessorAnswer;
 
             this.appendMessage(
                 message.content || message.Content,
