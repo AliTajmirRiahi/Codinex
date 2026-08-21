@@ -261,7 +261,17 @@ namespace Codinex.Infrastructure.Conversation
                     continue;
                 }
 
-                return name.Contains("path") ? GetPathDisplayName(detail) : detail;
+                if (name.Contains("path", StringComparison.OrdinalIgnoreCase))
+                {
+                    return GetPathDisplayName(detail);
+                }
+
+                if (name.Contains("id", StringComparison.OrdinalIgnoreCase))
+                {
+                    return GetIdDisplayName(detail);
+                }
+
+                return detail;
             }
 
             return string.Empty;
@@ -333,6 +343,22 @@ namespace Codinex.Infrastructure.Conversation
             return lastSeparatorIndex >= 0
                 ? normalizedPath.Substring(lastSeparatorIndex + 1)
                 : normalizedPath;
+        }
+
+        private static string GetIdDisplayName(string id)
+        {
+            var trimmedId = id.Trim();
+
+            if (string.IsNullOrWhiteSpace(trimmedId))
+            {
+                return string.Empty;
+            }
+
+            var lastSeparatorIndex = trimmedId.LastIndexOf('.');
+
+            return lastSeparatorIndex >= 0
+                ? trimmedId.Substring(lastSeparatorIndex + 1)
+                : trimmedId;
         }
 
     }
