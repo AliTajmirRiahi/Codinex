@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
@@ -98,6 +99,34 @@ namespace Codinex.Infrastructure.AI.Providers
             }
         }
 
+        public (string ProviderId, string ProviderName, string ModelId, string ModelName) GetCurrentModelIdentity(
+            ConversationProviderRole providerRole)
+        {
+            if (providerRole == ConversationProviderRole.Preprocessor)
+            {
+                var primaryProvider = providerManager.ActiveProvider;
+                var preprocessorProvider = GetConfiguredPreprocessorProvider(primaryProvider);
+                var preprocessorModelId = settingsManager.Settings.PreprocessorAiModelId;
+                var preprocessorModel = preprocessorProvider?.Models?
+                    .FirstOrDefault(x => string.Equals(x.Id, preprocessorModelId, StringComparison.OrdinalIgnoreCase));
+
+                return (
+                    preprocessorProvider?.Id,
+                    preprocessorProvider?.Name,
+                    preprocessorModel?.Id ?? preprocessorModelId,
+                    preprocessorModel?.Name ?? preprocessorModelId);
+            }
+
+            var provider = providerManager.ActiveProvider;
+            var model = GetCurrentModel(provider);
+
+            return (
+                provider?.Id,
+                provider?.Name,
+                model?.Id,
+                model?.Name);
+        }
+
         public IAiProvider GetProvider(AgentContext context)
         {
             var providers = providerManager.Providers
@@ -165,9 +194,13 @@ namespace Codinex.Infrastructure.AI.Providers
 
         private static string GetCurrentModelId(AiProvider provider)
         {
-            return provider?.Models?.FirstOrDefault(x => x.IsCurrent)?.Id
-                   ?? provider?.Models?.FirstOrDefault(x => x.IsSelected)?.Id
-                   ?? string.Empty;
+            return GetCurrentModel(provider)?.Id ?? string.Empty;
+        }
+
+        private static AiModel GetCurrentModel(AiProvider provider)
+        {
+            return provider?.Models?.FirstOrDefault(x => x.IsCurrent)
+                   ?? provider?.Models?.FirstOrDefault(x => x.IsSelected);
         }
 
         private static void DisposeProvider<TProvider>(

@@ -11,18 +11,27 @@ function getPreprocessorModelName(state) {
         || '';
 }
 
+function getOptionModelName(options) {
+    return options?.modelName
+        || options?.ModelName
+        || options?.modelId
+        || options?.ModelId
+        || '';
+}
+
 function getCurrentModelName(options) {
     const state = getState();
+    const optionModelName = getOptionModelName(options);
 
     if (isPreprocessorAnswer(options)) {
-        const modelName = getPreprocessorModelName(state);
+        const modelName = optionModelName || getPreprocessorModelName(state);
 
         return modelName
             ? `preprocessing answer : ${modelName}`
             : 'preprocessing answer';
     }
 
-    return state.currentChat?.modelId
+    return optionModelName
         || state.currentModel?.name
         || state.currentModel?.id
         || '';

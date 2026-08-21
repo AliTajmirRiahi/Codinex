@@ -30,8 +30,6 @@ namespace Codinex.Storage.Managers
             var doc = new ChatSessionDocument
             {
                 Id = id,
-                ProviderId = providerId,
-                ModelId = modelId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 IsSelected = true
