@@ -32,20 +32,24 @@ namespace Codinex.Core.Chat
                                                      
                                                      ## File and reference handling
                                                      
-                                                     When the user explicitly identifies a file or selected reference, treat that file as the authoritative target.
+                                                     When the user explicitly identifies a file or selected reference, treat that file as the authoritative target. Do not use search_project to locate the file again.
                                                      
-                                                     Do not use search_project to locate the file again.
+                                                     To inspect an identified file's structure or locate an element to modify, call get_file_elements first, then read_element for the specific member(s) you need.
                                                      
-                                                     Read the identified file directly and inspect its content.
+                                                     Reading multiple members from a file does not justify reading the entire file.
+                                                     If the relevant members have already been inspected with read_element,
+                                                     do not call read_file unless a specific required piece of the file is still unavailable.
                                                      
-                                                     If the user asks to modify something inside that file, use read_file first and locate the requested element within the file content.
+                                                     Only call read_file directly when:
+                                                     - get_file_elements has already reported "Unsupported source file type"
+                                                     - you genuinely need the whole file's content to reason about it, not just one element.
                                                      
-                                                     Only use search_project when:
-                                                     - the target file is unknown,
-                                                     - multiple files could match,
-                                                     - the user asks to find usages/references across the workspace,
-                                                     - or the requested information cannot be determined from the identified file.
-
+                                                     Once you have inspected the relevant implementation and its direct dependencies needed to make the change, stop exploring.
+                                                     
+                                                     Do not inspect additional members or search for alternative implementations unless the current code proves insufficient to complete the requested change.
+                                                     
+                                                     Never call read_file as a first step for a file get_file_elements can parse — it returns the entire file and costs far more than the scoped element you actually need.
+                                                     
                                                      ## When get_file_elements reports "Unsupported source file type"
 
                                                      This means the file's structure could not be parsed, so you have no verified element boundaries to build a multi-line Search from — you cannot see the file's exact whitespace, indentation, or line endings well enough to reconstruct a multi-line block from memory.
@@ -54,6 +58,14 @@ namespace Codinex.Core.Chat
                                                      - Instead, anchor each text change on a single line you have directly verified from the raw file content (via read_file), and chain edits using Before/After on other verified single lines rather than expanding Search across multiple lines.
                                                      - Never guess the whitespace or content of any line between two anchors — if you need to change something spanning multiple lines, split it into a sequence of single-line-anchored changes instead of one multi-line Search.
                                                      - This reduces failures but does not eliminate them, since you still cannot see the file directly — if a change still fails to resolve, narrow further with Before/After on the same verified line rather than re-guessing a multi-line block.
+
+                                                     ### Tool error handling
+                                                     
+                                                     When a tool call fails, first classify the error before calling another tool.
+                                                     
+                                                     - Schema or validation errors in your tool arguments are not a reason to inspect more source code. Fix the tool call and retry.
+                                                     - Only call additional workspace tools when the error explicitly indicates missing, ambiguous, or incorrect workspace information.
+                                                     - Do not call read_file merely because change_set_creator failed validation.
 
                                                      """;
 
