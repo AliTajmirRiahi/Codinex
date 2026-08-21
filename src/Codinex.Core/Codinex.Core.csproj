@@ -68,6 +68,8 @@
     <Compile Include="DependencyInjection\RegistrationReportFormatter.cs" />
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
+    <Compile Include="Interfaces\IFileReferenceBuilder.cs" />
+    <Compile Include="Interfaces\IWorkspaceFileWatcher.cs" />
     <Compile Include="Interfaces\Search\ICodeSearchEngine.cs" />
     <Compile Include="Interfaces\Search\IFuzzyStringSearchAlgorithm.cs" />
     <Compile Include="Interfaces\Search\IMultiPatternStringSearchAlgorithm.cs" />
@@ -211,6 +213,7 @@
     <Compile Include="Models\WorkspaceChanges\WorkspaceValidationResult.cs" />
     <Compile Include="Models\WorkspaceEntry.cs" />
     <Compile Include="Models\WorkspaceEntryType.cs" />
+    <Compile Include="Models\WorkspaceFileChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\IAiTool.cs" />
     <Compile Include="Tools\IAiToolRegistry.cs" />
