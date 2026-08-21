@@ -28,6 +28,8 @@ public class ReferenceManagerGetReferencesTests
             new List<IReferenceProvider>(),
             watcher,
             activeDocumentProvider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             pipeline,
             errorHandler);
 
@@ -66,6 +68,8 @@ public class ReferenceManagerGetReferencesTests
             [provider],
             watcher,
             activeDocumentProvider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             pipeline,
             errorHandler);
 
@@ -111,6 +115,8 @@ public class ReferenceManagerGetReferencesTests
             [provider1, provider2],
             watcher,
             activeDocumentProvider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             pipeline,
             errorHandler);
 

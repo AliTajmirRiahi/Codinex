@@ -384,6 +384,27 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 nameof(SendActiveDocumentAsync));
         };
 
+        _referenceManager.ReferenceAdded += (s, e) =>
+        {
+            _ = _pipeline.RunAsync(
+                () => SendReferenceAddedAsync(e.Item),
+                nameof(SendReferenceAddedAsync));
+        };
+
+        _referenceManager.ReferenceRemoved += (s, e) =>
+        {
+            _ = _pipeline.RunAsync(
+                () => SendReferenceRemovedAsync(e.FilePath),
+                nameof(SendReferenceRemovedAsync));
+        };
+
+        _referenceManager.ReferenceUpdated += (s, e) =>
+        {
+            _ = _pipeline.RunAsync(
+                () => SendReferenceUpdatedAsync(e.Item),
+                nameof(SendReferenceUpdatedAsync));
+        };
+
         _inputLanguageWatcher.InputLanguageChanged += (s, e) =>
         {
             _ = _pipeline.RunAsync(
@@ -995,6 +1016,39 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         {
             Type = WebViewMessageType.ActiveDocumentChanged,
             Payload = activeDocument
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendReferenceAddedAsync(ReferenceItem item)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ReferenceAdded,
+            Payload = item
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendReferenceRemovedAsync(string filePath)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ReferenceRemoved,
+            Payload = new { FilePath = filePath }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendReferenceUpdatedAsync(ReferenceItem item)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.ReferenceUpdated,
+            Payload = item
         };
 
         await _webViewClient.PostMessageAsync(message);

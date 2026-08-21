@@ -295,6 +295,40 @@ export function setComposerController(refs) {
     });
 }
 
+/**
+ * Adds a file reference to the composer's browsable list, or replaces the existing
+ * entry for the same file path if one is already present. Used to keep the '@' file
+ * picker in sync with add/edit events from the workspace file watcher.
+ */
+export function upsertComposerReference(item) {
+    if (!item) return;
+
+    const value = (item.value ?? item.Value ?? '').toLowerCase();
+    const withoutExisting = _state.composerReferences.filter(
+        r => (r.value ?? r.Value ?? '').toLowerCase() !== value
+    );
+
+    updateState({
+        composerReferences: [...withoutExisting, item]
+    });
+}
+
+/**
+ * Removes the file reference matching the given file path from the composer's
+ * browsable list. Used when the workspace file watcher reports a file deletion.
+ */
+export function removeComposerReference(filePath) {
+    if (!filePath) return;
+
+    const target = filePath.toLowerCase();
+
+    updateState({
+        composerReferences: _state.composerReferences.filter(
+            r => (r.value ?? r.Value ?? '').toLowerCase() !== target
+        )
+    });
+}
+
 export function setActiveDocument(doc) {
     updateState({
         activeDocument: doc

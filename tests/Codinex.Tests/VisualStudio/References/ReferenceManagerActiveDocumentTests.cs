@@ -32,6 +32,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -61,6 +63,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -92,6 +96,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -118,6 +124,8 @@ public class ReferenceManagerActiveDocumentTests
             [],
             watcher,
             provider,
+            Substitute.For<IWorkspaceFileWatcher>(),
+            Substitute.For<IFileReferenceBuilder>(),
             new TestExecutionPipeline(),
             errorHandler);
 

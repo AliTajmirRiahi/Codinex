@@ -88,6 +88,18 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onActiveDocumentChanged) handlers.onActiveDocumentChanged(payload);
                 break;
 
+            case EVENTS.REFERENCE_ADDED:
+                if (handlers.onReferenceAdded) handlers.onReferenceAdded(payload);
+                break;
+
+            case EVENTS.REFERENCE_REMOVED:
+                if (handlers.onReferenceRemoved) handlers.onReferenceRemoved(payload);
+                break;
+
+            case EVENTS.REFERENCE_UPDATED:
+                if (handlers.onReferenceUpdated) handlers.onReferenceUpdated(payload);
+                break;
+
             case EVENTS.INPUT_LANGUAGE_CHANGED:
                 if (handlers.onInputLanguageChanged) handlers.onInputLanguageChanged(payload);
                 break;

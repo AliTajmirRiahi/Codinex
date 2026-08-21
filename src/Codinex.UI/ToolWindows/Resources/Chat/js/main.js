@@ -3,7 +3,7 @@
  * The central entry point for the WebView UI.
  * Responsible for bootstrapping the entire frontend.
  */
-import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification, setSolutionDirectory, setSolutionName } from '../js/state/appState.js';
+import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification, setSolutionDirectory, setSolutionName, upsertComposerReference, removeComposerReference } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
 import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
@@ -263,6 +263,19 @@ document.addEventListener('DOMContentLoaded', () => {
         onActiveDocumentChanged: (payload) => {
             setActiveDocument(payload);
             chatController.handleActiveDocument();
+        },
+        onReferenceAdded: (payload) => {
+            upsertComposerReference(payload);
+            chatController.setComposerReferences();
+        },
+        onReferenceRemoved: (payload) => {
+            const filePath = payload?.filePath ?? payload?.FilePath;
+            removeComposerReference(filePath);
+            chatController.setComposerReferences();
+        },
+        onReferenceUpdated: (payload) => {
+            upsertComposerReference(payload);
+            chatController.setComposerReferences();
         },
         onInputLanguageChanged: (payload) => {
             const isRightToLeft = payload?.isRightToLeft ?? payload?.IsRightToLeft ?? false;

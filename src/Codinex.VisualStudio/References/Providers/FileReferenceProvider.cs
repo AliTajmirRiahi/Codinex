@@ -21,7 +21,7 @@ namespace Codinex.VisualStudio.References.Providers
         IWorkspaceFileService workspaceFileService,
         ISourceFileElementService sourceFileElementService,
         IUiThreadDispatcher uiThreadDispatcher)
-        : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider
+        : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider, IFileReferenceBuilder
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
         private readonly IWorkspaceFileService _workspaceFileService = workspaceFileService;
@@ -182,6 +182,35 @@ namespace Codinex.VisualStudio.References.Providers
             await Task.CompletedTask;
 
             return null;
+        }
+
+        /// <summary>
+        /// Builds a file reference for an individual path, without traversing the whole solution.
+        /// Used by <see cref="IWorkspaceFileWatcher"/>-driven updates (file added/edited) to refresh
+        /// a single entry rather than re-running <see cref="GetReferencesAsync"/>.
+        /// </summary>
+        public async Task<ReferenceItem> BuildFileReferenceAsync(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath) || !_workspaceFileService.Exists(filePath))
+                return null;
+
+            await Task.CompletedTask;
+
+            var fileName = Path.GetFileName(filePath);
+            var iconForFile = GetIconForFile(fileName);
+
+            return new ReferenceItem
+            {
+                Id = $"file:{Guid.NewGuid()}",
+                Name = fileName,
+                Description = iconForFile.Description,
+                Type = ReferenceKind.File,
+                Icon = iconForFile.Icon,
+                Value = filePath,
+                Metadata = BuildFileMetadata(
+                    filePath,
+                    _workspaceContext.SolutionName)
+            };
         }
 
         private ReferenceMetadata BuildFileMetadata(

@@ -37,6 +37,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [],
                 watcher,
                 provider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 pipeline,
                 errorHandler);
 
@@ -87,6 +89,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [],
                 watcher,
                 provider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 pipeline,
                 errorHandler);
 
@@ -143,6 +147,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [],
                 watcher,
                 provider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -187,6 +193,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [],
                 watcher,
                 provider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -242,6 +250,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [provider1, provider2],
                 watcher,
                 activeDocumentProvider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 
@@ -272,6 +282,8 @@ namespace Codinex.Tests.VisualStudio.References
                 [provider],
                 watcher,
                 activeDocumentProvider,
+                Substitute.For<IWorkspaceFileWatcher>(),
+                Substitute.For<IFileReferenceBuilder>(),
                 new TestExecutionPipeline(),
                 errorHandler);
 

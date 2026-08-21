@@ -172,6 +172,7 @@
     <Compile Include="WebView\ChangeReviewWebViewClient.cs" />
     <Compile Include="WebView\ChangeReviewMessageRouter.cs" />
     <Compile Include="WebView\WebViewResourceServer.cs" />
+    <Compile Include="WorkspaceFiles\VsWorkspaceFileWatcher.cs" />
     <Compile Include="Workspace\Formatters\BuildContextFormatter.cs" />
     <Compile Include="Workspace\Formatters\DiagnosticsFormatter.cs" />
     <Compile Include="Workspace\Formatters\GitContextFormatter.cs" />
