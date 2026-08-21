@@ -394,7 +394,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _referenceManager.ReferenceRemoved += (s, e) =>
         {
             _ = _pipeline.RunAsync(
-                () => SendReferenceRemovedAsync(e.FilePath),
+                () => SendReferenceRemovedAsync(e.Id),
                 nameof(SendReferenceRemovedAsync));
         };
 
@@ -1032,12 +1032,12 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendReferenceRemovedAsync(string filePath)
+    public async Task SendReferenceRemovedAsync(string id)
     {
         var message = new WebViewMessageResponse()
         {
             Type = WebViewMessageType.ReferenceRemoved,
-            Payload = new { FilePath = filePath }
+            Payload = new { Id = id }
         };
 
         await _webViewClient.PostMessageAsync(message);

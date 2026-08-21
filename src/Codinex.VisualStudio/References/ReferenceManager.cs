@@ -15,16 +15,6 @@ namespace Codinex.VisualStudio.References
         public ReferenceItem ActiveDocument { get; } = activeDocument;
     }
 
-    public class ReferenceItemEventArgs(ReferenceItem item) : EventArgs
-    {
-        public ReferenceItem Item { get; } = item;
-    }
-
-    public class ReferenceRemovedEventArgs(string filePath) : EventArgs
-    {
-        public string FilePath { get; } = filePath;
-    }
-
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]
     public class ReferenceManager
     {
@@ -32,6 +22,7 @@ namespace Codinex.VisualStudio.References
         private readonly IActiveDocumentProvider _activeDocumentProvider;
         private readonly IWorkspaceFileWatcher _workspaceFileWatcher;
         private readonly IFileReferenceBuilder _fileReferenceBuilder;
+        private readonly ISymbolReferenceWatcher _symbolReferenceWatcher;
         private readonly IExecutionPipeline _pipeline;
         private readonly IErrorHandler _errorHandler;
         private readonly IReadOnlyList<IReferenceProvider> _providers;
@@ -39,9 +30,9 @@ namespace Codinex.VisualStudio.References
         private ReferenceItem _activeDocumentItem;
 
         public event EventHandler<ActiveDocumentUpdatedEventArgs> ActiveDocumentUpdated;
-        public event EventHandler<ReferenceItemEventArgs> ReferenceAdded;
+        public event EventHandler<ReferenceItemChangedEventArgs> ReferenceAdded;
         public event EventHandler<ReferenceRemovedEventArgs> ReferenceRemoved;
-        public event EventHandler<ReferenceItemEventArgs> ReferenceUpdated;
+        public event EventHandler<ReferenceItemChangedEventArgs> ReferenceUpdated;
 
         public ReferenceManager(
             IEnumerable<IReferenceProvider> providers,
@@ -49,6 +40,7 @@ namespace Codinex.VisualStudio.References
             IActiveDocumentProvider activeDocumentProvider,
             IWorkspaceFileWatcher workspaceFileWatcher,
             IFileReferenceBuilder fileReferenceBuilder,
+            ISymbolReferenceWatcher symbolReferenceWatcher,
             IExecutionPipeline pipeline,
             IErrorHandler errorHandler)
         {
@@ -56,6 +48,7 @@ namespace Codinex.VisualStudio.References
             _activeDocumentProvider = activeDocumentProvider;
             _workspaceFileWatcher = workspaceFileWatcher;
             _fileReferenceBuilder = fileReferenceBuilder;
+            _symbolReferenceWatcher = symbolReferenceWatcher;
             _pipeline = pipeline;
             _errorHandler = errorHandler;
             _providers = providers.ToList();
@@ -65,6 +58,10 @@ namespace Codinex.VisualStudio.References
             _workspaceFileWatcher.FileAdded += OnFileAdded;
             _workspaceFileWatcher.FileRemoved += OnFileRemoved;
             _workspaceFileWatcher.FileChanged += OnFileChanged;
+
+            _symbolReferenceWatcher.ReferenceAdded += (_, e) => ReferenceAdded?.Invoke(this, e);
+            _symbolReferenceWatcher.ReferenceRemoved += (_, e) => ReferenceRemoved?.Invoke(this, e);
+            _symbolReferenceWatcher.ReferenceUpdated += (_, e) => ReferenceUpdated?.Invoke(this, e);
         }
 
         public async Task<IReadOnlyList<ReferenceItem>> GetAllReferencesAsync()
@@ -128,12 +125,12 @@ namespace Codinex.VisualStudio.References
             if (item == null)
                 return;
 
-            ReferenceAdded?.Invoke(this, new ReferenceItemEventArgs(item));
+            ReferenceAdded?.Invoke(this, new ReferenceItemChangedEventArgs(item));
         }
 
         private void OnFileRemoved(object sender, WorkspaceFileChangedEventArgs e)
         {
-            ReferenceRemoved?.Invoke(this, new ReferenceRemovedEventArgs(e.FilePath));
+            ReferenceRemoved?.Invoke(this, new ReferenceRemovedEventArgs(ReferenceIdBuilder.BuildFileId(e.FilePath)));
         }
 
         private void OnFileChanged(object sender, WorkspaceFileChangedEventArgs e)
@@ -150,7 +147,7 @@ namespace Codinex.VisualStudio.References
             if (item == null)
                 return;
 
-            ReferenceUpdated?.Invoke(this, new ReferenceItemEventArgs(item));
+            ReferenceUpdated?.Invoke(this, new ReferenceItemChangedEventArgs(item));
         }
     }
 }

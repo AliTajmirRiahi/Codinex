@@ -70,6 +70,7 @@
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
     <Compile Include="Interfaces\IFileReferenceBuilder.cs" />
     <Compile Include="Interfaces\IWorkspaceFileWatcher.cs" />
+    <Compile Include="Interfaces\ISymbolReferenceWatcher.cs" />
     <Compile Include="Interfaces\Search\ICodeSearchEngine.cs" />
     <Compile Include="Interfaces\Search\IFuzzyStringSearchAlgorithm.cs" />
     <Compile Include="Interfaces\Search\IMultiPatternStringSearchAlgorithm.cs" />
@@ -163,7 +164,10 @@
     <Compile Include="Models\ProjectContextItem.cs" />
     <Compile Include="Models\PromptProfileResult.cs" />
     <Compile Include="Models\PromptSectionProfile.cs" />
+    <Compile Include="Models\ReferenceIdBuilder.cs" />
     <Compile Include="Models\ReferenceItem.cs" />
+    <Compile Include="Models\ReferenceItemChangedEventArgs.cs" />
+    <Compile Include="Models\ReferenceRemovedEventArgs.cs" />
     <Compile Include="Models\Search\CodeSearchResult.cs" />
     <Compile Include="Models\Search\MatchType.cs" />
     <Compile Include="Models\Search\SearchAlgorithmType.cs" />

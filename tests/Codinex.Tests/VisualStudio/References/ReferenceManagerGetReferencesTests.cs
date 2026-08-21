@@ -30,6 +30,7 @@ public class ReferenceManagerGetReferencesTests
             activeDocumentProvider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             pipeline,
             errorHandler);
 
@@ -70,6 +71,7 @@ public class ReferenceManagerGetReferencesTests
             activeDocumentProvider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             pipeline,
             errorHandler);
 
@@ -117,6 +119,7 @@ public class ReferenceManagerGetReferencesTests
             activeDocumentProvider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             pipeline,
             errorHandler);
 

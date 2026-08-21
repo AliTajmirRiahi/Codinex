@@ -90,7 +90,7 @@ namespace Codinex.VisualStudio.References.Providers
 
             return new ReferenceItem
             {
-                Id = $"file:{Guid.NewGuid()}",
+                Id = ReferenceIdBuilder.BuildSymbolId(ReferenceKind.Field, filePath, containingType, signature),
                 Name = fieldName,
                 Description = fileName,
                 Type = ReferenceKind.Field,
@@ -139,7 +139,7 @@ namespace Codinex.VisualStudio.References.Providers
 
             return new ReferenceItem
             {
-                Id = $"file:{Guid.NewGuid()}",
+                Id = ReferenceIdBuilder.BuildSymbolId(ReferenceKind.Field, filePath, containingType, signature),
                 Name = propertyName,
                 Description = fileName,
                 Type = ReferenceKind.Field, // Mapping property to Field reference kind or specific kind if available

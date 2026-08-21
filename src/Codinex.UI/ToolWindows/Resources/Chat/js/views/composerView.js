@@ -825,11 +825,18 @@ export class ComposerView {
         selection.addRange(caretRange);
     }
     removeRefNode(refId) {
-        const chip = document.querySelector(`.context-chip-remove[data-id="${refId}"]`);
+        // Reference ids are now content-derived (e.g. "file:C:\path\to\file.cs"), so they can
+        // contain backslashes/colons. CSS attribute selectors treat backslash as an escape
+        // character, so interpolating the raw id into a selector string silently fails to match
+        // (querySelector finds nothing) instead of throwing. CSS.escape() is required here.
+        //
+        // Content-derived ids also mean the same reference can appear as more than one chip
+        // (e.g. picked both as "Active Document" and from the file list). State removal drops
+        // every entry with this id, so the DOM must remove every matching chip too, not just
+        // the first one found.
+        const chips = document.querySelectorAll(`.context-chip-remove[data-id="${CSS.escape(refId)}"]`);
 
-        if (!chip) return;
-
-        chip.parentNode.remove();
+        chips.forEach(chip => chip.parentNode?.remove());
     }
 
     insertTextAtCursor(filter) {

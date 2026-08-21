@@ -118,6 +118,7 @@
     <Compile Include="References\Providers\SolutionReferenceProvider.cs" />
     <Compile Include="References\Providers\SystemReferenceProvider.cs" />
     <Compile Include="References\ReferenceManager.cs" />
+    <Compile Include="References\RoslynSymbolReferenceWatcher.cs" />
     <Compile Include="Extensions\PathExtensions.cs" />
     <Compile Include="Services\BuildService.cs" />
     <Compile Include="Services\SourceFileElementIndex.cs" />

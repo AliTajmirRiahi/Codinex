@@ -41,6 +41,18 @@ namespace Codinex.VisualStudio.References.Providers.Base
             return result;
         }
 
+        /// <summary>
+        /// Re-extracts references for a single document, without traversing the whole solution.
+        /// Used by <see cref="ISymbolReferenceWatcher"/> to refresh just the document that changed.
+        /// </summary>
+        public Task<IReadOnlyList<ReferenceItem>> GetReferencesForDocumentAsync(Document document)
+        {
+            if (document == null || !IsSupportedDocument(document))
+                return Task.FromResult<IReadOnlyList<ReferenceItem>>(Array.Empty<ReferenceItem>());
+
+            return ExtractReferencesAsync(document.Project, document);
+        }
+
         protected virtual bool IsSupportedDocument(Document document)
         {
             return document.FilePath?.EndsWith(".cs",

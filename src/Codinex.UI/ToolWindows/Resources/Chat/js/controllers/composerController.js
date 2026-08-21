@@ -395,6 +395,13 @@ export class ComposerController {
             },
             references: (item) => {
                 const state = getState();
+                const itemId = item.id || item.Id;
+                const alreadySelected = itemId && state.composer.selectedReferences.some(i => (i.id || i.Id) === itemId);
+
+                if (alreadySelected) {
+                    return { shouldInsertChip: false, updateRefs: false };
+                }
+
                 const newRefs = [...state.composer.selectedReferences, item];
                 setSelectedReferences(newRefs);
                 return { shouldInsertChip: false, updateRefs: true };
@@ -425,7 +432,12 @@ export class ComposerController {
     handleSpecialDocument(type, item, name) {
         const state = getState();
 
-        const newRefs = [item, ...state.composer.selectedReferences.filter(i => i.name != name)];
+        const itemId = item.id || item.Id;
+        const newRefs = [
+            item,
+            ...state.composer.selectedReferences.filter(i =>
+                i.name != name && (!itemId || (i.id || i.Id) !== itemId))
+        ];
 
         setSelectedReferences(newRefs);
 

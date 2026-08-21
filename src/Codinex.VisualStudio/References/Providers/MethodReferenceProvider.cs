@@ -79,7 +79,7 @@ namespace Codinex.VisualStudio.References.Providers
 
             return new ReferenceItem
             {
-                Id = $"file:{Guid.NewGuid()}",
+                Id = ReferenceIdBuilder.BuildSymbolId(ReferenceKind.Method, filePath, containingType, signature),
                 Name = methodName,
                 Description = fileName,
                 Type = ReferenceKind.Method,

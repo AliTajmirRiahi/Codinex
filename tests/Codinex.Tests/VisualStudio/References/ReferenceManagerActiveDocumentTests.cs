@@ -34,6 +34,7 @@ public class ReferenceManagerActiveDocumentTests
             provider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -65,6 +66,7 @@ public class ReferenceManagerActiveDocumentTests
             provider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -98,6 +100,7 @@ public class ReferenceManagerActiveDocumentTests
             provider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             new TestExecutionPipeline(),
             errorHandler);
 
@@ -126,6 +129,7 @@ public class ReferenceManagerActiveDocumentTests
             provider,
             Substitute.For<IWorkspaceFileWatcher>(),
             Substitute.For<IFileReferenceBuilder>(),
+            Substitute.For<ISymbolReferenceWatcher>(),
             new TestExecutionPipeline(),
             errorHandler);
 
