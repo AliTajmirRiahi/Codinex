@@ -55,7 +55,7 @@ public sealed class ChangeSetCreatorTool(
     public ToolDefinition Definition => new(
         new Dictionary<string, ToolProperty>
         {
-            ["changes"] = WorkspaceToolSchemas.WorkspaceChangeSetProp
+            ["changes"] = WorkspaceToolSchemasFlat.WorkspaceChangeSetProp
         },
         ["changes"],
         true);
