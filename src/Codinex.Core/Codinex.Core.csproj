@@ -49,6 +49,7 @@
     <Compile Include="Chat\NoGitChangesException.cs" />
     <Compile Include="Chat\PromptProfiler.cs" />
     <Compile Include="Chat\ChatTitleGenerator.cs" />
+    <Compile Include="Chat\ToolHistoryCompactor.cs" />
     <Compile Include="Chat\ToolPromptBuilder.cs" />
     <Compile Include="Conversation\ConversationContext.cs" />
     <Compile Include="Conversation\ConversationEvent.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="DependencyInjection\ServiceRegistrar.cs" />
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
     <Compile Include="Interfaces\IFileReferenceBuilder.cs" />
+    <Compile Include="Interfaces\IToolHistoryCompactor.cs" />
     <Compile Include="Interfaces\IWorkspaceFileWatcher.cs" />
     <Compile Include="Interfaces\ISymbolReferenceWatcher.cs" />
     <Compile Include="Interfaces\Search\ICodeSearchEngine.cs" />
