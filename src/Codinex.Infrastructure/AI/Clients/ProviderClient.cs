@@ -212,7 +212,16 @@ namespace Codinex.Infrastructure.AI.Clients
                 method,
                 $"{baseUrl}/{endpoint.TrimStart('/')}");
 
-            if (!string.IsNullOrWhiteSpace(provider.ApiKey))
+            if (string.Equals(provider.Protocol, "anthropic", StringComparison.OrdinalIgnoreCase))
+            {
+                request.Headers.Add("anthropic-version", "2023-06-01");
+
+                if (!string.IsNullOrWhiteSpace(provider.ApiKey))
+                {
+                    request.Headers.Add("x-api-key", provider.ApiKey);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(provider.ApiKey))
             {
                 request.Headers.Authorization =
                     new AuthenticationHeaderValue(

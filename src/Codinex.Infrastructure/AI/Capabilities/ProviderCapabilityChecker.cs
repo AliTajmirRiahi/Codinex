@@ -29,6 +29,8 @@ namespace Codinex.Infrastructure.AI.Capabilities
     {
         private const string OpenCodeProtocol = "opendcodefree";
 
+        private const string AnthropicProtocol = "anthropic";
+
         public async Task CheckAsync(
             AiProvider provider,
             AiModel model,
@@ -142,21 +144,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
         {
             try
             {
-                var payload = new
-                {
-                    model = model.Id,
-
-                    stream = true,
-
-                    messages = new[]
-                    {
-                        new
-                        {
-                            role = "user",
-                            content = "Reply with pong."
-                        }
-                    }
-                };
+                var payload = BuildStreamingProbePayload(provider, model);
 
                 await foreach (var chunk in client.StreamPostAsync(
                                    provider,
@@ -185,43 +173,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
         {
             try
             {
-                var payload = new
-                {
-                    model = model.Id,
-
-                    stream = false,
-
-                    messages = new[]
-                    {
-                        new
-                        {
-                            role = "user",
-                            content = "Use the ping tool."
-                        }
-                    },
-
-                    tools = new[]
-                    {
-                        new
-                        {
-                            type = "function",
-
-                            function = new
-                            {
-                                name = "ping",
-
-                                description = "Returns pong.",
-
-                                parameters = new
-                                {
-                                    type = "object",
-
-                                    properties = new { }
-                                }
-                            }
-                        }
-                    }
-                };
+                var payload = BuildToolCallingProbePayload(provider, model);
 
                 var response = await client.PostAsync(
                     provider,
@@ -302,11 +254,20 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
         private static string GetChatEndpoint(AiProvider provider)
         {
+            if (IsAnthropicProvider(provider))
+                return "/messages";
+
             return provider.Protocol == "openai" ? "/chat/completions" : "/api/chat";
         }
 
         private static bool HasToolCalls(AiProvider provider, JObject root)
         {
+            if (IsAnthropicProvider(provider))
+            {
+                return root["content"] is JArray content
+                       && content.Any(x => x["type"]?.ToString() == "tool_use");
+            }
+
             var toolCalls = provider.Protocol == "openai"
                 ? root["choices"]?[0]?["message"]?["tool_calls"]
                 : root["message"]?["tool_calls"];
@@ -321,11 +282,163 @@ namespace Codinex.Infrastructure.AI.Capabilities
             bool useMaxCompletionTokens,
             CancellationToken cancellationToken)
         {
-            object payload;
+            var payload = BuildVisionProbePayload(
+                provider,
+                model,
+                imageBase64,
+                useMaxCompletionTokens);
+
+            await client.PostAsync(
+                provider,
+                GetChatEndpoint(provider),
+                payload,
+                cancellationToken);
+        }
+
+        private static object BuildStreamingProbePayload(AiProvider provider, AiModel model)
+        {
+            if (IsAnthropicProvider(provider))
+            {
+                return new
+                {
+                    model = model.Id,
+
+                    max_tokens = 10,
+
+                    stream = true,
+
+                    messages = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            content = "Reply with pong."
+                        }
+                    }
+                };
+            }
+
+            return new
+            {
+                model = model.Id,
+
+                stream = true,
+
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = "Reply with pong."
+                    }
+                }
+            };
+        }
+
+        private static object BuildToolCallingProbePayload(AiProvider provider, AiModel model)
+        {
+            if (IsAnthropicProvider(provider))
+            {
+                return new
+                {
+                    model = model.Id,
+
+                    max_tokens = 32,
+
+                    messages = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            content = "Use the ping tool."
+                        }
+                    },
+
+                    tools = new[]
+                    {
+                        new
+                        {
+                            name = "ping",
+
+                            description = "Returns pong.",
+
+                            input_schema = new
+                            {
+                                type = "object",
+
+                                properties = new { }
+                            }
+                        }
+                    },
+
+                    tool_choice = new
+                    {
+                        type = "tool",
+                        name = "ping"
+                    }
+                };
+            }
+
+            return new
+            {
+                model = model.Id,
+
+                stream = false,
+
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = "Use the ping tool."
+                    }
+                },
+
+                tools = new[]
+                {
+                    new
+                    {
+                        type = "function",
+
+                        function = new
+                        {
+                            name = "ping",
+
+                            description = "Returns pong.",
+
+                            parameters = new
+                            {
+                                type = "object",
+
+                                properties = new { }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        private static object BuildVisionProbePayload(
+            AiProvider provider,
+            AiModel model,
+            string imageBase64,
+            bool useMaxCompletionTokens)
+        {
+            if (IsAnthropicProvider(provider))
+            {
+                return new
+                {
+                    model = model.Id,
+
+                    messages = CreateAnthropicVisionProbeMessages(imageBase64),
+
+                    max_tokens = 10
+                };
+            }
 
             if (useMaxCompletionTokens)
             {
-                payload = new
+                return new
                 {
                     model = model.Id,
 
@@ -334,23 +447,54 @@ namespace Codinex.Infrastructure.AI.Capabilities
                     max_completion_tokens = 10
                 };
             }
-            else
+
+            return new
             {
-                payload = new
+                model = model.Id,
+
+                messages = CreateVisionProbeMessages(imageBase64),
+
+                max_tokens = 10
+            };
+        }
+
+        private static object[] CreateAnthropicVisionProbeMessages(string imageBase64)
+        {
+            return
+            [
+                new
                 {
-                    model = model.Id,
+                    role = "user",
 
-                    messages = CreateVisionProbeMessages(imageBase64),
+                    content = new object[]
+                    {
+                        new
+                        {
+                            type = "text",
 
-                    max_tokens = 10
-                };
-            }
+                            text = "Describe this image."
+                        },
 
-            await client.PostAsync(
-                provider,
-                GetChatEndpoint(provider),
-                payload,
-                cancellationToken);
+                        new
+                        {
+                            type = "image",
+
+                            source = new
+                            {
+                                type = "base64",
+                                media_type = "image/png",
+                                data = imageBase64
+                            }
+                        }
+                    }
+                }
+            ];
+        }
+
+        private static bool IsAnthropicProvider(AiProvider provider)
+        {
+            return string.Equals(provider.Protocol, AnthropicProtocol, StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(provider.Id, "anthropic", StringComparison.OrdinalIgnoreCase);
         }
 
         private static object[] CreateVisionProbeMessages(string imageBase64)
