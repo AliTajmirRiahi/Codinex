@@ -121,6 +121,9 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             if (string.Equals(provider.Protocol, "ollama", StringComparison.OrdinalIgnoreCase))
                 model.Family = AiProviderFamily.Ollama;
 
+            if (string.Equals(provider.Protocol, "anthropic", StringComparison.OrdinalIgnoreCase))
+                model.Family = AiProviderFamily.Anthropic;
+
             return model;
         }
 

@@ -24,6 +24,9 @@ namespace Codinex.Infrastructure.AI.Providers
             if (IsOpenCodeFreeProvider(provider))
                 return ActivatorUtilities.CreateInstance<OpenCodeFreeProvider>(serviceProvider);
 
+            if (IsAnthropicCompatibleProvider(provider))
+                return ActivatorUtilities.CreateInstance<AnthropicCompatibleProvider>(serviceProvider);
+
             if (IsOpenAiCompatibleProvider(provider))
                 return ActivatorUtilities.CreateInstance<OpenAiCompatibleProvider>(serviceProvider);
 
@@ -36,6 +39,12 @@ namespace Codinex.Infrastructure.AI.Providers
             return string.Equals(provider.Id, "gapgpt", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(provider.Id, "openai", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(provider.Protocol, "openai", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsAnthropicCompatibleProvider(AiProvider provider)
+        {
+            return string.Equals(provider.Id, "anthropic", StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(provider.Protocol, "anthropic", StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool IsOpenCodeFreeProvider(AiProvider provider)

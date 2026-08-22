@@ -1,0 +1,68 @@
+[
+  {
+    "Id": "claude-opus-4-1-20250805",
+    "Name": "Claude Opus 4.1",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported"
+  },
+  {
+    "Id": "claude-opus-4-20250514",
+    "Name": "Claude Opus 4",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported"
+  },
+  {
+    "Id": "claude-sonnet-4-5-20250929",
+    "Name": "Claude Sonnet 4.5",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported"
+  },
+  {
+    "Id": "claude-sonnet-4-20250514",
+    "Name": "Claude Sonnet 4",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported"
+  },
+  {
+    "Id": "claude-3-7-sonnet-20250219",
+    "Name": "Claude 3.7 Sonnet",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported"
+  },
+  {
+    "Id": "claude-3-5-haiku-20241022",
+    "Name": "Claude 3.5 Haiku",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Unsupported"
+  }
+]

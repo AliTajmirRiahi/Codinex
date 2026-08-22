@@ -48,6 +48,19 @@
     "IsEnabled": false
   },
   {
+    "Id": "anthropic",
+    "Protocol": "anthropic",
+    "Name": "Anthropic",
+    "Icon": "anthropic",
+    "IconColor": "#D4A27F",
+    "ApiKey": "",
+    "BaseUrl": "https://api.anthropic.com/v1",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
+  },
+  {
     "Id": "openrouter",
     "Protocol": "openai",
     "Name": "OpenRouter",
