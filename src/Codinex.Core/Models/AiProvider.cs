@@ -16,6 +16,9 @@ namespace Codinex.Core.Models
         // Icon name used by the UI to render the provider logo.
         public string Icon { get; private set; }
 
+        // Icon color used by the UI to render the provider logo.
+        public string IconColor { get; private set; }
+
         // Secret API key used for authentication
         public string ApiKey { get; private set; }
 
@@ -47,7 +50,7 @@ namespace Codinex.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string protocol, string baseUrl, string icon = "") : this(id, name, protocol, icon, "", baseUrl, false, true, false, "/models", new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl, string icon = "", string iconColor = "#000000") : this(id, name, protocol, icon, iconColor, "", baseUrl, false, true, false, "/models", new List<AiModel>())
         {
 
         }
@@ -61,6 +64,7 @@ namespace Codinex.Core.Models
             string name,
             string protocol,
             string icon,
+            string iconColor,
             string apiKey,
             string baseUrl,
             bool isEnabled,
@@ -87,6 +91,9 @@ namespace Codinex.Core.Models
             Icon = string.IsNullOrWhiteSpace(icon)
                 ? GetDefaultIcon(id, name, protocol)
                 : icon;
+            IconColor = string.IsNullOrWhiteSpace(iconColor)
+                ? "#000000"
+                : iconColor;
             ApiKey = apiKey ?? "";
             BaseUrl = baseUrl ?? "";
             IsEnabled = isEnabled;
