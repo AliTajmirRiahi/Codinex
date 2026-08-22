@@ -14,6 +14,14 @@ namespace Codinex.Core.Chat
     {
         private const int RecentToolResultWindow = 8;
 
+        /// <summary>
+        /// Tool results shorter than this are never stubbed. Hiding a small result
+        /// (e.g. a single member from read_element) saves only a handful of tokens
+        /// but costs a full extra tool round-trip the moment the model needs it again -
+        /// a bad trade for tasks that revisit many small members repeatedly.
+        /// </summary>
+        private const int MinStubbableContentLength = 1500;
+
         private static readonly string[] IdentifyingArgumentNames =
         {
             "path", "filePath", "query", "symbol", "id", "title", "elementId"
@@ -85,6 +93,11 @@ namespace Codinex.Core.Chat
 
             foreach (var index in toolMessageIndices)
             {
+                if (ShouldAlwaysKeep(history[index].Content))
+                {
+                    continue;
+                }
+
                 var toolCallId = history[index].ToolCallId ?? string.Empty;
                 var key = toolCallLookup.TryGetValue(toolCallId, out var call)
                     ? BuildTargetKey(call.Name, call.Arguments)
@@ -102,7 +115,10 @@ namespace Codinex.Core.Chat
 
             foreach (var index in toolMessageIndices)
             {
-                var key = keysByIndex[index];
+                if (!keysByIndex.TryGetValue(index, out var key))
+                {
+                    continue;
+                }
 
                 if (!string.IsNullOrEmpty(key) && lastIndexByKey[key] != index)
                 {
@@ -114,9 +130,9 @@ namespace Codinex.Core.Chat
         }
 
         /// <summary>
-        /// Keeps the most recent <see cref="RecentToolResultWindow"/> non-superseded, non-failed
-        /// tool results in full and marks everything older for stubbing. Failed results are always
-        /// kept, since they tend to be short and matter for retry reasoning.
+        /// Keeps the most recent <see cref="RecentToolResultWindow"/> non-superseded, non-exempt
+        /// tool results in full and marks everything older for stubbing. Failed results and results
+        /// too small to be worth hiding are always kept in full.
         /// </summary>
         private static HashSet<int> FindWindowStubIndices(
             IReadOnlyList<ChatMessage> history,
@@ -135,7 +151,7 @@ namespace Codinex.Core.Chat
                     continue;
                 }
 
-                if (IsFailedResult(history[index].Content))
+                if (ShouldAlwaysKeep(history[index].Content))
                 {
                     continue;
                 }
@@ -224,6 +240,13 @@ namespace Codinex.Core.Chat
             }
 
             return null;
+        }
+
+        private static bool ShouldAlwaysKeep(string content)
+        {
+            return string.IsNullOrEmpty(content)
+                || content.Length < MinStubbableContentLength
+                || IsFailedResult(content);
         }
 
         private static bool IsFailedResult(string content)
