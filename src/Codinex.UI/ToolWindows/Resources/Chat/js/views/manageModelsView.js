@@ -128,7 +128,7 @@ export const manageModelsView = {
 
                     option.innerHTML = `
                         <div class="drop-info">
-                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon"></codinex-icon>
+                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon" style="color: ${item.iconColor || item.IconColor || '#000000'};"></codinex-icon>
                             <span>${item.name}</span>
                         </div>`;
                     return option;

@@ -115,6 +115,7 @@ export function initSettingsController(transport) {
                 id: getProviderValue(provider, 'id', 'Id'),
                 name: getProviderValue(provider, 'name', 'Name'),
                 icon: getProviderValue(provider, 'icon', 'Icon', 'puzzle'),
+                iconColor: getProviderValue(provider, 'iconColor', 'IconColor', '#000000'),
                 models: getProviderValue(provider, 'models', 'Models', []),
             }));
     };
@@ -260,7 +261,7 @@ export function initSettingsController(transport) {
 
                     option.innerHTML = `
                         <div class="drop-info">
-                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon"></codinex-icon>
+                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon" style="color: ${item.iconColor || item.IconColor || '#000000'};"></codinex-icon>
                             <span>${item.name}</span>
                         </div>`;
                     return option;
