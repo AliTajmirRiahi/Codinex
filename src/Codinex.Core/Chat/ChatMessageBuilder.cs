@@ -14,10 +14,12 @@ namespace Codinex.Core.Chat
     [AutoDiRegister(Modules.Chat, RegistrationOrder.Platform)]
     public sealed class ChatMessageBuilder(
         IReferenceContextFormatter referenceContextFormatter,
-        IPromptProfiler promptProfiler) : IChatMessageBuilder
+        IPromptProfiler promptProfiler,
+        IToolHistoryCompactor toolHistoryCompactor) : IChatMessageBuilder
     {
         private readonly IReferenceContextFormatter _referenceContextFormatter = referenceContextFormatter ?? throw new ArgumentNullException(nameof(referenceContextFormatter));
         private readonly IPromptProfiler _promptProfiler = promptProfiler ?? throw new ArgumentNullException(nameof(promptProfiler));
+        private readonly IToolHistoryCompactor _toolHistoryCompactor = toolHistoryCompactor ?? throw new ArgumentNullException(nameof(toolHistoryCompactor));
 
         public ChatMessageBuildResult Build(ChatMessageBuildRequest request, PromptContext promptContext)
         {
@@ -45,9 +47,13 @@ namespace Codinex.Core.Chat
                 messages.Add(CreateMessage("system", BuildAgentInstruction(request.SelectedAgent)));
             }
 
-            if (request.ConversationHistory.Count > 0)
+            var compactedHistory = request.ConversationHistory.Count > 0
+                ? _toolHistoryCompactor.Compact(request.ConversationHistory)
+                : request.ConversationHistory;
+
+            if (compactedHistory.Count > 0)
             {
-                messages.AddRange(request.ConversationHistory.Select(CreateHistoryMessage));
+                messages.AddRange(compactedHistory.Select(CreateHistoryMessage));
             }
 
             var userMessage = CreateMessage("user", BuildUserContent(request, promptContext));
@@ -60,7 +66,7 @@ namespace Codinex.Core.Chat
                 SelectedCommand = request.SelectedCommand,
                 SelectedAgent = request.SelectedAgent,
                 SelectedReferences = request.SelectedReferences,
-                PromptProfile = _promptProfiler.Profile(BuildPromptProfileContext(request, promptContext, messages))
+                PromptProfile = _promptProfiler.Profile(BuildPromptProfileContext(request, promptContext, messages, compactedHistory))
             };
 
             userMessage.Context = requestContext;
@@ -161,7 +167,8 @@ namespace Codinex.Core.Chat
         private PromptContext BuildPromptProfileContext(
             ChatMessageBuildRequest request,
             PromptContext promptContext,
-            IReadOnlyList<ChatMessage> messages)
+            IReadOnlyList<ChatMessage> messages,
+            IReadOnlyList<ChatMessage> compactedHistory)
         {
             var context = new PromptContext();
 
@@ -178,7 +185,7 @@ namespace Codinex.Core.Chat
             AddProfileSection(
                 context,
                 "Conversation",
-                BuildConversationProfileContent(request));
+                BuildConversationProfileContent(request, compactedHistory));
 
             return context;
         }
@@ -310,11 +317,13 @@ namespace Codinex.Core.Chat
             return $"User attached {count} {label}";
         }
 
-        private static string BuildConversationProfileContent(ChatMessageBuildRequest request)
+        private static string BuildConversationProfileContent(
+            ChatMessageBuildRequest request,
+            IReadOnlyList<ChatMessage> compactedHistory)
         {
             var sb = new StringBuilder();
 
-            foreach (var message in request.ConversationHistory ?? Array.Empty<ChatMessage>())
+            foreach (var message in compactedHistory ?? Array.Empty<ChatMessage>())
             {
                 sb.AppendLine($"{message.Role}:");
 

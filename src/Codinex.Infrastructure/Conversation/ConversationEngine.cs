@@ -20,7 +20,8 @@ namespace Codinex.Infrastructure.Conversation
     public sealed class ConversationEngine(
         IAiProviderRouter aiProviderRouter,
         IAiToolRegistry toolRegistry,
-        IJsonSerializer jsonSerializer)
+        IJsonSerializer jsonSerializer,
+        IToolHistoryCompactor toolHistoryCompactor)
         : IConversationEngine
     {
         private const int MaxAttempts = 5;
@@ -38,7 +39,7 @@ namespace Codinex.Infrastructure.Conversation
             var provider = ResolveProvider(request.ProviderRole);
 
             return await provider.SendAsync(
-                history,
+                toolHistoryCompactor.Compact(history),
                 cancellationToken);
         }
 
@@ -65,7 +66,7 @@ namespace Codinex.Infrastructure.Conversation
                                history,
                                request.ProviderRole,
                                () => provider.SendStreamAsync(
-                                   history,
+                                   toolHistoryCompactor.Compact(history),
                                    cancellationToken),
                                cancellationToken))
             {
@@ -174,7 +175,7 @@ namespace Codinex.Infrastructure.Conversation
                                                history,
                                                providerRole,
                                                () => provider.ContinueAsync(
-                                                   history,
+                                                   toolHistoryCompactor.Compact(history),
                                                    cancellationToken),
                                                cancellationToken))
                             {
