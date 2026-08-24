@@ -65,6 +65,7 @@
     <Compile Include="Models\DTO\AiModelSelectedDto.cs" />
     <Compile Include="Models\DTO\AskUserAnswerDto.cs" />
     <Compile Include="Models\DTO\AiProviderDto.cs" />
+    <Compile Include="Models\DTO\BugReportDto.cs" />
     <Compile Include="Models\DTO\ChatSelectedDto.cs" />
     <Compile Include="Models\DTO\ChatUpdateDto.cs" />
     <Compile Include="Models\DTO\ConversationGroupCreateDto.cs" />

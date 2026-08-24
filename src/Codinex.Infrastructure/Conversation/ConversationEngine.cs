@@ -40,6 +40,8 @@ namespace Codinex.Infrastructure.Conversation
 
             return await provider.SendAsync(
                 toolHistoryCompactor.Compact(history),
+                request.ChatId,
+                request.ChatMessageId,
                 cancellationToken);
         }
 
@@ -65,8 +67,12 @@ namespace Codinex.Infrastructure.Conversation
             await foreach (var evt in ProcessEvents(
                                history,
                                request.ProviderRole,
+                               request.ChatId,
+                               request.ChatMessageId,
                                () => provider.SendStreamAsync(
                                    toolHistoryCompactor.Compact(history),
+                                   request.ChatId,
+                                   request.ChatMessageId,
                                    cancellationToken),
                                cancellationToken))
             {
@@ -80,6 +86,8 @@ namespace Codinex.Infrastructure.Conversation
         private async IAsyncEnumerable<ConversationEvent> ProcessEvents(
             List<ChatMessage> history,
             ConversationProviderRole providerRole,
+            string chatId,
+            string chatMessageId,
             Func<IAsyncEnumerable<ConversationEvent>> createEvents,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
@@ -174,8 +182,12 @@ namespace Codinex.Infrastructure.Conversation
                             await foreach (var continuationEvent in ProcessEvents(
                                                history,
                                                providerRole,
+                                               chatId,
+                                               chatMessageId,
                                                () => provider.ContinueAsync(
                                                    toolHistoryCompactor.Compact(history),
+                                                   chatId,
+                                                   chatMessageId,
                                                    cancellationToken),
                                                cancellationToken))
                             {

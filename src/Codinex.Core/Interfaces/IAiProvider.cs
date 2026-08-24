@@ -14,6 +14,8 @@ namespace Codinex.Core.Interfaces
         /// </summary>
         Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompt,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken ct = default);
 
 
@@ -22,10 +24,14 @@ namespace Codinex.Core.Interfaces
         /// </summary>
         IAsyncEnumerable<ConversationEvent> SendStreamAsync(
             IReadOnlyList<ChatMessage> messages,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default);
 
         IAsyncEnumerable<ConversationEvent> ContinueAsync(
             IReadOnlyList<ChatMessage> history,
-            CancellationToken cancellationToken);
+            string chatId = null,
+            string chatMessageId = null,
+            CancellationToken cancellationToken = default);
     }
 }

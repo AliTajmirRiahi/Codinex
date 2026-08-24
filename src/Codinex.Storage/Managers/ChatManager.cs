@@ -101,6 +101,11 @@ namespace Codinex.Storage.Managers
 
             if (File.Exists(path))
                 File.Delete(path);
+
+            var promptsPath = StoragePaths.GetChatPromptsPath(chatId);
+
+            if (fileSystem.Directory.Exists(promptsPath))
+                fileSystem.Directory.Delete(promptsPath, true);
         }
 
         /// <summary>

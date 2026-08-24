@@ -38,13 +38,16 @@ namespace Codinex.Infrastructure.AI.Providers
         IAiToolRegistry toolRegistry,
         IProviderClient client,
         IWorkspaceFileService workspaceFileService,
-        IPromptProfiler promptProfiler)
+        IPromptProfiler promptProfiler,
+        IPromptRecorder promptRecorder)
         : IAiProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
 
         public async Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompts,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken ct = default)
         {
             var model = _providerManager.ActiveModel;
@@ -67,15 +70,9 @@ namespace Codinex.Infrastructure.AI.Providers
                     payload,
                     ct);
 
-#if DEBUG
                 var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented);
 
-                var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
-
-                await workspaceFileService.CreateFileAsync(path, CancellationToken.None);
-
-                await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: CancellationToken.None);
-#endif
+                await promptRecorder.RecordAsync(chatId, chatMessageId, payloadContent, ct);
 
                 var json = jsonSerializer.Parse(response);
 
@@ -95,6 +92,8 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public IAsyncEnumerable<ConversationEvent> SendStreamAsync(
             IReadOnlyList<ChatMessage> messages,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
@@ -108,12 +107,16 @@ namespace Codinex.Infrastructure.AI.Providers
                     provider,
                     model,
                     messages,
+                    chatId,
+                    chatMessageId,
                     cancellationToken),
                 cancellationToken);
         }
 
         public IAsyncEnumerable<ConversationEvent> ContinueAsync(
             IReadOnlyList<ChatMessage> history,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             var model = _providerManager.ActiveModel;
@@ -127,6 +130,8 @@ namespace Codinex.Infrastructure.AI.Providers
                     provider,
                     model,
                     history,
+                    chatId,
+                    chatMessageId,
                     cancellationToken),
                 cancellationToken);
         }
@@ -185,6 +190,8 @@ namespace Codinex.Infrastructure.AI.Providers
                 AiProvider provider,
                 AiModel model,
                 IReadOnlyList<ChatMessage> messages,
+                string chatId,
+                string chatMessageId,
                 [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var tools = BuildTools(messages);
@@ -194,19 +201,15 @@ namespace Codinex.Infrastructure.AI.Providers
                 messages,
                 true,
                 tools);
-#if DEBUG
+
             var promptProfile = BuildPromptProfile(messages, tools);
             var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented) +
                                  Environment.NewLine +
                                  Environment.NewLine +
                                  FormatPromptProfile(promptProfile);
 
-            var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
+            await promptRecorder.RecordAsync(chatId, chatMessageId, payloadContent, cancellationToken);
 
-            await workspaceFileService.CreateFileAsync(path, cancellationToken);
-
-            await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: cancellationToken);
-#endif
             Dictionary<int, ToolCallBuilder> toolCalls = [];
             var toolArguments = new StringBuilder();
             var isThinking = false;

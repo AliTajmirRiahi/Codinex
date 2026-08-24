@@ -134,6 +134,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onRunCommandOnSelection) handlers.onRunCommandOnSelection(payload);
                 break;
 
+            case EVENTS.BUG_REPORT_SUBMITTED:
+                if (handlers.onBugReportSubmitted) handlers.onBugReportSubmitted(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }

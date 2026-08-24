@@ -186,10 +186,13 @@ public sealed class ConversationGroupManager(
 
         var isCurrentGroup = CurrentGroup != null && CurrentGroup.Id == groupId;
 
-        await storageService.DeleteDirectoryAsync(
-            StoragePaths.GetGroupPath(
-                WorkspaceName,
-                group.GetId()));
+        var groupPath = StoragePaths.GetGroupPath(
+            WorkspaceName,
+            group.GetId());
+
+        await DeleteGroupPromptsAsync(groupPath);
+
+        await storageService.DeleteDirectoryAsync(groupPath);
 
         _groups.Remove(group);
 
@@ -207,6 +210,33 @@ public sealed class ConversationGroupManager(
             if (nextGroup != null)
             {
                 await SelectGroupAsync(nextGroup.Id);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Cascade-deletes the prompt-recording folders (chat_&lt;chatId&gt;) belonging to every
+    /// chat within a group, before the group's own directory is removed.
+    /// </summary>
+    private async Task DeleteGroupPromptsAsync(string groupPath)
+    {
+        var files = await storageService.GetFilesAsync(groupPath);
+
+        foreach (var file in files)
+        {
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+
+            if (!fileName.StartsWith("chat-", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var chatId = fileName.Substring("chat-".Length);
+            var promptsPath = StoragePaths.GetChatPromptsPath(chatId);
+
+            if (await storageService.ExistsAsync(promptsPath))
+            {
+                await storageService.DeleteDirectoryAsync(promptsPath);
             }
         }
     }
