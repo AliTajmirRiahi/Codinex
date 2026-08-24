@@ -12,6 +12,7 @@ import { initChatController } from './controllers/chatController.js';
 import { AskUserQuestionView } from './views/askUserQuestionView.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
 import { initAboutController } from './controllers/aboutController.js';
+import { initBugReportController } from './controllers/bugReportController.js';
 import { initSettingsController } from './controllers/settingsController.js';
 import { EVENTS } from '../js/constants/events.js';
 import { reportError } from '../../Shared/bridge/errorReporter.js'
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const manageModelsController = initManageModelsController(webViewTransport);
     initAboutController();
+    const bugReportController = initBugReportController();
     const settingsController = initSettingsController(webViewTransport);
 
     const askUserQuestionView = new AskUserQuestionView({
@@ -302,6 +304,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onRunCommandOnSelection: (payload) => {
             chatController.runCommandOnSelection(payload);
+        },
+        onBugReportSubmitted: (payload) => {
+            bugReportController.handleBugReportSubmitted(payload);
         }
     });
 

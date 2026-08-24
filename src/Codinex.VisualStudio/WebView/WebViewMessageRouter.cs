@@ -52,6 +52,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IWorkspaceContext _workspaceContext;
     private readonly ISourceControlStatusService _sourceControlStatusService;
     private readonly IUiThreadDispatcher _uiThreadDispatcher;
+    private readonly IBugReportService _bugReportService;
+    private readonly IVsOutputWindowService _vsOutputWindowService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -77,7 +79,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IClarificationSessionService clarificationSessionService,
         IWorkspaceContext workspaceContext,
         ISourceControlStatusService sourceControlStatusService,
-        IUiThreadDispatcher uiThreadDispatcher)
+        IUiThreadDispatcher uiThreadDispatcher,
+        IBugReportService bugReportService,
+        IVsOutputWindowService vsOutputWindowService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -100,6 +104,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _workspaceContext = workspaceContext;
         _sourceControlStatusService = sourceControlStatusService;
         _uiThreadDispatcher = uiThreadDispatcher;
+        _bugReportService = bugReportService;
+        _vsOutputWindowService = vsOutputWindowService;
 
 
         RegisterEventHandlers();
@@ -359,6 +365,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             case WebViewMessageType.OpenReferenceFile:
                 {
                     await OpenReferenceFileAsync(request);
+                    return;
+                }
+            case WebViewMessageType.SubmitBugReport:
+                {
+                    var payload = _payloadBinder.Bind<BugReportDto>(request.Payload);
+
+                    await SubmitBugReportAsync(payload);
+
                     return;
                 }
             default:
@@ -1085,6 +1099,39 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             {
                 Selection = selection,
                 CommandName = commandName
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    private async Task SubmitBugReportAsync(BugReportDto payload)
+    {
+        string outputLog;
+
+        try
+        {
+            outputLog = await _vsOutputWindowService.ReadOutputAsync("Codinex", CancellationToken.None);
+        }
+        catch
+        {
+            outputLog = string.Empty;
+        }
+
+        var result = await _bugReportService.SubmitAsync(
+            payload?.ChatId,
+            payload?.Description,
+            outputLog,
+            CancellationToken.None);
+
+        var message = new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.BugReportSubmitted,
+            Payload = new
+            {
+                Success = result.Success,
+                Message = result.Message
             },
             Timestamp = DateTime.Now
         };

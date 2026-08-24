@@ -76,5 +76,18 @@ namespace Codinex.Storage.Services
                 $"{chatId}.json");
 
         #endregion
+
+        #region Prompts
+
+        public static string Prompts =>
+            Path.Combine(Root, "prompts");
+
+        public static string GetChatPromptsPath(string chatId) =>
+            Path.Combine(Prompts, $"chat_{chatId}");
+
+        public static string GetChatMessagePromptsPath(string chatId, string chatMessageId) =>
+            Path.Combine(GetChatPromptsPath(chatId), chatMessageId);
+
+        #endregion
     }
 }

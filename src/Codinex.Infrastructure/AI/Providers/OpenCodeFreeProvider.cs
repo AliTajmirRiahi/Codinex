@@ -43,11 +43,13 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public async Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompt,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken ct = default)
         {
             var sb = new StringBuilder();
 
-            await foreach (var evt in SendStreamAsync(prompt, ct))
+            await foreach (var evt in SendStreamAsync(prompt, chatId, chatMessageId, ct))
             {
                 switch (evt.Type)
                 {
@@ -65,6 +67,8 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public IAsyncEnumerable<ConversationEvent> SendStreamAsync(
             IReadOnlyList<ChatMessage> messages,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             var provider = providerManager.ActiveProvider;
@@ -84,13 +88,15 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public IAsyncEnumerable<ConversationEvent> ContinueAsync(
             IReadOnlyList<ChatMessage> history,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             // OpenCode does not participate in Codinex's local tool-calling loop (it manages its
             // own tools server-side), so ContinueAsync is never actually driven by a prior
             // ToolRequested event for this provider. It is implemented the same way as
             // SendStreamAsync for interface completeness.
-            return SendStreamAsync(history, cancellationToken);
+            return SendStreamAsync(history, chatId, chatMessageId, cancellationToken);
         }
 
         private static async IAsyncEnumerable<ConversationEvent> MapExpectedErrors(

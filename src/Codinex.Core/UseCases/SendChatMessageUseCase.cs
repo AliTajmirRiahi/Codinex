@@ -38,6 +38,8 @@ public sealed class SendChatMessageUseCase(
         if (request == null)
             throw new InvalidOperationException("Request cannot be empty.");
 
+        var chatMessageId = Guid.NewGuid().ToString();
+
         try
         {
             // Get last 10 messages for context
@@ -45,11 +47,13 @@ public sealed class SendChatMessageUseCase(
 
             var preprocessorResult = await RunPreprocessorAsync(
                 request,
+                chatMessageId,
                 cancellationToken);
 
             if (preprocessorResult?.IsAnswer == true)
             {
                 var directResult = CreateDirectResponseResult(request, preprocessorResult);
+                ApplyTurnContext(directResult, chatMessageId);
                 ApplyModelIdentity(directResult);
 
                 var directResponse = preprocessorResult.Response ?? string.Empty;
@@ -87,6 +91,7 @@ public sealed class SendChatMessageUseCase(
             var buildResult = chatMessageBuilder.Build(request, promptContext);
             buildResult.Context.PreprocessorResult = preprocessorResult;
             ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
+            ApplyTurnContext(buildResult, chatMessageId);
             ApplyModelIdentity(buildResult);
 
             var aiResult = await conversationEngine.ExecuteTextAsync(
@@ -139,6 +144,7 @@ public sealed class SendChatMessageUseCase(
             throw new ArgumentNullException(nameof(onMessage));
 
         var fullText = string.Empty;
+        var chatMessageId = Guid.NewGuid().ToString();
 
         ChatMessageBuildResult buildResult = null;
 
@@ -149,12 +155,14 @@ public sealed class SendChatMessageUseCase(
 
             var preprocessorResult = await RunPreprocessorStreamingAsync(
                 request,
+                chatMessageId,
                 onMessage,
                 cancellationToken);
 
             if (preprocessorResult?.IsAnswer == true)
             {
                 buildResult = CreateDirectResponseResult(request, preprocessorResult);
+                ApplyTurnContext(buildResult, chatMessageId);
                 ApplyModelIdentity(buildResult);
 
                 fullText = preprocessorResult.Response ?? string.Empty;
@@ -198,6 +206,7 @@ public sealed class SendChatMessageUseCase(
             if (preprocessorResult != null)
                 ApplyIntentToolPlan(buildResult.Context, preprocessorResult);
 
+            ApplyTurnContext(buildResult, chatMessageId);
             ApplyModelIdentity(buildResult);
 
             // Persist the exchange only after a successful AI response.
@@ -346,6 +355,7 @@ public sealed class SendChatMessageUseCase(
 
     private async Task<AiPreprocessorResult> RunPreprocessorAsync(
         ChatMessageBuildRequest request,
+        string chatMessageId,
         CancellationToken cancellationToken)
     {
         var preprocessorProvider = aiProviderRouter.GetCurrentPreprocessorProvider();
@@ -356,6 +366,8 @@ public sealed class SendChatMessageUseCase(
         }
 
         var buildResult = CreatePreprocessorBuildResult(request);
+        ApplyTurnContext(buildResult, chatMessageId);
+
         var response = await conversationEngine.ExecuteTextAsync(
             buildResult,
             cancellationToken);
@@ -365,6 +377,7 @@ public sealed class SendChatMessageUseCase(
 
     private async Task<AiPreprocessorResult> RunPreprocessorStreamingAsync(
         ChatMessageBuildRequest request,
+        string chatMessageId,
         Func<ChatResponse, Task> onMessage,
         CancellationToken cancellationToken)
     {
@@ -377,6 +390,7 @@ public sealed class SendChatMessageUseCase(
 
         var preprocessorText = string.Empty;
         var buildResult = CreatePreprocessorBuildResult(request);
+        ApplyTurnContext(buildResult, chatMessageId);
 
         await foreach (var evt in conversationEngine.ExecuteAsync(
                            buildResult,
@@ -414,6 +428,17 @@ public sealed class SendChatMessageUseCase(
         }
 
         context.PlannedTools = intentToolPlanner.PlanTools(preprocessorResult.Intents);
+    }
+
+    private void ApplyTurnContext(ChatMessageBuildResult buildResult, string chatMessageId)
+    {
+        if (buildResult == null)
+        {
+            return;
+        }
+
+        buildResult.ChatId = chatSession.SessionId;
+        buildResult.ChatMessageId = chatMessageId;
     }
 
     private void ApplyModelIdentity(ChatMessageBuildResult buildResult)

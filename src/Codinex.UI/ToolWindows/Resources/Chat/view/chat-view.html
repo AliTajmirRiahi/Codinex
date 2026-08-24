@@ -143,10 +143,13 @@
             </div>
         </div>
 
-        <!-- About / donate peek box above the input area -->
+        <!-- About / donate / report bug peek box above the input area -->
         <div class="about-peek-container">
             <div class="about-peek-box" title="About Codinex AI">
                 <codinex-image name="chevron-up.svg" class="about-peek-chevron"></codinex-image>
+                <button id="report-bug-menu-btn" class="about-peek-button" title="Report a Bug">
+                    <span>Report Bug</span>
+                </button>
                 <button id="about-menu-btn" class="about-peek-button" title="About Codinex AI">
                     <span>About</span>
                 </button>
@@ -669,6 +672,30 @@
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Bug Modal -->
+    <div id="bug-report-modal" class="modal hidden">
+        <div class="modal-content bug-report-modal-content">
+            <div class="modal-header">
+                <h2>Report a Bug</h2>
+                <button id="close-bug-report-modal">✕</button>
+            </div>
+
+            <div class="modal-body bug-report-modal-body">
+                <label class="bug-report-label" for="bug-report-description">What happened? <span class="bug-report-required">*</span></label>
+                <textarea id="bug-report-description" class="bug-report-textarea" rows="5" placeholder="Describe the issue you ran into..."></textarea>
+
+                <p class="bug-report-note">System info, the Codinex output log, and this chat's last recorded prompt will be included automatically.</p>
+
+                <p id="bug-report-status" class="bug-report-status hidden"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-bug-report-btn" type="button" class="secondary-button">Cancel</button>
+                <button id="submit-bug-report-btn" type="button">Submit</button>
             </div>
         </div>
     </div>

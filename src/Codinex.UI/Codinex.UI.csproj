@@ -257,6 +257,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\providerController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\manageModelsController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\aboutController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\bugReportController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\composerController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\chatController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\constants\statics.js" />

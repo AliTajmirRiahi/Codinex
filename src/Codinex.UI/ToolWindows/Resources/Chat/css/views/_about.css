@@ -2,12 +2,15 @@
     position: relative;
     height: 0;
     z-index: 25;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 8px;
+    padding-right: 14px;
 }
 
 .about-peek-box {
-    position: absolute;
-    right: 14px;
-    bottom: 0;
+    position: relative;
     width: 36px;
     height: 18px;
     display: flex;
@@ -28,7 +31,7 @@
 .about-peek-box:hover,
 .about-peek-box:focus-within {
     width: 144px;
-    height: 58px;
+    height: 100px;
     padding-top: 5px;
     border-color: rgba(255, 255, 255, 0.18);
 }
@@ -281,4 +284,58 @@
 .donate-copy-btn.copied {
     color: #89d185;
     opacity: 1;
+}
+
+.bug-report-modal-content {
+    width: 70%;
+    max-width: 560px;
+    height: auto;
+    min-height: 420px;
+}
+
+.bug-report-modal-body {
+    gap: 10px;
+}
+
+.bug-report-label {
+    color: var(--vs-foreground);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.bug-report-required {
+    color: #e06c75;
+}
+
+.bug-report-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    padding: 8px 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    background: var(--vs-input-bg);
+    color: var(--vs-foreground);
+    font-family: inherit;
+    font-size: 13px;
+}
+
+.bug-report-note {
+    margin: 0;
+    color: var(--vs-access-tool-tip-color);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.bug-report-status {
+    margin: 0;
+    font-size: 12px;
+}
+
+.bug-report-status-success {
+    color: #89d185;
+}
+
+.bug-report-status-error {
+    color: #e06c75;
 }

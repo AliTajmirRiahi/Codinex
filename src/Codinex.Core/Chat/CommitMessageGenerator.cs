@@ -59,7 +59,7 @@ namespace Codinex.Core.Chat
             // so we can tell a real error apart from real generated content.
             var builder = new StringBuilder();
 
-            await foreach (var conversationEvent in provider.SendStreamAsync(messages, cancellationToken))
+            await foreach (var conversationEvent in provider.SendStreamAsync(messages, cancellationToken: cancellationToken))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

@@ -25,7 +25,8 @@ namespace Codinex.Infrastructure.AI.Providers
         SettingsManager settingsManager,
         IAiToolRegistry toolRegistry,
         IProviderClient client,
-        IWorkspaceFileService workspaceFileService)
+        IWorkspaceFileService workspaceFileService,
+        IPromptRecorder promptRecorder)
         : IAiPreprocessorProvider
     {
         private readonly ProviderManager _providerManager = providerManager;
@@ -33,6 +34,8 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public async Task<string> SendAsync(
             IReadOnlyList<ChatMessage> prompt,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken ct = default)
         {
             var provider = GetProvider();
@@ -71,6 +74,8 @@ namespace Codinex.Infrastructure.AI.Providers
 
         public IAsyncEnumerable<ConversationEvent> SendStreamAsync(
             IReadOnlyList<ChatMessage> messages,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             var provider = GetProvider();
@@ -84,12 +89,16 @@ namespace Codinex.Infrastructure.AI.Providers
                     provider,
                     model,
                     messages,
+                    chatId,
+                    chatMessageId,
                     cancellationToken),
                 cancellationToken);
         }
 
         public IAsyncEnumerable<ConversationEvent> ContinueAsync(
             IReadOnlyList<ChatMessage> history,
+            string chatId = null,
+            string chatMessageId = null,
             CancellationToken cancellationToken = default)
         {
             var provider = GetProvider();
@@ -103,6 +112,8 @@ namespace Codinex.Infrastructure.AI.Providers
                     provider,
                     model,
                     history,
+                    chatId,
+                    chatMessageId,
                     cancellationToken),
                 cancellationToken);
         }
@@ -162,6 +173,8 @@ namespace Codinex.Infrastructure.AI.Providers
             AiProvider provider,
             AiModel model,
             IReadOnlyList<ChatMessage> messages,
+            string chatId,
+            string chatMessageId,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var toolCalls = new Dictionary<string, ToolCall>();
@@ -173,15 +186,9 @@ namespace Codinex.Infrastructure.AI.Providers
                 messages,
                 true);
 
-#if DEBUG
             var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented);
 
-            var path = @$"C:\Users\Programmer\AppData\Local\Codinex\prompts\prompt_{Guid.NewGuid()}.json";
-
-            await workspaceFileService.CreateFileAsync(path, cancellationToken);
-
-            await workspaceFileService.WriteAsync(path, payloadContent, cancellationToken: cancellationToken);
-#endif
+            await promptRecorder.RecordAsync(chatId, chatMessageId, payloadContent, cancellationToken);
 
             await foreach (var line in client.StreamPostAsync(
                                provider,
