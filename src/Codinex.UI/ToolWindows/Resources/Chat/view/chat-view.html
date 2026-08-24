@@ -224,8 +224,12 @@
                         </button>
                         <div class="model-selector-wrapper">
                             <button id="model-selector-btn" class="selector-btn" title="Select Model">
-                                <codinex-icon name="brain"></codinex-icon>
-                                <span id="current-model-name"></span>
+                                <codinex-icon name="ai-model"></codinex-icon>
+                                <span class="current-model-label">
+                                    <span id="current-model-provider" class="current-model-provider hidden"></span>
+                                    <span id="current-model-name" class="current-model-name"></span>
+                                </span>
+                                <span id="current-model-capabilities" class="current-model-capabilities"></span>
                                 <codinex-icon name="chevron-down"></codinex-icon>
                             </button>
                             <div id="model-dropdown-menu" class="com-dropdown">

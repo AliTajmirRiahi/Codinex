@@ -35,11 +35,52 @@
 
 .model-selector-wrapper {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .selector-btn {
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
 }
+
+.model-selector-wrapper .selector-btn {
+    justify-content: flex-start;
+}
+
+.current-model-label {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+    overflow: hidden;
+    flex: 1 1 auto;
+}
+
+.current-model-provider {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    opacity: 0.55;
+}
+
+.current-model-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.current-model-capabilities {
+    flex-shrink: 0;
+}
+
+    .current-model-capabilities .model-capabilities {
+        margin-left: 0;
+    }

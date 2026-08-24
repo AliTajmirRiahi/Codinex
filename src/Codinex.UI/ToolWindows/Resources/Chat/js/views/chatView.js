@@ -176,14 +176,30 @@ export const chatView = {
         return text;
     },
 
-    // updates current model name
+    // updates current model name, provider label and capability icons
     setCurrentModelName() {
         const currentModelName = $('#current-model-name');
         const appState = getState();
 
         if (!currentModelName || !appState.currentModel) return;
 
-        currentModelName.innerHTML = appState.currentModel.name;
+        const name = appState.currentModel.name || appState.currentModel.Name || '';
+
+        currentModelName.textContent = name;
+        currentModelName.title = name;
+
+        const providerName = appState.provider?.name || appState.provider?.Name || '';
+
+        const currentModelProvider = $('#current-model-provider');
+        if (currentModelProvider) {
+            currentModelProvider.textContent = providerName;
+        }
+        togglePanelHidden('#current-model-provider', !!providerName);
+
+        const currentModelCapabilities = $('#current-model-capabilities');
+        if (currentModelCapabilities) {
+            currentModelCapabilities.innerHTML = this.renderModelCapabilityIcons(appState.currentModel);
+        }
     },
 
     setModelDropdownProviderName() {

@@ -20,6 +20,8 @@ namespace Codinex.Infrastructure.AI.Capabilities
         public CapabilityProbeResult SupportsStreaming { get; set; } = CapabilityProbeResult.Unsupported;
 
         public CapabilityProbeResult SupportsToolCalling { get; set; } = CapabilityProbeResult.Unsupported;
+
+        public CapabilityProbeResult SupportsReasoning { get; set; } = CapabilityProbeResult.Unsupported;
     }
 
     [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
@@ -59,7 +61,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
                 chatCapabilities.SupportsStreaming,
                 chatCapabilities.SupportsToolCalling,
                 vision,
-                CapabilityProbeResult.Unsupported);
+                chatCapabilities.SupportsReasoning);
         }
 
         private static bool IsOpenCodeFreeProvider(AiProvider provider)
@@ -133,6 +135,11 @@ namespace Codinex.Infrastructure.AI.Capabilities
                 SupportsToolCalling = await ProbeToolCallingCapabilityAsync(
                     provider,
                     model,
+                    cancellationToken),
+
+                SupportsReasoning = await ProbeReasoningCapabilityAsync(
+                    provider,
+                    model,
                     cancellationToken)
             };
         }
@@ -190,6 +197,39 @@ namespace Codinex.Infrastructure.AI.Capabilities
             catch (OpenAiCompatibleException ex)
             {
                 return IsToolCallingUnsupported(ex.ResponseBody)
+                    ? CapabilityProbeResult.Unsupported
+                    : CapabilityProbeResult.Unknown;
+            }
+            catch
+            {
+                return CapabilityProbeResult.Unknown;
+            }
+        }
+
+        private async Task<CapabilityProbeResult> ProbeReasoningCapabilityAsync(
+            AiProvider provider,
+            AiModel model,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var payload = BuildReasoningProbePayload(provider, model);
+
+                var response = await client.PostAsync(
+                    provider,
+                    GetChatEndpoint(provider),
+                    payload,
+                    cancellationToken);
+
+                var root = JObject.Parse(response);
+
+                return HasReasoningContent(provider, root)
+                    ? CapabilityProbeResult.Supported
+                    : CapabilityProbeResult.Unsupported;
+            }
+            catch (OpenAiCompatibleException ex)
+            {
+                return IsReasoningUnsupported(ex.ResponseBody)
                     ? CapabilityProbeResult.Unsupported
                     : CapabilityProbeResult.Unknown;
             }
@@ -416,6 +456,79 @@ namespace Codinex.Infrastructure.AI.Capabilities
                     }
                 }
             };
+        }
+
+        private static object BuildReasoningProbePayload(AiProvider provider, AiModel model)
+        {
+            if (IsAnthropicProvider(provider))
+            {
+                return new
+                {
+                    model = model.Id,
+
+                    max_tokens = 1056,
+
+                    thinking = new
+                    {
+                        type = "enabled",
+                        budget_tokens = 1024
+                    },
+
+                    messages = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            content = "What is 2 + 2? Think step by step."
+                        }
+                    }
+                };
+            }
+
+            return new
+            {
+                model = model.Id,
+
+                stream = false,
+
+                reasoning = new { effort = "low" },
+
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = "What is 2 + 2? Think step by step."
+                    }
+                }
+            };
+        }
+
+        private static bool HasReasoningContent(AiProvider provider, JObject root)
+        {
+            if (IsAnthropicProvider(provider))
+            {
+                return root["content"] is JArray content
+                       && content.Any(x => x["type"]?.ToString() == "thinking");
+            }
+
+            var message = provider.Protocol == "openai"
+                ? root["choices"]?[0]?["message"]
+                : root["message"];
+
+            return !string.IsNullOrWhiteSpace(message?["reasoning_content"]?.ToString())
+                   || !string.IsNullOrWhiteSpace(message?["reasoning"]?.ToString())
+                   || !string.IsNullOrWhiteSpace(message?["thinking"]?.ToString());
+        }
+
+        private static bool IsReasoningUnsupported(string responseBody)
+        {
+            return (ContainsIgnoreCase(responseBody, "reasoning") || ContainsIgnoreCase(responseBody, "thinking"))
+                   && (ContainsIgnoreCase(responseBody, "unsupported parameter")
+                       || ContainsIgnoreCase(responseBody, "unknown parameter")
+                       || ContainsIgnoreCase(responseBody, "not supported")
+                       || ContainsIgnoreCase(responseBody, "does not support")
+                       || ContainsIgnoreCase(responseBody, "doesn't support"));
         }
 
         private static object BuildVisionProbePayload(

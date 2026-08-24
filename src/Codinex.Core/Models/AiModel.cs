@@ -54,7 +54,7 @@ namespace Codinex.Core.Models
         public CapabilityProbeResult SupportsVision { get; set; } = CapabilityProbeResult.Unknown;
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public CapabilityProbeResult SupportsReasoning { get; private set; } = CapabilityProbeResult.Unknown;
+        public CapabilityProbeResult SupportsReasoning { get; set; } = CapabilityProbeResult.Unknown;
 
         /// <summary>
         /// Constructor enforces required invariants.
