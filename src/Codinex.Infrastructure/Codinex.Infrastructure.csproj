@@ -61,8 +61,8 @@
     <Compile Include="AI\Clients\ProviderClient.cs" />
     <Compile Include="AI\Errors\AiErrorFactory.cs" />
     <Compile Include="AI\PromptRecorder.cs" />
-    <Compile Include="BugReporting\BugsnagOptions.cs" />
-    <Compile Include="BugReporting\BugReportedException.cs" />
+    <Compile Include="BugReporting\GitHubIssueOptions.cs" />
+    <Compile Include="BugReporting\GitHubIssueService.cs" />
     <Compile Include="BugReporting\BugReportService.cs" />
     <Compile Include="AI\Providers\AiProviderFactory.cs" />
     <Compile Include="AI\Providers\AiProviderRouter.cs" />
@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
-    <PackageReference Include="Bugsnag" Version="4.1.1" />
     <ProjectReference Include="..\Codinex.Core\Codinex.Core.csproj">
       <Project>{fab3acec-0007-48d9-99b7-cd6820fb97f2}</Project>
       <Name>Codinex.Core</Name>

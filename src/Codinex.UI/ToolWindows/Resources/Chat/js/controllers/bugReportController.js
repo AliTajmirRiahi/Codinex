@@ -82,7 +82,6 @@ export function initBugReportController() {
 
                 if (descriptionInput) descriptionInput.value = '';
 
-                setTimeout(closeModal, 1200);
                 return;
             }
 

@@ -5,70 +5,104 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Bugsnag;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces;
 using Codinex.Core.Models;
 using Codinex.Storage.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Codinex.Infrastructure.BugReporting
 {
     [AutoDiRegister(Modules.AI, RegistrationOrder.Infrastructure)]
-    public sealed class BugReportService(IWorkspaceFileService workspaceFileService) : IBugReportService
+    public sealed class BugReportService(
+        IWorkspaceFileService workspaceFileService,
+        IGitHubIssueService gitHubIssueService) : IBugReportService
     {
-        // BugSnag payloads have a practical ~1MB ceiling; keep the output log well under
-        // that so metadata never gets rejected outright.
+        // GitHub payloads have a practical ceiling too; keep the output log well under
+        // that so the issue body never gets rejected outright.
         private const int MaxOutputLogLength = 800_000;
 
-        private readonly Lazy<Client> _client = new(() =>
-            new Client(new Configuration(BugsnagOptions.ApiKey)));
-
-        public Task<BugReportResult> SubmitAsync(
+        public async Task<BugReportResult> SubmitAsync(
             string chatId,
             string description,
             string outputLog,
+            IReadOnlyDictionary<string, string> vsInfo,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
-                return Task.FromResult(BugReportResult.Failed("A description of the bug is required."));
+                return BugReportResult.Failed("A description of the bug is required.");
             }
 
-            try
-            {
-                var exception = new BugReportedException(description);
+            var systemInfo = CollectSystemInfo(vsInfo);
+            var lastPrompt = CollectLastPrompt(chatId);
+            var truncatedOutputLog = Truncate(outputLog);
 
-                var systemInfo = CollectSystemInfo();
-                var lastPrompt = CollectLastPrompt(chatId);
-                var truncatedOutputLog = Truncate(outputLog);
+            var issueResult = await gitHubIssueService.CreateIssueAsync(
+                BuildIssueTitle(description),
+                BuildIssueBody(chatId, description, systemInfo, lastPrompt, truncatedOutputLog),
+                cancellationToken);
 
-                _client.Value.Notify(exception, report =>
-                {
-                    report.Event.Context = description;
-                    report.Event.Metadata.Add("Report", new Dictionary<string, object>
-                    {
-                        ["ChatId"] = chatId,
-                        ["Description"] = description
-                    });
-                    report.Event.Metadata.Add("System", systemInfo);
-                    report.Event.Metadata.Add("OutputLog", new Dictionary<string, object>
-                    {
-                        ["Log"] = truncatedOutputLog
-                    });
-                    report.Event.Metadata.Add("LastPrompt", lastPrompt);
-                });
+            return issueResult.Success
+                ? BugReportResult.Ok($"Bug report filed as a GitHub issue")
+                : BugReportResult.Failed($"Failed to file GitHub issue");
+        }
 
-                return Task.FromResult(BugReportResult.Ok("Bug report sent. Thank you!"));
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(BugReportResult.Failed($"Failed to send bug report: {ex.Message}"));
-            }
+        private static string BuildIssueTitle(string description)
+        {
+            var firstLine = description.Split('\n')[0].Trim();
+
+            return firstLine.Length <= 80
+                ? $"[Bug] {firstLine}"
+                : $"[Bug] {firstLine.Substring(0, 80)}…";
+        }
+
+        private static string BuildIssueBody(
+            string chatId,
+            string description,
+            Dictionary<string, object> systemInfo,
+            object lastPrompt,
+            string truncatedOutputLog)
+        {
+            var body = new StringBuilder();
+
+            body.AppendLine("## Description");
+            body.AppendLine(description);
+            body.AppendLine();
+
+            body.AppendLine("## System Info");
+            body.AppendLine("```json");
+            body.AppendLine(JsonConvert.SerializeObject(systemInfo, Formatting.Indented));
+            body.AppendLine("```");
+            body.AppendLine();
+
+            body.AppendLine("<details><summary>Codinex output log</summary>");
+            body.AppendLine();
+            body.AppendLine("```");
+            body.AppendLine(string.IsNullOrWhiteSpace(truncatedOutputLog) ? "(empty)" : truncatedOutputLog);
+            body.AppendLine("```");
+            body.AppendLine("</details>");
+            body.AppendLine();
+
+            body.AppendLine("<details><summary>Last chat prompt</summary>");
+            body.AppendLine();
+            body.AppendLine("```json");
+            body.AppendLine(lastPrompt == null
+                ? "(none recorded)"
+                : JsonConvert.SerializeObject(lastPrompt, Formatting.Indented));
+            body.AppendLine("```");
+            body.AppendLine("</details>");
+            body.AppendLine();
+
+            body.AppendLine($"_Chat ID: {chatId}_");
+
+            return body.ToString();
         }
 
         private static string Truncate(string outputLog)
@@ -83,7 +117,7 @@ namespace Codinex.Infrastructure.BugReporting
                 : outputLog.Substring(outputLog.Length - MaxOutputLogLength);
         }
 
-        private static Dictionary<string, object> CollectSystemInfo()
+        private static Dictionary<string, object> CollectSystemInfo(IReadOnlyDictionary<string, string> vsInfo)
         {
             var info = new Dictionary<string, object>
             {
@@ -99,6 +133,14 @@ namespace Codinex.Infrastructure.BugReporting
             foreach (var kvp in CollectVisualInfo())
             {
                 info[kvp.Key] = kvp.Value;
+            }
+
+            if (vsInfo != null)
+            {
+                foreach (var kvp in vsInfo)
+                {
+                    info[kvp.Key] = kvp.Value;
+                }
             }
 
             return info;

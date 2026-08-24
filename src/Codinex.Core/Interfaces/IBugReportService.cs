@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.Models;
@@ -14,6 +15,7 @@ namespace Codinex.Core.Interfaces
             string chatId,
             string description,
             string outputLog,
+            IReadOnlyDictionary<string, string> vsInfo,
             CancellationToken cancellationToken = default);
     }
 }

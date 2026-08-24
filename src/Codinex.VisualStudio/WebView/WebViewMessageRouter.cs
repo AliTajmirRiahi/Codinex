@@ -1119,10 +1119,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             outputLog = string.Empty;
         }
 
+        var vsInfo = await CollectVsInfoAsync();
+
         var result = await _bugReportService.SubmitAsync(
             payload?.ChatId,
             payload?.Description,
             outputLog,
+            vsInfo,
             CancellationToken.None);
 
         var message = new WebViewMessageResponse
@@ -1137,6 +1140,29 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         };
 
         await _webViewClient.PostMessageAsync(message);
+    }
+
+    private async Task<Dictionary<string, string>> CollectVsInfoAsync()
+    {
+        var info = new Dictionary<string, string>();
+
+        try
+        {
+            var dte = await _visualStudio.GetDteAsync();
+
+            if (dte != null)
+            {
+                info["VsVersion"] = dte.Version;
+                info["VsEdition"] = dte.Edition;
+                info["VsName"] = dte.Name;
+            }
+        }
+        catch (Exception ex)
+        {
+            info["VsInfoError"] = ex.Message;
+        }
+
+        return info;
     }
 
     public async Task SendInputLanguageChangedAsync(InputLanguageChangedEventArgs inputLanguage)
