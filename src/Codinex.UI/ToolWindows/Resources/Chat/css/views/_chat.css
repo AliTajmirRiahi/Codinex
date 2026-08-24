@@ -740,3 +740,36 @@
     color: #ffeaea;
     word-break: break-word;
 }
+
+.codinex-error-box__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.codinex-error-box__send-bug-btn {
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 59, 59, 0.6);
+    border-radius: 6px;
+    background: rgba(255, 59, 59, 0.1);
+    color: #ffdddd;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.codinex-error-box__send-bug-btn:hover {
+    background: rgba(255, 59, 59, 0.22);
+}
+
+.codinex-error-box__send-bug-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.codinex-error-box__bug-sent {
+    font-size: 12px;
+    color: #89d185;
+}
