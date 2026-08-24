@@ -83,6 +83,8 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\settingsController.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\floatingDateSeparatorView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\languageDirection.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\controllers\addProviderController.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\addProviderView.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\chatController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\manageModelsController.test.js" />
     <Content Include="ToolWindows\Resources\Chat\tests\controllers\providerController.test.js" />

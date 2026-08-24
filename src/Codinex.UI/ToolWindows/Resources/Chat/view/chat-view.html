@@ -723,17 +723,22 @@
                 <!-- Step 1: Provider Selection -->
                 <div class="form-group">
                     <label>Select Provider</label>
-                    <div class="provider-selector-wrapper">
-                        <button id="provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Provider">
-                            <codinex-icon name="puzzle"></codinex-icon>
-                            <span id="provider-name">Select an AI Provider</span>
-                            <codinex-icon name="chevron-down"></codinex-icon>
-                        </button>
-                        <input id="provider-select" type="hidden" value="">
-                        <div id="provider-dropdown" class="com-dropdown">
-                            <div class="menu-label">Providers</div>
-                            <div id="provider-dropdown-menu-container"></div>
+                    <div class="provider-selector-row">
+                        <div class="provider-selector-wrapper">
+                            <button id="provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Provider">
+                                <codinex-icon name="puzzle"></codinex-icon>
+                                <span id="provider-name">Select an AI Provider</span>
+                                <codinex-icon name="chevron-down"></codinex-icon>
+                            </button>
+                            <input id="provider-select" type="hidden" value="">
+                            <div id="provider-dropdown" class="com-dropdown">
+                                <div class="menu-label">Providers</div>
+                                <div id="provider-dropdown-menu-container"></div>
+                            </div>
                         </div>
+                        <button id="add-custom-provider-btn" class="toolbar-btn" type="button" title="Add Custom Provider">
+                            <codinex-icon name="plus"></codinex-icon>
+                        </button>
                     </div>
                 </div>
 
@@ -793,7 +798,60 @@
         </div>
     </div>
 
+    <!-- Add Custom Provider Modal -->
+    <div id="add-provider-modal" class="modal hidden">
+        <div class="modal-content project-modal-content">
+            <div id="add-provider-loading-screen" class="modal-loading-screen hidden">
+                <codinex-image name="loading.svg" class="spinner"></codinex-image>
+            </div>
+            <div class="modal-header">
+                <h2>Add Custom Provider</h2>
+                <button id="close-add-provider-modal" type="button">✕</button>
+            </div>
 
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Provider Name</label>
+                    <input id="add-provider-name" type="text" placeholder="e.g. ChatGPT">
+                </div>
+
+                <div class="form-group">
+                    <label>Protocol</label>
+                    <select id="add-provider-protocol">
+                        <option value="openai">OpenAI Compatible</option>
+                        <option value="anthropic">Anthropic Compatible</option>
+                        <option value="ollama">Ollama</option>
+                        <option value="opendcodefree">OpenCode.ai (Free Models)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Base URL</label>
+                    <input id="add-provider-base-url" type="text" placeholder="https://api.openai.com/v1">
+                </div>
+
+                <div class="form-group">
+                    <label>Model Endpoint</label>
+                    <input id="add-provider-model-endpoint-url" type="text" placeholder="https://api.openai.com/v1/models">
+                    <small id="add-provider-endpoint-hint" class="form-hint">The full URL used to list models — must start with the Base URL above.</small>
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="add-provider-need-api-key" checked> Requires API Key</label>
+                </div>
+
+                <div class="form-group" id="add-provider-api-key-group">
+                    <label>API Key</label>
+                    <input id="add-provider-api-key" type="text" placeholder="sk-...">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="cancel-add-provider-btn" type="button" class="secondary-button">Cancel</button>
+                <button id="save-add-provider-btn" type="button" class="primary-button">Save Provider</button>
+            </div>
+        </div>
+    </div>
 
 
 

@@ -12,6 +12,7 @@ import { initChatController } from './controllers/chatController.js';
 import { chatView } from './views/chatView.js';
 import { AskUserQuestionView } from './views/askUserQuestionView.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
+import { initAddProviderController } from './controllers/addProviderController.js';
 import { initAboutController } from './controllers/aboutController.js';
 import { initBugReportController } from './controllers/bugReportController.js';
 import { initSettingsController } from './controllers/settingsController.js';
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatController = initChatController(webViewTransport);
 
     const manageModelsController = initManageModelsController(webViewTransport);
+    const addProviderController = initAddProviderController(webViewTransport);
     initAboutController();
     const bugReportController = initBugReportController();
     const settingsController = initSettingsController(webViewTransport);
@@ -309,6 +311,21 @@ document.addEventListener('DOMContentLoaded', () => {
         onBugReportSubmitted: (payload) => {
             bugReportController.handleBugReportSubmitted(payload);
             chatView.handleBugReportSubmitted(payload);
+        },
+        onCustomProviderAdded: (payload) => {
+            const providers = payload.providers || payload.Providers;
+            const currentProvider = providers?.current || providers?.Current;
+
+            if (currentProvider) setProvider(currentProvider);
+            if (providers) manageModelsController.updateUI(providers);
+
+            addProviderController.handleProviderAdded();
+            chatController.renderCurrentProvider();
+        },
+        onCustomProviderAddRejected: (payload) => {
+            const message = payload.message || payload.Message || 'Provider could not be added.';
+
+            addProviderController.handleProviderAddRejected(message);
         }
     });
 

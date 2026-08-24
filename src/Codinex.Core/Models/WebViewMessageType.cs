@@ -34,6 +34,7 @@ public static class WebViewMessageType
     public const string RewindChat = "REWIND_CHAT";
     public const string CopyToClipboard = "COPY_TO_CLIPBOARD";
     public const string SubmitBugReport = "SUBMIT_BUG_REPORT";
+    public const string AddCustomProvider = "ADD_CUSTOM_PROVIDER";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -68,5 +69,7 @@ public static class WebViewMessageType
     public const string AddSelectedCodeReference = "ADD_SELECTED_CODE_REFERENCE";
     public const string RunCommandOnSelection = "RUN_COMMAND_ON_SELECTION";
     public const string BugReportSubmitted = "BUG_REPORT_SUBMITTED";
+    public const string CustomProviderAdded = "CUSTOM_PROVIDER_ADDED";
+    public const string CustomProviderAddRejected = "CUSTOM_PROVIDER_ADD_REJECTED";
 
 }

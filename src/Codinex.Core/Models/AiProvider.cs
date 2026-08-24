@@ -56,6 +56,26 @@ namespace Codinex.Core.Models
         }
 
         /// <summary>
+        /// Constructor used to create a user-defined custom provider, allowing the caller to
+        /// control the flags that the simplified constructor above hard-codes.
+        /// </summary>
+        public AiProvider(
+            string id,
+            string name,
+            string protocol,
+            string baseUrl,
+            bool needApiKey,
+            bool isLocal,
+            string modelEndPoint,
+            string apiKey = "",
+            string icon = "",
+            string iconColor = "#000000")
+            : this(id, name, protocol, icon, iconColor, apiKey, baseUrl, false, needApiKey, isLocal, modelEndPoint, new List<AiModel>())
+        {
+
+        }
+
+        /// <summary>
         /// Constructor used by Newtonsoft during deserialization.
         /// </summary>
         [JsonConstructor]

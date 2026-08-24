@@ -268,6 +268,17 @@
 }
 
 
+.provider-selector-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .provider-selector-row .provider-selector-wrapper {
+        flex: 1;
+        min-width: 0;
+    }
+
 .provider-selector-wrapper {
     position: relative;
     width: 100%;

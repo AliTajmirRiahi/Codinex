@@ -251,6 +251,29 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.AddCustomProvider:
+                {
+                    var addProviderDto = _payloadBinder.Bind<AddCustomProviderDto>(request.Payload);
+
+                    try
+                    {
+                        var result = await _providerManager.AddCustomProviderAsync(addProviderDto);
+
+                        if (!result.Success)
+                        {
+                            await SendCustomProviderAddRejectedAsync(result.Message);
+                            return;
+                        }
+
+                        await SendCustomProviderAddedAsync(result.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        await SendCustomProviderAddRejectedAsync(ex.Message);
+                    }
+
+                    return;
+                }
             case WebViewMessageType.RefreshProviderModels:
                 {
                     var providerId = request.Payload?["providerId"]?.ToString();
@@ -696,6 +719,41 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     AvailableProviders = _providerManager.Providers,
                     Current = _providerManager.ActiveProvider
                 },
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendCustomProviderAddedAsync(string messageText = null)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.CustomProviderAdded,
+            Payload = new
+            {
+                Message = messageText,
+                Providers = new
+                {
+                    AvailableProviders = _providerManager.Providers,
+                    Current = _providerManager.ActiveProvider
+                },
+            },
+            Timestamp = DateTime.Now
+        };
+
+        await _webViewClient.PostMessageAsync(message);
+    }
+
+    public async Task SendCustomProviderAddRejectedAsync(string messageText)
+    {
+        var message = new WebViewMessageResponse()
+        {
+            Type = WebViewMessageType.CustomProviderAddRejected,
+            Payload = new
+            {
+                Message = messageText,
             },
             Timestamp = DateTime.Now
         };

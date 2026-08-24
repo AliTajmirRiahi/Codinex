@@ -235,6 +235,105 @@ namespace Codinex.Storage.Managers
             return ProviderSettingsUpdateResult.Saved();
         }
 
+        /// <summary>
+        /// Validates a user-supplied provider definition by attempting to fetch its model list,
+        /// and only persists it as a new, enabled provider (with its first model selected) if
+        /// that call succeeds.
+        /// </summary>
+        public async Task<ProviderSettingsUpdateResult> AddCustomProviderAsync(AddCustomProviderDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return ProviderSettingsUpdateResult.Failed("Provider name is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.Protocol))
+                return ProviderSettingsUpdateResult.Failed("Protocol is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.BaseUrl))
+                return ProviderSettingsUpdateResult.Failed("Base URL is required.");
+
+            if (dto.NeedApiKey && string.IsNullOrWhiteSpace(dto.ApiKey))
+                return ProviderSettingsUpdateResult.Failed("API key is required.");
+
+            var baseUrl = dto.BaseUrl.Trim().TrimEnd('/');
+            var modelEndPoint = "/" + (dto.ModelEndPoint ?? "").Trim().Trim('/');
+            if (modelEndPoint == "/")
+                modelEndPoint = "/models";
+
+            var id = GenerateUniqueProviderId(dto.Name);
+            var protocol = dto.Protocol.Trim();
+            var isLocal = IsLocalProtocol(protocol);
+
+            var provider = new AiProvider(
+                id,
+                dto.Name.Trim(),
+                protocol,
+                baseUrl,
+                dto.NeedApiKey,
+                isLocal,
+                modelEndPoint,
+                dto.ApiKey ?? "");
+
+            var models = await providerModelService.GetModelsFromServerAsync(provider, CancellationToken.None);
+
+            if (models == null || models.Count == 0)
+                return ProviderSettingsUpdateResult.Failed(
+                    $"Could not retrieve any models from {provider.Name}. Check the Base URL, Model Endpoint and API key.");
+
+            provider.SetModels(models);
+
+            foreach (var prov in Providers)
+                prov.Disable();
+
+            provider.Enable();
+
+            var firstModel = provider.Models.FirstOrDefault();
+            firstModel?.Select();
+            firstModel?.MarkAsCurrent();
+
+            Providers.Add(provider);
+
+            await providerCapabilityChecker.CheckAsync(provider, firstModel, CancellationToken.None);
+
+            await SaveAsync();
+
+            return ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
+        }
+
+        /// <summary>
+        /// Determines whether a provider is local purely from its protocol, mirroring the
+        /// bundled providers.json (only Ollama is flagged as a local HTTP API today).
+        /// </summary>
+        private static bool IsLocalProtocol(string protocol)
+        {
+            return string.Equals(protocol, "ollama", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private string GenerateUniqueProviderId(string name)
+        {
+            var slug = new string(name.Trim().ToLowerInvariant()
+                .Select(c => char.IsLetterOrDigit(c) ? c : '-')
+                .ToArray());
+
+            while (slug.Contains("--"))
+                slug = slug.Replace("--", "-");
+
+            slug = slug.Trim('-');
+
+            if (string.IsNullOrWhiteSpace(slug))
+                slug = "custom-provider";
+
+            var id = slug;
+            var suffix = 1;
+
+            while (Providers.Any(p => string.Equals(p.Id, id, StringComparison.OrdinalIgnoreCase)))
+                id = $"{slug}-{suffix++}";
+
+            return id;
+        }
+
         private static void PreserveModelRuntimeState(AiProvider provider, IReadOnlyCollection<AiModel> refreshedModels)
         {
             if (provider == null || refreshedModels == null || refreshedModels.Count == 0)

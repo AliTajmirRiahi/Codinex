@@ -138,6 +138,14 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onBugReportSubmitted) handlers.onBugReportSubmitted(payload);
                 break;
 
+            case EVENTS.CUSTOM_PROVIDER_ADDED:
+                if (handlers.onCustomProviderAdded) handlers.onCustomProviderAdded(payload);
+                break;
+
+            case EVENTS.CUSTOM_PROVIDER_ADD_REJECTED:
+                if (handlers.onCustomProviderAddRejected) handlers.onCustomProviderAddRejected(payload);
+                break;
+
             default:
                 throw new Error(`[Dispatcher] Unhandled message type: ${type}`);
         }
