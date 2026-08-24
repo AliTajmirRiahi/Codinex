@@ -53,7 +53,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly ISourceControlStatusService _sourceControlStatusService;
     private readonly IUiThreadDispatcher _uiThreadDispatcher;
     private readonly IBugReportService _bugReportService;
-    private readonly IVsOutputWindowService _vsOutputWindowService;
+    private readonly IVsDiagnosticsCollector _vsDiagnosticsCollector;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -81,7 +81,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ISourceControlStatusService sourceControlStatusService,
         IUiThreadDispatcher uiThreadDispatcher,
         IBugReportService bugReportService,
-        IVsOutputWindowService vsOutputWindowService)
+        IVsDiagnosticsCollector vsDiagnosticsCollector)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -105,7 +105,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _sourceControlStatusService = sourceControlStatusService;
         _uiThreadDispatcher = uiThreadDispatcher;
         _bugReportService = bugReportService;
-        _vsOutputWindowService = vsOutputWindowService;
+        _vsDiagnosticsCollector = vsDiagnosticsCollector;
 
 
         RegisterEventHandlers();
@@ -1108,18 +1108,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
     private async Task SubmitBugReportAsync(BugReportDto payload)
     {
-        string outputLog;
-
-        try
-        {
-            outputLog = await _vsOutputWindowService.ReadOutputAsync("Codinex", CancellationToken.None);
-        }
-        catch
-        {
-            outputLog = string.Empty;
-        }
-
-        var vsInfo = await CollectVsInfoAsync();
+        var outputLog = await _vsDiagnosticsCollector.CollectOutputLogAsync(CancellationToken.None);
+        var vsInfo = await _vsDiagnosticsCollector.CollectVsInfoAsync();
 
         var result = await _bugReportService.SubmitAsync(
             payload?.ChatId,
@@ -1140,29 +1130,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         };
 
         await _webViewClient.PostMessageAsync(message);
-    }
-
-    private async Task<Dictionary<string, string>> CollectVsInfoAsync()
-    {
-        var info = new Dictionary<string, string>();
-
-        try
-        {
-            var dte = await _visualStudio.GetDteAsync();
-
-            if (dte != null)
-            {
-                info["VsVersion"] = dte.Version;
-                info["VsEdition"] = dte.Edition;
-                info["VsName"] = dte.Name;
-            }
-        }
-        catch (Exception ex)
-        {
-            info["VsInfoError"] = ex.Message;
-        }
-
-        return info;
     }
 
     public async Task SendInputLanguageChangedAsync(InputLanguageChangedEventArgs inputLanguage)

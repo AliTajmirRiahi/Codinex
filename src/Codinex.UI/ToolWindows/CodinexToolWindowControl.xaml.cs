@@ -113,10 +113,6 @@ namespace Codinex.UI.ToolWindows
 
             await InitializeWebViewZoomAsync();
 
-            var gitContextProvider = _serviceProvider.GetRequiredService<IGitContextProvider>();
-
-            var tt = await gitContextProvider.GetContextAsync(CancellationToken.None);
-
             WebView.CoreWebView2.Navigate(
                 "http://codinex.resources/Chat/view/chat-view.html"
             );
