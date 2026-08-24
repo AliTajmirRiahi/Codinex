@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /graphify-out
 /CLAUDE.md
 /src/Codinex.Infrastructure/BugReporting/BugsnagOptions.cs
+/src/Codinex.Infrastructure/BugReporting/GitHubIssueOptions.cs

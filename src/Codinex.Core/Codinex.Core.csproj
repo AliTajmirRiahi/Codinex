@@ -111,6 +111,7 @@
     <Compile Include="Interfaces\IAiProvider.cs" />
     <Compile Include="Interfaces\IAiProviderFactory.cs" />
     <Compile Include="Interfaces\IBugReportService.cs" />
+    <Compile Include="Interfaces\IGitHubIssueService.cs" />
     <Compile Include="Interfaces\IPromptRecorder.cs" />
     <Compile Include="Interfaces\IAiProviderRouter.cs" />
     <Compile Include="Interfaces\IChatSession.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Models\AiProvider.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\BugReportResult.cs" />
+    <Compile Include="Models\GitHubIssueResult.cs" />
     <Compile Include="Models\BuildContext.cs" />
     <Compile Include="Models\ChatAgent.cs" />
     <Compile Include="Models\ChatCommand.cs" />
