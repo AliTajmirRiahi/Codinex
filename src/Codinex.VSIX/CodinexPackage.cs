@@ -42,7 +42,7 @@ namespace Codinex.VSIX
     public sealed class CodinexPackage : AsyncPackage
     {
         /// <summary>
-        /// CodifyPackage GUID string.
+        /// CodinexPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "eb873b7a-8287-48ac-8a6b-646d4166809b";
 
@@ -121,7 +121,7 @@ namespace Codinex.VSIX
 
                     handler.Handle(
                         exception,
-                        "CodifyPackage.InitializeAsync");
+                        "CodinexPackage.InitializeAsync");
                 }
                 else
                 {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -41,9 +42,16 @@ namespace Codinex.Infrastructure.ModelManagement
             if (retriever == null)
                 return [];
 
-            var onlineModels = await retriever.GetModelsAsync(provider, cancellationToken);
+            try
+            {
+                var onlineModels = await retriever.GetModelsAsync(provider, cancellationToken);
 
-            return onlineModels.ToList();
+                return onlineModels.ToList();
+            }
+            catch
+            {
+                return [];
+            }    
         }
 
     }
