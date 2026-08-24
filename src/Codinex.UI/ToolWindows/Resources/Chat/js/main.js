@@ -9,6 +9,7 @@ import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
 import { initChatController } from './controllers/chatController.js';
+import { chatView } from './views/chatView.js';
 import { AskUserQuestionView } from './views/askUserQuestionView.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
 import { initAboutController } from './controllers/aboutController.js';
@@ -307,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onBugReportSubmitted: (payload) => {
             bugReportController.handleBugReportSubmitted(payload);
+            chatView.handleBugReportSubmitted(payload);
         }
     });
 

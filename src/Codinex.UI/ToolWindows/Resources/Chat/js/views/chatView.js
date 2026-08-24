@@ -12,6 +12,12 @@ import { messageView } from '../views/messageView.js';
 import { CodeRenderer } from "../../../Shared/components/code-renderer.js";
 import { ComposerView } from './composerView.js';
 import { FloatingDateSeparatorView, defaultChatDateSeparatorFormatter } from './floatingDateSeparatorView.js';
+import { webViewTransport } from '../../../Shared/bridge/webViewTransport.js';
+import { EVENTS } from '../constants/events.js';
+
+// FIFO queue of "Send as a bug" buttons waiting on a BugReportSubmitted response.
+// The response has no correlation id, so submissions are resolved in the order sent.
+const pendingErrorBugReports = [];
 
 const ISO_DATE_TIME_WITHOUT_TIMEZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
 const EXPLICIT_TIMEZONE = /(?:z|[+-]\d{2}:?\d{2})$/i;
@@ -475,12 +481,52 @@ export const chatView = {
 
         messageEl.textContent = text;
 
+        this.wireSendAsBugButton(errorBox, text);
+
         container.appendChild(errorBox);
 
         if (statusElement) parent.appendChild(statusElement);
         parent.appendChild(element);
         // Auto-scroll to bottom
         container.scrollTop = container.scrollHeight;
+    },
+
+    wireSendAsBugButton(errorBox, errorText) {
+        const sendBugBtn = errorBox.querySelector('.codinex-error-box__send-bug-btn');
+        const sentLabel = errorBox.querySelector('.codinex-error-box__bug-sent');
+
+        sendBugBtn?.addEventListener('click', () => {
+            sendBugBtn.disabled = true;
+            sendBugBtn.textContent = 'Sending…';
+
+            const currentChat = getState().currentChat;
+            const chatId = currentChat?.id || currentChat?.Id || null;
+
+            pendingErrorBugReports.push({ sendBugBtn, sentLabel });
+
+            webViewTransport.send(EVENTS.SUBMIT_BUG_REPORT, {
+                chatId,
+                description: errorText
+            });
+        });
+    },
+
+    handleBugReportSubmitted(payload) {
+        const pending = pendingErrorBugReports.shift();
+
+        if (!pending) return;
+
+        const { sendBugBtn, sentLabel } = pending;
+        const success = payload?.success ?? payload?.Success;
+
+        if (success) {
+            sendBugBtn.classList.add('hidden');
+            sentLabel?.classList.remove('hidden');
+            return;
+        }
+
+        sendBugBtn.disabled = false;
+        sendBugBtn.textContent = 'Send as a bug';
     },
 
     handleSendMessage() {
