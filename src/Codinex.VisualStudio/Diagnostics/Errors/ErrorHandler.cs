@@ -75,6 +75,10 @@ namespace Codinex.VisualStudio.Diagnostics.Errors
 
         private void AutoReport(string dedupeKey, string description)
         {
+#if DEBUG
+            // Don't spam GitHub with issues from local dev/debug sessions.
+            return;
+#else
             var now = DateTime.UtcNow;
 
             _recentlyReported.TryGetValue(dedupeKey, out var lastReportedAt);
@@ -113,6 +117,7 @@ namespace Codinex.VisualStudio.Diagnostics.Errors
                     _logger.WriteLine($"[AUTO BUG REPORT] Failed: {ex.Message}");
                 }
             });
+#endif
         }
     }
 }
