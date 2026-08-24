@@ -10,11 +10,15 @@ using Microsoft.VisualStudio.Shell;
 
 namespace Codinex.VisualStudio.References.Providers.Base
 {
-    public abstract class RoslynReferenceProviderBase(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
+    public abstract class RoslynReferenceProviderBase(
+        IVisualStudioServices visualStudio,
+        IUiThreadDispatcher uiThreadDispatcher,
+        IWorkspaceIgnoreService workspaceIgnoreService)
         : VsServiceBase(visualStudio), IReferenceProvider
     {
         private readonly IVisualStudioServices _visualStudio = visualStudio;
         private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
+        private readonly IWorkspaceIgnoreService _workspaceIgnoreService = workspaceIgnoreService;
 
         public async Task<IReadOnlyList<ReferenceItem>> GetReferencesAsync()
         {
@@ -55,8 +59,13 @@ namespace Codinex.VisualStudio.References.Providers.Base
 
         protected virtual bool IsSupportedDocument(Document document)
         {
-            return document.FilePath?.EndsWith(".cs",
-                StringComparison.OrdinalIgnoreCase) == true;
+            if (document.FilePath?.EndsWith(".cs", StringComparison.OrdinalIgnoreCase) != true)
+                return false;
+
+            // Skip generated/build-output documents (e.g. under obj/, node_modules/) that Roslyn's
+            // project system sometimes still includes, so large solutions don't spend time parsing
+            // syntax trees that were never useful as references anyway.
+            return !_workspaceIgnoreService.ShouldIgnore(document.FilePath);
         }
 
         protected abstract Task<IReadOnlyList<ReferenceItem>>

@@ -9,8 +9,11 @@ using Microsoft.CodeAnalysis;
 
 namespace Codinex.TestCommon.Fakes.VisualStudio
 {
-    public sealed class TestRoslynReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
-        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)
+    public sealed class TestRoslynReferenceProvider(
+        IVisualStudioServices visualStudio,
+        IUiThreadDispatcher uiThreadDispatcher,
+        IWorkspaceIgnoreService? workspaceIgnoreService = null)
+        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher, workspaceIgnoreService ?? NeverIgnoreWorkspaceIgnoreService.Instance)
     {
         /// <summary>
         /// Gets the number of times ExtractReferencesAsync has been invoked.
@@ -44,5 +47,12 @@ namespace Codinex.TestCommon.Fakes.VisualStudio
             return OnExtractAsync?.Invoke(project, document)
                    ?? Task.FromResult<IReadOnlyList<ReferenceItem>>([]);
         }
+    }
+
+    internal sealed class NeverIgnoreWorkspaceIgnoreService : IWorkspaceIgnoreService
+    {
+        public static readonly NeverIgnoreWorkspaceIgnoreService Instance = new();
+
+        public bool ShouldIgnore(string filePath) => false;
     }
 }

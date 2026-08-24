@@ -182,6 +182,12 @@
     color: var(--vs-foreground);
 }
 
+    .menu-action span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
     .menu-action:hover {
         background: var( --vs-command-bar-hover-over-selected-icon-border-color);
         border-color: var( --vs-command-bar-hover-over-selected-icon-border-color);
@@ -289,6 +295,8 @@
     right: 0;
     flex-direction: column;
     min-width: 190px;
+    width: max-content;
+    max-width: 320px;
 }
 
 #provider-dropdown.com-dropdown,

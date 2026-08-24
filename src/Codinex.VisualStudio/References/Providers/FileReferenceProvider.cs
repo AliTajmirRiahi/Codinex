@@ -20,13 +20,15 @@ namespace Codinex.VisualStudio.References.Providers
         IWorkspaceContext workspaceContext ,
         IWorkspaceFileService workspaceFileService,
         ISourceFileElementService sourceFileElementService,
-        IUiThreadDispatcher uiThreadDispatcher)
+        IUiThreadDispatcher uiThreadDispatcher,
+        IWorkspaceIgnoreService workspaceIgnoreService)
         : VsServiceBase(visualStudio), IReferenceProvider, IActiveDocumentProvider, IFileReferenceBuilder
     {
         private readonly IWorkspaceContext _workspaceContext = workspaceContext;
         private readonly IWorkspaceFileService _workspaceFileService = workspaceFileService;
         private readonly ISourceFileElementService _sourceFileElementService = sourceFileElementService;
         private readonly IUiThreadDispatcher _uiThreadDispatcher = uiThreadDispatcher;
+        private readonly IWorkspaceIgnoreService _workspaceIgnoreService = workspaceIgnoreService;
 
         public sealed class FileIconInfo
         {
@@ -262,10 +264,18 @@ namespace Codinex.VisualStudio.References.Providers
 
             foreach (var item in projectItems.Cast<ProjectItem>()) //Testable loop for Enumerate COM EnvDTE.ProjectItems
             {
+                var itemPath = TryGetItemPath(item);
+
+                // Skip ignored files/folders (bin, obj, node_modules, packages, etc.) entirely, rather
+                // than walking into them, so large solutions don't spend minutes enumerating build
+                // output and dependency trees that were never useful as references anyway.
+                if (itemPath != null && _workspaceIgnoreService.ShouldIgnore(itemPath))
+                    continue;
+
                 // GUID for Physical File in VS
                 if (item.Kind == "{6BB5F8EE-4483-11D3-8BCF-00C04F8EC28C}")
                 {
-                    var filePath = item.FileNames[1];
+                    var filePath = itemPath ?? item.FileNames[1];
                     var fileName = Path.GetFileName(filePath);
                     var iconForFile = GetIconForFile(fileName);
 
@@ -295,6 +305,19 @@ namespace Codinex.VisualStudio.References.Providers
                 }
             }
 
+        }
+
+        private static string TryGetItemPath(ProjectItem item)
+        {
+            try
+            {
+                return item.FileNames[1];
+            }
+            catch (Exception)
+            {
+                // Some item kinds (e.g. virtual/solution folders, references) don't expose a file path.
+                return null;
+            }
         }
 
         private static FileIconInfo GetIconForFile(string fileName)

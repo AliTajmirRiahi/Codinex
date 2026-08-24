@@ -74,11 +74,13 @@ namespace Codinex.VisualStudio.References
                 }
                 catch (Exception ex)
                 {
+                    // A single misbehaving provider (e.g. an unsupported project type throwing from a
+                    // DTE property accessor) must not take down every other provider's results.
                     _errorHandler.Handle(
                         ex,
                         nameof(GetAllReferencesAsync));
 
-                    throw;
+                    return (IReadOnlyList<ReferenceItem>)Array.Empty<ReferenceItem>();
                 }
             });
 

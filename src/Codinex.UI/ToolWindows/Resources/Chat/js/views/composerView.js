@@ -510,6 +510,18 @@ export class ComposerView {
 
     }
 
+    // Long generated/migration file names (e.g. "202412301245493_Make_Nullable_Status_In_AspNetUsers.Designer.cs")
+    // blow out the menu row width. Truncate in the middle so the meaningful prefix and the
+    // extension/suffix (".Designer.cs") both stay visible instead of the tail getting cut off.
+    truncateMiddle(text, maxLength = 45) {
+        if (!text || text.length <= maxLength) return text;
+
+        const keepEnd = 20;
+        const keepStart = Math.max(maxLength - keepEnd - 3, 8);
+
+        return `${text.slice(0, keepStart)}...${text.slice(text.length - keepEnd)}`;
+    }
+
     renderNextMenuPage() {
 
         if (!this.menu) return;
@@ -522,6 +534,7 @@ export class ComposerView {
 
             const item = this.filteredItems[index];
             const el = document.createElement('button');
+            const fullName = item.label || item.name;
 
             el.className = `composer-menu-item  ${index === this.selectedIndex ? 'active' : ''}`;
 
@@ -529,7 +542,7 @@ export class ComposerView {
 
             el.innerHTML = `
                 ${item.icon ? `<div class="item-icon" style="${item.color ? `color: var(${item.color});` : ''}"><codinex-icon name="${item.icon}"></codinex-icon></div>` : ''}
-                <div class="item-name">${item.label || item.name}</div>
+                <div class="item-name" title="${fullName}">${this.truncateMiddle(fullName)}</div>
                 ${item.description ? `<div class="item-desc">${typeof (item.description) == 'function' ? item.description() : item.description}</div>` : ''}
             `;
 

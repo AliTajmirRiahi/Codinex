@@ -18,8 +18,11 @@ using Project = Microsoft.CodeAnalysis.Project;
 namespace Codinex.VisualStudio.References.Providers
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
-    public sealed class MethodReferenceProvider(IVisualStudioServices visualStudio, IUiThreadDispatcher uiThreadDispatcher)
-        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher)
+    public sealed class MethodReferenceProvider(
+        IVisualStudioServices visualStudio,
+        IUiThreadDispatcher uiThreadDispatcher,
+        IWorkspaceIgnoreService workspaceIgnoreService)
+        : RoslynReferenceProviderBase(visualStudio, uiThreadDispatcher, workspaceIgnoreService)
     {
         protected override Task<IReadOnlyList<ReferenceItem>> ExtractReferencesAsync(Project project, Document document)
         {

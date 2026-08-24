@@ -17,6 +17,7 @@ public abstract class FileReferenceProviderTestBase
     protected IWorkspaceFileService WorkspaceFileService = null!;
     protected ISourceFileElementService SourceFileElementService = null!;
     protected IUiThreadDispatcher UiThreadDispatcher = null!;
+    protected IWorkspaceIgnoreService WorkspaceIgnoreService = null!;
 
     protected DTE2 Dte = null!;
 
@@ -26,9 +27,11 @@ public abstract class FileReferenceProviderTestBase
         VisualStudioServices = Substitute.For<IVisualStudioServices>();
         WorkspaceContext = Substitute.For<IWorkspaceContext>();
         //FileSystem = Substitute.For<IFileSystem>();
-        WorkspaceFileService = Substitute.For<IWorkspaceFileService>(); 
+        WorkspaceFileService = Substitute.For<IWorkspaceFileService>();
         SourceFileElementService = Substitute.For<ISourceFileElementService>();
         UiThreadDispatcher = Substitute.For<IUiThreadDispatcher>();
+        WorkspaceIgnoreService = Substitute.For<IWorkspaceIgnoreService>();
+        WorkspaceIgnoreService.ShouldIgnore(Arg.Any<string>()).Returns(false);
 
         Dte = Substitute.For<DTE2>();
 
@@ -54,7 +57,8 @@ public abstract class FileReferenceProviderTestBase
             WorkspaceContext,
             WorkspaceFileService,
             SourceFileElementService,
-            UiThreadDispatcher);
+            UiThreadDispatcher,
+            WorkspaceIgnoreService);
     }
 
     protected void SetActiveDocument(

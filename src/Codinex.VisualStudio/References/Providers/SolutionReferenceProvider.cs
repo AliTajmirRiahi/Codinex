@@ -2,6 +2,7 @@
 
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
@@ -52,15 +53,27 @@ namespace Codinex.VisualStudio.References.Providers
                 // The GUID {66A26720-8FB5-11D2-AA7E-00C04F688DDE} is for Solution Folders
                 if (project.Kind == "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") continue;
 
-                items.Add(new ReferenceItem
+                try
                 {
-                    Id = $"proj:{project.UniqueName}",
-                    Name = project.Name,
-                    Description = "Project",
-                    Type = ReferenceKind.Project,
-                    Icon = "fileTypes/icon-project",
-                    Value = project.FullName
-                });
+                    items.Add(new ReferenceItem
+                    {
+                        Id = $"proj:{project.UniqueName}",
+                        Name = project.Name,
+                        Description = "Project",
+                        Type = ReferenceKind.Project,
+                        Icon = "fileTypes/icon-project",
+                        Value = project.FullName
+                    });
+                }
+                catch (System.Runtime.InteropServices.COMException)
+                {
+                    // Some project types (e.g. unsupported/unloaded/CPS projects still initializing)
+                    // throw from DTE property accessors like FullName. Skip them rather than letting
+                    // one broken project take down the whole reference list.
+                }
+                catch (NotImplementedException)
+                {
+                }
             }
 
             return items;
