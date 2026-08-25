@@ -36,7 +36,28 @@ function deriveModelEndPoint(baseUrl, modelEndpointUrl) {
     return relative;
 }
 
-const COLORABLE_TAGS = ['path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon'];
+/**
+ * Normalizes a hex color string typed by the user (3 or 6 digits, "#" optional)
+ * into a canonical "#rrggbb" form, or null if it isn't a valid hex color.
+ */
+function normalizeHexColor(value) {
+    const match = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec((value || '').trim());
+    if (!match) return null;
+
+    let hex = match[1];
+    if (hex.length === 3) {
+        hex = hex.split('').map(c => c + c).join('');
+    }
+
+    return `#${hex.toLowerCase()}`;
+}
+
+// Elements that actually paint a shape — missing fill defaults to black here, so we
+// add fill="currentColor" when it's absent, not just when it's hardcoded to something else.
+const SHAPE_TAGS = ['path', 'circle', 'ellipse', 'rect', 'line', 'polyline', 'polygon', 'text', 'use'];
+// Wrapper elements — a fill here only matters if it was explicitly set (e.g. a color
+// applied once on a <g> covering several children); we never force one onto them.
+const CONTAINER_TAGS = ['g', 'svg'];
 
 function readSvgFileAsText(file) {
     return new Promise((resolve, reject) => {
@@ -55,27 +76,52 @@ function svgTextToDataUri(svgText) {
     return `data:image/svg+xml;base64,${base64}`;
 }
 
+/**
+ * True for a paint value that would block IconColor from having any effect: a solid
+ * hardcoded color. False for "none" (intentionally unpainted), "currentColor" (already
+ * tintable), and url(#...) references (gradients/patterns — not a plain color, leave alone).
+ */
 function isTintable(value) {
     if (!value) return false;
     const v = value.trim().toLowerCase();
-    return v !== 'none' && v !== 'currentcolor';
+    if (v === 'none' || v === 'currentcolor') return false;
+    if (v.startsWith('url(')) return false;
+    return true;
 }
 
 /**
- * Replaces a hardcoded fill/stroke value inside an inline style="" declaration
- * with currentColor, leaving "none" / already-tintable values untouched.
+ * Replaces a hardcoded fill/stroke/color value inside a CSS declaration block
+ * (an inline style="" attribute, or the body of a <style> tag) with currentColor,
+ * leaving "none" / currentColor / url() paint-server references untouched.
  */
-function patchStyleColors(style) {
-    return style
-        .replace(/(fill)\s*:\s*([^;]+)/gi, (match, prop, value) => isTintable(value) ? `${prop}:currentColor` : match)
-        .replace(/(stroke)\s*:\s*([^;]+)/gi, (match, prop, value) => isTintable(value) ? `${prop}:currentColor` : match);
+function patchCssColors(css) {
+    return css.replace(/(fill|stroke|color)\s*:\s*([^;}"']+)/gi,
+        (match, prop, value) => isTintable(value) ? `${prop}:currentColor` : match);
+}
+
+function patchElementColor(el, isShape) {
+    const fill = el.getAttribute('fill');
+    if ((isShape && fill === null) || isTintable(fill)) {
+        el.setAttribute('fill', 'currentColor');
+    }
+
+    if (isTintable(el.getAttribute('stroke'))) {
+        el.setAttribute('stroke', 'currentColor');
+    }
+
+    const style = el.getAttribute('style');
+    if (style) {
+        el.setAttribute('style', patchCssColors(style));
+    }
 }
 
 /**
  * Checks whether an SVG's shapes will actually pick up a CSS `color` (i.e. use
- * currentColor), and rewrites any hardcoded fill/stroke to currentColor when they
- * won't — so the IconColor picker always has a visible effect, not just for SVGs
- * that already happen to be authored with currentColor.
+ * currentColor) and rewrites whatever won't — hardcoded fill/stroke attributes,
+ * inline style="" colors, and colors set inside embedded <style> rules (those take
+ * priority over presentation attributes, so they have to be patched too) — so the
+ * IconColor picker always has a visible effect, not just for SVGs that already
+ * happen to be authored with currentColor.
  */
 function normalizeSvgColor(svgText) {
     const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
@@ -84,23 +130,16 @@ function normalizeSvgColor(svgText) {
         throw new Error('The selected file is not a valid SVG.');
     }
 
-    COLORABLE_TAGS.forEach(tag => {
-        doc.querySelectorAll(tag).forEach(el => {
-            const fill = el.getAttribute('fill');
-            if (fill === null || isTintable(fill)) {
-                el.setAttribute('fill', 'currentColor');
-            }
+    SHAPE_TAGS.forEach(tag => {
+        doc.querySelectorAll(tag).forEach(el => patchElementColor(el, true));
+    });
 
-            const stroke = el.getAttribute('stroke');
-            if (isTintable(stroke)) {
-                el.setAttribute('stroke', 'currentColor');
-            }
+    CONTAINER_TAGS.forEach(tag => {
+        doc.querySelectorAll(tag).forEach(el => patchElementColor(el, false));
+    });
 
-            const style = el.getAttribute('style');
-            if (style) {
-                el.setAttribute('style', patchStyleColors(style));
-            }
-        });
+    doc.querySelectorAll('style').forEach(styleEl => {
+        styleEl.textContent = patchCssColors(styleEl.textContent || '');
     });
 
     return new XMLSerializer().serializeToString(doc);
@@ -147,6 +186,7 @@ export const addProviderView = {
         const iconPickBtn = $('#add-provider-icon-pick-btn');
         const iconClearBtn = $('#add-provider-icon-clear-btn');
         const iconColorInput = $('#add-provider-icon-color');
+        const iconColorHexInput = $('#add-provider-icon-color-hex');
 
         if (iconPickBtn && iconFileInput) {
             iconPickBtn.addEventListener('click', () => iconFileInput.click());
@@ -181,7 +221,31 @@ export const addProviderView = {
         }
 
         if (iconColorInput) {
-            iconColorInput.addEventListener('input', () => this._updateIconPreview());
+            iconColorInput.addEventListener('input', () => {
+                if (iconColorHexInput) iconColorHexInput.value = iconColorInput.value;
+                this._updateIconPreview();
+            });
+        }
+
+        if (iconColorHexInput) {
+            // Only commit while the user is typing once the value is a complete, valid hex
+            // color — an in-progress value like "#3f" is left alone rather than rejected.
+            iconColorHexInput.addEventListener('input', () => {
+                const normalized = normalizeHexColor(iconColorHexInput.value);
+                if (!normalized) return;
+
+                if (iconColorInput) iconColorInput.value = normalized;
+                this._updateIconPreview();
+            });
+
+            iconColorHexInput.addEventListener('blur', () => {
+                const normalized = normalizeHexColor(iconColorHexInput.value)
+                    || (iconColorInput ? iconColorInput.value : '#000000');
+
+                iconColorHexInput.value = normalized;
+                if (iconColorInput) iconColorInput.value = normalized;
+                this._updateIconPreview();
+            });
         }
 
         $('#save-add-provider-btn').onclick = () => {
@@ -197,6 +261,13 @@ export const addProviderView = {
                     message: 'Model Endpoint must be the full URL and must start with the Base URL above.',
                     mode: 'inline',
                     target: '#add-provider-model-endpoint-url'
+                },
+                {
+                    field: 'iconColor',
+                    validator: (value) => !!normalizeHexColor(value),
+                    message: 'Icon color must be a valid hex color (e.g. #000000).',
+                    mode: 'inline',
+                    target: '#add-provider-icon-color-hex'
                 },
             ];
 
@@ -214,7 +285,7 @@ export const addProviderView = {
             const data = {
                 name: raw.name,
                 icon: raw.icon,
-                iconColor: raw.iconColor,
+                iconColor: normalizeHexColor(raw.iconColor) || '#000000',
                 protocol: raw.protocol,
                 baseUrl: raw.baseUrl,
                 modelEndPoint: deriveModelEndPoint(raw.baseUrl, raw.modelEndpointUrl),
@@ -233,7 +304,7 @@ export const addProviderView = {
         return {
             name: $('#add-provider-name').value.trim(),
             icon: this._iconDataUri || '',
-            iconColor: $('#add-provider-icon-color').value || '#000000',
+            iconColor: $('#add-provider-icon-color-hex').value || $('#add-provider-icon-color').value || '#000000',
             protocol: $('#add-provider-protocol').value,
             baseUrl: $('#add-provider-base-url').value.trim(),
             modelEndpointUrl: $('#add-provider-model-endpoint-url').value.trim(),
@@ -256,7 +327,7 @@ export const addProviderView = {
         togglePanelHidden('#add-provider-api-key-group', true);
 
         this._iconDataUri = '';
-        $('#add-provider-icon-color').value = '#000000';
+        this._setIconColor('#000000');
         this._updateIconPreview();
 
         this._editingProviderId = null;
@@ -277,6 +348,18 @@ export const addProviderView = {
         }
 
         togglePanelHidden('#add-provider-icon-clear-btn', !!this._iconDataUri);
+    },
+
+    /**
+     * @private
+     */
+    _setIconColor(color) {
+        const normalized = normalizeHexColor(color) || '#000000';
+        const swatch = $('#add-provider-icon-color');
+        const hex = $('#add-provider-icon-color-hex');
+
+        if (swatch) swatch.value = normalized;
+        if (hex) hex.value = normalized;
     },
 
     setLoading(isLoading) {
@@ -330,7 +413,7 @@ export const addProviderView = {
         // The preview still shows whatever icon (bundled or embedded) the provider has today.
         const icon = provider.icon || provider.Icon || '';
         this._iconDataUri = icon.startsWith('data:') ? icon : '';
-        $('#add-provider-icon-color').value = provider.iconColor || provider.IconColor || '#000000';
+        this._setIconColor(provider.iconColor || provider.IconColor || '#000000');
 
         const preview = $('#add-provider-icon-preview');
         if (preview) {

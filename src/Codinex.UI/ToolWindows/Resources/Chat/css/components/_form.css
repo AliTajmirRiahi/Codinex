@@ -83,3 +83,10 @@
         border: none;
         border-radius: 3px;
     }
+
+.icon-picker-row .icon-color-hex-input {
+    width: 76px;
+    flex-shrink: 0;
+    font-family: var(--vs-editor-font-family, monospace);
+    text-transform: lowercase;
+}
