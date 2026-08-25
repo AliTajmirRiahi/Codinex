@@ -221,6 +221,69 @@ namespace Codinex.Core.Models
 
             BaseUrl = baseUrl;
         }
+
+
+        /// <summary>
+        /// Applies bundled provider metadata updates while preserving user-specific runtime settings.
+        /// </summary>
+        public bool ApplyDefaultMetadata(AiProvider defaultProvider)
+        {
+            if (defaultProvider == null)
+                throw new ArgumentNullException(nameof(defaultProvider));
+
+            var hasChanges = false;
+
+            if (!string.Equals(Name, defaultProvider.Name, StringComparison.Ordinal))
+            {
+                Name = defaultProvider.Name;
+                hasChanges = true;
+            }
+
+            if (!string.Equals(Protocol, defaultProvider.Protocol, StringComparison.Ordinal))
+            {
+                Protocol = defaultProvider.Protocol;
+                hasChanges = true;
+            }
+
+            if (!string.Equals(Icon, defaultProvider.Icon, StringComparison.Ordinal))
+            {
+                Icon = defaultProvider.Icon;
+                hasChanges = true;
+            }
+
+            if (!string.Equals(IconColor, defaultProvider.IconColor, StringComparison.Ordinal))
+            {
+                IconColor = defaultProvider.IconColor;
+                hasChanges = true;
+            }
+
+            if (!string.Equals(BaseUrl, defaultProvider.BaseUrl, StringComparison.Ordinal))
+            {
+                BaseUrl = defaultProvider.BaseUrl;
+                hasChanges = true;
+            }
+
+            if (NeedApiKey != defaultProvider.NeedApiKey)
+            {
+                NeedApiKey = defaultProvider.NeedApiKey;
+                hasChanges = true;
+            }
+
+            if (IsLocal != defaultProvider.IsLocal)
+            {
+                IsLocal = defaultProvider.IsLocal;
+                hasChanges = true;
+            }
+
+            if (!string.Equals(ModelEndPoint, defaultProvider.ModelEndPoint, StringComparison.Ordinal))
+            {
+                ModelEndPoint = defaultProvider.ModelEndPoint;
+                hasChanges = true;
+            }
+
+            return hasChanges;
+        }
+
     }
 
 }

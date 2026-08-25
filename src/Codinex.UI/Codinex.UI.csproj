@@ -121,6 +121,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\ton.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\anthropic.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\ai-model.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\gapgpt.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />

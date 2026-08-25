@@ -50,28 +50,36 @@ namespace Codinex.Storage.Managers
         /// <summary>
         /// Adds any provider present in the bundled providers.json but missing from the
         /// user's saved provider list (e.g. after an extension update introduced a new
-        /// provider). Existing saved providers (settings, API keys, selected models) are
-        /// left untouched.
+        /// provider), and updates default metadata for existing saved providers. User
+        /// specific values (API keys, enabled state, selected models) are left untouched.
         /// </summary>
-        /// <returns>True if one or more new providers were added.</returns>
+        /// <returns>True if one or more providers were added or updated.</returns>
         private async Task<bool> MergeNewDefaultProvidersAsync()
         {
             var defaultProviders = LoadResourceCollection<AiProvider>("providers.json");
+            var existingProviders = Providers.ToDictionary(p => p.Id, StringComparer.OrdinalIgnoreCase);
+            var hasChanges = false;
+            var newProviders = new List<AiProvider>();
 
-            var existingIds = new HashSet<string>(Providers.Select(p => p.Id), StringComparer.OrdinalIgnoreCase);
+            foreach (var defaultProvider in defaultProviders)
+            {
+                if (existingProviders.TryGetValue(defaultProvider.Id, out var existingProvider))
+                {
+                    hasChanges |= existingProvider.ApplyDefaultMetadata(defaultProvider);
+                    continue;
+                }
 
-            var newProviders = defaultProviders
-                .Where(p => !existingIds.Contains(p.Id))
-                .ToList();
+                newProviders.Add(defaultProvider);
+            }
 
-            if (newProviders.Count == 0)
-                return false;
+            if (newProviders.Count > 0)
+            {
+                await PopulateModelsAsync(newProviders);
+                Providers.AddRange(newProviders);
+                hasChanges = true;
+            }
 
-            await PopulateModelsAsync(newProviders);
-
-            Providers.AddRange(newProviders);
-
-            return true;
+            return hasChanges;
         }
 
         private async Task<List<AiProvider>> GetDefaultProviders()
