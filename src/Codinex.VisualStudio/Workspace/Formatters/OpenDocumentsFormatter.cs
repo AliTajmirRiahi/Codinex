@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Models;
 
 namespace Codinex.VisualStudio.Workspace.Formatters

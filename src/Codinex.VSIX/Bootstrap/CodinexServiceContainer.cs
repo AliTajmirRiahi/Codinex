@@ -1,4 +1,4 @@
-﻿// Path: Codinex\Infrastructure\DependencyInjection\ServiceContainer.cs
+// Path: Codinex\Infrastructure\DependencyInjection\ServiceContainer.cs
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO.Abstractions;
 using Codinex.Core.DependencyInjection;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
 using Codinex.VisualStudio.Logging;

@@ -3,7 +3,7 @@ using System.Linq;
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Models;
 using Codinex.Storage.Managers;
 

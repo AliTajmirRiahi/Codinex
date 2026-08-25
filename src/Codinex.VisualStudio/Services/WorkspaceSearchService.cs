@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.VisualStudio.Extensions;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Models;

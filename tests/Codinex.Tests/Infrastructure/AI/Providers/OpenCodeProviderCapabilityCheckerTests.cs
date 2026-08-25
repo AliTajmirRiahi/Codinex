@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Models;
 using Codinex.Infrastructure.AI.Capabilities;
 using Codinex.Infrastructure.Serialization;

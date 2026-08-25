@@ -2,8 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.AI;
 namespace Codinex.Infrastructure.AI.Providers.OpenCode
 {
     /// <summary>

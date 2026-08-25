@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 using Codinex.UI.ToolWindows;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.VSIX.Bootstrap;
 using Microsoft.VisualStudio.Shell;
 

@@ -1,6 +1,6 @@
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.WorkspaceChanges;

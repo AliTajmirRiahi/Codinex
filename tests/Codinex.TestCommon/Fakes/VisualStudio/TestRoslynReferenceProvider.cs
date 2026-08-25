@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References.Providers.Base;

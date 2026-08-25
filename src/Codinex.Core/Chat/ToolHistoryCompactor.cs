@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Chat;
 using Codinex.Core.Models;
 using Newtonsoft.Json;
 

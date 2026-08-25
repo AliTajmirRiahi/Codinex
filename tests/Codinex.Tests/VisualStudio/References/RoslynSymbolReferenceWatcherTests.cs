@@ -3,7 +3,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models;
 using Codinex.TestCommon.Builders.VisualStudio;
 using Codinex.TestCommon.Fakes.VisualStudio;

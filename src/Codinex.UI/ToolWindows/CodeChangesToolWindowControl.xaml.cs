@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.VisualStudio.Diagnostics.Errors;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace;

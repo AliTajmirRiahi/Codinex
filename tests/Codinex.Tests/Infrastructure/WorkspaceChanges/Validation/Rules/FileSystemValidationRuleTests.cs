@@ -3,7 +3,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 

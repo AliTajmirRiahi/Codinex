@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Services;
 namespace Codinex.Infrastructure.Serialization;
 
 [AutoDiRegister(Modules.JSON, RegistrationOrder.Infrastructure)]

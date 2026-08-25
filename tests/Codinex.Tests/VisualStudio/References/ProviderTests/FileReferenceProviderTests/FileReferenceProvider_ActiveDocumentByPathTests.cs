@@ -1,4 +1,3 @@
-﻿using Codinex.Core.Interfaces;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References.Providers;
 using FluentAssertions;

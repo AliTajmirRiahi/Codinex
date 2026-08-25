@@ -1,5 +1,5 @@
 using System;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges.Handlers;

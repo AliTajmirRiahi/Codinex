@@ -10,7 +10,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Codinex.Core.Chat;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Git;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Storage.Managers;
 using Microsoft.VisualStudio.Shell;
 

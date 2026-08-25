@@ -1,5 +1,5 @@
 using Codinex.Core.Interfaces.WorkspaceChanges;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Infrastructure.WorkspaceChanges.Handlers;
 using NSubstitute;
 using NUnit.Framework;

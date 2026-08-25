@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Tools;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.VisualStudio.Tools;

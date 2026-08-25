@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,7 @@ using System.Reflection;
 using System.Text;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Services;
 namespace Codinex.VisualStudio.Theme
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]

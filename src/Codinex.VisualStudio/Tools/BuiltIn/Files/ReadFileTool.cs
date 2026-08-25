@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Codinex.VisualStudio.Interfaces;

@@ -6,7 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Git;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models;
 
 namespace Codinex.Infrastructure.BugReporting

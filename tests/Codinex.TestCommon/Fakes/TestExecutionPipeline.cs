@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Services;
 namespace Codinex.TestCommon.Fakes
 {
     public sealed class TestExecutionPipeline : IExecutionPipeline

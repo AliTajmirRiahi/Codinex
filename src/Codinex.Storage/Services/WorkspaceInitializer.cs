@@ -2,8 +2,7 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Workspace;
 namespace Codinex.Storage.Services;
 
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]

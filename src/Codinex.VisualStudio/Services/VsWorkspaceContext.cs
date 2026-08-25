@@ -1,4 +1,4 @@
-﻿using EnvDTE80;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -7,8 +7,7 @@ using System.IO;
 using System.Linq;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Workspace;
 namespace Codinex.VisualStudio.Services
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]

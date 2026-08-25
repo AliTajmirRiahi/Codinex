@@ -1,7 +1,9 @@
 using Codinex.Core.Conversation;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.AI;
+using Codinex.Core.Interfaces.Chat;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;

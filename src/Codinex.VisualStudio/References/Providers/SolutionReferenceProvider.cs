@@ -1,4 +1,4 @@
-﻿// Infrastructure/References/Providers/SolutionReferenceProvider.cs
+// Infrastructure/References/Providers/SolutionReferenceProvider.cs
 
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.References;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Models;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;

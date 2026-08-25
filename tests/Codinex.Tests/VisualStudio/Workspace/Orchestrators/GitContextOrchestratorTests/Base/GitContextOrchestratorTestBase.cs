@@ -1,4 +1,4 @@
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Context;
 using Codinex.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;

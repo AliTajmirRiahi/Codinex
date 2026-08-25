@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Models;
 using Codinex.VisualStudio.Interfaces;
 using Microsoft.VisualStudio.ProjectSystem.Query;

@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.AI;
+using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models;
 using Codinex.Infrastructure.ModelManagement.Retrievers;
 using Codinex.Infrastructure.Serialization;

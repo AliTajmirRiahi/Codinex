@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Models;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Infrastructure.Workspace.PromptPipeline;

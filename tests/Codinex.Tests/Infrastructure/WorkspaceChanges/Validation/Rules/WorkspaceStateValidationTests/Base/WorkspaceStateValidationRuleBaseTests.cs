@@ -1,4 +1,4 @@
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Infrastructure.WorkspaceChanges.Validation.Rules;
 using NSubstitute;
 using NUnit.Framework;

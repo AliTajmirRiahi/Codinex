@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.Search;
 using Codinex.Infrastructure.Search;

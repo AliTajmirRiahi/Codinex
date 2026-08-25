@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Models;
 using Codinex.Storage.Services;

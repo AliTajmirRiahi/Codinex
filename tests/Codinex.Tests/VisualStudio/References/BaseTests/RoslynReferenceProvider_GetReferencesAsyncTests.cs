@@ -1,4 +1,4 @@
-﻿using Codinex.Core.Models;
+using Codinex.Core.Models;
 using Codinex.TestCommon.Builders.VisualStudio;
 using FluentAssertions;
 using Microsoft.VisualStudio.LanguageServices;
@@ -7,7 +7,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
 using Codinex.TestCommon.Fakes.VisualStudio;
 using Codinex.VisualStudio.Interfaces;
 using Microsoft.CodeAnalysis;

@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
-using Codinex.Core.Interfaces;
-
+using Codinex.Core.Interfaces.Services;
 namespace Codinex.Infrastructure.Http;
 
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Infrastructure)]

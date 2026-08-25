@@ -1,8 +1,7 @@
-﻿using EnvDTE;
+using EnvDTE;
 using EnvDTE80;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using Codinex.Core.Interfaces;
 using NSubstitute;
 
 namespace Codinex.TestCommon.Builders.VisualStudio;

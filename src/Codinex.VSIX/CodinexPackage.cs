@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
@@ -6,7 +6,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using Codinex.Core.Interfaces;
+using Codinex.Core.Interfaces.Services;
+using Codinex.Core.Interfaces.Workspace;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Managers;
 using Codinex.VisualStudio.Events.Build;
