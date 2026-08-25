@@ -10,7 +10,7 @@ using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Interfaces.Workspace;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
 

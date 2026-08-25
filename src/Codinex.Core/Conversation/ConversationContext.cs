@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
+using Codinex.Core.Models.References;
 
 namespace Codinex.Core.Conversation;
 

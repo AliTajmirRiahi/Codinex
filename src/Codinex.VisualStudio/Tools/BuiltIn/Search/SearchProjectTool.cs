@@ -1,4 +1,3 @@
-using Codinex.Core.Models;
 using Codinex.Core.Workspace;
 using Codinex.VisualStudio.Models;
 using Newtonsoft.Json.Linq;

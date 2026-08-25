@@ -1,4 +1,4 @@
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
 
 namespace Codinex.Core.Interfaces.AI
 {

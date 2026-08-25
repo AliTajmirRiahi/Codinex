@@ -8,7 +8,7 @@ using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
-using Codinex.Core.Models;
+using Codinex.Core.Models.WebView;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Infrastructure.WorkspaceChanges;
 using Codinex.VisualStudio.Interfaces;

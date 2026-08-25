@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.TestCommon.Fakes.VisualStudio;
 using Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
 

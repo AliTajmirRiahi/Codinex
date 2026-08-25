@@ -1,0 +1,34 @@
+using System.Collections.Generic;
+using Codinex.Core.Models.References;
+using Codinex.Core.Workspace.Prompt;
+
+namespace Codinex.Core.Models.Chat
+{
+    /// <summary>
+    /// Input model for <c>ChatMessageBuilder</c>.
+    /// Contains the raw request data collected before building the final AI message list,
+    /// such as the user's draft text, selected command, selected agent,
+    /// selected references, and conversation history.
+    /// This model represents the source data used to assemble the final chat payload.
+    /// </summary>
+    public sealed class ChatMessageBuildRequest
+    {
+        public string DraftText { get; set; } = string.Empty;
+
+        public PromptContext PromptContext { get; set; }
+
+        public string ProjectName { get; set; } = string.Empty;
+
+        public string ProjectInstruction { get; set; } = string.Empty;
+
+        public string SolutionInstruction { get; set; } = string.Empty;
+
+        public ChatCommand SelectedCommand { get; set; }
+
+        public ChatAgent SelectedAgent { get; set; }
+
+        public IReadOnlyList<ReferenceItem> SelectedReferences { get; set; }
+
+        public IReadOnlyList<ChatMessage> ConversationHistory { get; set; }
+    }
+}

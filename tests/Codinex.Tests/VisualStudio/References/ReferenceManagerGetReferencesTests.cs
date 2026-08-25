@@ -4,7 +4,7 @@ using Codinex.Core.Interfaces.Documents;
 using Codinex.Core.Interfaces.References;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Interfaces.Workspace;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.VisualStudio.References;
 using FluentAssertions;
 

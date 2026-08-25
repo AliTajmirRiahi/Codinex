@@ -1,4 +1,4 @@
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 
 namespace Codinex.VisualStudio.Models.Tools.ListDirectory;
 

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Tests.Infrastructure.Workspace.PromptPipeline.WorkspaceContextBuilderTests.Base;
 using FluentAssertions;

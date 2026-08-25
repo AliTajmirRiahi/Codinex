@@ -7,7 +7,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
 
 namespace Codinex.Infrastructure.ModelManagement.Retrievers
 {

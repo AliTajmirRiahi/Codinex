@@ -7,7 +7,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Documents;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Documents;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
 

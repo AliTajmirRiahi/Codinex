@@ -1,4 +1,4 @@
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.TestCommon.Builders.VisualStudio;
 using FluentAssertions;
 using Microsoft.VisualStudio.LanguageServices;

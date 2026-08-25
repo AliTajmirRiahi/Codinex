@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.WebView;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 

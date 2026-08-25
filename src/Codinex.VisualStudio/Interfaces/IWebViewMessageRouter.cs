@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
+using Codinex.Core.Models.WebView;
 
 namespace Codinex.VisualStudio.Interfaces;
 

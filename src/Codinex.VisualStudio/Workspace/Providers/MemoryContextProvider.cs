@@ -2,7 +2,7 @@ using System.Linq;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Context;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 using Codinex.Storage.Interfaces;
 
 namespace Codinex.VisualStudio.Workspace.Providers;

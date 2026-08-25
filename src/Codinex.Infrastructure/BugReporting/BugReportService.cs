@@ -13,7 +13,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Git;
 using Codinex.Core.Interfaces.Workspace;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Git;
 using Codinex.Storage.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

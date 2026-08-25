@@ -3,7 +3,7 @@ using System.Linq;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Chat;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
 using Codinex.Core.Workspace.Prompt;
 
 namespace Codinex.Core.Chat

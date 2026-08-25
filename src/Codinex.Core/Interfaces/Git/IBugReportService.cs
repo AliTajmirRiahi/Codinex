@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Git;
 
 namespace Codinex.Core.Interfaces.Git
 {

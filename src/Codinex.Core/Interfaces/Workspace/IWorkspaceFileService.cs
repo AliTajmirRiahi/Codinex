@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 
 namespace Codinex.Core.Interfaces.Workspace
 {

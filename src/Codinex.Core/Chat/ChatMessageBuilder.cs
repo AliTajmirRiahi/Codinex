@@ -7,7 +7,8 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Chat;
 using Codinex.Core.Interfaces.Context;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
+using Codinex.Core.Models.References;
 using Codinex.Core.Workspace.Prompt;
 
 namespace Codinex.Core.Chat

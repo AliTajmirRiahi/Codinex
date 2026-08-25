@@ -8,7 +8,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Interfaces.Workspace;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
 

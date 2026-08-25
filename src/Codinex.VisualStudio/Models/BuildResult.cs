@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 
 namespace Codinex.VisualStudio.Models;
 

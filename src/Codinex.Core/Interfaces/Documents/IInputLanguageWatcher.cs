@@ -1,5 +1,5 @@
 ﻿using System;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Documents;
 
 namespace Codinex.Core.Interfaces.Documents
 {

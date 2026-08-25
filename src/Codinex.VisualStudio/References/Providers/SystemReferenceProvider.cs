@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.References;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.VisualStudio.Interfaces;
 
 namespace Codinex.VisualStudio.References.Providers

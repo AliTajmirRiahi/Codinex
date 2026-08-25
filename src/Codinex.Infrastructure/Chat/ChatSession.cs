@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Codinex.Core.Chat;
 using Codinex.Core.Interfaces.Chat;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
 using Codinex.Storage.Commons;
 using Codinex.Storage.Managers;
 using Codinex.Storage.Models;

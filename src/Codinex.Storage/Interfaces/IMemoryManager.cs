@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Storage.Models;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 
 namespace Codinex.Storage.Interfaces
 {

@@ -9,12 +9,12 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Documents;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
-using DiagnosticSeverity = Codinex.Core.Models.DiagnosticSeverity;
+using DiagnosticSeverity = Codinex.Core.Models.Context.DiagnosticSeverity;
 using MicrosoftDiagnosticSeverity = Microsoft.CodeAnalysis.DiagnosticSeverity;
-using Models_DiagnosticSeverity = Codinex.Core.Models.DiagnosticSeverity;
+using Models_DiagnosticSeverity = Codinex.Core.Models.Context.DiagnosticSeverity;
 
 namespace Codinex.VisualStudio.Workspace.Providers
 {

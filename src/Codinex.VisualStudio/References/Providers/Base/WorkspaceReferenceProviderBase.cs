@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.Interfaces.References;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Internal;
 using Microsoft.CodeAnalysis;

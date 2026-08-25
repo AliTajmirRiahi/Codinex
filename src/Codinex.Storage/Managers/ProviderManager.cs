@@ -10,7 +10,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Models.DTO;
 using Codinex.Storage.Services;

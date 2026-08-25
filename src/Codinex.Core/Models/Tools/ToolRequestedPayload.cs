@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Codinex.Core.Conversation;
+using Codinex.Core.Models.Chat;
 
 namespace Codinex.Core.Models.Tools
 {

@@ -1,0 +1,78 @@
+namespace Codinex.Core.Models.WebView;
+
+/// <summary>
+/// Represents message types exchanged between WebView UI and the host application.
+/// </summary>
+public static class WebViewMessageType
+{
+    // From JS
+    public const string Ready = "READY";
+    public const string SendMessage = "SEND_MESSAGE";
+    public const string InitState = "INIT_STATE";
+    public const string SelectProvider = "SELECT_PROVIDER";
+    public const string SelectModel = "SELECT_MODEL";
+    public const string CancelGeneration = "CANCEL_GENERATION";
+    public const string UpdateSettings = "UPDATE_SETTINGS";
+    public const string UiError = "UI_ERROR";
+    public const string SelectChat = "SELECT_CHAT";
+    public const string SelectGroup = "SELECT_GROUP";
+    public const string NewChat = "NEW_CHAT";
+    public const string UpdateChat = "UPDATE_CHAT";
+    public const string DeleteChat = "DELETE_CHAT";
+    public const string NewGroup = "NEW_GROUP";
+    public const string UpdateGroup = "UPDATE_GROUP";
+    public const string DeleteGroup = "DELETE_GROUP";
+    public const string OpenExternalLink = "OPEN_EXTERNAL_LINK";
+    public const string OpenReferenceFile = "OPEN_REFERENCE_FILE";
+    public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";
+    public const string SaveSettings = "SAVE_SETTINGS";
+    public const string SaveSolutionInstruction = "SAVE_SOLUTION_INSTRUCTION";
+    public const string ChangesetDecision = "CHANGESET_DECISION";
+    public const string ChangesetViewReady = "CHANGESET_VIEW_READY";
+    public const string ReopenChangesetReview = "REOPEN_CHANGESET_REVIEW";
+    public const string AskUserAnswer = "ASK_USER_ANSWER";
+    public const string RewindChat = "REWIND_CHAT";
+    public const string CopyToClipboard = "COPY_TO_CLIPBOARD";
+    public const string SubmitBugReport = "SUBMIT_BUG_REPORT";
+    public const string AddCustomProvider = "ADD_CUSTOM_PROVIDER";
+    public const string EditCustomProvider = "EDIT_CUSTOM_PROVIDER";
+
+    // To JS
+    public const string InitData = "INIT_DATA";
+    public const string OpenProviderManager = "OPEN_PROVIDER_MANAGER";
+    public const string AiResponse = "AI_RESPONSE";
+    public const string StreamChunk = "STREAM_CHUNK";
+    public const string ThinkingStarted = "THINKING_STARTED";
+    public const string ThinkingChunk = "THINKING_CHUNK";
+    public const string ThinkingCompleted = "THINKING_COMPLETED";
+    public const string Error = "ERROR";
+    public const string SetLoading = "SET_LOADING";
+    public const string SelectModelApproved = "SELECT_MODEL_APPROVED";
+    public const string SelectChatApproved = "SELECT_CHAT_APPROVED";
+    public const string SelectGroupApproved = "SELECT_GROUP_APPROVED";
+    public const string ChangeModelSettingApproved = "CHANGE_MODEL_SETTING_APPROVED";
+    public const string ChangeModelSettingRejected = "CHANGE_MODEL_SETTING_REJECTED";
+    public const string ChatTitleChanged = "CHAT_TITLE_CHANGED";
+    public const string ActiveDocumentChanged = "ACTIVE_DOCUMENT_CHANGED";
+    public const string ReferenceAdded = "REFERENCE_ADDED";
+    public const string ReferenceRemoved = "REFERENCE_REMOVED";
+    public const string ReferenceUpdated = "REFERENCE_UPDATED";
+    public const string InputLanguageChanged = "INPUT_LANGUAGE_CHANGED";
+    public const string StatusChanged = "STATUS_CHANGED";
+    public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
+    public const string SettingsSaved = "SETTINGS_SAVED";
+    public const string SolutionInstructionSaved = "SOLUTION_INSTRUCTION_SAVED";
+    public const string ChangesetShow = "CHANGESET_SHOW";
+    public const string ChatBlocked = "CHAT_BLOCKED";
+    public const string ChatUnblocked = "CHAT_UNBLOCKED";
+    public const string AskUserQuestion = "ASK_USER_QUESTION";
+    public const string RewindChatApproved = "REWIND_CHAT_APPROVED";
+    public const string AddSelectedCodeReference = "ADD_SELECTED_CODE_REFERENCE";
+    public const string RunCommandOnSelection = "RUN_COMMAND_ON_SELECTION";
+    public const string BugReportSubmitted = "BUG_REPORT_SUBMITTED";
+    public const string CustomProviderAdded = "CUSTOM_PROVIDER_ADDED";
+    public const string CustomProviderAddRejected = "CUSTOM_PROVIDER_ADD_REJECTED";
+    public const string CustomProviderUpdated = "CUSTOM_PROVIDER_UPDATED";
+    public const string CustomProviderUpdateRejected = "CUSTOM_PROVIDER_UPDATE_REJECTED";
+
+}

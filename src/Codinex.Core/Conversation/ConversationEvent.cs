@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
 using Codinex.Core.Models.Tools;
 using Newtonsoft.Json.Linq;
 

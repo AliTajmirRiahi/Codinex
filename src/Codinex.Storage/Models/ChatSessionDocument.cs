@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
 using Codinex.Storage.Commons;
 
 namespace Codinex.Storage.Models

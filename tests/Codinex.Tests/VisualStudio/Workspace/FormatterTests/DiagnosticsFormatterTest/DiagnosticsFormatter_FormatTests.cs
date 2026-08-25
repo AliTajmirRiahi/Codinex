@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 using Codinex.Tests.VisualStudio.Workspace.FormatterTests.DiagnosticsFormatterTest.Base;
 using FluentAssertions;
 using NUnit.Framework;

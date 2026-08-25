@@ -2,7 +2,7 @@ using System;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.AI;
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Codinex.Infrastructure.AI.Providers

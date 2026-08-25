@@ -10,7 +10,8 @@ using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Git;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
+using Codinex.Core.Models.Context;
 
 namespace Codinex.Core.Chat
 {

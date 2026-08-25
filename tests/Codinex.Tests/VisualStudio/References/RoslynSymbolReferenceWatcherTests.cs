@@ -4,7 +4,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.References;
 using Codinex.TestCommon.Builders.VisualStudio;
 using Codinex.TestCommon.Fakes.VisualStudio;
 using Codinex.VisualStudio.Interfaces;

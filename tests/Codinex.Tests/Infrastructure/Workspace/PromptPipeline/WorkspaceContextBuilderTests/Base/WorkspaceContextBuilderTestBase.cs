@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Infrastructure.Workspace.PromptPipeline;
 using NSubstitute;

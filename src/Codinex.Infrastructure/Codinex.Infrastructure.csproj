@@ -166,8 +166,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Images\capability-test.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

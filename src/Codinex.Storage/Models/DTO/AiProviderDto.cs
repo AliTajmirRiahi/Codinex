@@ -1,6 +1,6 @@
 
 using System.Collections.Generic;
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
 
 namespace Codinex.Storage.Models.DTO;
 

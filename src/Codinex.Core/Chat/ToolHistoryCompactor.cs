@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Chat;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Chat;
 using Newtonsoft.Json;
 
 namespace Codinex.Core.Chat

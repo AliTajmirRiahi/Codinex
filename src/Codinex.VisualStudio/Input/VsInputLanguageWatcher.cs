@@ -6,7 +6,7 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Documents;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Documents;
 
 namespace Codinex.VisualStudio.Input
 {
@@ -21,7 +21,7 @@ namespace Codinex.VisualStudio.Input
     {
         private bool _isSubscribed;
 
-        public event EventHandler<Codinex.Core.Models.InputLanguageChangedEventArgs> InputLanguageChanged;
+        public event EventHandler<Codinex.Core.Models.Documents.InputLanguageChangedEventArgs> InputLanguageChanged;
 
         public async Task StartAsync()
         {
@@ -46,7 +46,7 @@ namespace Codinex.VisualStudio.Input
         {
             if (culture == null) return;
 
-            InputLanguageChanged?.Invoke(this, new Codinex.Core.Models.InputLanguageChangedEventArgs
+            InputLanguageChanged?.Invoke(this, new Codinex.Core.Models.Documents.InputLanguageChangedEventArgs
             {
                 LanguageTag = culture.Name,
                 LanguageName = culture.EnglishName,

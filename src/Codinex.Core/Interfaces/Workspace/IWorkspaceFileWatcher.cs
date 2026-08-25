@@ -1,5 +1,5 @@
 using System;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 
 namespace Codinex.Core.Interfaces.Workspace
 {

@@ -1,3 +1,4 @@
+using Codinex.Core.Models.References;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References.Providers;
 using FluentAssertions;
@@ -6,7 +7,6 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Codinex.Core.Models;
 using Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests.Base;
 
 namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProviderTests

@@ -9,7 +9,7 @@ using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
-using Codinex.Core.Models;
+using Codinex.Core.Models.WebView;
 using Codinex.Core.Models.Tools;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Storage.Interfaces;

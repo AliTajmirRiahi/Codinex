@@ -1,4 +1,4 @@
-using Codinex.Core.Models;
+using Codinex.Core.Models.Context;
 
 namespace Codinex.Core.Interfaces.Context
 {

@@ -1,7 +1,7 @@
 using Codinex.Core.Workspace.Prompt;
 using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Documents;
-using Codinex.Core.Models;
+using Codinex.Core.Models.Workspace;
 using Codinex.VisualStudio.Workspace.Orchestrators;
 using NSubstitute;
 using NUnit.Framework;

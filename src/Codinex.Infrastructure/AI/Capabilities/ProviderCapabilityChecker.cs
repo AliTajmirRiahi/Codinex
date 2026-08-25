@@ -10,7 +10,8 @@ using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Models;
+using Codinex.Core.Models.AI;
+using Codinex.Core.Models.Chat;
 using Codinex.Infrastructure.AI.Providers.OpenCode;
 using Codinex.Infrastructure.CustomeExceptions;
 
