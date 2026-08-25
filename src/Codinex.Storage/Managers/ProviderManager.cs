@@ -24,6 +24,9 @@ namespace Codinex.Storage.Managers
     {
         private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
 
+        // ~100KB SVG file, inflated by base64 encoding plus the "data:image/svg+xml;base64," prefix.
+        private const int MaxIconDataUriLength = 140_000;
+
         public List<AiProvider> Providers { get; private set; } = [];
 
         public AiProvider ActiveProvider => Providers.FirstOrDefault(p => p.IsEnabled);
@@ -250,39 +253,12 @@ namespace Codinex.Storage.Managers
         /// </summary>
         public async Task<ProviderSettingsUpdateResult> AddCustomProviderAsync(AddCustomProviderDto dto)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto));
-
-            if (string.IsNullOrWhiteSpace(dto.Name))
-                return ProviderSettingsUpdateResult.Failed("Provider name is required.");
-
-            if (string.IsNullOrWhiteSpace(dto.Protocol))
-                return ProviderSettingsUpdateResult.Failed("Protocol is required.");
-
-            if (string.IsNullOrWhiteSpace(dto.BaseUrl))
-                return ProviderSettingsUpdateResult.Failed("Base URL is required.");
-
-            if (dto.NeedApiKey && string.IsNullOrWhiteSpace(dto.ApiKey))
-                return ProviderSettingsUpdateResult.Failed("API key is required.");
-
-            var baseUrl = dto.BaseUrl.Trim().TrimEnd('/');
-            var modelEndPoint = "/" + (dto.ModelEndPoint ?? "").Trim().Trim('/');
-            if (modelEndPoint == "/")
-                modelEndPoint = "/models";
+            var validationError = ValidateCustomProviderDto(dto);
+            if (validationError != null)
+                return validationError;
 
             var id = GenerateUniqueProviderId(dto.Name);
-            var protocol = dto.Protocol.Trim();
-            var isLocal = IsLocalProtocol(protocol);
-
-            var provider = new AiProvider(
-                id,
-                dto.Name.Trim(),
-                protocol,
-                baseUrl,
-                dto.NeedApiKey,
-                isLocal,
-                modelEndPoint,
-                dto.ApiKey ?? "");
+            var provider = BuildProviderFromDto(id, dto);
 
             var models = await providerModelService.GetModelsFromServerAsync(provider, CancellationToken.None);
 
@@ -308,6 +284,136 @@ namespace Codinex.Storage.Managers
             await SaveAsync();
 
             return ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
+        }
+
+        /// <summary>
+        /// Re-validates an existing user-added provider's (possibly changed) definition against
+        /// its live models endpoint, and only replaces it in place if that call succeeds.
+        /// Bundled providers can't be edited this way.
+        /// </summary>
+        public async Task<ProviderSettingsUpdateResult> UpdateCustomProviderAsync(string providerId, AddCustomProviderDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(providerId))
+                throw new ArgumentException(@"ProviderId is required.", nameof(providerId));
+
+            var index = Providers.FindIndex(p => string.Equals(p.Id, providerId, StringComparison.OrdinalIgnoreCase));
+            if (index < 0)
+                return ProviderSettingsUpdateResult.Failed("Provider was not found.");
+
+            var existing = Providers[index];
+            if (!existing.AddByUser)
+                return ProviderSettingsUpdateResult.Failed("Only custom providers can be edited.");
+
+            var validationError = ValidateCustomProviderDto(dto);
+            if (validationError != null)
+                return validationError;
+
+            var updatedProvider = BuildProviderFromDto(existing.Id, dto);
+
+            var models = await providerModelService.GetModelsFromServerAsync(updatedProvider, CancellationToken.None);
+
+            if (models == null || models.Count == 0)
+                return ProviderSettingsUpdateResult.Failed(
+                    $"Could not retrieve any models from {updatedProvider.Name}. Check the Base URL, Model Endpoint and API key.");
+
+            PreserveModelRuntimeState(existing, models);
+            updatedProvider.SetModels(models);
+
+            if (existing.IsEnabled)
+                updatedProvider.Enable();
+
+            Providers[index] = updatedProvider;
+
+            var currentModel = updatedProvider.Models.FirstOrDefault(m => m.IsCurrent);
+
+            await providerCapabilityChecker.CheckAsync(updatedProvider, currentModel, CancellationToken.None);
+
+            await SaveAsync();
+
+            return ProviderSettingsUpdateResult.Saved($"{updatedProvider.Name} updated successfully.");
+        }
+
+        /// <summary>
+        /// Validates the fields shared by adding and editing a custom provider.
+        /// Returns null when the DTO is valid, or a failure result describing the first problem found.
+        /// </summary>
+        private static ProviderSettingsUpdateResult ValidateCustomProviderDto(AddCustomProviderDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            if (string.IsNullOrWhiteSpace(dto.Name))
+                return ProviderSettingsUpdateResult.Failed("Provider name is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.Protocol))
+                return ProviderSettingsUpdateResult.Failed("Protocol is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.BaseUrl))
+                return ProviderSettingsUpdateResult.Failed("Base URL is required.");
+
+            if (dto.NeedApiKey && string.IsNullOrWhiteSpace(dto.ApiKey))
+                return ProviderSettingsUpdateResult.Failed("API key is required.");
+
+            var icon = (dto.Icon ?? "").Trim();
+            if (!string.IsNullOrEmpty(icon))
+            {
+                if (!icon.StartsWith("data:image/svg+xml", StringComparison.OrdinalIgnoreCase))
+                    return ProviderSettingsUpdateResult.Failed("Logo must be an embedded SVG image.");
+
+                if (icon.Length > MaxIconDataUriLength)
+                    return ProviderSettingsUpdateResult.Failed("Logo file is too large.");
+            }
+
+            var iconColor = (dto.IconColor ?? "").Trim();
+            if (!string.IsNullOrEmpty(iconColor) && !IsHexColor(iconColor))
+                return ProviderSettingsUpdateResult.Failed("Icon color must be a hex color (e.g. #000000).");
+
+            return null;
+        }
+
+        private static bool IsHexColor(string value)
+        {
+            if (value.Length != 7 || value[0] != '#')
+                return false;
+
+            for (var i = 1; i < value.Length; i++)
+            {
+                var c = value[i];
+                var isHexDigit = (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+                if (!isHexDigit)
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Builds a user-defined <see cref="AiProvider"/> from a validated DTO, normalizing the
+        /// Base URL / ModelEndPoint pair. Does not touch <see cref="Providers"/>.
+        /// </summary>
+        private static AiProvider BuildProviderFromDto(string id, AddCustomProviderDto dto)
+        {
+            var baseUrl = dto.BaseUrl.Trim().TrimEnd('/');
+            var modelEndPoint = "/" + (dto.ModelEndPoint ?? "").Trim().Trim('/');
+            if (modelEndPoint == "/")
+                modelEndPoint = "/models";
+
+            var protocol = dto.Protocol.Trim();
+            var isLocal = IsLocalProtocol(protocol);
+            var icon = (dto.Icon ?? "").Trim();
+            var iconColor = (dto.IconColor ?? "").Trim();
+
+            return new AiProvider(
+                id,
+                dto.Name.Trim(),
+                protocol,
+                baseUrl,
+                dto.NeedApiKey,
+                isLocal,
+                modelEndPoint,
+                dto.ApiKey ?? "",
+                icon,
+                string.IsNullOrEmpty(iconColor) ? "#000000" : iconColor);
         }
 
         /// <summary>

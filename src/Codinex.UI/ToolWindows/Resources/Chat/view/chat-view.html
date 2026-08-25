@@ -805,7 +805,7 @@
                 <codinex-image name="loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="modal-header">
-                <h2>Add Custom Provider</h2>
+                <h2 id="add-provider-modal-title">Add Custom Provider</h2>
                 <button id="close-add-provider-modal" type="button">✕</button>
             </div>
 
@@ -843,6 +843,20 @@
                 <div class="form-group" id="add-provider-api-key-group">
                     <label>API Key</label>
                     <input id="add-provider-api-key" type="text" placeholder="sk-...">
+                </div>
+
+                <div class="form-group">
+                    <label>Logo (optional)</label>
+                    <div class="icon-picker-row">
+                        <div class="icon-picker-preview">
+                            <codinex-icon id="add-provider-icon-preview" name="puzzle"></codinex-icon>
+                        </div>
+                        <button id="add-provider-icon-pick-btn" type="button" class="secondary-button">Choose SVG…</button>
+                        <button id="add-provider-icon-clear-btn" type="button" class="link-button hidden">Remove</button>
+                        <input id="add-provider-icon-color" type="color" value="#000000" title="Icon Color">
+                        <input id="add-provider-icon-file" type="file" accept=".svg,image/svg+xml" class="hidden">
+                    </div>
+                    <small class="form-hint">The SVG is recolored automatically if it doesn't already support this color.</small>
                 </div>
             </div>
 

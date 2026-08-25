@@ -326,6 +326,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = payload.message || payload.Message || 'Provider could not be added.';
 
             addProviderController.handleProviderAddRejected(message);
+        },
+        onCustomProviderUpdated: (payload) => {
+            const providers = payload.providers || payload.Providers;
+            const currentProvider = providers?.current || providers?.Current;
+
+            if (currentProvider) setProvider(currentProvider);
+            if (providers) manageModelsController.updateUI(providers);
+
+            addProviderController.handleProviderUpdated();
+            chatController.renderCurrentProvider();
+        },
+        onCustomProviderUpdateRejected: (payload) => {
+            const message = payload.message || payload.Message || 'Provider could not be updated.';
+
+            addProviderController.handleProviderUpdateRejected(message);
         }
     });
 

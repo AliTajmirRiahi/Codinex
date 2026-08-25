@@ -76,6 +76,25 @@
             background: var(--vs-main-window-active-default-border-color);
         }
 
+/* Same button chrome, usable outside .modal-footer too (e.g. an inline picker button in the modal body) */
+.primary-button,
+.secondary-button,
+.danger-button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    background: var(--vs-command-bar-mouse-down-border-color);
+    color: var(--vs-background);
+    cursor: pointer;
+    font: inherit;
+}
+
+    .primary-button:hover,
+    .secondary-button:hover,
+    .danger-button:hover {
+        background: var(--vs-main-window-active-default-border-color);
+    }
+
 .project-modal-content {
     width: 70%;
     max-width: 680px;
@@ -118,13 +137,13 @@
     gap: 8px;
 }
 
-.modal-footer .secondary-button {
+.secondary-button {
     background: transparent;
     border: 1px solid var(--vs-border);
     color: var(--vs-foreground);
 }
 
-.modal-footer .danger-button {
+.danger-button {
     background: #c42b1c;
     color: #fff;
 }

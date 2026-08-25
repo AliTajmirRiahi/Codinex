@@ -42,6 +42,10 @@ namespace Codinex.Core.Models
         // Indicates whether the provider is active
         public bool IsEnabled { get; private set; }
 
+        // Indicates whether this provider was created by the user (as opposed to bundled
+        // with the extension) — only these providers can be edited or should show custom icons.
+        public bool AddByUser { get; private set; }
+
         // Available models for this provider
         public IReadOnlyCollection<AiModel> Models => _models.AsReadOnly();
 
@@ -50,14 +54,15 @@ namespace Codinex.Core.Models
         /// <summary>
         /// Constructor enforces required invariants.
         /// </summary>
-        public AiProvider(string id, string name, string protocol, string baseUrl, string icon = "", string iconColor = "#000000") : this(id, name, protocol, icon, iconColor, "", baseUrl, false, true, false, "/models", new List<AiModel>())
+        public AiProvider(string id, string name, string protocol, string baseUrl, string icon = "", string iconColor = "#000000") : this(id, name, protocol, icon, iconColor, "", baseUrl, false, true, false, "/models", new List<AiModel>(), false)
         {
 
         }
 
         /// <summary>
         /// Constructor used to create a user-defined custom provider, allowing the caller to
-        /// control the flags that the simplified constructor above hard-codes.
+        /// control the flags that the simplified constructor above hard-codes. Providers built
+        /// through this constructor are always flagged as <see cref="AddByUser"/>.
         /// </summary>
         public AiProvider(
             string id,
@@ -70,7 +75,7 @@ namespace Codinex.Core.Models
             string apiKey = "",
             string icon = "",
             string iconColor = "#000000")
-            : this(id, name, protocol, icon, iconColor, apiKey, baseUrl, false, needApiKey, isLocal, modelEndPoint, new List<AiModel>())
+            : this(id, name, protocol, icon, iconColor, apiKey, baseUrl, false, needApiKey, isLocal, modelEndPoint, new List<AiModel>(), true)
         {
 
         }
@@ -91,7 +96,8 @@ namespace Codinex.Core.Models
             bool? needApiKey,
             bool? isLocal,
             string modelEndPoint,
-            List<AiModel> models)
+            List<AiModel> models,
+            bool? addByUser = null)
         {
             if (string.IsNullOrWhiteSpace(id))
                 throw new ArgumentException(@"Provider id cannot be empty.", nameof(id));
@@ -122,6 +128,7 @@ namespace Codinex.Core.Models
             ModelEndPoint = string.IsNullOrWhiteSpace(modelEndPoint)
                 ? "/models"
                 : modelEndPoint;
+            AddByUser = addByUser ?? false;
 
             _models = models ?? new List<AiModel>();
         }

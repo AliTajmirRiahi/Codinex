@@ -5,6 +5,7 @@ import { $, togglePanelHidden } from '../utils/dom.js';
 import { PaginationService } from '../services/paginationService.js';
 import { validationService } from '../services/validationService.js';
 import { DropDownView } from '../views/dropDownView.js';
+import { CUSTOME_EVENTS } from '../constants/events.js';
 
 /**
  * Manages the settings panel UI, including provider selection, 
@@ -131,6 +132,21 @@ export const manageModelsView = {
                             <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon" style="color: ${item.iconColor || item.IconColor || '#000000'};"></codinex-icon>
                             <span>${item.name}</span>
                         </div>`;
+
+                    const isCustomProvider = !!(item.addByUser || item.AddByUser);
+                    if (isCustomProvider) {
+                        const editBtn = document.createElement('button');
+                        editBtn.type = 'button';
+                        editBtn.className = 'drop-option-edit-btn';
+                        editBtn.title = 'Edit Provider';
+                        editBtn.innerHTML = '<codinex-icon name="pencil"></codinex-icon>';
+                        editBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            window.dispatchEvent(new CustomEvent(CUSTOME_EVENTS.EDIT_CUSTOM_PROVIDER, { detail: item }));
+                        });
+                        option.appendChild(editBtn);
+                    }
+
                     return option;
                 },
                 onItemSelect: (provider) => {

@@ -84,6 +84,32 @@
     gap: 8px;
 }
 
+.drop-option-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--vs-foreground);
+    opacity: 0.75;
+    cursor: pointer;
+}
+
+    .drop-option-edit-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        opacity: 1;
+    }
+
+    .drop-option-edit-btn codinex-icon {
+        width: 14px;
+        height: 14px;
+    }
+
 .multiplier {
     font-size: 11px;
     opacity: 0.5;

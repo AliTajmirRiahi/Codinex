@@ -40,3 +40,46 @@
         font-size: 11px;
         color: var(--vs-access-tool-tip-color);
     }
+
+.icon-picker-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-picker-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    background: var(--vs-input-bg);
+}
+
+    .icon-picker-preview codinex-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+.icon-picker-row input[type="color"] {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    padding: 2px;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    background: var(--vs-input-bg);
+    cursor: pointer;
+}
+
+    .icon-picker-row input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    .icon-picker-row input[type="color"]::-webkit-color-swatch {
+        border: none;
+        border-radius: 3px;
+    }

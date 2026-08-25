@@ -35,6 +35,7 @@ public static class WebViewMessageType
     public const string CopyToClipboard = "COPY_TO_CLIPBOARD";
     public const string SubmitBugReport = "SUBMIT_BUG_REPORT";
     public const string AddCustomProvider = "ADD_CUSTOM_PROVIDER";
+    public const string EditCustomProvider = "EDIT_CUSTOM_PROVIDER";
 
     // To JS
     public const string InitData = "INIT_DATA";
@@ -71,5 +72,7 @@ public static class WebViewMessageType
     public const string BugReportSubmitted = "BUG_REPORT_SUBMITTED";
     public const string CustomProviderAdded = "CUSTOM_PROVIDER_ADDED";
     public const string CustomProviderAddRejected = "CUSTOM_PROVIDER_ADD_REJECTED";
+    public const string CustomProviderUpdated = "CUSTOM_PROVIDER_UPDATED";
+    public const string CustomProviderUpdateRejected = "CUSTOM_PROVIDER_UPDATE_REJECTED";
 
 }
