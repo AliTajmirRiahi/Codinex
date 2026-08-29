@@ -24,10 +24,12 @@ namespace Codinex.Infrastructure.AI
             string payloadContent,
             CancellationToken cancellationToken = default)
         {
-            var safeChatId = string.IsNullOrWhiteSpace(chatId) ? "unknown" : chatId;
-            var safeChatMessageId = string.IsNullOrWhiteSpace(chatMessageId) ? "unknown" : chatMessageId;
+            if (string.IsNullOrWhiteSpace(chatId) || string.IsNullOrWhiteSpace(chatMessageId))
+            {
+                return;
+            }
 
-            var folder = StoragePaths.GetChatMessagePromptsPath(safeChatId, safeChatMessageId);
+            var folder = StoragePaths.GetChatMessagePromptsPath(chatId, chatMessageId);
             var path = Path.Combine(folder, $"prompt_{Guid.NewGuid()}.json");
 
             if (!workspaceFileService.DirectoryExists(folder))
