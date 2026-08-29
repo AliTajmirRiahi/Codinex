@@ -1,141 +1,322 @@
-## THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED.
+<!-- ⚠️ THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED. -->
 
-# ![Codinex AI Logo](assets/Codinex_AI_logo_40x40.png) Codinex AI
+<div align="center">
 
-A next‑generation AI coding assistant for Visual Studio — fully agent‑configurable, provider‑agnostic, and built with local‑first support in mind.
+<img src="assets/Codinex_AI_logo_40x40.png" alt="Codinex AI" width="72" height="72" />
+
+# Codinex AI
+
+**A next‑generation, provider‑agnostic AI coding assistant for Visual Studio.**
+Bring your own model — cloud or fully local — and keep control of your entire AI stack.
+
+[![Visual Studio](https://img.shields.io/badge/Visual%20Studio-2022%20(17.0%2B)-5C2D91?logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
+[![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.7.2-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![UI](https://img.shields.io/badge/UI-WebView2-0078D4?logo=microsoftedge&logoColor=white)](https://learn.microsoft.com/microsoft-edge/webview2/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-license)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing)
+[![Status](https://img.shields.io/badge/status-active%20development-orange.svg)](#-roadmap)
+
+[Vision](#-vision) · [Features](#-features) · [Demo](#-demo) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [Configuration](#-configuration) · [Roadmap](#-roadmap)
+
+</div>
+
+---
+
+## 🎥 Demo
+
+> **Placeholder — full walkthrough.** Upload `hero-demo.mp4` here (drag‑and‑drop into the GitHub README editor to get a `user-attachments` URL), or keep the committed copy below.
+
+<div align="center">
+
+<!-- MEDIA:hero-demo — replace the src with the GitHub user-attachments URL after upload -->
+<video
+  src="https://github.com/AliTajmirRiahi/Codinex/raw/master/assets/media/hero-demo.mp4"
+  poster="assets/media/hero-poster.png"
+  controls
+  muted
+  width="820">
+  Your browser does not render embedded video —
+  <a href="assets/media/hero-demo.mp4">download the demo clip</a>.
+</video>
+
+<sub><i>From a natural‑language prompt → agentic exploration → reviewed changeset → build → tests → commit.</i></sub>
+
+</div>
+
+---
 
 ## 🚀 Vision
 
-Codinex AI is an extensible Visual Studio extension inspired by GitHub Copilot — but with a fundamental difference:
+Codinex AI is an extensible Visual Studio extension inspired by GitHub Copilot — with one fundamental difference:
 
-    🔌 You are not locked into one AI provider.
+> 🔌 **You are not locked into a single AI provider.**
 
-Codinex allows developers to connect any AI Agent — cloud or local — and configure their own AI pipeline.
+Codinex lets developers connect **any** AI backend — cloud or local — and configure their own AI pipeline end to end. That makes it especially valuable for:
 
-This makes it especially powerful for:
+- Developers who want full control over their AI stack and their data
+- Teams with privacy, compliance, or air‑gap requirements
+- Regions with limited or unstable access to commercial AI services
+- The Iranian developer community seeking reliable local‑first AI integrations
 
-    Developers who want full control over their AI stack
-    Teams with privacy requirements
-    Regions with limited access to certain AI services
-    The Iranian developer community seeking reliable local AI integrations
+---
 
-## 🧠 Core Features
+## ✨ Features
 
-    🧠 AI‑powered code generation
-    💬 Chat‑based development assistant
-    🔁 Streaming responses
-    🧩 Pluggable AI provider architecture
-    🌐 WebView2 modern UI (HTML/CSS/JS)
-    🔐 Local model support (Ollama, LM Studio, local LLM servers)
-    ⚙️ Configurable AI endpoints
-    📦 Designed for future multi‑agent orchestration
+### 🔌 Provider‑agnostic by design
+
+| Capability | Details |
+|---|---|
+| **OpenAI‑compatible** | Any endpoint speaking the OpenAI Chat Completions API (OpenAI, Azure OpenAI, Together, Groq, OpenRouter, LiteLLM, vLLM, …). |
+| **Anthropic‑compatible** | Claude Messages API and compatible gateways. |
+| **Gemini‑compatible** | Google Gemini `generateContent` / streaming API. |
+| **Ollama** | First‑class local runtime integration. |
+| **OpenCode (free tier)** | Built‑in zero‑config provider to try the extension instantly. |
+| **Custom endpoints** | Add any base URL + key; per‑provider model catalog. |
+| **Capability probing** | On connect, Codinex probes each model for **streaming**, **tool‑calling**, and **reasoning** support and adapts the UI accordingly. |
+| **Model management UI** | Add / remove / switch providers and models without leaving the tool window. |
+
+### 🔐 Local‑first & offline‑friendly
+
+- Works fully against **Ollama**, **LM Studio**, or any self‑hosted OpenAI‑compatible server.
+- No cloud round‑trip required — keep source code on your machine.
+- Configurable endpoints for restricted networks and proxies.
+
+### 🤖 Agentic tools
+
+Codinex doesn't just answer — it *acts*, through a controlled set of built‑in tools:
+
+| Group | Tools |
+|---|---|
+| **Read & understand** | Read File · Read Element · Get File Elements · List Directory · Get Projects · Get Open Documents |
+| **Search** | Search Project · Find References · Find Symbol |
+| **Change code** | Changeset Creator (multi‑file edits gated by human review) |
+| **Build & verify** | Build Project · Build Solution · Run Tests · Get Diagnostics |
+| **Collaborate** | Ask‑User‑Question (structured clarification cards) |
+| **Memory** | Remember Fact · Forget Fact (persists across sessions) |
+
+### 🧩 Solution‑aware context (`@` references)
+
+Attach precise context to any prompt: **file**, **folder**, **solution**, **class**, **interface**, **method**, **field**, or **system** references. Symbol references are **Roslyn‑powered** and stay in sync as you edit.
+
+Ambient context providers feed the agent automatically: **Git state**, **compiler diagnostics**, **build output**, **open documents**, **project structure**, and **saved memory**.
+
+### 🔎 Reviewed changesets
+
+- Dedicated **Change Review** tool window with side‑by‑side and line‑level diffs.
+- Syntax‑highlighted hunks; **approve or reject per change**.
+- Nothing touches your working tree until you say so.
+
+### 💬 Modern chat experience
+
+- **Streaming** token rendering with Markdown + syntax highlighting.
+- Multiple conversations / conversation groups with pagination.
+- Prompt‑cache lineage pinning for faster, cheaper follow‑ups.
+- **RTL / Persian language support** in the composer.
+- Theme‑aware WebView2 UI that follows Visual Studio light/dark themes.
+- Built‑in **About** and **Bug Report** panels.
+
+### 🔧 Git integration
+
+- One‑click **AI commit‑message generation**, injected directly into the Visual Studio Git changes UI.
+- Git status surfaced to the agent as context.
+
+---
+
+## 🖼 Feature gallery
+
+> All clips below are **placeholders**. Drop the named files into [`assets/media/`](assets/media/RECORDING.md) and they render automatically. Recording specs and the full shot list live in [`assets/media/RECORDING.md`](assets/media/RECORDING.md).
+
+| Connect any provider | Local model, offline |
+|---|---|
+| ![Connect a provider](assets/media/01-connect-provider.gif) | ![Local Ollama model](assets/media/02-local-model-ollama.gif) |
+
+| Solution‑aware `@` references | Agentic tool chain |
+|---|---|
+| ![Context references](assets/media/03-context-references.gif) | ![Agentic tools](assets/media/04-agentic-tools.gif) |
+
+| Review every change | Build & run tests from chat |
+|---|---|
+| ![Changeset review](assets/media/05-changeset-review.gif) | ![Build and tests](assets/media/06-build-and-tests.gif) |
+
+| Fix from diagnostics | AI commit messages |
+|---|---|
+| ![Fix diagnostics](assets/media/07-fix-diagnostics.gif) | ![Commit message generation](assets/media/08-commit-message.gif) |
+
+| Persistent memory | RTL / Persian |
+|---|---|
+| ![Memory](assets/media/09-memory.gif) | ![RTL Persian](assets/media/10-rtl-persian.gif) |
+
+<details>
+<summary>More</summary>
+
+| Structured clarification |
+|---|
+| ![Ask user question](assets/media/11-clarify.gif) |
+
+</details>
+
+---
 
 ## 🏗 Architecture
 
-Codinex uses a modern hybrid architecture:
-Visual Studio Extension Layer
+Codinex uses a layered, provider‑agnostic architecture with a WebView2 front end.
 
-    Built with Visual Studio Toolkit
-    ToolWindow‑based UI
-    Async command routing
-    WebView2 host
+```mermaid
+flowchart TD
+    subgraph VS["Visual Studio host"]
+        PKG["Codinex.VSIX<br/>package · tool windows · commands"]
+        VSL["Codinex.VisualStudio<br/>Roslyn · references · workspace providers · built-in tools · Git UI hooks"]
+    end
 
-UI Layer
+    subgraph UI["Codinex.UI  (WebView2)"]
+        CHAT["Chat view<br/>streaming · markdown · @-references"]
+        REVIEW["Change Review view<br/>diff · approve / reject"]
+    end
 
-    HTML / CSS / JavaScript
-    Markdown rendering
-    Syntax highlighting
-    Streaming message updates
-    Bidirectional JS ↔ C# communication
+    subgraph CORE["Codinex.Core"]
+        CONV["Conversation engine · use cases"]
+        TOOLS["Tool registry · intent planner"]
+        CTX["Context builder · prompt profiler"]
+    end
 
-Codinex is provider‑agnostic by design.
+    subgraph INFRA["Codinex.Infrastructure"]
+        ROUTER["AI provider router"]
+        PROV["OpenAI · Anthropic · Gemini · Ollama · OpenCode"]
+        CAP["Capability checker"]
+        WSC["Workspace change parsing · validation · handlers"]
+    end
 
-🌍 Built With the Iranian Developer Community in Mind
+    STORAGE["Codinex.Storage<br/>providers · chats · settings · memory"]
 
-Many developers face:
+    UI <-->|JS ⇄ C# bridge| VSL
+    VSL --> CORE
+    CORE --> INFRA
+    INFRA --> PROV
+    CORE --> STORAGE
+    VSL --> STORAGE
+```
 
-    API access restrictions
-    Payment limitations
-    Privacy concerns
-    Connectivity instability
+**Projects**
 
-Codinex solves this by enabling:
+| Project | Responsibility |
+|---|---|
+| `Codinex.Core` | Domain models, conversation engine, use cases, tool contracts, context building. |
+| `Codinex.Infrastructure` | AI provider adapters, capability probing, HTTP, workspace‑change parsing/validation. |
+| `Codinex.Storage` | Persistence for providers, chats, settings, and memory. |
+| `Codinex.VisualStudio` | VS/Roslyn integration: reference providers, workspace context, built‑in tools, Git UI hooks. |
+| `Codinex.UI` | WebView2 front end (HTML/CSS/JS) for chat and change review. |
+| `Codinex.VSIX` | The deployable extension package, tool windows, and commands. |
 
-    Local AI hosting
-    Configurable endpoints
-    Offline‑first capability (planned)
+---
 
-🛠 Tech Stack
+## 🛠 Tech stack
 
-    C#
-    Visual Studio SDK
-    WebView2
-    HTML/CSS/JavaScript
-    Markdown rendering engine
-    REST‑based AI communication
-    Streaming token handling
+`C#` · `Visual Studio SDK 17.x` · `.NET Framework 4.7.2` · `WebView2` · `Roslyn` · `HTML/CSS/JavaScript` · Markdown rendering · streaming token handling · REST‑based AI communication.
 
-🔮 Roadmap
+Test coverage: **100+ C# test files** (xUnit) and a **Jest** suite for the WebView UI.
 
-    ✅ ToolWindow with WebView2 UI
-    ✅ Command binding & shortcut system
-    🔄 JS ↔ C# bidirectional messaging
-    🔄 Streaming token renderer
-    ⏳ AI Provider abstraction layer
-    ⏳ Settings UI for model configuration
-    ⏳ Multi‑agent orchestration
-    ⏳ Inline code completion
-    ⏳ Context‑aware file indexing
-    ⏳ RAG integration
+---
 
-🧩 Planned Provider Interface
+## 📦 Getting Started
 
-    C#:
-    public interface IAIProvider
+> A Visual Studio Marketplace release is planned. For now, build from source.
 
-    {
+```bash
+git clone https://github.com/AliTajmirRiahi/Codinex.git
+```
 
-        Task<AIResponse> SendAsync(AIRequest request);
+1. Open **`Codinex AI.slnx`** in Visual Studio 2022 (17.0+).
+2. Restore NuGet packages and build the solution.
+3. Set **`Codinex.VSIX`** as the startup project.
+4. Press **F5** to launch the Visual Studio Experimental Instance with the extension loaded.
+5. Open the **Codinex AI** tool window from the toolbar / `View → Other Windows`.
 
-        IAsyncEnumerable<string> StreamAsync(AIRequest request);
+### Build the WebView UI (only if you change the front end)
 
-    }
+```bash
+cd src/Codinex.UI/ToolWindows/Resources
+npm install
+npm test
+```
 
-Providers will implement this interface, making Codinex fully extensible.
-📦 Installation (Development)
+---
 
-    Clone repository
-    Open solution in Visual Studio
-    Build
-    Run in Experimental Instance (F5)
+## ⚙️ Configuration
 
-🎯 Long Term Goal
+1. Open the Codinex AI tool window → **Settings → Add Provider**.
+2. Pick a provider type (OpenAI‑compatible / Anthropic / Gemini / Ollama / custom).
+3. Enter the **base URL** and **API key** (leave the key blank for local servers).
+4. Codinex probes the models for streaming / tool‑calling / reasoning support.
+5. Open **Manage Models**, choose a default model, and start chatting.
 
-To build an open, extensible AI coding platform where:
+**Local model example (Ollama)**
 
-    Developers choose their AI
-    Communities build custom agents
-    AI integration becomes modular
-    Innovation is not locked behind one vendor
+| Field | Value |
+|---|---|
+| Provider type | Ollama |
+| Base URL | `http://localhost:11434` |
+| API key | *(none)* |
+| Model | `qwen2.5-coder`, `llama3.1`, … |
 
-🤝 Contributing
+---
 
-Contributions are welcome.
+## 🔮 Roadmap
 
-If you want to:
+- [x] ToolWindow with WebView2 UI
+- [x] JS ⇄ C# bidirectional messaging
+- [x] Streaming token renderer
+- [x] AI provider abstraction layer (OpenAI / Anthropic / Gemini / Ollama / OpenCode)
+- [x] Provider & model configuration UI
+- [x] Solution‑aware `@` references (Roslyn symbols, files, folders)
+- [x] Agentic built‑in tools (search, read, build, test, diagnostics, changesets)
+- [x] Reviewed changesets with diff UI
+- [x] Persistent memory
+- [x] AI commit‑message generation in the Git UI
+- [ ] Inline code completion
+- [ ] Context‑aware file indexing + RAG
+- [ ] Multi‑agent orchestration
+- [ ] Offline‑first packaging
+- [ ] Visual Studio Marketplace release
 
-    Build a provider adapter
-    Improve UI
-    Add streaming optimization
-    Add agent orchestration
-    Improve performance
+---
 
-Feel free to open an issue or submit a pull request.
-📜 License
+## 🌍 Built with the Iranian developer community in mind
 
-MIT (recommended — adjust if needed)
-💡 Philosophy
+Many developers face API access restrictions, payment limitations, privacy concerns, and connectivity instability. Codinex addresses this with local AI hosting, fully configurable endpoints, and an offline‑friendly design.
 
-    AI should empower developers — not restrict them.
+---
 
-Codinex exists to give control back to developers.
+## 🤝 Contributing
+
+Contributions are welcome — provider adapters, UI improvements, streaming optimizations, agent orchestration, performance work, and docs.
+
+1. Open an issue describing the change.
+2. Fork, branch, and keep changes focused.
+3. Add/adjust tests (`Codinex.Tests` for C#, Jest for UI).
+4. Open a pull request.
+
+### Planned provider interface
+
+```csharp
+public interface IAiProvider
+{
+    Task<AiResponse> SendAsync(AiRequest request);
+    IAsyncEnumerable<string> StreamAsync(AiRequest request);
+}
+```
+
+Providers implement this contract, making Codinex fully extensible.
+
+---
+
+## 📜 License
+
+MIT. *(A `LICENSE` file still needs to be added to the repository.)*
+
+---
+
+## 💡 Philosophy
+
+> AI should empower developers — not restrict them.
+
+Codinex exists to give control back to developers: **you choose your AI, your models, and where your code goes.**
