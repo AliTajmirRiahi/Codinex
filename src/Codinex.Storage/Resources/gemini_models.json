@@ -1,0 +1,86 @@
+[
+  {
+    "Id": "gemini-2.5-pro",
+    "Name": "Gemini 2.5 Pro",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Supported"
+  },
+  {
+    "Id": "gemini-2.5-flash",
+    "Name": "Gemini 2.5 Flash",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Supported"
+  },
+  {
+    "Id": "gemini-2.5-flash-lite",
+    "Name": "Gemini 2.5 Flash-Lite",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Supported"
+  },
+  {
+    "Id": "gemini-2.0-flash",
+    "Name": "Gemini 2.0 Flash",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Unsupported"
+  },
+  {
+    "Id": "gemini-2.0-flash-lite",
+    "Name": "Gemini 2.0 Flash-Lite",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Unsupported"
+  },
+  {
+    "Id": "gemini-1.5-pro",
+    "Name": "Gemini 1.5 Pro",
+    "TokenLimit": 2097152,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Unsupported"
+  },
+  {
+    "Id": "gemini-1.5-flash",
+    "Name": "Gemini 1.5 Flash",
+    "TokenLimit": 1048576,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "GoogleGemini",
+    "SupportsStreaming": "Supported",
+    "SupportsToolCalling": "Supported",
+    "SupportsVision": "Supported",
+    "SupportsReasoning": "Unsupported"
+  }
+]

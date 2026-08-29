@@ -69,6 +69,7 @@
     <Compile Include="AI\Providers\OllamaProvider.cs" />
     <Compile Include="AI\Providers\OpenAiCompatibleProvider.cs" />
     <Compile Include="AI\Providers\AnthropicCompatibleProvider.cs" />
+    <Compile Include="AI\Providers\GeminiCompatibleProvider.cs" />
     <Compile Include="AI\Providers\OpenCodeFreeProvider.cs" />
     <Compile Include="AI\Providers\OpenCode\OpenCodeCatalog.cs" />
     <Compile Include="AI\Providers\OpenCode\OpenCodeDtos.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Http\HttpService.cs" />
     <Compile Include="ModelManagement\ProviderModelService.cs" />
     <Compile Include="ModelManagement\ResourceModelLoader.cs" />
+    <Compile Include="ModelManagement\Retrievers\GeminiModelRetriever.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenAiCompatibleModelRetriever.cs" />
     <Compile Include="ModelManagement\Retrievers\OpenCodeFreeModelRetriever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

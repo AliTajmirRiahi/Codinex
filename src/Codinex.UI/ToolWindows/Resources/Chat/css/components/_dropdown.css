@@ -343,6 +343,8 @@
     right: 0;
     flex-direction: column;
     min-width: 100%;
+    max-height: 300px;
+    overflow: auto;
 }
 
 #provider-dropdown-menu-container,

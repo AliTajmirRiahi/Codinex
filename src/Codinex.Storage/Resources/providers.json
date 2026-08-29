@@ -65,6 +65,19 @@
     "IsEnabled": false
   },
   {
+    "Id": "gemini",
+    "Protocol": "gemini",
+    "Name": "Google Gemini",
+    "Icon": "Providers/gemini",
+    "IconColor": "#4796E3",
+    "ApiKey": "",
+    "BaseUrl": "https://generativelanguage.googleapis.com/v1beta",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
+  },
+  {
     "Id": "openrouter",
     "Protocol": "openai",
     "Name": "OpenRouter",

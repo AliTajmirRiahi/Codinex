@@ -120,6 +120,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\usdt.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\crypto\ton.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\anthropic.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gemini.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\ai-model.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gapgpt.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\groq-icon-seeklogo.svg" />

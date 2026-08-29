@@ -87,10 +87,12 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));
 
-            // OpenCode's free-model provider uses its own "GET /provider" discovery format,
-            // handled by OpenCodeFreeModelRetriever, not the OpenAI-compatible "/models" shape.
+            // OpenCode's free-model provider uses its own "GET /provider" discovery format
+            // (OpenCodeFreeModelRetriever), and Gemini uses "GET /models" with a "models[].name"
+            // shape (GeminiModelRetriever); neither matches the OpenAI "data[].id" shape here.
             return !string.IsNullOrWhiteSpace(provider.ModelEndPoint)
-                   && !string.Equals(provider.Protocol, "opendcodefree", StringComparison.OrdinalIgnoreCase);
+                   && !string.Equals(provider.Protocol, "opendcodefree", StringComparison.OrdinalIgnoreCase)
+                   && !string.Equals(provider.Protocol, "gemini", StringComparison.OrdinalIgnoreCase);
         }
 
         public async Task<IReadOnlyList<AiModel>> GetModelsAsync(
@@ -124,6 +126,9 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
 
             if (string.Equals(provider.Protocol, "anthropic", StringComparison.OrdinalIgnoreCase))
                 model.Family = AiProviderFamily.Anthropic;
+
+            if (string.Equals(provider.Protocol, "gemini", StringComparison.OrdinalIgnoreCase))
+                model.Family = AiProviderFamily.GoogleGemini;
 
             return model;
         }

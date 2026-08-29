@@ -222,6 +222,13 @@ namespace Codinex.Infrastructure.AI.Clients
                     request.Headers.Add("x-api-key", provider.ApiKey);
                 }
             }
+            else if (string.Equals(provider.Protocol, "gemini", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.IsNullOrWhiteSpace(provider.ApiKey))
+                {
+                    request.Headers.Add("x-goog-api-key", provider.ApiKey);
+                }
+            }
             else if (!string.IsNullOrWhiteSpace(provider.ApiKey))
             {
                 request.Headers.Authorization =

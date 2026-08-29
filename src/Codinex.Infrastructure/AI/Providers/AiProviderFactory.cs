@@ -27,6 +27,9 @@ namespace Codinex.Infrastructure.AI.Providers
             if (IsAnthropicCompatibleProvider(provider))
                 return ActivatorUtilities.CreateInstance<AnthropicCompatibleProvider>(serviceProvider);
 
+            if (IsGeminiCompatibleProvider(provider))
+                return ActivatorUtilities.CreateInstance<GeminiCompatibleProvider>(serviceProvider);
+
             if (IsOpenAiCompatibleProvider(provider))
                 return ActivatorUtilities.CreateInstance<OpenAiCompatibleProvider>(serviceProvider);
 
@@ -45,6 +48,12 @@ namespace Codinex.Infrastructure.AI.Providers
         {
             return string.Equals(provider.Id, "anthropic", StringComparison.OrdinalIgnoreCase)
                    || string.Equals(provider.Protocol, "anthropic", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsGeminiCompatibleProvider(AiProvider provider)
+        {
+            return string.Equals(provider.Id, "gemini", StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(provider.Protocol, "gemini", StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool IsOpenCodeFreeProvider(AiProvider provider)

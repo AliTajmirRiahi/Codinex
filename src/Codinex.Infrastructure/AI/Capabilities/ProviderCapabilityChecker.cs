@@ -35,6 +35,8 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
         private const string AnthropicProtocol = "anthropic";
 
+        private const string GeminiProtocol = "gemini";
+
         public async Task CheckAsync(
             AiProvider provider,
             AiModel model,
@@ -157,7 +159,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
                 await foreach (var chunk in client.StreamPostAsync(
                                    provider,
-                                   GetChatEndpoint(provider),
+                                   GetChatEndpoint(provider, model, stream: true),
                                    payload,
                                    cancellationToken))
                 {
@@ -186,7 +188,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
                 var response = await client.PostAsync(
                     provider,
-                    GetChatEndpoint(provider),
+                    GetChatEndpoint(provider, model),
                     payload,
                     cancellationToken);
 
@@ -219,7 +221,7 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
                 var response = await client.PostAsync(
                     provider,
-                    GetChatEndpoint(provider),
+                    GetChatEndpoint(provider, model),
                     payload,
                     cancellationToken);
 
@@ -294,10 +296,15 @@ namespace Codinex.Infrastructure.AI.Capabilities
             }
         }
 
-        private static string GetChatEndpoint(AiProvider provider)
+        private static string GetChatEndpoint(AiProvider provider, AiModel model, bool stream = false)
         {
             if (IsAnthropicProvider(provider))
                 return "/messages";
+
+            if (IsGeminiProvider(provider))
+                return stream
+                    ? $"/models/{model.Id}:streamGenerateContent?alt=sse"
+                    : $"/models/{model.Id}:generateContent";
 
             return provider.Protocol == "openai" ? "/chat/completions" : "/api/chat";
         }
@@ -308,6 +315,12 @@ namespace Codinex.Infrastructure.AI.Capabilities
             {
                 return root["content"] is JArray content
                        && content.Any(x => x["type"]?.ToString() == "tool_use");
+            }
+
+            if (IsGeminiProvider(provider))
+            {
+                return root["candidates"]?[0]?["content"]?["parts"] is JArray geminiParts
+                       && geminiParts.Any(x => x["functionCall"] != null);
             }
 
             var toolCalls = provider.Protocol == "openai"
@@ -332,13 +345,29 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
             await client.PostAsync(
                 provider,
-                GetChatEndpoint(provider),
+                GetChatEndpoint(provider, model),
                 payload,
                 cancellationToken);
         }
 
         private static object BuildStreamingProbePayload(AiProvider provider, AiModel model)
         {
+            if (IsGeminiProvider(provider))
+            {
+                return new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            parts = new[] { new { text = "Reply with pong." } }
+                        }
+                    },
+                    generationConfig = new { maxOutputTokens = 10 }
+                };
+            }
+
             if (IsAnthropicProvider(provider))
             {
                 return new
@@ -379,6 +408,41 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
         private static object BuildToolCallingProbePayload(AiProvider provider, AiModel model)
         {
+            if (IsGeminiProvider(provider))
+            {
+                return new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            parts = new[] { new { text = "Use the ping tool." } }
+                        }
+                    },
+                    tools = new[]
+                    {
+                        new
+                        {
+                            functionDeclarations = new[]
+                            {
+                                new
+                                {
+                                    name = "ping",
+                                    description = "Returns pong.",
+                                    parameters = new { type = "object", properties = new { } }
+                                }
+                            }
+                        }
+                    },
+                    toolConfig = new
+                    {
+                        functionCallingConfig = new { mode = "ANY" }
+                    },
+                    generationConfig = new { maxOutputTokens = 32 }
+                };
+            }
+
             if (IsAnthropicProvider(provider))
             {
                 return new
@@ -462,6 +526,26 @@ namespace Codinex.Infrastructure.AI.Capabilities
 
         private static object BuildReasoningProbePayload(AiProvider provider, AiModel model)
         {
+            if (IsGeminiProvider(provider))
+            {
+                return new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            parts = new[] { new { text = "What is 2 + 2? Think step by step." } }
+                        }
+                    },
+                    generationConfig = new
+                    {
+                        maxOutputTokens = 1056,
+                        thinkingConfig = new { thinkingBudget = 1024, includeThoughts = true }
+                    }
+                };
+            }
+
             if (IsAnthropicProvider(provider))
             {
                 return new
@@ -514,6 +598,12 @@ namespace Codinex.Infrastructure.AI.Capabilities
                        && content.Any(x => x["type"]?.ToString() == "thinking");
             }
 
+            if (IsGeminiProvider(provider))
+            {
+                return root["candidates"]?[0]?["content"]?["parts"] is JArray geminiParts
+                       && geminiParts.Any(x => x["thought"]?.Value<bool>() == true);
+            }
+
             var message = provider.Protocol == "openai"
                 ? root["choices"]?[0]?["message"]
                 : root["message"];
@@ -539,6 +629,33 @@ namespace Codinex.Infrastructure.AI.Capabilities
             string imageBase64,
             bool useMaxCompletionTokens)
         {
+            if (IsGeminiProvider(provider))
+            {
+                return new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            parts = new object[]
+                            {
+                                new { text = "Describe this image." },
+                                new
+                                {
+                                    inlineData = new
+                                    {
+                                        mimeType = "image/png",
+                                        data = imageBase64
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    generationConfig = new { maxOutputTokens = 10 }
+                };
+            }
+
             if (IsAnthropicProvider(provider))
             {
                 return new
@@ -610,6 +727,12 @@ namespace Codinex.Infrastructure.AI.Capabilities
         {
             return string.Equals(provider.Protocol, AnthropicProtocol, StringComparison.OrdinalIgnoreCase)
                    || string.Equals(provider.Id, "anthropic", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsGeminiProvider(AiProvider provider)
+        {
+            return string.Equals(provider.Protocol, GeminiProtocol, StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(provider.Id, "gemini", StringComparison.OrdinalIgnoreCase);
         }
 
         private static object[] CreateVisionProbeMessages(string imageBase64)

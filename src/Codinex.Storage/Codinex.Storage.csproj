@@ -111,6 +111,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\gemini_models.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Resources\openrouter_models.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

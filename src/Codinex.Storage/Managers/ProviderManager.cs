@@ -41,14 +41,37 @@ namespace Codinex.Storage.Managers
                 Providers = await storage.LoadAsync<List<AiProvider>>(StoragePaths.Providers)
                              ?? await GetDefaultProviders();
 
-                if (await MergeNewDefaultProvidersAsync())
+                var hasChanges = await MergeNewDefaultProvidersAsync();
+                hasChanges |= ReorderProviders();
+
+                if (hasChanges)
                     await SaveAsync();
             }
             else
             {
                 Providers = await GetDefaultProviders();
+                ReorderProviders();
                 await SaveAsync();
             }
+        }
+
+        /// <summary>
+        /// Keeps bundled (system) providers ahead of user-added ones, preserving the
+        /// existing relative order within each group. <see cref="Enumerable.OrderBy{TSource,TKey}(IEnumerable{TSource},Func{TSource,TKey})"/>
+        /// is a stable sort, so this is a stable partition on <see cref="AiProvider.AddByUser"/>.
+        /// </summary>
+        /// <returns>True if the ordering changed.</returns>
+        private bool ReorderProviders()
+        {
+            var reordered = Providers
+                .OrderBy(p => p.AddByUser)
+                .ToList();
+
+            if (reordered.SequenceEqual(Providers))
+                return false;
+
+            Providers = reordered;
+            return true;
         }
 
         /// <summary>
@@ -279,6 +302,7 @@ namespace Codinex.Storage.Managers
             firstModel?.MarkAsCurrent();
 
             Providers.Add(provider);
+            ReorderProviders();
 
             await providerCapabilityChecker.CheckAsync(provider, firstModel, CancellationToken.None);
 
