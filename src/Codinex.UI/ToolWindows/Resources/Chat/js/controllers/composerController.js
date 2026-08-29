@@ -404,7 +404,7 @@ export class ComposerController {
 
                 const newRefs = [...state.composer.selectedReferences, item];
                 setSelectedReferences(newRefs);
-                return { shouldInsertChip: false, updateRefs: true };
+                return { shouldInsertChip: true, updateRefs: true };
             }
         };
 
@@ -415,13 +415,15 @@ export class ComposerController {
         if (result.shouldInsertChip) {
             // Insert chip into the view
             this.view.insertChip({
-                id: item.id,
-                text: item.name || item.text,
+                id: item.id || item.Id,
+                text: item.name || item.Name || item.text,
                 type: type,
-                icon: item.icon,
+                icon: item.icon || item.Icon,
                 trigger: trigger
             });
-        } else if (result.updateRefs) {
+        }
+
+        if (result.updateRefs) {
             // Update reference chips specifically
             const state = getState();
             this.view.updateReferenceChips(state.composer.selectedReferences);
@@ -561,10 +563,12 @@ export class ComposerController {
         }
         else if (item.type === 'references') {
             const state = getState();
+            const itemId = item.id || item.Id;
 
-            const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
+            const remainingRefs = state.composer.selectedReferences.filter(i => (i.id || i.Id) !== itemId);
 
             setSelectedReferences(remainingRefs);
+            this.view.updateReferenceChips(remainingRefs);
         }
         else if (item.type === 'commands') {
             setSelectedCommand(null);
@@ -573,15 +577,16 @@ export class ComposerController {
 
     removeRef(item) {
         const state = getState();
+        const itemId = item.id || item.Id;
         // Sync the specific category with AppState
-        const remainingRefs = state.composer.selectedReferences.filter(i => i.id !== item.id);
+        const remainingRefs = state.composer.selectedReferences.filter(i => (i.id || i.Id) !== itemId);
         setSelectedReferences(remainingRefs);
 
         // Sync draft text if necessary (or re-parse)
         // The view will handle the DOM removal, but if your draftText depends on
         // these tokens, you might need to trigger a re-parse here.
 
-        this.view.removeRefNode(item.id);
+        this.view.removeRefNode(itemId);
     }
 
     resetComposer() {

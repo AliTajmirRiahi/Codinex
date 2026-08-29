@@ -117,11 +117,11 @@ export class ComposerView {
                 this.navigateMenu(-1);
             }
             else if (e.key === 'Backspace') {
-                //const handled = this.handleBackspace();
-                //if (handled) {
-                //    e.preventDefault();
-                //    return;
-                //}
+                const handled = this.handleBackspace();
+                if (handled) {
+                    e.preventDefault();
+                    return;
+                }
             }
             // Handle actions when the Escape key is pressed
             if (e.key === 'Escape') {
@@ -325,10 +325,13 @@ export class ComposerView {
         chip.className = `composer-chip composer-chip--${item.type || 'default'}`;
         chip.contentEditable = 'false';
         // Render icon (if provided) and label
-        chip.innerHTML = `${item.icon ? `<codinex-icon name="${item.icon}"></codinex-icon>` : ''}<span class="chip-label">${item.label || item.name || item.text}</span>`;
-        chip.dataset.id = item.id;
+        const chipText = item.label || item.name || item.Name || item.text;
+        const chipId = item.id || item.Id;
+        const chipIcon = item.icon || item.Icon;
+        chip.innerHTML = `${chipIcon ? `<codinex-icon name="${chipIcon}"></codinex-icon>` : ''}<span class="chip-label">${chipText}</span>`;
+        chip.dataset.id = chipId;
         chip.dataset.type = item.type;
-        chip.dataset.name = item.label || item.name || item.text
+        chip.dataset.name = chipText;
 
         // For example, if you want to add a space after the chip
         const node = range.startContainer;
@@ -626,23 +629,29 @@ export class ComposerView {
         const container = range.startContainer;
         const offset = range.startOffset;
 
-        // Case 1: Caret is at the very beginning of a text node
-        if (container.nodeType === Node.TEXT_NODE && offset === 0) {
+        // Case 1: Caret is inside a text node.
+        if (container.nodeType === Node.TEXT_NODE) {
+            if (offset > 0) {
+                const textBefore = container.textContent.substring(0, offset);
+
+                // Let the browser remove regular text. Only intercept whitespace immediately after chips.
+                if (textBefore.trim() !== '') return false;
+
+                container.textContent = container.textContent.substring(offset);
+            }
+
             nodeToDelete = container.previousSibling;
         }
-        // Case 2: Caret is in a text node, but there's only whitespace behind it
-        else if (container.nodeType === Node.TEXT_NODE && offset > 0) {
-            const textBefore = container.textContent.substring(0, offset);
-            // If the only thing before the cursor in this node is a space/newline
-            if (textBefore.trim() === '' && textBefore.length > 0) {
-                // Manually clear this whitespace to "jump" to the chip
-                container.textContent = container.textContent.substring(offset);
-                nodeToDelete = container.previousSibling.previousSibling;
-            }
-        }
-        // Case 3: Caret is directly in the parent container
+        // Case 2: Caret is directly in the parent container.
         else if (container === this.input) {
             nodeToDelete = this.input.childNodes[offset - 1];
+        }
+
+        // Skip/remove whitespace nodes between the caret and a chip.
+        while (nodeToDelete && nodeToDelete.nodeType === Node.TEXT_NODE && (nodeToDelete.textContent || '').trim() === '') {
+            const previousNode = nodeToDelete.previousSibling;
+            nodeToDelete.remove();
+            nodeToDelete = previousNode;
         }
 
         // Validation: Is it really a chip?
@@ -666,6 +675,7 @@ export class ComposerView {
 
             // 3. Clean up the DOM (merges adjacent text nodes)
             this.input.normalize();
+            this.configInput();
 
             return true; // Stop browser from doing default backspace
         }
@@ -847,9 +857,15 @@ export class ComposerView {
         // (e.g. picked both as "Active Document" and from the file list). State removal drops
         // every entry with this id, so the DOM must remove every matching chip too, not just
         // the first one found.
-        const chips = document.querySelectorAll(`.context-chip-remove[data-id="${CSS.escape(refId)}"]`);
+        const escapedRefId = CSS.escape(refId);
+        const contextChips = document.querySelectorAll(`.context-chip-remove[data-id="${escapedRefId}"]`);
+        const composerChips = this.input?.querySelectorAll(`.composer-chip--references[data-id="${escapedRefId}"]`) || [];
 
-        chips.forEach(chip => chip.parentNode?.remove());
+        contextChips.forEach(chip => chip.parentNode?.remove());
+        composerChips.forEach(chip => chip.remove());
+
+        this.input?.normalize();
+        this.configInput();
     }
 
     insertTextAtCursor(filter) {
