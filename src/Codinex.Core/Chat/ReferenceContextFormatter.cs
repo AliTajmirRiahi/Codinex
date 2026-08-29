@@ -55,24 +55,14 @@ namespace Codinex.Core.Chat
 
         private static void AppendElements(StringBuilder sb, ReferenceItem reference)
         {
-            if (reference.Metadata.Elements?.Any() != true)
+            var elementCount = reference.Metadata.Elements?.Count() ?? 0;
+
+            if (elementCount == 0)
             {
                 return;
             }
 
-            sb.AppendLine("Elements:");
-
-            foreach (var element in reference.Metadata.Elements)
-            {
-                sb.AppendLine($"- id: {element.Id}");
-                sb.AppendLine($"  kind: {element.Kind}");
-                sb.AppendLine($"  name: {element.Name}");
-
-                if (!string.IsNullOrWhiteSpace(element.Signature))
-                {
-                    sb.AppendLine($"  signature: {element.Signature}");
-                }
-            }
+            sb.AppendLine($"Elements: {elementCount} elements available — use get_file_elements on this Path to list them, or read_file to see the full content.");
         }
 
         private static string FormatSymbol(ReferenceItem reference, string kindName)
