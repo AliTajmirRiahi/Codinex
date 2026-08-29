@@ -28,7 +28,7 @@
     <RootNamespace>Codinex.VSIX</RootNamespace>
     <AssemblyName>Codinex.VSIX</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win;win-x64</RuntimeIdentifiers>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>

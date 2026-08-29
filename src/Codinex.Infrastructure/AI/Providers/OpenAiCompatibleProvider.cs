@@ -64,7 +64,8 @@ namespace Codinex.Infrastructure.AI.Providers
                             provider,
                             model,
                             prompts,
-                            false);
+                            false,
+                            chatId);
 
             try
             {
@@ -204,7 +205,8 @@ namespace Codinex.Infrastructure.AI.Providers
                 model,
                 messages,
                 true,
-                tools);
+                tools,
+                chatId);
 
             var promptProfile = BuildPromptProfile(messages, tools);
             var payloadContent = Newtonsoft.Json.JsonConvert.SerializeObject(payload, Newtonsoft.Json.Formatting.Indented) +
@@ -458,14 +460,16 @@ namespace Codinex.Infrastructure.AI.Providers
             AiProvider provider,
             AiModel model,
             IReadOnlyList<ChatMessage> messages,
-            bool stream)
+            bool stream,
+            string chatId = null)
         {
             return BuildChatCompletionPayload(
                 provider,
                 model,
                 messages,
                 stream,
-                BuildTools(messages));
+                BuildTools(messages),
+                chatId);
         }
 
         private object BuildChatCompletionPayload(
@@ -473,16 +477,26 @@ namespace Codinex.Infrastructure.AI.Providers
             AiModel model,
             IReadOnlyList<ChatMessage> messages,
             bool stream,
-            object[] tools)
+            object[] tools,
+            string chatId = null)
         {
-            return new
+            var payload = new Dictionary<string, object>
             {
-                model = model.Id,
-                messages = BuildMessages(messages),
-                stream = model.SupportsStreaming == CapabilityProbeResult.Supported && stream,
-                tools,
-                tool_choice = "auto"
+                ["model"] = model.Id,
+                ["messages"] = BuildMessages(messages),
+                ["stream"] = model.SupportsStreaming == CapabilityProbeResult.Supported && stream,
+                ["tools"] = tools,
+                ["tool_choice"] = "auto"
             };
+
+            if (!string.IsNullOrWhiteSpace(chatId))
+            {
+                // Pin every request of a chat to the same prompt-cache lineage so the
+                // shared system + tools prefix reliably hits cache across the agentic loop.
+                payload["prompt_cache_key"] = chatId;
+            }
+
+            return payload;
         }
 
         private object[] BuildTools(IReadOnlyList<ChatMessage> messages)
