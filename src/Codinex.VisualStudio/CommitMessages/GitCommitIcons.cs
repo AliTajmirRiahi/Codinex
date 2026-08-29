@@ -6,7 +6,8 @@ namespace Codinex.VisualStudio.CommitMessages
 {
     /// <summary>
     /// Builds small themed icon elements from the paths of
-    /// src/Codinex.UI/ToolWindows/Resources/Icons/{magic-wand-sparkles,check-compact}.svg,
+    /// src/Codinex.UI/ToolWindows/Resources/Icons/Status/magic-wand-sparkles.svg and
+    /// src/Codinex.UI/ToolWindows/Resources/Icons/Actions/check-compact.svg,
     /// scaled to fit a Viewbox so they follow the host button's foreground brush.
     /// </summary>
     internal static class GitCommitIcons

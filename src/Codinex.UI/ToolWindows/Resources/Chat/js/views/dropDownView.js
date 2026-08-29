@@ -101,7 +101,7 @@ export class DropDownView {
 
         option.innerHTML = `
             <div class="option-info">
-                <codinex-icon name="${item.icon || 'lightning'}"></codinex-icon>
+                <codinex-icon name="${item.icon || 'Status/lightning'}"></codinex-icon>
                 <span class="option-name">${item.name}</span>
                 ${item.multiplier ? `<span class="multiplier">${item.multiplier}</span>` : ''}
             </div>

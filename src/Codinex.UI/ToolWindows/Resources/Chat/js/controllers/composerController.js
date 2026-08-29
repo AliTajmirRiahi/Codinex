@@ -177,43 +177,43 @@ export class ComposerController {
                 {
                     id: 'agent-python',
                     name: '@python-expert',
-                    icon: 'hat-glasses',
+                    icon: 'Status/hat-glasses',
                     description: 'Best for Python'
                 },
                 {
                     id: 'agent-web',
                     name: '@web-dev',
-                    icon: 'monitor',
+                    icon: 'Status/monitor',
                     description: 'Frontend specialist'
                 },
                 {
                     id: 'agent-debugger',
                     name: '@debugger',
-                    icon: 'bug',
+                    icon: 'Status/bug',
                     description: 'Diagnose and fix bugs'
                 },
                 {
                     id: 'agent-modernize',
                     name: '@modernize',
-                    icon: 'refresh-cw',
+                    icon: 'Actions/refresh-cw',
                     description: 'Modernize your applications'
                 },
                 {
                     id: 'agent-profiler',
                     name: '@profiler',
-                    icon: 'activity',
+                    icon: 'Status/activity',
                     description: 'Optimize your code'
                 },
                 {
                     id: 'agent-test',
                     name: '@test',
-                    icon: 'test-tube-diagonal',
+                    icon: 'Status/test-tube-diagonal',
                     description: 'Generate unit tests'
                 },
                 {
                     id: 'agent-vs',
                     name: '@vs',
-                    icon: 'Visual-Studio-Icon-Flat',
+                    icon: 'Branding/Visual-Studio-Icon-Flat',
                     description: 'Ask questions about Visual Studio'
                 }
             ],

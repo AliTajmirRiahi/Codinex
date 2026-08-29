@@ -129,7 +129,7 @@ export const manageModelsView = {
 
                     option.innerHTML = `
                         <div class="drop-info">
-                            <codinex-icon name="${item.icon || 'puzzle'}" class="provider-icon" style="color: ${item.iconColor || item.IconColor || '#000000'};"></codinex-icon>
+                            <codinex-icon name="${item.icon || 'Status/puzzle'}" class="provider-icon" style="color: ${item.iconColor || item.IconColor || '#000000'};"></codinex-icon>
                             <span>${item.name}</span>
                         </div>`;
 
@@ -139,7 +139,7 @@ export const manageModelsView = {
                         editBtn.type = 'button';
                         editBtn.className = 'drop-option-edit-btn';
                         editBtn.title = 'Edit Provider';
-                        editBtn.innerHTML = '<codinex-icon name="pencil"></codinex-icon>';
+                        editBtn.innerHTML = '<codinex-icon name="Actions/pencil"></codinex-icon>';
                         editBtn.addEventListener('click', (e) => {
                             e.stopPropagation();
                             window.dispatchEvent(new CustomEvent(CUSTOME_EVENTS.EDIT_CUSTOM_PROVIDER, { detail: item }));

@@ -137,13 +137,13 @@ namespace Codinex.Core.Models.AI
         {
             if (string.Equals(id, "ollama", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(protocol, "ollama", StringComparison.OrdinalIgnoreCase))
-                return "ollama";
+                return "Providers/ollama";
 
             if (string.Equals(id, "openai", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(id, "openAI", StringComparison.OrdinalIgnoreCase))
-                return "openai";
+                return "Providers/openai";
 
-            return "puzzle";
+            return "Status/puzzle";
         }
 
         /// <summary>

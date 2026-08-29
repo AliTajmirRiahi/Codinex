@@ -28,7 +28,7 @@ export const projectListView = {
                 option.innerHTML = `
                     <div class="drop-row">
                         <div class="col-main">
-                            <codinex-icon name="folder" class="chat-icon"></codinex-icon>
+                            <codinex-icon name="Status/folder" class="chat-icon"></codinex-icon>
                             <span class="chat-title">${this.escapeHtml(item.name)}</span>
                         </div>
                         <span class="col-date">${projectDate}</span>

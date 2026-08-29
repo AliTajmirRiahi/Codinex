@@ -43,7 +43,7 @@ function createMessageHeader(sender) {
 
     if (sender === 'assistant') {
         const logoEl = document.createElement('codinex-image');
-        logoEl.setAttribute('name', 'codinex-AI-logo-black.svg');
+        logoEl.setAttribute('name', 'Branding/codinex-AI-logo-black.svg');
         logoEl.setAttribute('alt', 'Codinex AI Logo');
         logoEl.className = 'message-header-logo';
 
@@ -77,7 +77,7 @@ function createUserMessageCopyButton(text) {
     buttonEl.className = 'message-copy-btn';
     buttonEl.title = 'Copy message';
     buttonEl.setAttribute('aria-label', 'Copy message');
-    buttonEl.innerHTML = '<codinex-icon name="copy" aria-hidden="true"></codinex-icon>';
+    buttonEl.innerHTML = '<codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>';
 
     buttonEl.addEventListener('click', async () => {
         const originalTitle = buttonEl.title;
@@ -116,7 +116,7 @@ function createRewindToHereButton(messageIndex) {
     buttonEl.className = 'message-rewind-btn';
     buttonEl.title = 'Rewind to here';
     buttonEl.setAttribute('aria-label', 'Rewind to here');
-    buttonEl.innerHTML = '<codinex-icon name="refresh-cw" aria-hidden="true"></codinex-icon>';
+    buttonEl.innerHTML = '<codinex-icon name="Actions/refresh-cw" aria-hidden="true"></codinex-icon>';
 
     buttonEl.addEventListener('click', () => {
         document.dispatchEvent(new CustomEvent('chat:rewind-to-message', {
@@ -277,9 +277,9 @@ function createReferencesBox(references) {
     toggleEl.className = 'message-references-toggle';
     toggleEl.setAttribute('aria-expanded', 'false');
     toggleEl.innerHTML = `
-        <codinex-icon name="folder" aria-hidden="true"></codinex-icon>
+        <codinex-icon name="Status/folder" aria-hidden="true"></codinex-icon>
         <span>${references.length} reference${references.length > 1 ? 's' : ''}</span>
-        <codinex-icon name="chevron-down" class="message-references-chevron" aria-hidden="true"></codinex-icon>
+        <codinex-icon name="Actions/chevron-down" class="message-references-chevron" aria-hidden="true"></codinex-icon>
     `;
 
     const listEl = document.createElement('div');

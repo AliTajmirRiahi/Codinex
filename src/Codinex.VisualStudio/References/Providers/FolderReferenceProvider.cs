@@ -79,7 +79,7 @@ namespace Codinex.VisualStudio.References.Providers
                 Name = folderName,
                 Description = $"Parent ({(string.IsNullOrWhiteSpace(parentFolderName) ? projectName : parentFolderName)})",
                 Type = ReferenceKind.Folder, // Assuming ReferenceKind has a Folder type defined in Codinex.Core.Models
-                Icon = "folder", // Placeholder for actual icon representation
+                Icon = "Status/folder", // Placeholder for actual icon representation
                 Color = "--vs-viz-surface-gold-medium-color", // Placeholder for actual color representation
                 Metadata = new ReferenceMetadata()
                 {

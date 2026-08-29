@@ -86,10 +86,10 @@ export const chatView = {
 
     renderModelCapabilityIcons(item) {
         const icons = [
-            this.renderModelCapabilityIcon(item, 'supportsStreaming', 'SupportsStreaming', 'lightning', 'Streaming'),
-            this.renderModelCapabilityIcon(item, 'supportsToolCalling', 'SupportsToolCalling', 'wrench', 'Tool calling'),
-            this.renderModelCapabilityIcon(item, 'supportsVision', 'SupportsVision', 'eye', 'Vision'),
-            this.renderModelCapabilityIcon(item, 'supportsReasoning', 'SupportsReasoning', 'brain', 'Reasoning'),
+            this.renderModelCapabilityIcon(item, 'supportsStreaming', 'SupportsStreaming', 'Status/lightning', 'Streaming'),
+            this.renderModelCapabilityIcon(item, 'supportsToolCalling', 'SupportsToolCalling', 'Status/wrench', 'Tool calling'),
+            this.renderModelCapabilityIcon(item, 'supportsVision', 'SupportsVision', 'Status/eye', 'Vision'),
+            this.renderModelCapabilityIcon(item, 'supportsReasoning', 'SupportsReasoning', 'Status/brain', 'Reasoning'),
         ].filter(Boolean);
 
         if (icons.length === 0) return '';
@@ -134,7 +134,7 @@ export const chatView = {
 
                 option.innerHTML = `
                     <div class="drop-info">
-                        <codinex-icon name="lightning" class="low-vis"></codinex-icon>
+                        <codinex-icon name="Status/lightning" class="low-vis"></codinex-icon>
                         <span>${item.name}</span>
                     </div>
                     ${this.renderModelCapabilityIcons(item)}`;

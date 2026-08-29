@@ -29,7 +29,7 @@ export const chatListView = {
                 option.innerHTML = `
                     <div class="drop-row">
                         <div class="col-main">
-                            <codinex-icon name="message-circle-check" class="chat-icon"></codinex-icon>
+                            <codinex-icon name="Status/message-circle-check" class="chat-icon"></codinex-icon>
                             <span class="chat-title">${this.escapeHtml(item.title)}</span>
                         </div>
                         <span class="col-date">${chatDate}</span>

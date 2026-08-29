@@ -380,7 +380,7 @@ export class ComposerView {
         this.sendBtn.title = this.isStreaming ? 'Stop' : 'Send';
         this.sendBtn.innerHTML = this.isStreaming
             ? '<codinex-icon name="symbols/stop-circle"></codinex-icon>'
-            : '<codinex-icon name="send-horizontal"></codinex-icon>';
+            : '<codinex-icon name="Actions/send-horizontal"></codinex-icon>';
 
         this.setInputDisabled(this.isStreaming);
         this.updateSendState();
@@ -744,7 +744,7 @@ export class ComposerView {
                 ${refIcon ? `<div class="item-icon" style="${refColor ? `color: var(${refColor});` : ''}"><codinex-icon name="${refIcon}"></codinex-icon></div>` : ''}
                 <span class="context-chip-text" role="button" tabindex="0" data-id="${refId}">${refName}</span>
                 <button class="context-chip-remove" title="Remove Context" data-id="${refId}">
-                    <codinex-icon name="circle-x"></codinex-icon>
+                    <codinex-icon name="Actions/circle-x"></codinex-icon>
                 </button>`;
 
             const chipText = chip.querySelector('.context-chip-text');

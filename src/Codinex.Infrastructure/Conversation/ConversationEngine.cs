@@ -277,12 +277,12 @@ namespace Codinex.Infrastructure.Conversation
                     continue;
                 }
 
-                if (name.Contains("path", StringComparison.OrdinalIgnoreCase))
+                if (name.IndexOf("path", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     return GetPathDisplayName(detail);
                 }
 
-                if (name.Contains("id", StringComparison.OrdinalIgnoreCase))
+                if (name.IndexOf("id", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     return GetIdDisplayName(detail);
                 }

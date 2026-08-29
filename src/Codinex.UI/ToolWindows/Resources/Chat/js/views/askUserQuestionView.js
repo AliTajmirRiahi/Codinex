@@ -86,7 +86,7 @@ export class AskUserQuestionView {
             : '';
         header.innerHTML = `
             <div class="ask-user-question__title">
-                <codinex-icon name="message-circle-check"></codinex-icon>
+                <codinex-icon name="Status/message-circle-check"></codinex-icon>
                 <span>${escapeHtml(question.question)}</span>
             </div>
             ${progress}
@@ -98,7 +98,7 @@ export class AskUserQuestionView {
         const prevBtn = createElement('button', 'ask-user-question__nav-btn ask-user-question__nav-btn--prev');
         prevBtn.type = 'button';
         prevBtn.title = 'Previous answer';
-        prevBtn.innerHTML = '<codinex-icon name="chevron-down"></codinex-icon>';
+        prevBtn.innerHTML = '<codinex-icon name="Actions/chevron-down"></codinex-icon>';
         prevBtn.addEventListener('click', () => this.navigate(-1));
 
         const track = createElement('div', 'ask-user-question__track');
@@ -116,7 +116,7 @@ export class AskUserQuestionView {
         const nextBtn = createElement('button', 'ask-user-question__nav-btn ask-user-question__nav-btn--next');
         nextBtn.type = 'button';
         nextBtn.title = 'Next answer';
-        nextBtn.innerHTML = '<codinex-icon name="chevron-down"></codinex-icon>';
+        nextBtn.innerHTML = '<codinex-icon name="Actions/chevron-down"></codinex-icon>';
         nextBtn.addEventListener('click', () => this.navigate(1));
 
         stage.appendChild(prevBtn);
@@ -171,7 +171,7 @@ export class AskUserQuestionView {
             <div class="ask-user-question__card-number">${index + 1}</div>
             <div class="ask-user-question__card-body">${escapeHtml(option.description || option.label)}</div>
             <div class="ask-user-question__card-footer">
-                <codinex-icon name="${option.recommended ? 'message-circle-check' : 'message-square-plus'}"></codinex-icon>
+                <codinex-icon name="${option.recommended ? 'Status/message-circle-check' : 'Status/message-square-plus'}"></codinex-icon>
                 <span>${option.recommended ? 'Recommended' : 'Alternative'}</span>
             </div>
         `;
@@ -194,7 +194,7 @@ export class AskUserQuestionView {
 
         card.innerHTML = `
             <div class="ask-user-question__card-footer ask-user-question__card-footer--top">
-                <codinex-icon name="pencil"></codinex-icon>
+                <codinex-icon name="Actions/pencil"></codinex-icon>
                 <span>Your own answer</span>
             </div>
             <textarea class="ask-user-question__custom-input" rows="3" placeholder="Type your answer..."></textarea>

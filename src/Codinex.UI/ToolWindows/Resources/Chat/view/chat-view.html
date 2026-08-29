@@ -22,7 +22,7 @@
     <!-- Loading Screen Container -->
     <!-- This will be visible by default until onInitData is triggered -->
     <div id="loading-screen" class="loading-screen">
-        <codinex-image name="loading.svg" class="spinner"></codinex-image>
+        <codinex-image name="Status/loading.svg" class="spinner"></codinex-image>
         <h2>Loading Codinex AI...</h2>
     </div>
     <div id="main-chat-wrapper" class="chat-wrapper hidden">
@@ -31,9 +31,9 @@
         <div class="project-toolbar">
             <div class="project-selector-wrapper">
                 <button id="project-selector-btn" class="selector-btn" title="Select Project">
-                    <codinex-icon name="folder"></codinex-icon>
+                    <codinex-icon name="Status/folder"></codinex-icon>
                     <span id="project-name">Default Project</span>
-                    <codinex-icon name="chevron-down"></codinex-icon>
+                    <codinex-icon name="Actions/chevron-down"></codinex-icon>
                 </button>
 
                 <div id="project-dropdown" class="com-dropdown">
@@ -45,17 +45,17 @@
 
             <!-- Button to create a new conversation project -->
             <button id="new-project-btn" class="toolbar-btn" title="New Project">
-                <codinex-icon name="plus-circle"></codinex-icon>
+                <codinex-icon name="Actions/plus-circle"></codinex-icon>
             </button>
 
             <!-- Button to delete the current active conversation project -->
             <!-- Button to edit the current active conversation project -->
             <button id="edit-project-btn" class="toolbar-btn" title="Edit Project">
-                <codinex-icon name="pencil"></codinex-icon>
+                <codinex-icon name="Actions/pencil"></codinex-icon>
             </button>
 
             <button id="delete-project-btn" class="toolbar-btn danger" title="Delete Project">
-                <codinex-icon name="trash-2"></codinex-icon>
+                <codinex-icon name="Actions/trash-2"></codinex-icon>
             </button>
 
         </div>
@@ -66,7 +66,7 @@
             <div class="chat-history-selector-wrapper">
                 <button id="chat-history-selector-btn" class="selector-btn" title="Select Model">
                     <span id="chat-history-name">NAME</span>
-                    <codinex-icon name="chevron-down"></codinex-icon>
+                    <codinex-icon name="Actions/chevron-down"></codinex-icon>
                 </button>
 
                 <div id="chat-history-dropdown" class="com-dropdown">
@@ -78,25 +78,25 @@
 
             <!-- Button to create a new chat session -->
             <button id="new-chat-btn" class="toolbar-btn" title="New Chat">
-                <codinex-icon name="plus-circle"></codinex-icon>
+                <codinex-icon name="Actions/plus-circle"></codinex-icon>
             </button>
 
             <!-- Button to edit the current active chat session -->
             <button id="edit-chat-btn" class="toolbar-btn" title="Edit Chat">
-                <codinex-icon name="pencil"></codinex-icon>
+                <codinex-icon name="Actions/pencil"></codinex-icon>
             </button>
 
             <!-- Button to delete the current active chat session -->
             <button id="delete-chat-btn" class="toolbar-btn danger" title="Delete Chat">
-                <codinex-icon name="trash-2"></codinex-icon>
+                <codinex-icon name="Actions/trash-2"></codinex-icon>
             </button>
         </div>
 
         <!-- Initial welcome state when no messages are present -->
         <div id="chat-welcome" class="chat-welcome-screen">
             <!-- Main Logo -->
-            <!--<img src="../Icons/codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo">-->
-            <codinex-image name="codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo"></codinex-image>
+            <!--<img src="../Icons/Branding/codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo">-->
+            <codinex-image name="Branding/codinex-AI-logo-black.svg" alt="Codinex AI Logo" class="welcome-logo"></codinex-image>
             <!-- App Title -->
             <h1 class="welcome-title">Codinex AI</h1>
 
@@ -116,7 +116,7 @@
                      thinking box in the timeline instead of reusing/replacing a single one. -->
                 <div id="thinking-box-template" class="thinking-box hidden">
                     <button class="thinking-toggle" type="button" aria-expanded="false">
-                        <codinex-image name="chevron-down.svg" class="thinking-chevron"></codinex-image>
+                        <codinex-image name="Actions/chevron-down.svg" class="thinking-chevron"></codinex-image>
                         <span class="thinking-label">Thinking...</span>
                     </button>
                     <div class="thinking-content"></div>
@@ -125,14 +125,14 @@
                      folded into once more than 3 are visible at once. -->
                 <div id="total-thoughts-box" class="thinking-box total-thoughts-box hidden collapsed">
                     <button class="thinking-toggle" type="button" aria-expanded="false">
-                        <codinex-image name="chevron-down.svg" class="thinking-chevron"></codinex-image>
+                        <codinex-image name="Actions/chevron-down.svg" class="thinking-chevron"></codinex-image>
                         <span class="thinking-label total-thoughts-label">Total Thoughts</span>
                     </button>
                     <div class="thinking-content total-thoughts-content"></div>
                 </div>
                 <div id="response-status" class="response-status hidden"></div>
                 <div id="response-loading" class="response-loading hidden">
-                    <codinex-image name="linear-loading.svg"></codinex-image>
+                    <codinex-image name="Status/linear-loading.svg"></codinex-image>
                 </div>
                 <div id="error-box" class="codinex-error-box hidden">
                     <div class="codinex-error-box__title">Error</div>
@@ -150,7 +150,7 @@
         <!-- About / donate / report bug peek box above the input area -->
         <div class="about-peek-container">
             <div class="about-peek-box" title="About Codinex AI">
-                <codinex-image name="chevron-up.svg" class="about-peek-chevron"></codinex-image>
+                <codinex-image name="Actions/chevron-up.svg" class="about-peek-chevron"></codinex-image>
                 <button id="report-bug-menu-btn" class="about-peek-button" title="Report a Bug">
                     <span>Report Bug</span>
                 </button>
@@ -163,7 +163,7 @@
         <!-- Shown while a Code Changes review is pending; locks the composer until decided -->
         <div id="chat-blocked-banner" class="chat-blocked-banner hidden" role="button" tabindex="0"
              title="Click to reopen the Code Changes window">
-            <codinex-icon name="scroll-text"></codinex-icon>
+            <codinex-icon name="Status/scroll-text"></codinex-icon>
             <span>You have a pending code change to review before you can continue. Click to reopen it.</span>
         </div>
 
@@ -173,7 +173,7 @@
         <!-- User input section at the bottom -->
         <div id="input-container" class="input-container">
             <div id="input-loading-screen" class="input-loading-screen hidden">
-                <codinex-image name="loading.svg" class="spinner"></codinex-image>
+                <codinex-image name="Status/loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="input-box-wrapper">
                 <!-- Preview of a quoted assistant selection, attached to the next outgoing message -->
@@ -187,13 +187,13 @@
                         <div id="composer-quote-preview-text" class="composer-quote-preview__text"></div>
                     </div>
                     <button id="composer-quote-preview-dismiss" type="button" class="composer-quote-preview__dismiss" title="Remove quote">
-                        <codinex-icon name="circle-x"></codinex-icon>
+                        <codinex-icon name="Actions/circle-x"></codinex-icon>
                     </button>
                 </div>
                 <!-- Top row: context / file selector -->
                 <div class="input-context-row">
                     <button id="contextBtn" class="context-add-btn" title="Add Context" data-placeholder=" References">
-                        <codinex-icon name="plus"></codinex-icon>
+                        <codinex-icon name="Actions/plus"></codinex-icon>
                     </button>
                     <div id="contextInput"
                          class="context-input content-editable hidden"
@@ -218,19 +218,19 @@
                 <div class="input-footer-row">
                     <div class="selector-group">
                         <button id="agent-selector-btn" class="selector-btn hidden" title="Select Agent">
-                            <codinex-icon name="hat-glasses"></codinex-icon>
+                            <codinex-icon name="Status/hat-glasses"></codinex-icon>
                             <span>Agent</span>
-                            <codinex-icon name="chevron-down"></codinex-icon>
+                            <codinex-icon name="Actions/chevron-down"></codinex-icon>
                         </button>
                         <div class="model-selector-wrapper">
                             <button id="model-selector-btn" class="selector-btn" title="Select Model">
-                                <codinex-icon name="ai-model"></codinex-icon>
+                                <codinex-icon name="Status/ai-model"></codinex-icon>
                                 <span class="current-model-label">
                                     <span id="current-model-provider" class="current-model-provider hidden"></span>
                                     <span id="current-model-name" class="current-model-name"></span>
                                 </span>
                                 <span id="current-model-capabilities" class="current-model-capabilities"></span>
-                                <codinex-icon name="chevron-down"></codinex-icon>
+                                <codinex-icon name="Actions/chevron-down"></codinex-icon>
                             </button>
                             <div id="model-dropdown-menu" class="com-dropdown">
                                 <div class="menu-label model-menu-label">
@@ -240,7 +240,7 @@
                                 <div id="model-dropdown-menu-container"></div>
                                 <div class="menu-divider"></div>
                                 <div id="manage-models-action" class="menu-action">
-                                    <codinex-icon name="wrench"></codinex-icon>
+                                    <codinex-icon name="Status/wrench"></codinex-icon>
                                     <span>Manage Models</span>
                                 </div>
                             </div>
@@ -249,22 +249,22 @@
                     <div class="input-actions">
                         <div class="settings-selector-wrapper">
                             <button id="settings-btn" title="Change Settings">
-                                <codinex-icon name="wrench"></codinex-icon>
+                                <codinex-icon name="Status/wrench"></codinex-icon>
                             </button>
                             <div id="settings-dropdown-menu" class="com-dropdown">
                                 <div id="open-codinex-settings-action" class="menu-action">
-                                    <codinex-icon name="wrench"></codinex-icon>
+                                    <codinex-icon name="Status/wrench"></codinex-icon>
                                     <span>Codinex Settings</span>
                                 </div>
                                 <div class="menu-divider"></div>
                                 <div id="open-solution-settings-action" class="menu-action">
-                                    <codinex-icon name="wrench"></codinex-icon>
+                                    <codinex-icon name="Status/wrench"></codinex-icon>
                                     <span id="solution-settings-menu-label">Solution Settings</span>
                                 </div>
                             </div>
                         </div>
                         <button id="send-btn" class="disable" title="Send">
-                            <codinex-icon name="send-horizontal"></codinex-icon>
+                            <codinex-icon name="Actions/send-horizontal"></codinex-icon>
                         </button>
                     </div>
                 </div>
@@ -460,9 +460,9 @@
                                 <label>Local Provider</label>
                                 <div class="provider-selector-wrapper">
                                     <button id="setting-preprocessor-provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Local Provider">
-                                        <codinex-icon name="puzzle"></codinex-icon>
+                                        <codinex-icon name="Status/puzzle"></codinex-icon>
                                         <span id="setting-preprocessor-provider-name">Select a local provider</span>
-                                        <codinex-icon name="chevron-down"></codinex-icon>
+                                        <codinex-icon name="Actions/chevron-down"></codinex-icon>
                                     </button>
                                     <input id="setting-preprocessor-provider" type="hidden" value="">
                                     <div id="setting-preprocessor-provider-dropdown" class="com-dropdown">
@@ -572,7 +572,7 @@
 
             <div class="modal-body about-modal-body">
                 <div class="about-hero">
-                    <codinex-image name="codinex-AI-logo-black.svg" class="about-logo"></codinex-image>
+                    <codinex-image name="Branding/codinex-AI-logo-black.svg" class="about-logo"></codinex-image>
                     <div>
                         <h3>Codinex AI</h3>
                         <p>Built by Ali Tajmir Riahi</p>
@@ -597,7 +597,7 @@
                 </div>
 
                 <button id="open-donate-modal" type="button" class="donate-button" title="Donate to Codinex AI">
-                    <img src="http://codinex.resources/Icons/donate.png" alt="Donate">
+                    <img src="http://codinex.resources/Icons/Branding/donate.png" alt="Donate">
                 </button>
             </div>
         </div>
@@ -620,7 +620,7 @@
                         <span class="donate-coin-name">BTC</span>
                         <span class="donate-address" title="bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39">bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39</span>
                         <button type="button" class="donate-copy-btn" data-address="bc1qhtnn6l3g2kqx54xvxfdylmaw84zgfay2vrpg39" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <div class="donate-row" data-coin="BNB">
@@ -628,7 +628,7 @@
                         <span class="donate-coin-name">BNB</span>
                         <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
                         <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <div class="donate-row" data-coin="USDT">
@@ -636,7 +636,7 @@
                         <span class="donate-coin-name">USDT (BEP20)</span>
                         <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
                         <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <div class="donate-row" data-coin="USDC">
@@ -644,7 +644,7 @@
                         <span class="donate-coin-name">USDC (BEP20)</span>
                         <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
                         <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <!--<div class="donate-row" data-coin="ETH">
@@ -652,7 +652,7 @@
                         <span class="donate-coin-name">ETH</span>
                         <span class="donate-address" title="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6">0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6</span>
                         <button type="button" class="donate-copy-btn" data-address="0xe3a184F2020aF76E2a42FB2eEf7bbBd973413AD6" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>-->
                     <div class="donate-row" data-coin="TRX">
@@ -660,7 +660,7 @@
                         <span class="donate-coin-name">TRX</span>
                         <span class="donate-address" title="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv">TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv</span>
                         <button type="button" class="donate-copy-btn" data-address="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <div class="donate-row" data-coin="USDT">
@@ -668,7 +668,7 @@
                         <span class="donate-coin-name">USDT (TRON)</span>
                         <span class="donate-address" title="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv">TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv</span>
                         <button type="button" class="donate-copy-btn" data-address="TActmJZzqC7cjBsgx2va3UDBGnD2TicMJv" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                     <div class="donate-row" data-coin="GRAM">
@@ -676,7 +676,7 @@
                         <span class="donate-coin-name">GRAM</span>
                         <span class="donate-address" title="UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ">UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ</span>
                         <button type="button" class="donate-copy-btn" data-address="UQA7hiOR5OlW48XB0GavFaFL05lSRO8Sb8gPicbeULi6bCgQ" title="Copy address" aria-label="Copy address">
-                            <codinex-icon name="copy" aria-hidden="true"></codinex-icon>
+                            <codinex-icon name="Actions/copy" aria-hidden="true"></codinex-icon>
                         </button>
                     </div>
                 </div>
@@ -712,7 +712,7 @@
     <div id="model-management-modal" class="modal hidden">
         <div class="modal-content">
             <div id="models-loading-screen" class="modal-loading-screen hidden">
-                <codinex-image name="loading.svg" class="spinner"></codinex-image>
+                <codinex-image name="Status/loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="modal-header">
                 <h2 id="modal-title">Add AI Model</h2>
@@ -726,9 +726,9 @@
                     <div class="provider-selector-row">
                         <div class="provider-selector-wrapper">
                             <button id="provider-selector-btn" class="selector-btn provider-selector-btn" type="button" title="Select Provider">
-                                <codinex-icon name="puzzle"></codinex-icon>
+                                <codinex-icon name="Status/puzzle"></codinex-icon>
                                 <span id="provider-name">Select an AI Provider</span>
-                                <codinex-icon name="chevron-down"></codinex-icon>
+                                <codinex-icon name="Actions/chevron-down"></codinex-icon>
                             </button>
                             <input id="provider-select" type="hidden" value="">
                             <div id="provider-dropdown" class="com-dropdown">
@@ -737,7 +737,7 @@
                             </div>
                         </div>
                         <button id="add-custom-provider-btn" class="toolbar-btn" type="button" title="Add Custom Provider">
-                            <codinex-icon name="plus"></codinex-icon>
+                            <codinex-icon name="Actions/plus"></codinex-icon>
                         </button>
                     </div>
                 </div>
@@ -802,7 +802,7 @@
     <div id="add-provider-modal" class="modal hidden">
         <div class="modal-content project-modal-content">
             <div id="add-provider-loading-screen" class="modal-loading-screen hidden">
-                <codinex-image name="loading.svg" class="spinner"></codinex-image>
+                <codinex-image name="Status/loading.svg" class="spinner"></codinex-image>
             </div>
             <div class="modal-header">
                 <h2 id="add-provider-modal-title">Add Custom Provider</h2>
@@ -849,7 +849,7 @@
                     <label>Logo (optional)</label>
                     <div class="icon-picker-row">
                         <div class="icon-picker-preview">
-                            <codinex-icon id="add-provider-icon-preview" name="puzzle"></codinex-icon>
+                            <codinex-icon id="add-provider-icon-preview" name="Status/puzzle"></codinex-icon>
                         </div>
                         <button id="add-provider-icon-pick-btn" type="button" class="secondary-button">Choose SVG…</button>
                         <button id="add-provider-icon-clear-btn" type="button" class="link-button hidden">Remove</button>

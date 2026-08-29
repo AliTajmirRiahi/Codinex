@@ -343,7 +343,7 @@ export const addProviderView = {
     _updateIconPreview() {
         const preview = $('#add-provider-icon-preview');
         if (preview) {
-            preview.setAttribute('name', this._iconDataUri || 'puzzle');
+            preview.setAttribute('name', this._iconDataUri || 'Status/puzzle');
             preview.style.color = $('#add-provider-icon-color')?.value || '#000000';
         }
 
@@ -408,7 +408,6 @@ export const addProviderView = {
         togglePanelHidden('#add-provider-api-key-group', needApiKey);
         $('#add-provider-api-key').value = provider.apiKey || provider.ApiKey || '';
 
-        // Bundled default icon names (e.g. "puzzle") aren't editable logos — only a
         // previously embedded data URI counts as a custom logo the user can replace/remove.
         // The preview still shows whatever icon (bundled or embedded) the provider has today.
         const icon = provider.icon || provider.Icon || '';
@@ -417,7 +416,7 @@ export const addProviderView = {
 
         const preview = $('#add-provider-icon-preview');
         if (preview) {
-            preview.setAttribute('name', icon || 'puzzle');
+            preview.setAttribute('name', icon || 'Status/puzzle');
             preview.style.color = $('#add-provider-icon-color').value;
         }
         togglePanelHidden('#add-provider-icon-clear-btn', !!this._iconDataUri);
