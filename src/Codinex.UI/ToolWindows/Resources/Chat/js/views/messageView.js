@@ -127,12 +127,30 @@ function createRewindToHereButton(messageIndex) {
     return buttonEl;
 }
 
+function createForkFromHereButton(messageIndex) {
+    const buttonEl = document.createElement('button');
+    buttonEl.type = 'button';
+    buttonEl.className = 'message-rewind-btn message-fork-btn';
+    buttonEl.title = 'Fork from here';
+    buttonEl.setAttribute('aria-label', 'Fork from here');
+    buttonEl.innerHTML = '<codinex-icon name="Actions/split" aria-hidden="true"></codinex-icon>';
+
+    buttonEl.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('chat:fork-from-message', {
+            detail: { messageIndex }
+        }));
+    });
+
+    return buttonEl;
+}
+
 function createUserMessageActions(text, messageIndex) {
     const actionsEl = document.createElement('div');
     actionsEl.className = 'message-actions';
 
     if (Number.isInteger(messageIndex)) {
         actionsEl.appendChild(createRewindToHereButton(messageIndex));
+        actionsEl.appendChild(createForkFromHereButton(messageIndex));
     }
 
     actionsEl.appendChild(createUserMessageCopyButton(text));

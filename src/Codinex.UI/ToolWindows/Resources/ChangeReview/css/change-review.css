@@ -358,7 +358,7 @@ body.resizing-col {
 
 .review-sidebar {
     width: 300px;
-    min-width: 180px;
+    min-width: 400px;
     max-width: 640px;
     flex: 0 0 auto;
     display: flex;

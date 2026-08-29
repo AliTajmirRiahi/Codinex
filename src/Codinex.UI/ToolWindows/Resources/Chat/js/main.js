@@ -260,10 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
             applyChatsPayload(payload);
         },
         onNewChat: (payload) => {
-            setChatList(payload.chats.chatList);
-            setCurrentChat(payload.chats.current);
-            chatController.renderChatList();
+            applyChatsPayload(payload);
             chatController.navigateToChat();
+
+            const forkText = payload?.forkText ?? payload?.ForkText;
+
+            if (forkText !== undefined) {
+                chatController.handleForkChatApproved(payload);
+            }
         },  
         onActiveDocumentChanged: (payload) => {
             setActiveDocument(payload);

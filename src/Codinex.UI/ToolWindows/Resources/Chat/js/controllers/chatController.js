@@ -144,6 +144,18 @@ export function initChatController(transport) {
         transport.send(EVENTS.REWIND_CHAT, { messageIndex });
     });
 
+    document.addEventListener('chat:fork-from-message', (e) => {
+        const messageIndex = e.detail?.messageIndex;
+
+        if (!Number.isInteger(messageIndex)) return;
+
+        const state = getState();
+
+        if (state.isLoading || state.isChatBlocked || state.isAwaitingClarification) return;
+
+        transport.send(EVENTS.FORK_CHAT, { messageIndex });
+    });
+
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat);
     projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject);
 
@@ -477,6 +489,30 @@ export function initChatController(transport) {
 
             setSelectedReferences(rewindReferences);
             chatView.composer.updateReferenceChips(rewindReferences);
+
+            if (typeof composerController.handleInput === 'function') {
+                composerController.handleInput({ trigger: null });
+            }
+
+            chatView.composer.input.focus();
+        },
+        handleForkChatApproved: (payload) => {
+            const forkText = payload?.forkText ?? payload?.ForkText ?? '';
+            const forkReferences = payload?.forkReferences || payload?.ForkReferences || [];
+
+            composerController.resetComposer();
+            chatView.composer.clearQuote();
+
+            const extracted = extractQuoteFromText(forkText);
+
+            chatView.composer.setText(extracted.text);
+
+            if (extracted.quote) {
+                chatView.composer.setQuote(extracted.quote);
+            }
+
+            setSelectedReferences(forkReferences);
+            chatView.composer.updateReferenceChips(forkReferences);
 
             if (typeof composerController.handleInput === 'function') {
                 composerController.handleInput({ trigger: null });

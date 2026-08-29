@@ -396,6 +396,14 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     return;
                 }
+            case WebViewMessageType.ForkChat:
+                {
+                    var payload = _payloadBinder.Bind<RewindChatDto>(request.Payload);
+
+                    await ForkChatAsync(payload.MessageIndex);
+
+                    return;
+                }
             case WebViewMessageType.UiError:
                 {
                     var payload = _payloadBinder.Bind<UiErrorModel>(request.Payload);
@@ -1220,6 +1228,58 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         );
 
         await SendNewChatMessageAsync(chatList, currentChat);
+    }
+
+    /// <summary>
+    /// Creates a new chat from the active chat history before the selected user message,
+    /// then hands the selected user message's text back to the UI so it can be restored
+    /// into the composer for editing/resending.
+    /// </summary>
+    public async Task ForkChatAsync(int messageIndex)
+    {
+        var sourceChatId = _sessionService.ActiveSession.SessionId;
+        var sourceChat = await _chatManager.LoadChatAsync(sourceChatId);
+
+        if (sourceChat == null || messageIndex < 0 || messageIndex >= sourceChat.Messages.Count)
+            return;
+
+        var targetMessage = sourceChat.Messages[messageIndex];
+
+        if (!string.Equals(targetMessage.Role, "user", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var forkText = targetMessage.Content;
+        var forkReferences = targetMessage.Context?.SelectedReferences;
+
+        var forkedChat = await _chatManager.CreateChatAsync(
+            _providerManager.ActiveProvider.Id,
+            _providerManager.ActiveModel.Id
+        );
+
+        forkedChat.Messages = sourceChat.Messages.Take(messageIndex).ToList();
+
+        await _chatManager.SaveChatAsync(forkedChat);
+        await _sessionService.LoadSessionAsync(forkedChat.Id);
+
+        var chatList = await _chatManager.GetAllChatsAsync();
+
+        var message = new WebViewMessageResponse
+        {
+            Type = WebViewMessageType.NewChat,
+            Payload = new
+            {
+                Chats = new
+                {
+                    ChatList = chatList,
+                    Current = forkedChat
+                },
+                ForkText = forkText,
+                ForkReferences = forkReferences,
+                Timestamp = DateTime.Now
+            }
+        };
+
+        await _webViewClient.PostMessageAsync(message);
     }
 
     /// <summary>

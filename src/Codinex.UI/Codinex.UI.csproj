@@ -125,6 +125,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\ai-model.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gapgpt.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\groq-icon-seeklogo.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\split.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
