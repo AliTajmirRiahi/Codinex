@@ -241,6 +241,16 @@ export class ComposerView {
             range.collapse(false);
         }
 
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Use the browser editing command so the paste becomes its own undo step.
+        // Direct DOM insertion skips the contenteditable undo stack, causing Ctrl+Z
+        // to remove the previous text until another input event happens.
+        if (document.queryCommandSupported?.('insertText') && document.execCommand('insertText', false, text)) {
+            return;
+        }
+
         range.deleteContents();
 
         const textNode = document.createTextNode(text);

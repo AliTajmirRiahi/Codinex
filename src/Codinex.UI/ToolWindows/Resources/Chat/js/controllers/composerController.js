@@ -245,6 +245,10 @@ export class ComposerController {
         document.addEventListener('composer:ref-remove', (e) => {
             this.removeRef(e.detail);
         });
+
+        document.addEventListener('paste', (e) => {
+            this.handlePaste(e);
+        });
     }
 
     /**
@@ -487,6 +491,38 @@ export class ComposerController {
         // Sync with AppState (we'll complete this in a later step)
         setActiveMenu(null);
         setActiveTrigger(null);
+    }
+
+    async handlePaste(e) {
+        if (!this.currentModelSupportsVision()) return;
+
+        const clipboardData = e.clipboardData || window.clipboardData;
+        if (!clipboardData) return;
+
+        const files = [];
+
+        if (clipboardData.items && clipboardData.items.length) {
+            for (const item of clipboardData.items) {
+                if (item.kind !== 'file' || !item.type || !item.type.startsWith('image/')) continue;
+
+                const file = item.getAsFile();
+                if (file) files.push(file);
+            }
+        }
+
+        if (!files.length && clipboardData.files && clipboardData.files.length) {
+            for (const file of clipboardData.files) {
+                if (file && file.type && file.type.startsWith('image/')) files.push(file);
+            }
+        }
+
+        if (!files.length) return;
+
+        e.preventDefault();
+
+        for (const file of files) {
+            await this.addImageReference(file);
+        }
     }
 
     uploadImageContext() {

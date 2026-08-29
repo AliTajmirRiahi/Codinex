@@ -523,6 +523,12 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
     private async Task OpenReferenceFileAsync(WebViewMessageRequest request)
     {
+        if (IsImageOpenRequest(request))
+        {
+            OpenImageReference(request);
+            return;
+        }
+
         var filePath = request.Payload?["filePath"]?.ToString();
         if (string.IsNullOrWhiteSpace(filePath))
             return;
@@ -547,6 +553,117 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         selection.EndOfLine(true);
     }
 #pragma warning restore VSTHRD010
+
+    private static bool IsImageOpenRequest(WebViewMessageRequest request)
+    {
+        var isImage = request.Payload?["isImage"]?.ToObject<bool?>() == true;
+        var mimeType = request.Payload?["mimeType"]?.ToString();
+        var body = request.Payload?["body"]?.ToString();
+
+        return isImage
+            || (!string.IsNullOrWhiteSpace(mimeType) && mimeType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+            || (!string.IsNullOrWhiteSpace(body) && body.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void OpenImageReference(WebViewMessageRequest request)
+    {
+        var filePath = request.Payload?["filePath"]?.ToString();
+        var content = request.Payload?["content"]?.ToString();
+        var body = request.Payload?["body"]?.ToString();
+        var mimeType = request.Payload?["mimeType"]?.ToString();
+
+        if (!string.IsNullOrWhiteSpace(filePath) && _workspaceFileService.FileExists(filePath))
+        {
+            OpenWithShell(filePath);
+            return;
+        }
+
+        var base64 = content;
+
+        if (!string.IsNullOrWhiteSpace(body))
+        {
+            if (body.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            {
+                var separatorIndex = body.IndexOf(',');
+                if (separatorIndex < 0)
+                    return;
+
+                var header = body.Substring(0, separatorIndex);
+                base64 = body.Substring(separatorIndex + 1);
+
+                var mimeStart = "data:".Length;
+                var mimeEnd = header.IndexOf(';');
+                if (mimeEnd > mimeStart)
+                    mimeType = header.Substring(mimeStart, mimeEnd - mimeStart);
+            }
+            else if (string.IsNullOrWhiteSpace(base64))
+            {
+                base64 = body;
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(base64))
+            return;
+
+        byte[] imageBytes;
+        try
+        {
+            imageBytes = Convert.FromBase64String(base64);
+        }
+        catch
+        {
+            return;
+        }
+
+        var tempDirectory = Path.Combine(Path.GetTempPath(), "Codinex", "ImageReferences");
+        Directory.CreateDirectory(tempDirectory);
+
+        var fileName = SanitizeFileName(request.Payload?["fileName"]?.ToString() ?? filePath);
+        var extension = Path.GetExtension(fileName);
+        if (string.IsNullOrWhiteSpace(extension))
+            extension = GetImageExtension(mimeType);
+
+        var tempFilePath = Path.Combine(
+            tempDirectory,
+            $"{Path.GetFileNameWithoutExtension(fileName)}-{Guid.NewGuid():N}{extension}");
+
+        File.WriteAllBytes(tempFilePath, imageBytes);
+        OpenWithShell(tempFilePath);
+    }
+
+    private static void OpenWithShell(string filePath)
+    {
+        Process.Start(new ProcessStartInfo(filePath)
+        {
+            UseShellExecute = true
+        });
+    }
+
+    private static string SanitizeFileName(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return "image";
+
+        var invalidChars = Path.GetInvalidFileNameChars();
+        var sanitizedChars = fileName.Select(c => invalidChars.Contains(c) ? '_' : c).ToArray();
+        var sanitized = new string(sanitizedChars).Trim();
+
+        return string.IsNullOrWhiteSpace(sanitized) ? "image" : sanitized;
+    }
+
+    private static string GetImageExtension(string mimeType)
+    {
+        return mimeType?.ToLowerInvariant() switch
+        {
+            "image/jpeg" => ".jpg",
+            "image/jpg" => ".jpg",
+            "image/gif" => ".gif",
+            "image/bmp" => ".bmp",
+            "image/webp" => ".webp",
+            "image/svg+xml" => ".svg",
+            _ => ".png"
+        };
+    }
 
     private async Task AskAiAssistantAsync(WebViewMessageRequest request)
     {

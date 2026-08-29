@@ -300,9 +300,9 @@ body.resizing-col {
 
 .diff-line-text {
     flex: 1;
-    min-width: 0;
-    white-space: pre-wrap;
-    word-break: break-all;
+    min-width: max-content;
+    white-space: pre;
+    word-break: normal;
 }
 
 .diff-cell-add {

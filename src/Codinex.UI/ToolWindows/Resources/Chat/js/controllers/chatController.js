@@ -71,6 +71,16 @@ function getErrorMessage(payload) {
     return STATICS.GENERIC_CHAT_ERROR;
 }
 
+function isImageReference(reference, metadata) {
+    const type = reference?.type || reference?.Type;
+    const signature = metadata?.signature || metadata?.Signature;
+    const body = metadata?.body || metadata?.Body;
+
+    return type === 'Image'
+        || signature?.startsWith('image/')
+        || body?.startsWith('data:image/');
+}
+
 /**
  * Initialize chat controller
  * @param {Object} transport - Communication transport with VS extension host
@@ -98,6 +108,18 @@ export function initChatController(transport) {
 
         const startLine = metadata.startLine ?? metadata.StartLine;
         const endLine = metadata.endLine ?? metadata.EndLine;
+
+        if (isImageReference(reference, metadata)) {
+            transport.send(EVENTS.OPEN_REFERENCE_FILE, {
+                filePath,
+                fileName: reference?.name || reference?.Name || filePath,
+                isImage: true,
+                mimeType: metadata.signature || metadata.Signature,
+                body: metadata.body || metadata.Body,
+                content: metadata.content || metadata.Content
+            });
+            return;
+        }
 
         transport.send(EVENTS.OPEN_REFERENCE_FILE, { filePath, startLine, endLine });
     });
