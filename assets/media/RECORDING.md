@@ -7,7 +7,7 @@ Drop the real files here with the **exact names** below and they will render aut
 
 | File | Type | Length | Notes |
 |------|------|--------|-------|
-| `hero-poster.png`            | PNG  | –      | Still frame used as the `<video>` poster. |
+| `hero-poster.png`            | PNG  | –      | ✅ **Already included** (1280×720). Poster shown before the hero video plays. Edit `hero-poster.svg` and re-export with Inkscape if you want to tweak it. |
 | `hero-demo.mp4`              | MP4  | ~75 s  | Full "prompt → changeset → build → tests → commit" walkthrough. Prefer uploading via GitHub drag-and-drop and pasting the `user-attachments` URL; keep this committed copy as a fallback (Git LFS if > 5 MB). |
 | `01-connect-provider.gif`    | GIF  | 8–15 s | Add a custom provider, capability badges light up. |
 | `02-local-model-ollama.gif`  | GIF  | 8–15 s | Offline chat against a local Ollama / LM Studio model. |
