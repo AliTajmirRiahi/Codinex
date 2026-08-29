@@ -38,7 +38,8 @@ namespace Codinex.VisualStudio.WebView
 
             string resourceName = $"{resourceRoot}.{relativePath}";
 
-            var stream = assembly.GetManifestResourceStream(resourceName);
+            var stream = assembly.GetManifestResourceStream(resourceName)
+                ?? TryLegacyIconSubfolder(relativePath);
 
             if (stream == null)
             {
@@ -63,6 +64,33 @@ namespace Codinex.VisualStudio.WebView
                 "OK",
                 $"Content-Type: {contentType}"
             );
+        }
+
+        // Icons/*.svg used to live flat under Icons/ before being sorted into
+        // Providers/, Branding/, Actions/, and Status/ subfolders. Persisted data
+        // (e.g. a user's saved custom AI provider) can still reference an icon by
+        // its old bare name, so fall back to searching the new subfolders before
+        // giving up. New references should always use the subfolder-qualified name.
+        private static readonly string[] LegacyIconSubfolders = { "Providers", "Branding", "Actions", "Status" };
+
+        private Stream TryLegacyIconSubfolder(string relativePath)
+        {
+            const string iconsPrefix = "Icons.";
+
+            if (!relativePath.StartsWith(iconsPrefix, StringComparison.Ordinal))
+                return null;
+
+            string iconFile = relativePath.Substring(iconsPrefix.Length);
+
+            foreach (var subfolder in LegacyIconSubfolders)
+            {
+                var stream = assembly.GetManifestResourceStream($"{resourceRoot}.{iconsPrefix}{subfolder}.{iconFile}");
+
+                if (stream != null)
+                    return stream;
+            }
+
+            return null;
         }
 
         private static string GetContentType(string path)
