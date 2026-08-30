@@ -28,9 +28,11 @@ Bring your own model — cloud or fully local — and keep control of your entir
 
 <div align="center">
 
-https://github.com/user-attachments/assets/8ee952b9-75ff-4f37-abc5-89eb0c1e701e
-
-![Codinex AI — from prompt to commit](assets/media/hero-poster.png)
+<video
+  src="https://github.com/user-attachments/assets/8ee952b9-75ff-4f37-abc5-89eb0c1e701e"
+  poster="https://raw.githubusercontent.com/AliTajmirRiahi/Codinex/master/assets/media/hero-poster.png"
+  controls muted playsinline width="820">
+</video>
 
 <sub><i>From a natural‑language prompt → agentic exploration → reviewed changeset → build → tests → commit.</i></sub>
 
