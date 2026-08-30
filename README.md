@@ -1,9 +1,3 @@
-
-
-https://github.com/user-attachments/assets/cd2f360b-82a8-4693-9fe9-8d368f02be56
-
-
-
 <!-- ⚠️ THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED. -->
 
 <div align="center">
