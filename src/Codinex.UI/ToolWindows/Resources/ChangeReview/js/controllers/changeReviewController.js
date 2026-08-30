@@ -177,7 +177,21 @@ function renderDiff(container, file) {
     const language = detectLanguage(file.filePath);
     const rows = buildSideBySideRows(diffLines(file.originalText, file.modifiedText));
 
-    const fragment = document.createDocumentFragment();
+    // Two independent scroll columns (see change-review.css). Horizontal scroll
+    // is per-side so a long line can't overlap the other column; vertical scroll
+    // is mirrored below so the two sides stay row-aligned.
+    const leftSide = document.createElement('div');
+    const rightSide = document.createElement('div');
+    leftSide.className = 'diff-side diff-side-left';
+    rightSide.className = 'diff-side diff-side-right';
+
+    const leftInner = document.createElement('div');
+    const rightInner = document.createElement('div');
+    leftInner.className = 'diff-side-inner';
+    rightInner.className = 'diff-side-inner';
+    leftSide.appendChild(leftInner);
+    rightSide.appendChild(rightInner);
+
     const hunkElements = [];
     let oldLineNo = 1;
     let newLineNo = 1;
@@ -195,8 +209,8 @@ function renderDiff(container, file) {
             hunkElements[row.hunk] = leftCell;
         }
 
-        fragment.appendChild(leftCell);
-        fragment.appendChild(rightCell);
+        leftInner.appendChild(leftCell);
+        rightInner.appendChild(rightCell);
 
         if (row.left) oldLineNo++;
         if (row.right) newLineNo++;
@@ -204,7 +218,18 @@ function renderDiff(container, file) {
         if (row.right && row.right.type === 'add') additions++;
     }
 
-    container.appendChild(fragment);
+    let vScrollLock = false;
+    const mirrorVScroll = (from, to) => from.addEventListener('scroll', () => {
+        if (vScrollLock) return;
+        vScrollLock = true;
+        to.scrollTop = from.scrollTop;
+        vScrollLock = false;
+    });
+    mirrorVScroll(leftSide, rightSide);
+    mirrorVScroll(rightSide, leftSide);
+
+    container.appendChild(leftSide);
+    container.appendChild(rightSide);
 
     return {
         hunkElements,

@@ -253,12 +253,33 @@ body.resizing-col {
 .diff-content {
     flex: 1;
     min-height: 0;
-    overflow: auto;
+    overflow: hidden;
     display: grid;
-    grid-auto-rows: min-content;
     font-family: Consolas, "Courier New", monospace;
     font-size: 12.5px;
     line-height: 1.5;
+}
+
+/*
+ * Each side is its own scroll container. The grid above still sizes the two
+ * sides via --diff-split; horizontal scroll is per-side (so a long line can
+ * never bleed over the neighbouring column), vertical scroll is kept in sync
+ * by the controller so rows stay aligned.
+ */
+.diff-side {
+    min-width: 0;
+    overflow: auto;
+}
+
+.diff-side-left {
+    border-right: 1px solid var(--vs-border, #3f3f46);
+}
+
+.diff-side-inner {
+    min-width: 100%;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
 }
 
 .diff-col-resizer {
@@ -282,12 +303,7 @@ body.resizing-col {
     display: flex;
     white-space: pre;
     padding: 0 8px;
-    min-width: 0;
-    border-right: 1px solid var(--vs-border, #3f3f46);
-}
-
-.diff-cell:nth-child(2n) {
-    border-right: none;
+    min-width: 100%;
 }
 
 .diff-line-num {
