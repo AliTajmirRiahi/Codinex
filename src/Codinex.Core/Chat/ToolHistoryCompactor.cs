@@ -15,6 +15,16 @@ namespace Codinex.Core.Chat
         private const int RecentToolResultWindow = 8;
 
         /// <summary>
+        /// Cumulative byte ceiling for the kept-in-full recent tool results. The count window
+        /// alone does not defend against one very large result: if fewer than
+        /// <see cref="RecentToolResultWindow"/> results follow it, it never leaves the window
+        /// and is replayed on every request. Once the kept results exceed this many characters,
+        /// older ones are stubbed even while still inside the count window. The single most
+        /// recent result is always kept in full regardless of size.
+        /// </summary>
+        private const int MaxRecentToolResultChars = 60_000;
+
+        /// <summary>
         /// Tool results shorter than this are never stubbed. Hiding a small result
         /// (e.g. a single member from read_element) saves only a handful of tokens
         /// but costs a full extra tool round-trip the moment the model needs it again -
@@ -141,6 +151,7 @@ namespace Codinex.Core.Chat
         {
             var stubIndices = new HashSet<int>(supersededIndices);
             var keptFullCount = 0;
+            var keptFullChars = 0;
 
             for (var i = toolMessageIndices.Count - 1; i >= 0; i--)
             {
@@ -151,14 +162,24 @@ namespace Codinex.Core.Chat
                     continue;
                 }
 
-                if (ShouldAlwaysKeep(history[index].Content))
+                var content = history[index].Content;
+
+                if (ShouldAlwaysKeep(content))
                 {
                     continue;
                 }
 
-                if (keptFullCount < RecentToolResultWindow)
+                var length = content?.Length ?? 0;
+
+                var withinCountWindow = keptFullCount < RecentToolResultWindow;
+                var withinByteBudget = keptFullChars + length <= MaxRecentToolResultChars;
+
+                // Always keep the single most recent result in full - the model is
+                // actively working with it - then apply both the count and byte limits.
+                if (keptFullCount == 0 || (withinCountWindow && withinByteBudget))
                 {
                     keptFullCount++;
+                    keptFullChars += length;
                     continue;
                 }
 

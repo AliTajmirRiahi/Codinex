@@ -29,6 +29,14 @@ namespace Codinex.Infrastructure.Conversation
     {
         private const int MaxAttempts = 5;
 
+        /// <summary>
+        /// Hard cap on a single tool result before it enters the conversation history.
+        /// A pathological result (e.g. a search that matched a minified bundle or source map)
+        /// would otherwise be replayed on every subsequent request for the rest of the turn.
+        /// Provider-agnostic backstop that protects against every tool, not just search.
+        /// </summary>
+        private const int MaxToolResultLength = 25_000;
+
         public async Task<string> ExecuteTextAsync(
             ChatMessageBuildResult request,
             CancellationToken cancellationToken = default)
@@ -169,12 +177,13 @@ namespace Codinex.Infrastructure.Conversation
                                 {
                                     Role = "tool",
                                     ToolCallId = result.Id,
-                                    Content = jsonSerializer.Serialize(new
-                                    {
-                                        success = result.Success,
-                                        error = result.Error,
-                                        data = result.Data
-                                    })
+                                    Content = TruncateToolContent(
+                                        jsonSerializer.Serialize(new
+                                        {
+                                            success = result.Success,
+                                            error = result.Error,
+                                            data = result.Data
+                                        }))
                                 });
 
                                 yield return ConversationEvent.ToolCompleted(result);
@@ -341,6 +350,20 @@ namespace Codinex.Infrastructure.Conversation
             }
 
             return TimeSpan.FromSeconds(Math.Pow(2, retryAttempt - 1));
+        }
+
+        private static string TruncateToolContent(string content)
+        {
+            if (string.IsNullOrEmpty(content) || content.Length <= MaxToolResultLength)
+            {
+                return content;
+            }
+
+            var omitted = content.Length - MaxToolResultLength;
+
+            return content.Substring(0, MaxToolResultLength) +
+                   $"\n\n[tool result truncated to save context: {omitted:N0} of {content.Length:N0} chars omitted. " +
+                   "Narrow the request (a more specific query, a single file, or one element) to retrieve the rest.]";
         }
 
         private static string GetPathDisplayName(string path)

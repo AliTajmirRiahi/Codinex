@@ -24,6 +24,13 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
 {
     private const int DefaultCount = 20;
 
+    /// <summary>
+    /// Cumulative cap on preview text across all returned rows. Individual previews are
+    /// already bounded by the search service; this is a second backstop so a single
+    /// response can never balloon the conversation regardless of row count.
+    /// </summary>
+    private const int MaxTotalPreviewChars = 8_000;
+
     public string Name => "search_project";
 
     public string Description =>
@@ -111,6 +118,39 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 .Take(take)
                 .ToList();
 
+            var previewBudget = MaxTotalPreviewChars;
+
+            var projectedResults = new List<object>(limitedResults.Count);
+
+            foreach (var r in limitedResults)
+            {
+                var preview = r.Preview ?? string.Empty;
+
+                if (previewBudget <= 0)
+                {
+                    preview = string.Empty;
+                }
+                else if (preview.Length > previewBudget)
+                {
+                    preview = preview.Substring(0, previewBudget) + "…";
+                    previewBudget = 0;
+                }
+                else
+                {
+                    previewBudget -= preview.Length;
+                }
+
+                projectedResults.Add(new
+                {
+                    r.Name,
+                    r.RelativePath,
+                    r.LineNumber,
+                    r.Column,
+                    Preview = preview,
+                    r.MatchType
+                });
+            }
+
             // FullPath is intentionally omitted: it repeats the same workspace-root prefix on
             // every row and is redundant with RelativePath, which is all downstream tools need.
             var data = new
@@ -120,15 +160,7 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 TotalCount = totalCount,
                 ReturnedCount = limitedResults.Count,
                 IsTruncated = totalCount > limitedResults.Count,
-                Results = limitedResults.Select(r => new
-                {
-                    r.Name,
-                    r.RelativePath,
-                    r.LineNumber,
-                    r.Column,
-                    r.Preview,
-                    r.MatchType
-                })
+                Results = projectedResults
             };
 
             return Task.FromResult(

@@ -20,6 +20,13 @@ namespace Codinex.VisualStudio.Services
         IWorkspaceIgnoreService workspaceFileFilter)
         : IWorkspaceSearchService
     {
+        /// <summary>
+        /// Upper bound on a single match preview. A raw matched line can be the entire
+        /// file when it is minified/generated (bundles, source maps, single-line JSON),
+        /// which otherwise floods the conversation with hundreds of KB per result.
+        /// </summary>
+        private const int MaxPreviewLength = 400;
+
         public IReadOnlyList<WorkspaceFile> FindFiles(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -111,7 +118,9 @@ namespace Codinex.VisualStudio.Services
 
                     for (var i = 0; i < lines.Length; i++)
                     {
-                        if (lines[i].IndexOf(text, StringComparison.OrdinalIgnoreCase) < 0)
+                        var matchIndex = lines[i].IndexOf(text, StringComparison.OrdinalIgnoreCase);
+
+                        if (matchIndex < 0)
                             continue;
 
                         result.Add(new WorkspaceFile
@@ -120,8 +129,8 @@ namespace Codinex.VisualStudio.Services
                             FullPath = file.FullPath,
                             RelativePath = file.RelativePath,
                             LineNumber = i + 1,
-                            Preview = lines[i],
-                            Column = lines[i].IndexOf(text, StringComparison.OrdinalIgnoreCase) + 1
+                            Preview = BuildPreview(lines[i], matchIndex, text.Length),
+                            Column = matchIndex + 1
                         });
                     }
                 }
@@ -179,7 +188,7 @@ namespace Codinex.VisualStudio.Services
                             FullPath = file.FullPath,
                             RelativePath = file.RelativePath,
                             LineNumber = i + 1,
-                            Preview = lines[i],
+                            Preview = BuildPreview(lines[i], match.Index, match.Length),
                             Column = match.Index + 1
                         });
                     }
@@ -208,6 +217,38 @@ namespace Codinex.VisualStudio.Services
                 SearchProjectType.Regex => SearchRegex(query),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unsupported search type.")
             };
+        }
+
+        /// <summary>
+        /// Returns at most <see cref="MaxPreviewLength"/> characters of the matched line,
+        /// centred on the match so the hit stays visible, with ellipses marking any elision.
+        /// </summary>
+        private static string BuildPreview(string line, int matchIndex, int matchLength)
+        {
+            if (string.IsNullOrEmpty(line) || line.Length <= MaxPreviewLength)
+            {
+                return line;
+            }
+
+            var visibleMatch = Math.Min(Math.Max(matchLength, 0), MaxPreviewLength);
+            var contextBudget = MaxPreviewLength - visibleMatch;
+
+            var start = Math.Max(0, matchIndex - (contextBudget / 2));
+            var length = Math.Min(line.Length - start, MaxPreviewLength);
+
+            var slice = line.Substring(start, length);
+
+            if (start > 0)
+            {
+                slice = "…" + slice;
+            }
+
+            if (start + length < line.Length)
+            {
+                slice += "…";
+            }
+
+            return slice;
         }
 
         // Enumerates all files in the current workspace.
