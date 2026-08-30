@@ -1,3 +1,5 @@
+
+
 <!-- ⚠️ THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED. -->
 
 <div align="center">
@@ -26,16 +28,7 @@ Bring your own model — cloud or fully local — and keep control of your entir
 
 <div align="center">
 
-<!--
-  ▶ PUBLISH THE WALKTHROUGH VIDEO (one-time, on github.com):
-  1. Open this README on github.com and click the ✏️ Edit button.
-  2. Drag  assets/media/hero-demo.mp4  into the editor. GitHub uploads it and
-     inserts a  https://github.com/user-attachments/assets/<id>  URL.
-  3. Paste that URL on its own line just above the poster image below —
-     GitHub renders it as an inline player (with sound). Then commit.
-  The .mp4 is intentionally NOT stored in the repo (it would bloat every clone);
-  it lives in assets/media/ locally for you to upload. See assets/media/RECORDING.md.
--->
+https://github.com/user-attachments/assets/8ee952b9-75ff-4f37-abc5-89eb0c1e701e
 
 ![Codinex AI — from prompt to commit](assets/media/hero-poster.png)
 
