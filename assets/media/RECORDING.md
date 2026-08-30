@@ -3,12 +3,17 @@
 This folder holds the screencasts referenced by the root `README.md`.
 Drop the real files here with the **exact names** below and they will render automatically.
 
+> **Video files (`*.mp4`) are git-ignored on purpose** — committing a multi‑MB binary
+> bloats every clone forever. Keep `hero-demo.mp4` here locally, then publish it by
+> dragging it into the README editor on github.com (see the comment in `README.md`,
+> section *Demo*). GIFs and PNGs are small enough to commit normally.
+
 ## Files expected by README.md
 
 | File | Type | Length | Notes |
 |------|------|--------|-------|
 | `hero-poster.png`            | PNG  | –      | ✅ **Already included** (1280×720). Poster shown before the hero video plays. Edit `hero-poster.svg` and re-export with Inkscape if you want to tweak it. |
-| `hero-demo.mp4`              | MP4  | ~75 s  | Full "prompt → changeset → build → tests → commit" walkthrough. Prefer uploading via GitHub drag-and-drop and pasting the `user-attachments` URL; keep this committed copy as a fallback (Git LFS if > 5 MB). |
+| `hero-demo.mp4`              | MP4  | ~75 s  | Full "prompt → changeset → build → tests → commit" walkthrough. **Not committed** (git-ignored) — publish it via GitHub drag-and-drop upload and paste the `user-attachments` URL into `README.md`. |
 | `01-connect-provider.gif`    | GIF  | 8–15 s | Add a custom provider, capability badges light up. |
 | `02-local-model-ollama.gif`  | GIF  | 8–15 s | Offline chat against a local Ollama / LM Studio model. |
 | `03-context-references.gif`  | GIF  | 8–15 s | `@`-mention picker: file / folder / class / method / solution. |

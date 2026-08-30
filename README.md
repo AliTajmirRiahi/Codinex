@@ -24,20 +24,20 @@ Bring your own model — cloud or fully local — and keep control of your entir
 
 ## 🎥 Demo
 
-> **Placeholder — full walkthrough.** Upload `hero-demo.mp4` here (drag‑and‑drop into the GitHub README editor to get a `user-attachments` URL), or keep the committed copy below.
-
 <div align="center">
 
-<!-- MEDIA:hero-demo — replace the src with the GitHub user-attachments URL after upload -->
-<video
-  src="https://github.com/AliTajmirRiahi/Codinex/raw/master/assets/media/hero-demo.mp4"
-  poster="assets/media/hero-poster.png"
-  controls
-  muted
-  width="820">
-  Your browser does not render embedded video —
-  <a href="assets/media/hero-demo.mp4">download the demo clip</a>.
-</video>
+<!--
+  ▶ PUBLISH THE WALKTHROUGH VIDEO (one-time, on github.com):
+  1. Open this README on github.com and click the ✏️ Edit button.
+  2. Drag  assets/media/hero-demo.mp4  into the editor. GitHub uploads it and
+     inserts a  https://github.com/user-attachments/assets/<id>  URL.
+  3. Paste that URL on its own line just above the poster image below —
+     GitHub renders it as an inline player (with sound). Then commit.
+  The .mp4 is intentionally NOT stored in the repo (it would bloat every clone);
+  it lives in assets/media/ locally for you to upload. See assets/media/RECORDING.md.
+-->
+
+![Codinex AI — from prompt to commit](assets/media/hero-poster.png)
 
 <sub><i>From a natural‑language prompt → agentic exploration → reviewed changeset → build → tests → commit.</i></sub>
 

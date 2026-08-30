@@ -369,3 +369,8 @@ FodyWeavers.xsd
 /CLAUDE.md
 /src/Codinex.Infrastructure/BugReporting/BugsnagOptions.cs
 /src/Codinex.Infrastructure/BugReporting/GitHubIssueOptions.cs
+
+# Screencast videos are published as GitHub attachments, not committed (see assets/media/RECORDING.md)
+assets/media/*.mp4
+assets/media/*.mov
+assets/media/*.webm
