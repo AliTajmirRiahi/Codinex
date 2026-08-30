@@ -1,5 +1,9 @@
 
 
+https://github.com/user-attachments/assets/cd2f360b-82a8-4693-9fe9-8d368f02be56
+
+
+
 <!-- ⚠️ THIS PROJECT IS CURRENTLY UNDER ACTIVE DEVELOPMENT AND WILL EVOLVE AS FEATURES ARE ADDED. -->
 
 <div align="center">
@@ -28,11 +32,7 @@ Bring your own model — cloud or fully local — and keep control of your entir
 
 <div align="center">
 
-<video
-  src="https://github.com/user-attachments/assets/8ee952b9-75ff-4f37-abc5-89eb0c1e701e"
-  poster="https://raw.githubusercontent.com/AliTajmirRiahi/Codinex/master/assets/media/hero-poster.png"
-  controls muted playsinline width="820">
-</video>
+https://github.com/user-attachments/assets/f15c382c-9e5c-4e60-bf64-c05e83e44c92
 
 <sub><i>From a natural‑language prompt → agentic exploration → reviewed changeset → build → tests → commit.</i></sub>
 
