@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="assets/Codinex_AI_logo_40x40.png" alt="Codinex AI" width="72" height="72" />
+<img src="assets/Codinex_AI_Logo.svg" alt="Codinex AI" width="72" height="72" />
 
 # Codinex AI
 
