@@ -12,6 +12,7 @@ using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Core.Models.AI;
 using Codinex.Core.Models.Chat;
+using Codinex.Infrastructure.AI.Errors;
 using Codinex.Infrastructure.AI.Providers.OpenCode;
 using Codinex.Infrastructure.CustomeExceptions;
 
@@ -51,6 +52,8 @@ namespace Codinex.Infrastructure.AI.Capabilities
                 return;
             }
 
+            await EnsureProviderUsableAsync(provider, model, cancellationToken);
+
             var chatCapabilities = await ProbeChatCapabilitiesAsync(
                 provider,
                 model,
@@ -71,6 +74,93 @@ namespace Codinex.Infrastructure.AI.Capabilities
         private static bool IsOpenCodeFreeProvider(AiProvider provider)
         {
             return string.Equals(provider.Protocol, OpenCodeProtocol, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Sends one minimal chat request before probing individual capabilities so that a
+        /// provider-wide failure (invalid API key, no credits, rate limit, provider down,
+        /// unsupported region) is surfaced to the user instead of being swallowed by the
+        /// per-capability probes and reported as a silent "Unknown".
+        /// A rejection that is only about the probe request itself (e.g. a 400 on the tiny
+        /// payload) is ignored here and left for the real probes to interpret.
+        /// </summary>
+        private async Task EnsureProviderUsableAsync(
+            AiProvider provider,
+            AiModel model,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var payload = BuildConnectivityProbePayload(provider, model);
+
+                await client.PostAsync(
+                    provider,
+                    GetChatEndpoint(provider, model),
+                    payload,
+                    cancellationToken);
+            }
+            catch (OpenAiCompatibleException ex)
+            {
+                var error = AiErrorFactory.FromHttpStatusCode(
+                    ex.StatusCode,
+                    ex.ResponseBody,
+                    ex.RetryAfter,
+                    ex);
+
+                if (AiErrorFactory.IsProviderConfigurationError(error.Code))
+                    throw new ProviderCapabilityException(error);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch
+            {
+                // Network / transient failures are left to the individual probes, which
+                // already degrade to "Unknown" for anything they cannot classify.
+            }
+        }
+
+        private static object BuildConnectivityProbePayload(AiProvider provider, AiModel model)
+        {
+            if (IsGeminiProvider(provider))
+            {
+                return new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            role = "user",
+                            parts = new[] { new { text = "ping" } }
+                        }
+                    },
+                    generationConfig = new { maxOutputTokens = 1 }
+                };
+            }
+
+            if (IsAnthropicProvider(provider))
+            {
+                return new
+                {
+                    model = model.Id,
+                    max_tokens = 1,
+                    messages = new[]
+                    {
+                        new { role = "user", content = "ping" }
+                    }
+                };
+            }
+
+            return new
+            {
+                model = model.Id,
+                stream = false,
+                messages = new[]
+                {
+                    new { role = "user", content = "ping" }
+                }
+            };
         }
 
         /// <summary>

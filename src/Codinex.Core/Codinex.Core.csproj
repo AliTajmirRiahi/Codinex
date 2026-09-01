@@ -146,6 +146,7 @@
     <Compile Include="Models\AI\AiErrorCode.cs" />
     <Compile Include="Models\AI\AiModel.cs" />
     <Compile Include="Models\AI\AiProvider.cs" />
+    <Compile Include="Models\AI\ProviderCapabilityException.cs" />
     <Compile Include="Models\Chat\Attachment.cs" />
     <Compile Include="Models\Git\BugReportResult.cs" />
     <Compile Include="Models\Git\GitHubIssueResult.cs" />

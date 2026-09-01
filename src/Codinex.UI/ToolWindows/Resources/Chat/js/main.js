@@ -17,6 +17,7 @@ import { initAboutController } from './controllers/aboutController.js';
 import { initBugReportController } from './controllers/bugReportController.js';
 import { initSettingsController } from './controllers/settingsController.js';
 import { EVENTS } from '../js/constants/events.js';
+import { validationService } from './services/validationService.js';
 import { reportError } from '../../Shared/bridge/errorReporter.js'
 
 // Register Custom Elements
@@ -172,6 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (providers)
                 manageModelsController.updateUI(providers);
 
+            // Saved, but the provider could not be verified (e.g. out of credits). Keep the
+            // selection and just warn — do not treat it as a failure.
+            const warning = payload.warning || payload.Warning;
+            if (warning)
+                validationService.showError({ message: warning, mode: 'toast' });
+
             manageModelsController.closeProviderSettings();
             chatController.renderCurrentProvider();
         },
@@ -182,7 +189,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (providers)
                 manageModelsController.updateUI(providers);
 
+            // Release the composer spinner: this rejection also covers model switches
+            // made straight from the chat input dropdown, where the settings panel is closed.
+            setInputLoading(false);
+
             manageModelsController.showSettingsError(message);
+
+            // Surface the reason even when the settings panel is not open (its inline error
+            // target lives inside that panel).
+            validationService.showError({ message, mode: 'toast' });
         },
         onProviderModelsRefreshed: (payload) => {
             const providers = payload.providers || payload.Providers;
@@ -323,6 +338,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentProvider) setProvider(currentProvider);
             if (providers) manageModelsController.updateUI(providers);
 
+            const warning = payload.warning || payload.Warning;
+            if (warning)
+                validationService.showError({ message: warning, mode: 'toast' });
+
             addProviderController.handleProviderAdded();
             chatController.renderCurrentProvider();
         },
@@ -337,6 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentProvider) setProvider(currentProvider);
             if (providers) manageModelsController.updateUI(providers);
+
+            const warning = payload.warning || payload.Warning;
+            if (warning)
+                validationService.showError({ message: warning, mode: 'toast' });
 
             addProviderController.handleProviderUpdated();
             chatController.renderCurrentProvider();

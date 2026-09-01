@@ -206,7 +206,15 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 {
                     var payload = _payloadBinder.Bind<AiModelSelectedDto>(request.Payload);
 
-                    await _providerManager.SetCurrentModelAsync(payload);
+                    try
+                    {
+                        await _providerManager.SetCurrentModelAsync(payload);
+                    }
+                    catch (ProviderCapabilityException ex)
+                    {
+                        await SendChangeModelSettingRejectedAsync(ex.Error.Message, false);
+                        return;
+                    }
 
                     await SendSelectedModelApprovedAsync();
 
@@ -249,7 +257,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendChangeModelSettingApprovedAsync(result.Message);
+                        await SendChangeModelSettingApprovedAsync(result.Message, result.Warning);
                     }
                     catch (Exception ex)
                     {
@@ -272,7 +280,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendCustomProviderAddedAsync(result.Message);
+                        await SendCustomProviderAddedAsync(result.Message, result.Warning);
                     }
                     catch (Exception ex)
                     {
@@ -295,7 +303,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendCustomProviderUpdatedAsync(result.Message);
+                        await SendCustomProviderUpdatedAsync(result.Message, result.Warning);
                     }
                     catch (Exception ex)
                     {
@@ -840,7 +848,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     }
 
 
-    public async Task SendChangeModelSettingApprovedAsync(string messageText = null)
+    public async Task SendChangeModelSettingApprovedAsync(string messageText = null, string warning = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -848,6 +856,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
+                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
@@ -881,7 +890,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendCustomProviderAddedAsync(string messageText = null)
+    public async Task SendCustomProviderAddedAsync(string messageText = null, string warning = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -889,6 +898,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
+                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
@@ -916,7 +926,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendCustomProviderUpdatedAsync(string messageText = null)
+    public async Task SendCustomProviderUpdatedAsync(string messageText = null, string warning = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -924,6 +934,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
+                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,

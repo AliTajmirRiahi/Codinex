@@ -21,7 +21,7 @@ namespace Codinex.Infrastructure.ModelManagement
             CancellationToken cancellationToken = default)
         {
             // Always load local models first.
-            var localModels = await resourceLoader.LoadAsync(provider, cancellationToken);
+            var localModels = provider.AddByUser ? [] : await resourceLoader.LoadAsync(provider, cancellationToken);
 
             if (provider.NeedApiKey && string.IsNullOrWhiteSpace(provider.ApiKey))
                 return localModels;

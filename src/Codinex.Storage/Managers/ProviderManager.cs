@@ -261,13 +261,18 @@ namespace Codinex.Storage.Managers
 
             currentModel?.MarkAsCurrent();
 
-            await providerCapabilityChecker.CheckAsync(provider, currentModel, CancellationToken.None);
+            // A failed capability probe (bad key, no credits, rate limit, ...) is reported
+            // as a warning, not a hard failure: the provider stays selected and saved so the
+            // user can top up / fix the key and keep working instead of losing the selection.
+            var capabilityWarning = await RunCapabilityCheckAsync(provider, currentModel);
 
             await SaveAsync();
 
             await InitializeAsync();
 
-            return ProviderSettingsUpdateResult.Saved();
+            return capabilityWarning != null
+                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning)
+                : ProviderSettingsUpdateResult.Saved();
         }
 
         /// <summary>
@@ -304,11 +309,13 @@ namespace Codinex.Storage.Managers
             Providers.Add(provider);
             ReorderProviders();
 
-            await providerCapabilityChecker.CheckAsync(provider, firstModel, CancellationToken.None);
+            var capabilityWarning = await RunCapabilityCheckAsync(provider, firstModel);
 
             await SaveAsync();
 
-            return ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
+            return capabilityWarning != null
+                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning, $"{provider.Name} added successfully.")
+                : ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
         }
 
         /// <summary>
@@ -351,11 +358,13 @@ namespace Codinex.Storage.Managers
 
             var currentModel = updatedProvider.Models.FirstOrDefault(m => m.IsCurrent);
 
-            await providerCapabilityChecker.CheckAsync(updatedProvider, currentModel, CancellationToken.None);
+            var capabilityWarning = await RunCapabilityCheckAsync(updatedProvider, currentModel);
 
             await SaveAsync();
 
-            return ProviderSettingsUpdateResult.Saved($"{updatedProvider.Name} updated successfully.");
+            return capabilityWarning != null
+                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning, $"{updatedProvider.Name} updated successfully.")
+                : ProviderSettingsUpdateResult.Saved($"{updatedProvider.Name} updated successfully.");
         }
 
         /// <summary>
@@ -502,6 +511,25 @@ namespace Codinex.Storage.Managers
             }
         }
 
+        /// <summary>
+        /// Runs the capability probe and turns a provider-level failure (invalid key, no
+        /// credits, rate limit, provider down, unsupported region) into a user-facing warning
+        /// string instead of throwing. Returns null when the check passes, or fails only in a
+        /// way that does not make the provider unusable.
+        /// </summary>
+        private async Task<string> RunCapabilityCheckAsync(AiProvider provider, AiModel model)
+        {
+            try
+            {
+                await providerCapabilityChecker.CheckAsync(provider, model, CancellationToken.None);
+                return null;
+            }
+            catch (ProviderCapabilityException ex)
+            {
+                return ex.Error.Message;
+            }
+        }
+
         public async Task SetCurrentModelAsync(AiModelSelectedDto payload)
         {
             if (payload == null)
@@ -526,11 +554,25 @@ namespace Codinex.Storage.Managers
 
             model.MarkAsCurrent();
 
-            await providerCapabilityChecker.CheckAsync(provider, model, CancellationToken.None);
+            ProviderCapabilityException capabilityError = null;
+
+            try
+            {
+                await providerCapabilityChecker.CheckAsync(provider, model, CancellationToken.None);
+            }
+            catch (ProviderCapabilityException ex)
+            {
+                // Keep the user's model selection, but let the caller report why the
+                // provider could not be verified (bad key, no credits, rate limit, ...).
+                capabilityError = ex;
+            }
 
             await SaveAsync();
 
             await InitializeAsync();
+
+            if (capabilityError != null)
+                throw capabilityError;
         }
     }
 }

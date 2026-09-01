@@ -250,6 +250,28 @@ namespace Codinex.Infrastructure.AI.Errors
             return AiErrorCode.Unknown;
         }
 
+        /// <summary>
+        /// True when the error means the whole provider is unusable as configured
+        /// (bad key, no credits, rate limited, provider down, unsupported region) rather
+        /// than a single request or capability being rejected. Callers use this to decide
+        /// whether to abort and surface a message instead of degrading silently.
+        /// </summary>
+        public static bool IsProviderConfigurationError(AiErrorCode code)
+        {
+            switch (code)
+            {
+                case AiErrorCode.AuthenticationFailed:
+                case AiErrorCode.InvalidApiKey:
+                case AiErrorCode.InsufficientCredits:
+                case AiErrorCode.UnsupportedRegion:
+                case AiErrorCode.RateLimitExceeded:
+                case AiErrorCode.ProviderUnavailable:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         private static bool IsRetryable(AiErrorCode code)
         {
             switch (code)
