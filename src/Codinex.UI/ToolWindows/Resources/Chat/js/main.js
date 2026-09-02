@@ -173,30 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (providers)
                 manageModelsController.updateUI(providers);
 
-            // Saved, but the provider could not be verified (e.g. out of credits). Keep the
-            // selection and just warn — do not treat it as a failure.
-            const warning = payload.warning || payload.Warning;
-            if (warning)
-                validationService.showError({ message: warning, mode: 'toast' });
-
+            manageModelsController.clearSettingsError();
             manageModelsController.closeProviderSettings();
             chatController.renderCurrentProvider();
         },
         onChangeModelSettingRejected: (payload) => {
-            const providers = payload.providers || payload.Providers;
             const message = payload.message || payload.Message || 'Settings could not be saved.';
 
-            if (providers)
-                manageModelsController.updateUI(providers);
-
-            // Release the composer spinner: this rejection also covers model switches
-            // made straight from the chat input dropdown, where the settings panel is closed.
+            // Do NOT rebuild the settings panel here: the save was rejected, nothing was
+            // persisted, and updateUI() would wipe the provider/model/API-key the user is
+            // in the middle of fixing. Just release the spinner and show why, in place.
             setInputLoading(false);
 
+            // Persistent error next to the Save button; the modal stays open so the user
+            // can correct the key / top up credits and retry.
             manageModelsController.showSettingsError(message);
 
-            // Surface the reason even when the settings panel is not open (its inline error
-            // target lives inside that panel).
+            // Also toast it for the case where this rejection came from switching models
+            // straight from the chat input dropdown, with the settings panel closed.
             validationService.showError({ message, mode: 'toast' });
         },
         onProviderModelsRefreshed: (payload) => {
@@ -338,10 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentProvider) setProvider(currentProvider);
             if (providers) manageModelsController.updateUI(providers);
 
-            const warning = payload.warning || payload.Warning;
-            if (warning)
-                validationService.showError({ message: warning, mode: 'toast' });
-
+            manageModelsController.clearSettingsError();
             addProviderController.handleProviderAdded();
             chatController.renderCurrentProvider();
         },
@@ -357,10 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentProvider) setProvider(currentProvider);
             if (providers) manageModelsController.updateUI(providers);
 
-            const warning = payload.warning || payload.Warning;
-            if (warning)
-                validationService.showError({ message: warning, mode: 'toast' });
-
+            manageModelsController.clearSettingsError();
             addProviderController.handleProviderUpdated();
             chatController.renderCurrentProvider();
         },

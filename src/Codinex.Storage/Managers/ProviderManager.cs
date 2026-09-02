@@ -261,18 +261,22 @@ namespace Codinex.Storage.Managers
 
             currentModel?.MarkAsCurrent();
 
-            // A failed capability probe (bad key, no credits, rate limit, ...) is reported
-            // as a warning, not a hard failure: the provider stays selected and saved so the
-            // user can top up / fix the key and keep working instead of losing the selection.
-            var capabilityWarning = await RunCapabilityCheckAsync(provider, currentModel);
+            // A failed capability probe (bad key, no credits, rate limit, provider down)
+            // aborts the save and reports why. Reload from disk to discard the in-memory
+            // enable/select mutations made above (nothing was persisted); the settings panel
+            // keeps the user's in-progress choice on its own so they can fix and retry.
+            var capabilityError = await RunCapabilityCheckAsync(provider, currentModel);
+            if (capabilityError != null)
+            {
+                await InitializeAsync();
+                return ProviderSettingsUpdateResult.Failed(capabilityError, isAvailable: false);
+            }
 
             await SaveAsync();
 
             await InitializeAsync();
 
-            return capabilityWarning != null
-                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning)
-                : ProviderSettingsUpdateResult.Saved();
+            return ProviderSettingsUpdateResult.Saved();
         }
 
         /// <summary>
@@ -309,13 +313,17 @@ namespace Codinex.Storage.Managers
             Providers.Add(provider);
             ReorderProviders();
 
-            var capabilityWarning = await RunCapabilityCheckAsync(provider, firstModel);
+            var capabilityError = await RunCapabilityCheckAsync(provider, firstModel);
+            if (capabilityError != null)
+            {
+                // Undo the not-yet-persisted add and the disable of the other providers.
+                await InitializeAsync();
+                return ProviderSettingsUpdateResult.Failed(capabilityError, isAvailable: false);
+            }
 
             await SaveAsync();
 
-            return capabilityWarning != null
-                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning, $"{provider.Name} added successfully.")
-                : ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
+            return ProviderSettingsUpdateResult.Saved($"{provider.Name} added successfully.");
         }
 
         /// <summary>
@@ -358,13 +366,16 @@ namespace Codinex.Storage.Managers
 
             var currentModel = updatedProvider.Models.FirstOrDefault(m => m.IsCurrent);
 
-            var capabilityWarning = await RunCapabilityCheckAsync(updatedProvider, currentModel);
+            var capabilityError = await RunCapabilityCheckAsync(updatedProvider, currentModel);
+            if (capabilityError != null)
+            {
+                Providers[index] = existing;
+                return ProviderSettingsUpdateResult.Failed(capabilityError, isAvailable: false);
+            }
 
             await SaveAsync();
 
-            return capabilityWarning != null
-                ? ProviderSettingsUpdateResult.SavedWithWarning(capabilityWarning, $"{updatedProvider.Name} updated successfully.")
-                : ProviderSettingsUpdateResult.Saved($"{updatedProvider.Name} updated successfully.");
+            return ProviderSettingsUpdateResult.Saved($"{updatedProvider.Name} updated successfully.");
         }
 
         /// <summary>
@@ -512,10 +523,9 @@ namespace Codinex.Storage.Managers
         }
 
         /// <summary>
-        /// Runs the capability probe and turns a provider-level failure (invalid key, no
-        /// credits, rate limit, provider down, unsupported region) into a user-facing warning
-        /// string instead of throwing. Returns null when the check passes, or fails only in a
-        /// way that does not make the provider unusable.
+        /// Runs the capability probe and returns a user-facing message when the provider is
+        /// unusable (invalid key, no credits, rate limit, provider down, unsupported region),
+        /// or null when the check passes or fails only in a way that does not block usage.
         /// </summary>
         private async Task<string> RunCapabilityCheckAsync(AiProvider provider, AiModel model)
         {

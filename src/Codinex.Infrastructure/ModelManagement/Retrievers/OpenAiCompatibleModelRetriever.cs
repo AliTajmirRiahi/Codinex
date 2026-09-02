@@ -45,7 +45,9 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             "wizard",
             "devstral",
             "hermes",
-            "ernie"
+            "ernie",
+            "mimo",
+            "minimax"
         ];
 
         private static readonly string[] SupportedModelPrefixes =
@@ -82,7 +84,12 @@ namespace Codinex.Infrastructure.ModelManagement.Retrievers
             "whisper"
         ];
 
-        public bool CanHandle(AiProvider provider)
+        /// <summary>
+    /// Determines whether this retriever can handle the specified AI provider.
+    /// </summary>
+    /// <param name="provider">The AI provider to check.</param>
+    /// <returns><c>true</c> if the provider can be handled by this retriever; otherwise, <c>false</c>.</returns>
+    public bool CanHandle(AiProvider provider)
         {
             if (provider == null)
                 throw new ArgumentNullException(nameof(provider));

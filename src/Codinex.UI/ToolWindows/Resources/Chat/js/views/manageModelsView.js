@@ -90,6 +90,7 @@ export const manageModelsView = {
                 return;
             }
 
+            this.clearError();
             this.setLoading(true);
 
             if (saveCallBack)
@@ -102,11 +103,23 @@ export const manageModelsView = {
     showError(message) {
         this.setLoading(false);
 
+        const banner = $('#settings-error');
+        if (banner) {
+            banner.textContent = message || 'Settings could not be saved.';
+            togglePanelHidden('#settings-error', true);
+            return;
+        }
+
+        // Fallback if the banner element is missing for some reason.
         validationService.showError({
             message: message || 'Settings could not be saved.',
-            mode: 'inline',
-            target: '#models-checkbox-list'
+            mode: 'toast'
         });
+    },
+    clearError() {
+        const banner = $('#settings-error');
+        if (banner) banner.textContent = '';
+        togglePanelHidden('#settings-error', false);
     },
     /**
      * Renders the provider dropdown and attaches selection logic.
@@ -160,6 +173,7 @@ export const manageModelsView = {
             const selectedId = e.target.value;
             const provider = this.state.providers.find(p => p.id === selectedId);
 
+            this.clearError();
             this.renderProviderModels(provider);
 
             if (provider && provider.models) {

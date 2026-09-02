@@ -60,8 +60,24 @@
     padding: 16px 20px;
     border-top: 1px solid var(--vs-border);
     display: flex;
+    align-items: center;
     justify-content: flex-end;
 }
+
+/* Inline, persistent error shown next to the modal's Save button (e.g. a provider that
+   authenticated but is out of credits). Stays visible until the next save attempt. */
+.settings-error {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-right: 12px;
+    text-align: left;
+    color: var(--vs-errorForeground, #f85149);
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
     /* Button */
     .modal-footer button {
         padding: 6px 14px;

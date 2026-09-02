@@ -258,7 +258,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendChangeModelSettingApprovedAsync(result.Message, result.Warning);
+                        await SendChangeModelSettingApprovedAsync(result.Message);
                     }
                     catch (Exception ex)
                     {
@@ -281,7 +281,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendCustomProviderAddedAsync(result.Message, result.Warning);
+                        await SendCustomProviderAddedAsync(result.Message);
                     }
                     catch (Exception ex)
                     {
@@ -304,7 +304,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                             return;
                         }
 
-                        await SendCustomProviderUpdatedAsync(result.Message, result.Warning);
+                        await SendCustomProviderUpdatedAsync(result.Message);
                     }
                     catch (Exception ex)
                     {
@@ -884,7 +884,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     }
 
 
-    public async Task SendChangeModelSettingApprovedAsync(string messageText = null, string warning = null)
+    public async Task SendChangeModelSettingApprovedAsync(string messageText = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -892,7 +892,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
-                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
@@ -926,7 +925,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendCustomProviderAddedAsync(string messageText = null, string warning = null)
+    public async Task SendCustomProviderAddedAsync(string messageText = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -934,7 +933,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
-                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
@@ -962,7 +960,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         await _webViewClient.PostMessageAsync(message);
     }
 
-    public async Task SendCustomProviderUpdatedAsync(string messageText = null, string warning = null)
+    public async Task SendCustomProviderUpdatedAsync(string messageText = null)
     {
         var message = new WebViewMessageResponse()
         {
@@ -970,7 +968,6 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             Payload = new
             {
                 Message = messageText,
-                Warning = warning,
                 Providers = new
                 {
                     AvailableProviders = _providerManager.Providers,
