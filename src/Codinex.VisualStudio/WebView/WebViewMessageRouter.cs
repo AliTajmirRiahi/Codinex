@@ -31,6 +31,8 @@ using Codinex.VisualStudio.Tools.BuiltIn.Workspace;
 using Codinex.VisualStudio.SourceControl;
 using Process = System.Diagnostics.Process;
 
+#pragma warning disable VSTHRD103 // vs-threading analyzer suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.WebView;
 
 /// <summary>

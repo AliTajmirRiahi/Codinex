@@ -16,11 +16,13 @@ namespace Codinex.VisualStudio.Diagnostics.Errors
     /// generic message to the user.
     /// </summary>
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]
+#pragma warning disable CS9113 // bugReportService/vsDiagnosticsCollector are consumed by AutoReport in non-DEBUG builds only.
     public sealed class ErrorHandler(
         IVsOutputLogger logger,
         IJsonSerializer jsonSerializer,
         IBugReportService bugReportService,
         IVsDiagnosticsCollector vsDiagnosticsCollector) : IErrorHandler
+#pragma warning restore CS9113
     {
         // Same exception/error repeating in a tight loop (e.g. on every keystroke)
         // must not file a fresh GitHub issue each time.

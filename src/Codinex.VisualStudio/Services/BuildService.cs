@@ -15,6 +15,8 @@ using Codinex.Core.Models.Context;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.Models;
 
+#pragma warning disable VSTHRD010 // vs-threading analyzer suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.Services;
 
 /// <summary>

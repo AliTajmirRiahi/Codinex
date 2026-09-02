@@ -81,7 +81,7 @@ namespace Codinex.VisualStudio.Theme
             return result.ToString();
         }
 
-        private IEnumerable<(string Name, object? Value)> GetAllEnvironmentColorKeys()
+        private IEnumerable<(string Name, object Value)> GetAllEnvironmentColorKeys()
         {
             var type = typeof(EnvironmentColors);
 

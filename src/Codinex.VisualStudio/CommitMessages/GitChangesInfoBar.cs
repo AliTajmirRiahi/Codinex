@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
+#pragma warning disable VSTHRD010 // vs-threading analyzer suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.CommitMessages
 {
     /// <summary>

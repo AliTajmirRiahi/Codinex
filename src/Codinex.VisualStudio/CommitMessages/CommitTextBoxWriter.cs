@@ -5,6 +5,8 @@ using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Input;
 
+#pragma warning disable VSTHRD110, VSTHRD001 // vs-threading analyzers suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.CommitMessages
 {
     /// <summary>

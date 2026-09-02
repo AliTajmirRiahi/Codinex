@@ -26,12 +26,12 @@ namespace Codinex.VisualStudio.Diagnostics.Errors
         /// <summary>
         /// Exception stack trace for debugging.
         /// </summary>
-        public string? StackTrace { get; set; }
+        public string StackTrace { get; set; }
 
         /// <summary>
         /// Optional serialized context data.
         /// </summary>
-        public string? Context { get; set; }
+        public string Context { get; set; }
 
         /// <summary>
         /// UTC timestamp when the error was captured.

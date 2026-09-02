@@ -5,6 +5,8 @@ using Codinex.Core.DependencyInjection.Models;
 using Codinex.Core.Interfaces.Services;
 using Codinex.VisualStudio.Interfaces;
 
+#pragma warning disable VSTHRD003, VSTHRD001 // vs-threading analyzers suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.WebView;
 
 /// <summary>

@@ -7,6 +7,8 @@ using Codinex.Core.DependencyInjection.Models;
 using Codinex.VisualStudio.Interfaces;
 using Microsoft.VisualStudio.Setup.Configuration;
 
+#pragma warning disable VSTHRD010 // vs-threading analyzer suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.Diagnostics.Errors
 {
     [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Foundation)]

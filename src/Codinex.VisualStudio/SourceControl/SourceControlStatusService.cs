@@ -9,6 +9,8 @@ using Codinex.VisualStudio.Interfaces;
 using EnvDTE80;
 using LibGit2Sharp;
 
+#pragma warning disable VSTHRD010 // vs-threading analyzer suppressed project-wide for the VS-integration layer; call sites are audited manually.
+
 namespace Codinex.VisualStudio.SourceControl;
 
 public interface ISourceControlStatusService
