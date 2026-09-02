@@ -31,7 +31,7 @@ public sealed class ToolRequest
         return string.IsNullOrWhiteSpace(value) && !openFailed ? throw new ToolRequestValidationException(Name, name) : value;
     }
 
-    public string? GetString(string name)
+    public string GetString(string name)
     {
         return Arguments.Value<string>(name);
     }
