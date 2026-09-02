@@ -18,7 +18,7 @@ public sealed class WorkspaceChangeDtoConverter : JsonConverter<WorkspaceChangeD
     public override WorkspaceChangeDto ReadJson(
         JsonReader reader,
         Type objectType,
-        WorkspaceChangeDto? existingValue,
+        WorkspaceChangeDto existingValue,
         bool hasExistingValue,
         JsonSerializer serializer)
     {
@@ -50,7 +50,7 @@ public sealed class WorkspaceChangeDtoConverter : JsonConverter<WorkspaceChangeD
 
     public override void WriteJson(
         JsonWriter writer,
-        WorkspaceChangeDto? value,
+        WorkspaceChangeDto value,
         JsonSerializer serializer)
     {
         throw new NotSupportedException(

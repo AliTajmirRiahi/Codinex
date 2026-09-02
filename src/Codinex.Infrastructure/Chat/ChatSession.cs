@@ -24,7 +24,7 @@ namespace Codinex.Infrastructure.Chat
     /// LoadAsync and SaveAsync are currently no-op (in-memory only).
     /// They can later be extended to persist data using a storage service.
     /// </summary>
-    public sealed class ChatSession(ChatManager chatManager, ProviderManager providerManager, SettingsManager settingsManager) : IChatSession
+    public sealed class ChatSession(ChatManager chatManager) : IChatSession
     {
         private List<ChatMessage> _messages = new();
 

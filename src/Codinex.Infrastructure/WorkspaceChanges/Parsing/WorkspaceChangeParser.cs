@@ -18,7 +18,6 @@ namespace Codinex.Infrastructure.WorkspaceChanges.Parsing;
 /// </summary>
 [AutoDiRegister(Modules.Workspace, RegistrationOrder.Features)]
 public sealed class WorkspaceChangeParser(
-    IJsonSerializer jsonSerializer,
     IWorkspaceChangeMapper mapper)
     : IWorkspaceChangeParser
 {

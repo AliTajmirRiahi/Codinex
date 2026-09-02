@@ -10,7 +10,7 @@ using Codinex.Storage.Managers;
 namespace Codinex.Infrastructure.Chat
 {
     [AutoDiRegister(Modules.Chat, RegistrationOrder.Infrastructure)]
-    public class ChatSessionService(ChatManager chatManager, ProviderManager providerManager, SettingsManager settingsManager)
+    public class ChatSessionService(ChatManager chatManager, ProviderManager providerManager)
     {
         /// <summary>
         /// Gets the currently active chat session.
@@ -81,7 +81,7 @@ namespace Codinex.Infrastructure.Chat
         {
             await chatManager.SelectChatAsync(sessionId);
 
-            var session = new ChatSession(chatManager, providerManager, settingsManager);
+            var session = new ChatSession(chatManager);
 
             await session.LoadAsync(sessionId);
 

@@ -33,7 +33,6 @@ namespace Codinex.Infrastructure.AI.Providers
         ProviderManager providerManager,
         IAiToolRegistry toolRegistry,
         IProviderClient client,
-        IWorkspaceFileService workspaceFileService,
         IPromptProfiler promptProfiler,
         IPromptRecorder promptRecorder)
         : IAiProvider

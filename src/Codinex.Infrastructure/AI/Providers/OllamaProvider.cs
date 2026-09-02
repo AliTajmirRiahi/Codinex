@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 using Codinex.Core.Conversation;
 using Codinex.Core.Interfaces.AI;
 using Codinex.Core.Interfaces.Services;
-using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Models.AI;
 using Codinex.Core.Models.Chat;
-using Codinex.Core.Models.Tools;
 using Codinex.Core.Tools;
 using Codinex.Infrastructure.AI.Errors;
 using Codinex.Storage.Managers;
@@ -28,7 +26,6 @@ namespace Codinex.Infrastructure.AI.Providers
         SettingsManager settingsManager,
         IAiToolRegistry toolRegistry,
         IProviderClient client,
-        IWorkspaceFileService workspaceFileService,
         IPromptRecorder promptRecorder)
         : IAiPreprocessorProvider
     {
