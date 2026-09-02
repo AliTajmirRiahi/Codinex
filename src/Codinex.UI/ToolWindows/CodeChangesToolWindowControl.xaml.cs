@@ -196,10 +196,7 @@ namespace Codinex.UI.ToolWindows
 
         private void OnThemeChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ApplyThemeToWebViewAsync();
-            });
+            _ = ApplyThemeToWebViewAsync();
         }
 
         private void OnNavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
