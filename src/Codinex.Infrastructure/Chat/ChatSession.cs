@@ -83,6 +83,7 @@ namespace Codinex.Infrastructure.Chat
                 ModelId = message.ModelId,
                 ModelName = message.ModelName,
                 IsPreprocessorAnswer = message.IsPreprocessorAnswer,
+                ChatMessageId = message.ChatMessageId,
                 CreatedAt = message.CreatedAt,
             };
         }
@@ -130,7 +131,8 @@ namespace Codinex.Infrastructure.Chat
             string modelId,
             string providerName,
             string modelName,
-            bool isPreprocessorAnswer = false)
+            bool isPreprocessorAnswer = false,
+            string chatMessageId = null)
         {
             if (string.IsNullOrWhiteSpace(content))
                 throw new Exception("Ai message respones is null");
@@ -144,6 +146,7 @@ namespace Codinex.Infrastructure.Chat
                 ModelId = modelId,
                 ModelName = modelName,
                 IsPreprocessorAnswer = isPreprocessorAnswer,
+                ChatMessageId = chatMessageId,
                 CreatedAt = DateTime.UtcNow,
             };
 

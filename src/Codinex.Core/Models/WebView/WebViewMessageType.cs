@@ -24,6 +24,7 @@ public static class WebViewMessageType
     public const string DeleteGroup = "DELETE_GROUP";
     public const string OpenExternalLink = "OPEN_EXTERNAL_LINK";
     public const string OpenReferenceFile = "OPEN_REFERENCE_FILE";
+    public const string OpenPromptFolder = "OPEN_PROMPT_FOLDER";
     public const string RefreshProviderModels = "REFRESH_PROVIDER_MODELS";
     public const string SaveSettings = "SAVE_SETTINGS";
     public const string SaveSolutionInstruction = "SAVE_SOLUTION_INSTRUCTION";

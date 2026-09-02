@@ -144,6 +144,46 @@ function createForkFromHereButton(messageIndex) {
     return buttonEl;
 }
 
+function createOpenPromptFolderButton(chatMessageId) {
+    const buttonEl = document.createElement('button');
+    buttonEl.type = 'button';
+    buttonEl.className = 'message-copy-btn message-prompt-btn';
+    buttonEl.title = 'Open prompt folder';
+    buttonEl.setAttribute('aria-label', 'Open prompt folder');
+    buttonEl.innerHTML = '<codinex-icon name="Actions/prompt" aria-hidden="true"></codinex-icon>';
+
+    buttonEl.addEventListener('click', () => {
+        document.dispatchEvent(new CustomEvent('chat:open-prompt-folder', {
+            detail: { chatMessageId }
+        }));
+    });
+
+    return buttonEl;
+}
+
+function getChatMessageId(options) {
+    return options?.chatMessageId || options?.ChatMessageId || '';
+}
+
+function createAssistantMessageActions(chatMessageId) {
+    const actionsEl = document.createElement('div');
+    actionsEl.className = 'message-actions assistant-message-actions';
+
+    actionsEl.appendChild(createOpenPromptFolderButton(chatMessageId));
+
+    return actionsEl;
+}
+
+function createAssistantMessageElement(messageDiv, chatMessageId) {
+    const messageGroupEl = document.createElement('div');
+    messageGroupEl.className = 'assistant-message-group';
+
+    messageGroupEl.appendChild(messageDiv);
+    messageGroupEl.appendChild(createAssistantMessageActions(chatMessageId));
+
+    return messageGroupEl;
+}
+
 function createUserMessageActions(text, messageIndex) {
     const actionsEl = document.createElement('div');
     actionsEl.className = 'message-actions';
@@ -386,6 +426,12 @@ export const messageView = {
             return createUserMessageElement(messageDiv, displayText, options?.messageIndex);
         }
 
+        const chatMessageId = getChatMessageId(options);
+
+        if (sender === 'assistant' && chatMessageId) {
+            return createAssistantMessageElement(messageDiv, chatMessageId);
+        }
+
         return messageDiv;
     },
     createStreamingMessage(options) {
@@ -404,7 +450,12 @@ export const messageView = {
             messageDiv.appendChild(footerEl);
         }
 
-        document.getElementById('chat-container').appendChild(messageDiv);
+        const chatMessageId = getChatMessageId(options);
+        const elementToAppend = chatMessageId
+            ? createAssistantMessageElement(messageDiv, chatMessageId)
+            : messageDiv;
+
+        document.getElementById('chat-container').appendChild(elementToAppend);
 
         return contentEl;
     }

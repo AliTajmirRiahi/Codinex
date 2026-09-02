@@ -567,8 +567,10 @@ export const chatView = {
             const modelId = message.modelId || message.ModelId;
             const modelName = message.modelName || message.ModelName;
             const isPreprocessorAnswer = message.isPreprocessorAnswer || message.IsPreprocessorAnswer;
+            const chatMessageId = message.chatMessageId || message.ChatMessageId;
 
             if (context) options.context = context;
+            if (chatMessageId) options.chatMessageId = chatMessageId;
             if (providerId) options.providerId = providerId;
             if (providerName) options.providerName = providerName;
             if (modelId) options.modelId = modelId;

@@ -71,7 +71,8 @@ public sealed class SendChatMessageUseCase(
                     directResult.ModelId,
                     directResult.ProviderName,
                     directResult.ModelName,
-                    directResult.ProviderRole == ConversationProviderRole.Preprocessor);
+                    directResult.ProviderRole == ConversationProviderRole.Preprocessor,
+                    chatMessageId);
 
                 var directTitleChanged = await chatSession.SaveAsync();
 
@@ -113,7 +114,8 @@ public sealed class SendChatMessageUseCase(
                 buildResult.ModelId,
                 buildResult.ProviderName,
                 buildResult.ModelName,
-                buildResult.ProviderRole == ConversationProviderRole.Preprocessor);
+                buildResult.ProviderRole == ConversationProviderRole.Preprocessor,
+                chatMessageId);
 
             // Save session
             var titleChanged = await chatSession.SaveAsync();
@@ -180,7 +182,8 @@ public sealed class SendChatMessageUseCase(
                     buildResult.ModelId,
                     buildResult.ProviderName,
                     buildResult.ModelName,
-                    buildResult.ProviderRole == ConversationProviderRole.Preprocessor);
+                    buildResult.ProviderRole == ConversationProviderRole.Preprocessor,
+                    chatMessageId);
 
                 var directTitleChanged = await chatSession.SaveAsync();
 
@@ -307,7 +310,8 @@ public sealed class SendChatMessageUseCase(
                 buildResult.ModelId,
                 buildResult.ProviderName,
                 buildResult.ModelName,
-                buildResult.ProviderRole == ConversationProviderRole.Preprocessor);
+                buildResult.ProviderRole == ConversationProviderRole.Preprocessor,
+                chatMessageId);
 
             await chatSession.SaveAsync();
 
@@ -333,7 +337,8 @@ public sealed class SendChatMessageUseCase(
                     buildResult.ModelId,
                     buildResult.ProviderName,
                     buildResult.ModelName,
-                    buildResult.ProviderRole == ConversationProviderRole.Preprocessor);
+                    buildResult.ProviderRole == ConversationProviderRole.Preprocessor,
+                    chatMessageId);
                 titleChanged = await chatSession.SaveAsync();
             }
 
@@ -768,6 +773,11 @@ public sealed class SendChatMessageUseCase(
         if (!string.IsNullOrWhiteSpace(buildResult?.ModelName))
         {
             Add("modelName", buildResult.ModelName);
+        }
+
+        if (!string.IsNullOrWhiteSpace(buildResult?.ChatMessageId))
+        {
+            Add("chatMessageId", buildResult.ChatMessageId);
         }
 
         if (titleChanged)

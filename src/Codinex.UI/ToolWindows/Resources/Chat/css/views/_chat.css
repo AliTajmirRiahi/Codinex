@@ -423,6 +423,30 @@
         opacity: 1;
     }
 
+/* Assistant message + its action row (open prompt folder, …) */
+.assistant-message-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: flex-start;
+    width: 100%;
+}
+
+.assistant-message-actions {
+    align-self: flex-start;
+}
+
+.message-prompt-btn codinex-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.message-prompt-btn codinex-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 /* Message header */
 .message-header {
     display: flex;

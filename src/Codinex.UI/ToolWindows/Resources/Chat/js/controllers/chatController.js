@@ -156,6 +156,17 @@ export function initChatController(transport) {
         transport.send(EVENTS.FORK_CHAT, { messageIndex });
     });
 
+    document.addEventListener('chat:open-prompt-folder', (e) => {
+        const chatMessageId = e.detail?.chatMessageId;
+
+        if (!chatMessageId) return;
+
+        const currentChat = getState().currentChat;
+        const chatId = currentChat?.id || currentChat?.Id || null;
+
+        transport.send(EVENTS.OPEN_PROMPT_FOLDER, { chatId, chatMessageId });
+    });
+
     chatListView.initialize(onChatSelected, handleNewChat, handleDeleteChat, handleEditChat);
     projectListView.initialize(onProjectSelected, handleNewProject, handleDeleteProject, handleEditProject);
 

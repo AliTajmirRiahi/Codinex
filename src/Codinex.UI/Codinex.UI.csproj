@@ -67,6 +67,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\refresh-cw.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\selectionToolbar.css" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\selectionToolbar.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\contextMenu.css" />
@@ -126,6 +127,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gapgpt.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\groq-icon-seeklogo.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\split.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\prompt.svg" />
     <Content Include="ToolWindows\Resources\jest.config.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Shared\components\toastify.css" />
@@ -173,7 +175,6 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\symbol-array.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\send-horizontal.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\scroll-text.svg" />
-    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\refresh-cw.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\plus.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\monitor.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\message-square-x.svg" />

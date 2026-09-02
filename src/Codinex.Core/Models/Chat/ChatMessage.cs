@@ -35,6 +35,14 @@ namespace Codinex.Core.Models.Chat
 
         public bool IsPreprocessorAnswer { get; set; }
 
+        /// <summary>
+        /// Id of the chat turn this message belongs to. Used to locate the recorded
+        /// prompt payload folder at
+        /// %LocalAppData%\Codinex\prompts\chat_&lt;chatId&gt;\&lt;ChatMessageId&gt;.
+        /// Only assistant messages carry it; older history may leave it null.
+        /// </summary>
+        public string ChatMessageId { get; set; }
+
         public DateTime CreatedAt { get; set; }
     }
 

@@ -21,6 +21,7 @@ using Codinex.Infrastructure.Chat;
 using Codinex.Storage.Interfaces;
 using Codinex.Storage.Managers;
 using Codinex.Storage.Models;
+using Codinex.Storage.Services;
 using Codinex.Storage.Models.DTO;
 using Codinex.VisualStudio.Interfaces;
 using Codinex.VisualStudio.References;
@@ -436,6 +437,11 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     await OpenReferenceFileAsync(request);
                     return;
                 }
+            case WebViewMessageType.OpenPromptFolder:
+                {
+                    OpenPromptFolder(request);
+                    return;
+                }
             case WebViewMessageType.SubmitBugReport:
                 {
                     var payload = _payloadBinder.Bind<BugReportDto>(request.Payload);
@@ -531,6 +537,36 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
             return;
 
         Process.Start(new ProcessStartInfo(uri.AbsoluteUri)
+        {
+            UseShellExecute = true
+        });
+    }
+
+    /// <summary>
+    /// Opens the folder that holds the recorded outgoing prompt payloads for a single
+    /// chat turn (%LocalAppData%\Codinex\prompts\chat_&lt;chatId&gt;\&lt;chatMessageId&gt;)
+    /// in the OS file explorer. Silently no-ops when the turn has no recorded folder
+    /// (e.g. older history saved before prompt recording, or a failed request).
+    /// </summary>
+    private void OpenPromptFolder(WebViewMessageRequest request)
+    {
+        var chatMessageId = request.Payload?["chatMessageId"]?.ToString();
+        if (string.IsNullOrWhiteSpace(chatMessageId))
+            return;
+
+        var chatId = request.Payload?["chatId"]?.ToString();
+        if (string.IsNullOrWhiteSpace(chatId))
+            chatId = _sessionService?.ActiveSession?.SessionId;
+
+        if (string.IsNullOrWhiteSpace(chatId))
+            return;
+
+        var folder = StoragePaths.GetChatMessagePromptsPath(chatId, chatMessageId);
+
+        if (!Directory.Exists(folder))
+            return;
+
+        Process.Start(new ProcessStartInfo(folder)
         {
             UseShellExecute = true
         });
