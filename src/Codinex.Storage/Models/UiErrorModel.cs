@@ -26,6 +26,6 @@ namespace Codinex.Storage.Models
         /// <summary>
         /// JavaScript stack trace if available
         /// </summary>
-        public string? Stack { get; set; }
+        public string Stack { get; set; }
     }
 }

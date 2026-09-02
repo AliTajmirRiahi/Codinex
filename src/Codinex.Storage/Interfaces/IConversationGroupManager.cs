@@ -13,7 +13,7 @@ public interface IConversationGroupManager
 
     Task<IReadOnlyList<ConversationGroup>> GetAllGroupsAsync();
 
-    Task<ConversationGroup?> GetGroupAsync(Guid groupId);
+    Task<ConversationGroup> GetGroupAsync(Guid groupId);
 
     Task<ConversationGroup> CreateGroupAsync(string name, string description);
 
