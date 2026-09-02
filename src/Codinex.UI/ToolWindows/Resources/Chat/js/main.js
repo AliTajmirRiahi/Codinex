@@ -11,6 +11,7 @@ import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.j
 import { initChatController } from './controllers/chatController.js';
 import { chatView } from './views/chatView.js';
 import { AskUserQuestionView } from './views/askUserQuestionView.js';
+import { PromptSizeGuardView } from './views/promptSizeGuardView.js';
 import { initManageModelsController } from './controllers/manageModelsController.js';
 import { initAddProviderController } from './controllers/addProviderController.js';
 import { initAboutController } from './controllers/aboutController.js';
@@ -63,6 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         onAnswer: ({ requestId, answers }) => {
             webViewTransport.send(EVENTS.ASK_USER_ANSWER, { requestId, answers });
             askUserQuestionView.hide();
+            setAwaitingClarification(false);
+        }
+    });
+
+    const promptSizeGuardView = new PromptSizeGuardView({
+        container: $('#prompt-size-guard-panel'),
+        onDecision: ({ requestId, proceed }) => {
+            webViewTransport.send(EVENTS.PROMPT_SIZE_DECISION, { requestId, proceed });
             setAwaitingClarification(false);
         }
     });
@@ -311,6 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
         onAskUserQuestion: (payload) => {
             setAwaitingClarification(true);
             askUserQuestionView.show(payload);
+        },
+        onPromptSizeWarning: (payload) => {
+            setAwaitingClarification(true);
+            promptSizeGuardView.show(payload);
         },
         onRewindChatApproved: (payload) => {
             chatController.handleRewindChatApproved(payload);

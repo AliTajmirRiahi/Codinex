@@ -32,6 +32,7 @@ public static class WebViewMessageType
     public const string ChangesetViewReady = "CHANGESET_VIEW_READY";
     public const string ReopenChangesetReview = "REOPEN_CHANGESET_REVIEW";
     public const string AskUserAnswer = "ASK_USER_ANSWER";
+    public const string PromptSizeDecision = "PROMPT_SIZE_DECISION";
     public const string RewindChat = "REWIND_CHAT";
     public const string ForkChat = "FORK_CHAT";
     public const string CopyToClipboard = "COPY_TO_CLIPBOARD";
@@ -68,6 +69,7 @@ public static class WebViewMessageType
     public const string ChatBlocked = "CHAT_BLOCKED";
     public const string ChatUnblocked = "CHAT_UNBLOCKED";
     public const string AskUserQuestion = "ASK_USER_QUESTION";
+    public const string PromptSizeWarning = "PROMPT_SIZE_WARNING";
     public const string RewindChatApproved = "REWIND_CHAT_APPROVED";
     public const string AddSelectedCodeReference = "ADD_SELECTED_CODE_REFERENCE";
     public const string RunCommandOnSelection = "RUN_COMMAND_ON_SELECTION";

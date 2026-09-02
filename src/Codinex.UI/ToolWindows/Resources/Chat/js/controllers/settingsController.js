@@ -26,6 +26,8 @@ export function initSettingsController(transport) {
     const autoAddActiveDocumentInput = $('#setting-auto-add-active-document');
     const enableStreamingChatInput = $('#setting-enable-streaming-chat');
     const bypassPreviewChangeInput = $('#setting-bypass-preview-change');
+    const enablePromptSizeWarningInput = $('#setting-enable-prompt-size-warning');
+    const promptSizeKbInput = $('#setting-prompt-size-kb');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const solutionInstructionInput = $('#setting-solution-instruction');
     const excludeDirectoriesInput = $('#setting-exclude-directories');
@@ -44,10 +46,13 @@ export function initSettingsController(transport) {
     const preprocessorPrevPageButton = $('#setting-preprocessor-prev-page');
     const preprocessorNextPageButton = $('#setting-preprocessor-next-page');
     const preprocessorPageInfo = $('#setting-preprocessor-page-info');
-    // Scoped to the solution-settings modal — the Codinex-settings modal has its own
-    // single, always-active panel and no tabs of its own.
-    const tabs = Array.from(solutionSettingsModal?.querySelectorAll('.settings-tab') || []);
-    const panels = Array.from(solutionSettingsModal?.querySelectorAll('.settings-tab-panel') || []);
+    // Both settings modals carry their own tab strip; tab/panel names are unique across
+    // the two, so a single flat list plus name-based selectTab() drives both.
+    const tabHosts = [codinexSettingsModal, solutionSettingsModal].filter(Boolean);
+    const collectSettingsNodes = (selector) =>
+        tabHosts.reduce((acc, host) => acc.concat(Array.from(host.querySelectorAll(selector))), []);
+    const tabs = collectSettingsNodes('.settings-tab');
+    const panels = collectSettingsNodes('.settings-tab-panel');
     let currentSettings = {};
     let currentWorkspaceSettings = {};
     let canBypassPreviewChange = false;
@@ -324,6 +329,24 @@ export function initSettingsController(transport) {
                 'EnablePreprocessorAi');
         }
 
+        if (enablePromptSizeWarningInput) {
+            enablePromptSizeWarningInput.checked = !!getValue(
+                currentSettings,
+                'enablePromptSizeWarning',
+                'EnablePromptSizeWarning',
+                true);
+        }
+
+        if (promptSizeKbInput) {
+            const kb = getValue(
+                currentSettings,
+                'promptSizeWarningKb',
+                'PromptSizeWarningKb',
+                200);
+
+            promptSizeKbInput.value = Number(kb) > 0 ? kb : 200;
+        }
+
         renderLocalProviders();
 
         if (solutionInstructionInput) {
@@ -396,6 +419,7 @@ export function initSettingsController(transport) {
 
     const openCodinexSettingsModal = () => {
         applySettingsToForm();
+        selectTab('general');
         codinexSettingsModal?.classList.remove('hidden');
     };
 
@@ -467,11 +491,15 @@ export function initSettingsController(transport) {
     // (SaveSettingsAsync replaces it wholesale) so fields owned by the Solution Settings
     // modal are preserved as-is.
     saveCodinexSettingsButton?.addEventListener('click', () => {
+        const parsedKb = parseInt(promptSizeKbInput?.value, 10);
+
         currentSettings = {
             ...currentSettings,
             autoAddActiveDocumentToMessage: !!autoAddActiveDocumentInput?.checked,
             enableStreamingChat: !!enableStreamingChatInput?.checked,
             byPassPreviewChangeAndApplyChangeDirectly: !!bypassPreviewChangeInput?.checked && canBypassPreviewChange,
+            enablePromptSizeWarning: enablePromptSizeWarningInput ? !!enablePromptSizeWarningInput.checked : true,
+            promptSizeWarningKb: Number.isFinite(parsedKb) && parsedKb > 0 ? parsedKb : 200,
         };
 
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);

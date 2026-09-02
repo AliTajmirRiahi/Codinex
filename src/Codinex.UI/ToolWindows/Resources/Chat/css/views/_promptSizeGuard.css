@@ -1,0 +1,77 @@
+/* Prompt Size Guard — confirmation shown above the composer before an oversized
+   request is sent to the model. Locks the composer (via body.awaiting-clarification,
+   shared with the clarification carousel) until Stop or Continue is chosen. */
+
+.prompt-size-guard-panel {
+    margin: 0 10px 8px;
+}
+
+.prompt-size-guard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 16px 18px;
+    border: 1px solid var(--vs-warning-border, #d9a441);
+    border-radius: 10px;
+    background: var(--vs-input-bg, #252526);
+}
+
+.prompt-size-guard__icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.prompt-size-guard__title {
+    color: var(--vs-foreground);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.prompt-size-guard__body,
+.prompt-size-guard__question {
+    color: var(--vs-file-tab-text-color, #a0a0a0);
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 320px;
+}
+
+.prompt-size-guard__question {
+    color: var(--vs-foreground);
+}
+
+.prompt-size-guard__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.prompt-size-guard__btn {
+    min-width: 96px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--vs-border, #3f3f46);
+}
+
+.prompt-size-guard__btn--stop {
+    background: transparent;
+    color: var(--vs-foreground);
+}
+
+.prompt-size-guard__btn--stop:hover {
+    background: var(--vs-toolbar-hover, rgba(255, 255, 255, 0.06));
+}
+
+.prompt-size-guard__btn--continue {
+    background: var(--vs-accent, #7c5cff);
+    border-color: var(--vs-accent, #7c5cff);
+    color: #ffffff;
+}
+
+.prompt-size-guard__btn--continue:hover {
+    filter: brightness(1.08);
+}

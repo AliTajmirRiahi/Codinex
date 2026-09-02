@@ -57,6 +57,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IInputLanguageWatcher _inputLanguageWatcher;
     private readonly IChangesetSessionService _changesetSessionService;
     private readonly IClarificationSessionService _clarificationSessionService;
+    private readonly IPromptSizeGuard _promptSizeGuard;
     private readonly IWorkspaceContext _workspaceContext;
     private readonly ISourceControlStatusService _sourceControlStatusService;
     private readonly IUiThreadDispatcher _uiThreadDispatcher;
@@ -85,6 +86,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         IInputLanguageWatcher inputLanguageWatcher,
         IChangesetSessionService changesetSessionService,
         IClarificationSessionService clarificationSessionService,
+        IPromptSizeGuard promptSizeGuard,
         IWorkspaceContext workspaceContext,
         ISourceControlStatusService sourceControlStatusService,
         IUiThreadDispatcher uiThreadDispatcher,
@@ -109,6 +111,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _inputLanguageWatcher = inputLanguageWatcher;
         _changesetSessionService = changesetSessionService;
         _clarificationSessionService = clarificationSessionService;
+        _promptSizeGuard = promptSizeGuard;
         _workspaceContext = workspaceContext;
         _sourceControlStatusService = sourceControlStatusService;
         _uiThreadDispatcher = uiThreadDispatcher;
@@ -184,6 +187,15 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     var payload = _payloadBinder.Bind<AskUserAnswerDto>(request.Payload);
 
                     _clarificationSessionService.SubmitAnswers(payload.RequestId, payload.Answers);
+
+                    return;
+                }
+
+            case WebViewMessageType.PromptSizeDecision:
+                {
+                    var payload = _payloadBinder.Bind<PromptSizeDecisionDto>(request.Payload);
+
+                    _promptSizeGuard.SubmitDecision(payload.RequestId, payload.Proceed);
 
                     return;
                 }

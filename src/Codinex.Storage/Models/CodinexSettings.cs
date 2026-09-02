@@ -14,6 +14,12 @@ namespace Codinex.Storage.Models
         // Enables preprocessing prompts through a local AI provider before sending them to the main chat model.
         public bool EnablePreprocessorAi { get; set; }
 
+        // Shows an in-chat warning before sending a request whose serialized payload exceeds PromptSizeWarningKb.
+        public bool EnablePromptSizeWarning { get; set; } = true;
+
+        // Serialized request payload size, in KB, at or above which the large-prompt warning is shown.
+        public int PromptSizeWarningKb { get; set; } = 200;
+
         // Local provider id used by the prompt preprocessor.
         public string PreprocessorAiProviderId { get; set; } = string.Empty;
 

@@ -122,6 +122,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onAskUserQuestion) handlers.onAskUserQuestion(payload);
                 break;
 
+            case EVENTS.PROMPT_SIZE_WARNING:
+                if (handlers.onPromptSizeWarning) handlers.onPromptSizeWarning(payload);
+                break;
+
             case EVENTS.REWIND_CHAT_APPROVED:
                 if (handlers.onRewindChatApproved) handlers.onRewindChatApproved(payload);
                 break;

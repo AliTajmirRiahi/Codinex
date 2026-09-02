@@ -128,6 +128,7 @@
     <Compile Include="Services\SourceFileElementService.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
+    <Compile Include="Services\PromptSizeGuardService.cs" />
     <Compile Include="Services\WorkspaceIgnoreImporter.cs" />
     <Compile Include="Services\WorkspaceIgnoreService.cs" />
     <Compile Include="Services\WorkspaceSearchService.cs" />

@@ -26,6 +26,7 @@
 @import url('./views/_toolbar.css');
 @import url('./views/_inputArea.css');
 @import url('./views/_askUserQuestion.css');
+@import url('./views/_promptSizeGuard.css');
 @import url('./views/_manageModels.css');
 @import url('./views/_about.css');
 @import url('./views/_settings.css');

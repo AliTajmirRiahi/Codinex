@@ -128,3 +128,42 @@
         font-size: 12px;
         line-height: 1.4;
     }
+
+.setting-field {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid var(--vs-border);
+    border-radius: 6px;
+    color: var(--vs-foreground);
+}
+
+    .setting-field span {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .setting-field strong {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .setting-field small {
+        color: var(--vs-access-tool-tip-color);
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+.setting-number-input {
+    width: 90px;
+    padding: 6px 8px;
+    border: 1px solid var(--vs-border);
+    border-radius: 4px;
+    background: var(--vs-input-bg, #252526);
+    color: var(--vs-foreground);
+    font-size: 13px;
+}

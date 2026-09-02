@@ -71,6 +71,7 @@
     <Compile Include="Interfaces\Helper\IStringHelper.cs" />
     <Compile Include="Interfaces\References\IFileReferenceBuilder.cs" />
     <Compile Include="Interfaces\Chat\IToolHistoryCompactor.cs" />
+    <Compile Include="Interfaces\Services\IPromptSizeGuard.cs" />
     <Compile Include="Interfaces\Workspace\IWorkspaceFileWatcher.cs" />
     <Compile Include="Interfaces\References\ISymbolReferenceWatcher.cs" />
     <Compile Include="Interfaces\Search\ICodeSearchEngine.cs" />

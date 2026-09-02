@@ -53,6 +53,7 @@
     <Compile Include="Managers\MemoryManager.cs" />
     <Compile Include="Managers\WorkspaceSettingsManager.cs" />
     <Compile Include="Models\DTO\AddCustomProviderDto.cs" />
+    <Compile Include="Models\DTO\PromptSizeDecisionDto.cs" />
     <Compile Include="Models\DTO\EditCustomProviderDto.cs" />
     <Compile Include="Models\DTO\RewindChatDto.cs" />
     <Compile Include="Models\DTO\SolutionInstructionDto.cs" />

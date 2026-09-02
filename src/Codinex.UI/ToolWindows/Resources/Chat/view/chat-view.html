@@ -170,6 +170,9 @@
         <!-- Shown when the assistant asks a clarifying question; locks the composer until answered -->
         <div id="ask-user-question-panel" class="ask-user-question-panel hidden"></div>
 
+        <!-- Shown before an oversized request is sent; locks the send until Stop/Continue is chosen -->
+        <div id="prompt-size-guard-panel" class="prompt-size-guard-panel hidden"></div>
+
         <!-- User input section at the bottom -->
         <div id="input-container" class="input-container">
             <div id="input-loading-screen" class="input-loading-screen hidden">
@@ -349,8 +352,33 @@
             </div>
 
             <div class="modal-body settings-modal-body">
+                <div class="settings-tabs" role="tablist" aria-label="Settings sections">
+                    <button id="settings-tab-general"
+                            class="settings-tab active"
+                            type="button"
+                            role="tab"
+                            aria-selected="true"
+                            aria-controls="settings-panel-general"
+                            data-settings-tab="general">
+                        General
+                    </button>
+                    <button id="settings-tab-prompt-guard"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-prompt-guard"
+                            data-settings-tab="prompt-guard">
+                        Prompt Guard
+                    </button>
+                </div>
+
                 <div class="settings-tab-panels">
-                    <section class="settings-tab-panel active">
+                    <section id="settings-panel-general"
+                             class="settings-tab-panel active"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-general"
+                             data-settings-panel="general">
                         <div class="settings-section">
                             <h3>General</h3>
                             <p class="settings-section-description">Configure general chat behavior.</p>
@@ -377,6 +405,33 @@
                                     <strong>ByPass Preview Change and apply change directly</strong>
                                     <small>Apply workspace changes without the Code Changes preview. Available only when the solution is under source control such as Git or TFS.</small>
                                 </span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-prompt-guard"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-prompt-guard"
+                             data-settings-panel="prompt-guard">
+                        <div class="settings-section">
+                            <h3>Prompt Guard</h3>
+                            <p class="settings-section-description">Warn before sending a very large request to the model.</p>
+
+                            <label class="setting-checkbox-option" for="setting-enable-prompt-size-warning">
+                                <input id="setting-enable-prompt-size-warning" type="checkbox">
+                                <span>
+                                    <strong>Warn before sending large prompts</strong>
+                                    <small>Show a Stop / Continue confirmation in the chat when a request exceeds the size below.</small>
+                                </span>
+                            </label>
+
+                            <label class="setting-field" for="setting-prompt-size-kb">
+                                <span>
+                                    <strong>Warn above (KB)</strong>
+                                    <small>Serialized request payload size, in kilobytes, at which the warning appears.</small>
+                                </span>
+                                <input id="setting-prompt-size-kb" type="number" min="1" step="1" class="setting-number-input">
                             </label>
                         </div>
                     </section>
