@@ -45,6 +45,22 @@ public sealed class WorkspaceIgnoreImporter(
         ".vs", ".git", ".idea", ".vscode", ".hg", ".svn", ".gradle", ".nuget"
     };
 
+    /// <summary>
+    /// Bare directory names that are safe to exclude at any depth because they are almost
+    /// always generated output. A generic word from a personal ignore section ("Files",
+    /// "personal", "html", "publish") is NOT imported as a directory rule - matched by name
+    /// at any depth, it would hide real source folders that happen to share the name.
+    /// </summary>
+    private static readonly HashSet<string> KnownGeneratedDirectories = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "bin", "obj", "build", "dist", "out", "target", "coverage",
+        "node_modules", "packages", "bower_components", "jspm_packages",
+        "TestResults", "artifacts", "BenchmarkDotNet.Artifacts",
+        ".next", ".nuxt", ".turbo", ".parcel-cache", ".cache",
+        "__pycache__", ".pytest_cache", ".mypy_cache", ".tox", ".venv", "venv",
+        ".gradle", ".terraform", "CMakeFiles"
+    };
+
     public async Task StartAsync()
     {
         try
@@ -66,8 +82,11 @@ public sealed class WorkspaceIgnoreImporter(
             var directories = ToSet(settings.ExcludeDirectories);
             var files = ToSet(settings.ExcludeFiles);
 
-            var directoriesBefore = directories.Count;
-            var filesBefore = files.Count;
+            // Heal any match-everything patterns (e.g. a bare "*" produced by an earlier,
+            // less strict import of a "dir/*" rule) that may already be persisted. Left in
+            // place, one of these makes WorkspaceIgnoreService hide the entire workspace.
+            var changed = directories.RemoveWhere(IsDegeneratePattern) > 0;
+            changed |= files.RemoveWhere(IsDegeneratePattern) > 0;
 
             var imported = 0;
 
@@ -104,11 +123,12 @@ public sealed class WorkspaceIgnoreImporter(
                     if (target.Add(value))
                     {
                         imported++;
+                        changed = true;
                     }
                 }
             }
 
-            if (directories.Count == directoriesBefore && files.Count == filesBefore)
+            if (!changed)
             {
                 return;
             }
@@ -162,6 +182,7 @@ public sealed class WorkspaceIgnoreImporter(
 
         line = line.Replace('\\', '/');
 
+        var isRootAnchored = line.StartsWith("/");
         var endsWithSlash = line.EndsWith("/");
 
         line = line.Trim('/');
@@ -172,12 +193,14 @@ public sealed class WorkspaceIgnoreImporter(
         }
 
         var lastSlash = line.LastIndexOf('/');
+        var isPathAnchored = isRootAnchored || lastSlash >= 0;
 
         var lastSegment = lastSlash >= 0
             ? line.Substring(lastSlash + 1)
             : line;
 
-        if (lastSegment.Length == 0 || lastSegment == "**")
+        // Reject anything that would match every name: bare "*", "**", "*.*", "?" etc.
+        if (IsDegeneratePattern(lastSegment))
         {
             return false;
         }
@@ -186,39 +209,84 @@ public sealed class WorkspaceIgnoreImporter(
 
         if (endsWithSlash)
         {
-            // Explicit directory marker.
+            // Explicit directory marker ("build/", "/src/gen/").
             if (hasWildcard)
             {
                 return false;
             }
 
-            value = lastSegment;
-            isDirectory = true;
-            return true;
+            return TryAcceptDirectory(lastSegment, isPathAnchored, out value, ref isDirectory);
         }
 
+        // A wildcard in a path-anchored rule ("tools/**", ".axoCover/*") does not map to a
+        // flat name/pattern list - only import wildcard rules that stand on their own.
         if (hasWildcard)
         {
+            if (isPathAnchored)
+            {
+                return false;
+            }
+
             value = lastSegment;
             isDirectory = false;
             return true;
         }
 
         // No wildcard and no trailing slash: a plain name.
-        value = lastSegment;
-
         if (lastSegment.StartsWith("."))
         {
             // Leading-dot name: a few well-known ones are tool directories, the rest
             // (".env", ".env.local", ".DS_Store") are treated as files.
-            isDirectory = KnownDotDirectories.Contains(lastSegment);
+            if (KnownDotDirectories.Contains(lastSegment))
+            {
+                return TryAcceptDirectory(lastSegment, isPathAnchored, out value, ref isDirectory);
+            }
+
+            value = lastSegment;
+            isDirectory = false;
             return true;
         }
 
-        // "styles.css" / "secrets.json" -> file; "dist" / "build" / "coverage" -> directory.
-        isDirectory = !lastSegment.Contains('.');
+        // "styles.css" / "secrets.json" -> file (matched by name, low blast radius).
+        if (lastSegment.Contains('.'))
+        {
+            value = lastSegment;
+            isDirectory = false;
+            return true;
+        }
+
+        // Extension-less bare word -> directory ("dist", "Files"). Only import it when it
+        // is anchored to a path or a well-known generated-output name; a generic word
+        // matched at any depth would hide real source folders sharing that name.
+        return TryAcceptDirectory(lastSegment, isPathAnchored, out value, ref isDirectory);
+    }
+
+    private static bool TryAcceptDirectory(
+        string name,
+        bool isPathAnchored,
+        out string value,
+        ref bool isDirectory)
+    {
+        value = null;
+
+        if (!isPathAnchored
+            && !KnownGeneratedDirectories.Contains(name)
+            && !KnownDotDirectories.Contains(name))
+        {
+            return false;
+        }
+
+        value = name;
+        isDirectory = true;
         return true;
     }
+
+    /// <summary>
+    /// True when a pattern consists only of wildcard / separator / dot characters and would
+    /// therefore match every file or directory name (e.g. "*", "**", "*.*", "?", "/").
+    /// </summary>
+    private static bool IsDegeneratePattern(string pattern) =>
+        string.IsNullOrWhiteSpace(pattern) || pattern.Trim('*', '?', '.', ' ', '/').Length == 0;
 
     private static HashSet<string> ToSet(string semicolonList)
     {

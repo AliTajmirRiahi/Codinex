@@ -104,6 +104,12 @@ public sealed class WorkspaceIgnoreService(
         if (string.IsNullOrWhiteSpace(pattern))
             return false;
 
+        // A pattern made up only of wildcard / dot / separator characters (e.g. "*", "*.*",
+        // "**") expands to a match-everything regex and would silently hide the entire
+        // workspace. Never let one exclude a file - treat it as a no-op.
+        if (pattern.Trim('*', '?', '.', ' ', '/').Length == 0)
+            return false;
+
         if (!pattern.Contains('*') && !pattern.Contains('?'))
             return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
 
