@@ -32,6 +32,15 @@ namespace Codinex.Core.Chat
         /// </summary>
         private const int MinStubbableContentLength = 1500;
 
+        /// <summary>
+        /// How many of the most recent results per target (tool name + identifying argument)
+        /// to keep in full. Keeping two - not one - lets the model diff "before" against
+        /// "after" for a file/element it read, edited, then re-read, so it can catch its own
+        /// regression (e.g. a variable rename that did not land) without re-fetching and
+        /// re-fetching. Older repeats of the same target are stale and still get stubbed.
+        /// </summary>
+        private const int KeptResultsPerTarget = 2;
+
         private static readonly string[] IdentifyingArgumentNames =
         {
             "path", "filePath", "query", "symbol", "id", "title", "elementId"
@@ -89,9 +98,9 @@ namespace Codinex.Core.Chat
         }
 
         /// <summary>
-        /// Marks every tool-result message whose target (tool name + identifying argument)
-        /// is repeated by a later call. Only the most recent result per target is kept full,
-        /// since a later identical call has already made the earlier one stale.
+        /// Marks tool-result messages whose target (tool name + identifying argument) is
+        /// repeated by later calls, keeping the most recent <see cref="KeptResultsPerTarget"/>
+        /// results per target in full and stubbing the older repeats.
         /// </summary>
         private static HashSet<int> FindSupersededIndices(
             IReadOnlyList<ChatMessage> history,
@@ -99,7 +108,7 @@ namespace Codinex.Core.Chat
             Dictionary<string, (string Name, JObject Arguments)> toolCallLookup)
         {
             var keysByIndex = new Dictionary<int, string>();
-            var lastIndexByKey = new Dictionary<string, int>();
+            var indicesByKey = new Dictionary<string, List<int>>();
 
             foreach (var index in toolMessageIndices)
             {
@@ -115,9 +124,29 @@ namespace Codinex.Core.Chat
 
                 keysByIndex[index] = key;
 
-                if (!string.IsNullOrEmpty(key))
+                if (string.IsNullOrEmpty(key))
                 {
-                    lastIndexByKey[key] = index;
+                    continue;
+                }
+
+                if (!indicesByKey.TryGetValue(key, out var list))
+                {
+                    list = new List<int>();
+                    indicesByKey[key] = list;
+                }
+
+                list.Add(index);
+            }
+
+            // toolMessageIndices is in call order, so each list's tail is its most recent
+            // results - spare the last KeptResultsPerTarget of every target.
+            var kept = new HashSet<int>();
+
+            foreach (var list in indicesByKey.Values)
+            {
+                for (var i = Math.Max(0, list.Count - KeptResultsPerTarget); i < list.Count; i++)
+                {
+                    kept.Add(list[i]);
                 }
             }
 
@@ -130,7 +159,7 @@ namespace Codinex.Core.Chat
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(key) && lastIndexByKey[key] != index)
+                if (!string.IsNullOrEmpty(key) && !kept.Contains(index))
                 {
                     superseded.Add(index);
                 }

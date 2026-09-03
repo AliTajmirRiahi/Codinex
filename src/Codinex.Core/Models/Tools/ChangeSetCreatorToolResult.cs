@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Codinex.Core.Models.Tools
 {
@@ -51,5 +52,14 @@ namespace Codinex.Core.Models.Tools
         /// success / failed
         /// </summary>
         public string Status { get; set; } = "success";
+
+        /// <summary>
+        /// For EditFile / CreateFile: a snippet of the file AFTER the change was applied,
+        /// showing the modified region(s) with a few lines of surrounding context. Lets the
+        /// model verify what actually landed without a follow-up read_file / read_element.
+        /// Null for operations where it does not apply (rename, move, delete).
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string AppliedRegion { get; set; }
     }
 }

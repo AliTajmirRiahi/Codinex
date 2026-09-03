@@ -21,7 +21,7 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
         public string Name => "list_directory";
 
         public string Description =>
-            "Lists the files and directories within a workspace directory. It Should Have path";
+            "Lists the files and directories within a workspace directory. Omit path or pass an empty string to list the workspace root.";
 
         public IReadOnlyList<string> Capabilities =>
         [
@@ -40,11 +40,9 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
                 {
                     ["path"] = new ToolProperty(
                         ToolPropertyType.String,
-                        "The workspace-relative directory path to list. Use an empty string to list the workspace root.")
+                        "The workspace-relative directory path to list. Omit or pass an empty string to list the workspace root.")
                 },
-                [
-                    "path"
-                ]);
+                []);
 
         public ToolVisibility Visibility { get; } = ToolVisibility.Model;
 
@@ -56,10 +54,11 @@ namespace Codinex.VisualStudio.Tools.BuiltIn.Workspace
         {
             await Task.Yield();
 
-            var path = request.GetRequiredString("path");
+            // path is optional: an empty/omitted value means "the workspace root".
+            var path = request.GetString("path");
 
-            if (string.IsNullOrEmpty(path))
-                path = workspaceContext.SolutionPath;
+            if (string.IsNullOrWhiteSpace(path))
+                path = workspaceContext.SolutionDirectory;
 
             var entries = await workspaceFileService.ListDirectoryAsync(path, cancellationToken);
 
