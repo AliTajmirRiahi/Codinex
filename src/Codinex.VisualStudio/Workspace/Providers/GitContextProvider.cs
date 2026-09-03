@@ -75,6 +75,40 @@ namespace Codinex.VisualStudio.Workspace.Providers
             }, cancellationToken);
         }
 
+        public async Task<bool> HasPendingChangesAsync(
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var solutionDirectory = await GetSolutionDirectoryAsync();
+
+            return await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using var repo = OpenRepository(solutionDirectory);
+
+                if (repo == null)
+                {
+                    return false;
+                }
+
+                foreach (var entry in repo.RetrieveStatus(new StatusOptions { IncludeIgnored = false }))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var (status, _) = MapFileStatus(entry.State);
+
+                    if (status != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }, cancellationToken);
+        }
+
         public async Task<IReadOnlyList<GitCommit>> GetCommitsAsync(
             int maxCount,
             CancellationToken cancellationToken)

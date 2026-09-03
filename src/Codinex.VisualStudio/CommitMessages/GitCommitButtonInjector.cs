@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Codinex.Core.Chat;
+using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Git;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Storage.Managers;
@@ -30,12 +31,18 @@ namespace Codinex.VisualStudio.CommitMessages
     /// silently stop working on a VS update. It fails soft: if injection or writing ever fails,
     /// nothing is shown and VS is never disrupted.
     /// </summary>
-    internal sealed class GitCommitButtonInjector(SettingsManager settingsManager, ICommitMessageGenerator generator, IErrorHandler errorHandler)
+    internal sealed class GitCommitButtonInjector(SettingsManager settingsManager, ICommitMessageGenerator generator, IGitContextProvider gitContextProvider, IErrorHandler errorHandler)
     {
         private const string MarkerTag = "Codinex_GitCommit_Injected";
         private static readonly TimeSpan ErrorAutoResetDelay = TimeSpan.FromSeconds(3);
 
         private readonly GitCommitGenerationState _state = new();
+
+        // Whether the workspace currently has any pending Git changes. Refreshed on the
+        // injector's poll; drives the disabled/greyed-out look of the idle wand button.
+        // Defaults to true so the button is never wrongly disabled before the first probe.
+        private bool _hasPendingChanges = true;
+        private bool _hasChangesRefreshInFlight;
 
         private ContentControl _host;
         private Panel _hostPanel;
@@ -66,6 +73,8 @@ namespace Codinex.VisualStudio.CommitMessages
                 if (mainWindow == null) return;
 
                 TrackCommitActionButtons(mainWindow);
+
+                RefreshPendingChanges();
 
                 var point = GitCommitVisualTreeLocator.Find(mainWindow);
                 if (point == null) return;
@@ -203,6 +212,7 @@ namespace Codinex.VisualStudio.CommitMessages
 
             _state.Reset();
             Render();
+            RefreshPendingChanges();
         }
 
         private void Render()
@@ -240,6 +250,17 @@ namespace Codinex.VisualStudio.CommitMessages
                 Cursor = System.Windows.Input.Cursors.Hand
             };
             button.Click += (s, e) => StartGeneration();
+
+            if (!_hasPendingChanges)
+            {
+                // Nothing to commit — mirror Visual Studio's own greyed-out Commit
+                // buttons instead of letting the user click through to a
+                // "No changes to commit." error.
+                button.IsEnabled = false;
+                button.Opacity = 0.4;
+                button.Cursor = System.Windows.Input.Cursors.Arrow;
+                button.ToolTip = "No changes to commit";
+            }
 
             if (_isIconRow)
             {
@@ -398,6 +419,52 @@ namespace Codinex.VisualStudio.CommitMessages
                 VerticalAlignment = VerticalAlignment.Center,
                 Opacity = 0.8
             };
+        }
+
+        /// <summary>
+        /// Refreshes <see cref="_hasPendingChanges"/> off the UI thread and re-renders the
+        /// idle button if it changed. Only runs while idle (the button isn't shown in the
+        /// other phases) and never overlaps itself.
+        /// </summary>
+        private void RefreshPendingChanges()
+        {
+            if (_host == null) return;
+            if (_hasChangesRefreshInFlight) return;
+            if (_state.Phase != GitCommitPhase.Idle) return;
+
+            _hasChangesRefreshInFlight = true;
+
+            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var hasChanges = true;
+
+                try
+                {
+                    hasChanges = await gitContextProvider.HasPendingChangesAsync(CancellationToken.None);
+                }
+                catch
+                {
+                    // Fail open: never leave the button stuck disabled because a status
+                    // probe threw.
+                    hasChanges = true;
+                }
+                finally
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                    _hasChangesRefreshInFlight = false;
+
+                    if (hasChanges != _hasPendingChanges)
+                    {
+                        _hasPendingChanges = hasChanges;
+
+                        if (_state.Phase == GitCommitPhase.Idle)
+                        {
+                            Render();
+                        }
+                    }
+                }
+            });
         }
 
         private void StartGeneration()

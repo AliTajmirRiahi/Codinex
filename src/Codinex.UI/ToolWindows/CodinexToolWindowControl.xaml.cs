@@ -269,16 +269,24 @@ namespace Codinex.UI.ToolWindows
         }
         private void OnUnloaded(object sender, RoutedEventArgs e)
         {
-            GitCommitButtonVisibility.SetCodinexOpen(false);
-
             // Visual Studio can unload tool window content during docking, auto-hide,
-            // or unpin operations. Do not dispose WebView here; dispose only when the
-            // tool window pane is actually disposed.
+            // or unpin operations. None of those mean Codinex was closed, so do NOT
+            // clear the Git commit-button visibility flag here (that would drop the
+            // injected "Generate Commit Message" button and it would not come back on
+            // re-pin). Do not dispose WebView here either; both the flag and the
+            // WebView are only torn down in Dispose(), when the tool window pane is
+            // actually destroyed.
         }
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            GitCommitButtonVisibility.SetCodinexOpen(IsVisible);
+            // Only re-assert "open" when the window becomes visible again (e.g. an
+            // auto-hidden/unpinned pane flying back out). Becoming invisible is not a
+            // close — Dispose() is the single source of truth for that.
+            if (IsVisible)
+            {
+                GitCommitButtonVisibility.SetCodinexOpen(true);
+            }
         }
 
         public void Dispose()

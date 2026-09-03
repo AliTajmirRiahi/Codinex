@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using Codinex.Core.DependencyInjection.Attributes;
 using Codinex.Core.DependencyInjection.Models;
+using Codinex.Core.Interfaces.Context;
 using Codinex.Core.Interfaces.Git;
 using Codinex.Core.Interfaces.Services;
 using Codinex.Storage.Managers;
@@ -19,6 +20,7 @@ namespace Codinex.VisualStudio.CommitMessages
     public sealed class GitCommitButtonWatcher(
         IUiThreadDispatcher uiThreadDispatcher,
         ICommitMessageGenerator commitMessageGenerator,
+        IGitContextProvider gitContextProvider,
         IErrorHandler errorHandler,
         SettingsManager settingsManager)
         : IStartupTask
@@ -31,7 +33,7 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             await uiThreadDispatcher.SwitchToMainThreadAsync();
 
-            var injector = new GitCommitButtonInjector(settingsManager, commitMessageGenerator, errorHandler);
+            var injector = new GitCommitButtonInjector(settingsManager, commitMessageGenerator, gitContextProvider, errorHandler);
 
             GitCommitButtonVisibility.Changed += () =>
             {
