@@ -50,6 +50,11 @@ export const manageModelsView = {
             });
         }
 
+        const apiKeyToggle = $('#model-api-key-toggle');
+        if (apiKeyToggle) {
+            apiKeyToggle.onclick = () => this.toggleApiKeyVisibility();
+        }
+
         $('#refresh-models-btn').onclick = () => {
             const provider = this.getSelectedProvider();
 
@@ -120,6 +125,34 @@ export const manageModelsView = {
         const banner = $('#settings-error');
         if (banner) banner.textContent = '';
         togglePanelHidden('#settings-error', false);
+    },
+    /**
+     * Flips the API-key field between masked (dots) and plain text, keeping the
+     * trailing toggle icon (eye / eye-slash) and its label in sync.
+     */
+    toggleApiKeyVisibility() {
+        const input = $('#model-api-key');
+        if (!input) return;
+
+        this._setApiKeyVisible(input.type === 'password');
+    },
+    /** Forces the API-key field back to masked; used whenever its value is repopulated. */
+    setApiKeyMasked() {
+        this._setApiKeyVisible(false);
+    },
+    _setApiKeyVisible(visible) {
+        const input = $('#model-api-key');
+        const toggle = $('#model-api-key-toggle');
+        if (input) input.type = visible ? 'text' : 'password';
+
+        if (toggle) {
+            const icon = toggle.querySelector('codinex-icon');
+            if (icon) icon.setAttribute('name', visible ? 'Actions/eye-slash' : 'Actions/eye');
+
+            const label = visible ? 'Hide API key' : 'Show API key';
+            toggle.title = label;
+            toggle.setAttribute('aria-label', label);
+        }
     },
     /**
      * Renders the provider dropdown and attaches selection logic.
@@ -229,6 +262,7 @@ export const manageModelsView = {
         this.pagination.goToPage(1);
         this._applyModelFilter();
         $('#model-api-key').value = provider ? provider.apiKey : '';
+        this.setApiKeyMasked();
         const needsApiKey = this._providerNeedsApiKey(provider);
         togglePanelHidden('#refresh-models-btn', !!(provider && (!needsApiKey || provider.apiKey)));
 

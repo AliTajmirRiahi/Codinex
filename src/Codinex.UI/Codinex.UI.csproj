@@ -102,6 +102,8 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\symbols\stop-circle.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Branding\donate.png" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\chevron-up.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\eye.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\eye-slash.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\eye.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\pencil.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\copy.svg" />

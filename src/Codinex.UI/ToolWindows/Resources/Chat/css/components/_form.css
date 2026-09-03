@@ -41,6 +41,49 @@
         color: var(--vs-access-tool-tip-color);
     }
 
+/* Text input with a trailing in-field button (e.g. reveal/hide an API key) */
+.input-with-affix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .input-with-affix > input {
+        flex: 1 1 auto;
+        width: 100%;
+        padding-right: 30px;
+    }
+
+.input-affix-btn {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--vs-foreground);
+    opacity: 0.65;
+    cursor: pointer;
+}
+
+    .input-affix-btn:hover {
+        opacity: 1;
+    }
+
+    .input-affix-btn codinex-icon,
+    .input-affix-btn codinex-icon svg {
+        display: block;
+        width: 15px;
+        height: 15px;
+    }
+
 .icon-picker-row {
     display: flex;
     align-items: center;

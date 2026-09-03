@@ -821,7 +821,12 @@
 
                     <div class="form-group">
                         <label>API Key</label>
-                        <input id="model-api-key" type="text" placeholder="sx-...">
+                        <div class="input-with-affix">
+                            <input id="model-api-key" type="password" placeholder="sx-..." autocomplete="off" spellcheck="false">
+                            <button id="model-api-key-toggle" class="input-affix-btn" type="button" title="Show API key" aria-label="Show API key">
+                                <codinex-icon name="Actions/eye"></codinex-icon>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
