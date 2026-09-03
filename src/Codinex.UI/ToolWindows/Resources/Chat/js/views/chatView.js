@@ -22,11 +22,10 @@ const pendingErrorBugReports = [];
 const ISO_DATE_TIME_WITHOUT_TIMEZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
 const EXPLICIT_TIMEZONE = /(?:z|[+-]\d{2}:?\d{2})$/i;
 
-function formatChatDateTime(date) {
+function formatChatTime(date) {
     const pad = (value) => String(value).padStart(2, '0');
 
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
-        `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
 function parseChatDate(value) {
@@ -481,8 +480,8 @@ export const chatView = {
                 const dateEl = document.createElement('span');
 
                 dateEl.className = 'message-date';
-                dateEl.textContent = formatChatDateTime(messageDate);
-                actionsEl.insertBefore(dateEl, actionsEl.firstChild);
+                dateEl.textContent = formatChatTime(messageDate);
+                actionsEl.appendChild(dateEl);
             }
         }
 
