@@ -22,6 +22,13 @@ const pendingErrorBugReports = [];
 const ISO_DATE_TIME_WITHOUT_TIMEZONE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?$/;
 const EXPLICIT_TIMEZONE = /(?:z|[+-]\d{2}:?\d{2})$/i;
 
+function formatChatDateTime(date) {
+    const pad = (value) => String(value).padStart(2, '0');
+
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+        `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 function parseChatDate(value) {
     if (!value) return null;
 
@@ -465,6 +472,19 @@ export const chatView = {
         const messageDiv = messageView.createMessageElement(text, sender, messageOptions);
 
         this.tagMessageElement(messageDiv, createdAt || new Date(), deferDateSeparatorRefresh);
+
+        if (sender === 'user') {
+            const actionsEl = messageDiv.querySelector('.message-actions');
+
+            if (actionsEl) {
+                const messageDate = parseChatDate(messageDiv.dataset?.messageCreatedAt) || new Date();
+                const dateEl = document.createElement('span');
+
+                dateEl.className = 'message-date';
+                dateEl.textContent = formatChatDateTime(messageDate);
+                actionsEl.insertBefore(dateEl, actionsEl.firstChild);
+            }
+        }
 
         // The current turn's thinking box (if any) was already placed right
         // before this insertion point by showThinking(), so it naturally ends

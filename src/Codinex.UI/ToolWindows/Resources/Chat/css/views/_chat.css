@@ -348,6 +348,16 @@
         width:100%;
     }
 
+.message-date {
+    padding: 3px 6px;
+    font-size: 11px;
+    opacity: 0.65;
+    direction: ltr;
+    unicode-bidi: embed;
+    user-select: text;
+    white-space: nowrap;
+}
+
 .message-actions {
     display: inline-flex;
     align-items: center;
