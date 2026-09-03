@@ -31,6 +31,8 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
     /// </summary>
     private const int MaxTotalPreviewChars = 8_000;
 
+    private static readonly char[] GlobChars = ['*', '?'];
+
     public string Name => "search_project";
 
     public string Description =>
@@ -111,7 +113,33 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
 
             var results = workspaceSearchService.Search(query, searchType);
 
+            string note = null;
+
+            // "pattern" with no wildcard characters is almost always a text search the model
+            // mislabeled - FindByPattern is a filesystem glob and matches nothing for a plain
+            // string. Fall back to a text search rather than returning an empty result.
+            if (results.Count == 0
+                && searchType == SearchProjectType.Pattern
+                && query.IndexOfAny(GlobChars) < 0)
+            {
+                var textResults = workspaceSearchService.Search(query, SearchProjectType.Text);
+
+                if (textResults.Count > 0)
+                {
+                    results = textResults;
+                    type = SearchProjectType.Text.ToString().ToLowerInvariant();
+                    note = "The query has no wildcard characters, so it was run as a 'text' search instead of 'pattern'.";
+                }
+            }
+
             var totalCount = results.Count;
+
+            if (totalCount > 0 && skip >= totalCount)
+            {
+                note = string.IsNullOrEmpty(note)
+                    ? $"skip ({skip}) is past the last result - there are only {totalCount}. Call again with skip:0 to see them."
+                    : note + $" Also: skip ({skip}) is past the only {totalCount} result(s); use skip:0.";
+            }
 
             var limitedResults = results
                 .Skip(skip)
@@ -159,7 +187,8 @@ public sealed class SearchProjectTool(IWorkspaceSearchService workspaceSearchSer
                 Type = type,
                 TotalCount = totalCount,
                 ReturnedCount = limitedResults.Count,
-                IsTruncated = totalCount > limitedResults.Count,
+                IsTruncated = skip + limitedResults.Count < totalCount,
+                Note = note,
                 Results = projectedResults
             };
 

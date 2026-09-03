@@ -75,6 +75,12 @@ namespace Codinex.Infrastructure.Conversation
             var history = request.Messages.ToList();
             var provider = ResolveProvider(request.ProviderRole);
 
+            // Per-turn cache of read-only tool results, keyed by tool name + arguments. Lets
+            // an identical repeat call short-circuit instead of re-running the tool and
+            // re-sending the whole prompt for another round-trip - a common failure mode
+            // with weaker models that ignore the "don't repeat calls" instruction.
+            var executedToolResults = new Dictionary<string, string>(StringComparer.Ordinal);
+
             await foreach (var evt in ProcessEvents(
                                history,
                                request.ProviderRole,
@@ -85,6 +91,7 @@ namespace Codinex.Infrastructure.Conversation
                                    request.ChatId,
                                    request.ChatMessageId,
                                    cancellationToken),
+                               executedToolResults,
                                cancellationToken))
             {
                 yield return evt;
@@ -100,6 +107,7 @@ namespace Codinex.Infrastructure.Conversation
             string chatId,
             string chatMessageId,
             Func<IAsyncEnumerable<ConversationEvent>> createEvents,
+            Dictionary<string, string> executedToolResults,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             ConversationEvent originalFailureEvent = null;
@@ -142,6 +150,37 @@ namespace Codinex.Infrastructure.Conversation
                             {
                                 var tool = toolRegistry.Get(toolRequest.Name);
 
+                                var dedupKey = TryBuildDedupKey(toolRequest);
+
+                                if (dedupKey != null
+                                    && executedToolResults.TryGetValue(dedupKey, out var priorContent))
+                                {
+                                    yield return ConversationEvent.Status(
+                                        $"Reusing earlier {toolRequest.Name} result...");
+
+                                    var duplicateResult = ToolResult.Successful(
+                                        toolRequest.Id,
+                                        BuildDuplicateResultData(toolRequest.Name, priorContent));
+
+                                    results.Add(duplicateResult);
+
+                                    history.Add(new ChatMessage
+                                    {
+                                        Role = "tool",
+                                        ToolCallId = toolRequest.Id,
+                                        Content = jsonSerializer.Serialize(new
+                                        {
+                                            success = duplicateResult.Success,
+                                            error = duplicateResult.Error,
+                                            data = duplicateResult.Data
+                                        })
+                                    });
+
+                                    yield return ConversationEvent.ToolCompleted(duplicateResult);
+
+                                    continue;
+                                }
+
                                 var statusMessage = GetStatusMessage(tool, toolRequest);
 
                                 if (!string.IsNullOrWhiteSpace(statusMessage))
@@ -173,18 +212,31 @@ namespace Codinex.Infrastructure.Conversation
 
                                 results.Add(result);
 
+                                var toolContent = TruncateToolContent(
+                                    jsonSerializer.Serialize(new
+                                    {
+                                        success = result.Success,
+                                        error = result.Error,
+                                        data = result.Data
+                                    }));
+
                                 history.Add(new ChatMessage
                                 {
                                     Role = "tool",
                                     ToolCallId = result.Id,
-                                    Content = TruncateToolContent(
-                                        jsonSerializer.Serialize(new
-                                        {
-                                            success = result.Success,
-                                            error = result.Error,
-                                            data = result.Data
-                                        }))
+                                    Content = toolContent
                                 });
+
+                                if (result.Success
+                                    && string.Equals(toolRequest.Name, "change_set_creator", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // The workspace just changed; every cached read is now suspect.
+                                    executedToolResults.Clear();
+                                }
+                                else if (dedupKey != null && result.Success)
+                                {
+                                    executedToolResults[dedupKey] = toolContent;
+                                }
 
                                 yield return ConversationEvent.ToolCompleted(result);
                             }
@@ -201,6 +253,7 @@ namespace Codinex.Infrastructure.Conversation
                                                    chatId,
                                                    chatMessageId,
                                                    cancellationToken),
+                                               executedToolResults,
                                                cancellationToken))
                             {
                                 yield return continuationEvent;
@@ -364,6 +417,74 @@ namespace Codinex.Infrastructure.Conversation
             return content.Substring(0, MaxToolResultLength) +
                    $"\n\n[tool result truncated to save context: {omitted:N0} of {content.Length:N0} chars omitted. " +
                    "Narrow the request (a more specific query, a single file, or one element) to retrieve the rest.]";
+        }
+
+        /// <summary>
+        /// Read-only tools whose result depends only on their arguments and the current
+        /// workspace state - safe to serve from the per-turn cache when an identical call
+        /// repeats. Anything that mutates state or whose result legitimately changes between
+        /// calls (change_set_creator, build_*, get_diagnostics, *_memory) is never deduped.
+        /// </summary>
+        private static readonly HashSet<string> DedupableTools = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "read_file",
+            "read_element",
+            "get_file_elements",
+            "search_project",
+            "list_directory",
+            "get_projects",
+            "get_open_documents"
+        };
+
+        /// <summary>Cap on how much of the earlier result to inline back into a duplicate response.</summary>
+        private const int MaxInlineDuplicateResultChars = 3_000;
+
+        private const string DuplicateCallNote =
+            "This call is identical to one already made in this conversation and was not run again - " +
+            "the result has not changed. Do not repeat it: reuse the result below (or from the earlier " +
+            "call), or change the arguments if you need different information.";
+
+        private static string TryBuildDedupKey(ToolRequest request)
+        {
+            if (request?.Name == null || !DedupableTools.Contains(request.Name))
+            {
+                return null;
+            }
+
+            var arguments = request.Arguments;
+
+            var normalizedArgs = arguments == null
+                ? string.Empty
+                : new JObject(arguments.Properties()
+                        .OrderBy(p => p.Name, StringComparer.Ordinal))
+                    .ToString(Formatting.None);
+
+            return request.Name.ToLowerInvariant() + "|" + normalizedArgs;
+        }
+
+        private object BuildDuplicateResultData(string toolName, string priorContent)
+        {
+            var wrapper = new JObject
+            {
+                ["duplicate"] = true,
+                ["tool"] = toolName,
+                ["note"] = DuplicateCallNote
+            };
+
+            if (!string.IsNullOrEmpty(priorContent)
+                && priorContent.Length <= MaxInlineDuplicateResultChars)
+            {
+                try
+                {
+                    wrapper["previousResult"] = jsonSerializer.Parse(priorContent);
+                }
+                catch
+                {
+                    wrapper["previousResult"] = priorContent;
+                }
+            }
+
+            return wrapper;
         }
 
         private static string GetPathDisplayName(string path)

@@ -229,6 +229,8 @@
     <Compile Include="VisualStudio\Workspace\FormatterTests\OpenDocumentsFormatterTest\OpenDocumentsFormatter_FormatTests.cs" />
     <Compile Include="VisualStudio\Workspace\ProviderTests\DiagnosticsProviderTests\Base\DiagnosticsProviderTestBase.cs" />
     <Compile Include="VisualStudio\Workspace\ProviderTests\DiagnosticsProviderTests\DiagnosticsProvider_GetDiagnosticsAsyncTests.cs" />
+    <Compile Include="VisualStudio\Tools\Files\ReadFileToolTests.cs" />
+    <Compile Include="VisualStudio\Tools\Search\SearchProjectToolTests.cs" />
     <Compile Include="VSIX\Bootstrap\CodinexServiceContainerTests.cs" />
   </ItemGroup>
   <ItemGroup>
