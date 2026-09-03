@@ -54,7 +54,7 @@ public class OpenCodeFreeProviderTests
         // No active chat session wired up in these unit tests: the provider falls back to
         // creating a fresh OpenCode session per call. Session reuse itself is covered by
         // OpenCodeSessionStoreTests.
-        _chatSessionService = new ChatSessionService(null!, _providerManager, null!);
+        _chatSessionService = new ChatSessionService(null!, _providerManager);
     }
 
     private OpenCodeFreeProvider CreateSut()
