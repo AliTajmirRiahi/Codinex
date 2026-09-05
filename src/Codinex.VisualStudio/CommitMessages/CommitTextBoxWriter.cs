@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 #pragma warning disable VSTHRD110, VSTHRD001 // vs-threading analyzers suppressed project-wide for the VS-integration layer; call sites are audited manually.
 
@@ -73,8 +74,29 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             try
             {
+                // A synthetic keybd_event Ctrl+A/Ctrl+V is a *global* OS-level keystroke: Windows
+                // delivers it to whatever control currently holds real Win32 keyboard focus, not
+                // wherever WPF's Focus()/Keyboard.Focus() below just pointed. If the user clicked
+                // into another control while generation was running in the background — most
+                // notably the chat input, which is hosted in a WebView2 and therefore owns its
+                // own native child HWND — that control keeps real OS focus regardless of what we
+                // do to the WPF focus state. Force the VS window to the foreground and confirm
+                // the commit box actually became the focused element before gambling with a
+                // global keystroke; otherwise bail out and let the caller fall back to the
+                // value-pattern write, which targets the control directly and can't leak into an
+                // unrelated input.
+                if (PresentationSource.FromVisual(textBox) is HwndSource hwndSource)
+                {
+                    NativeMethods.SetForegroundWindow(hwndSource.Handle);
+                }
+
                 textBox.Focus();
                 Keyboard.Focus(textBox);
+
+                if (!ReferenceEquals(Keyboard.FocusedElement, textBox))
+                {
+                    return false;
+                }
 
                 var previousClipboard = TryGetClipboardText();
 
@@ -154,6 +176,12 @@ namespace Codinex.VisualStudio.CommitMessages
         {
             [DllImport("user32.dll")]
             private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, System.UIntPtr dwExtraInfo);
+
+            [DllImport("user32.dll", EntryPoint = "SetForegroundWindow")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            private static extern bool SetForegroundWindowNative(System.IntPtr hWnd);
+
+            public static void SetForegroundWindow(System.IntPtr hWnd) => _ = SetForegroundWindowNative(hWnd);
 
             private const byte VK_CONTROL = 0x11;
             private const byte VK_A = 0x41;
