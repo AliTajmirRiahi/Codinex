@@ -34,7 +34,8 @@ public sealed class SendChatMessageUseCase(
     IConversationEngine conversationEngine,
     IWorkspaceContextBuilder workspaceContextBuilder,
     IAiProviderRouter aiProviderRouter,
-    IIntentToolPlanner intentToolPlanner)
+    IIntentToolPlanner intentToolPlanner,
+    IToastNotificationService toastNotificationService)
     : ISendChatMessageUseCase
 {
     public async Task<ChatResponse> ExecuteAsync(ChatMessageBuildRequest request,
@@ -293,6 +294,10 @@ public sealed class SendChatMessageUseCase(
 
                     case ConversationEventType.ConversationFailed:
 
+                        await toastNotificationService.ShowAsync(
+                            "Codinex AI — error",
+                            evt.DisplayMessage);
+
                         await onMessage(
                             new ChatResponse(
                                 WebViewMessageType.Error,
@@ -314,6 +319,10 @@ public sealed class SendChatMessageUseCase(
                 chatMessageId);
 
             await chatSession.SaveAsync();
+
+            await toastNotificationService.ShowAsync(
+                "Codinex AI — task finished",
+                "The assistant finished responding and no further input is needed.");
 
             // Emit the final completed response.
             await onMessage(new ChatResponse(
@@ -358,9 +367,15 @@ public sealed class SendChatMessageUseCase(
                 Stream = true
             });
 
+            var userFacingMessage = errorHandler.GetUserFacingMessage();
+
+            await toastNotificationService.ShowAsync(
+                "Codinex AI — error",
+                userFacingMessage);
+
             await onMessage(new ChatResponse(
                 WebViewMessageType.Error,
-                errorHandler.GetUserFacingMessage()));
+                userFacingMessage));
         }
     }
 

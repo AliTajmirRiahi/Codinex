@@ -129,6 +129,9 @@
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
     <Compile Include="Services\PromptSizeGuardService.cs" />
+    <Compile Include="Notifications\VsHostWindowStateProvider.cs" />
+    <Compile Include="Notifications\ToastWindow.cs" />
+    <Compile Include="Notifications\ToastNotificationService.cs" />
     <Compile Include="Services\WorkspaceIgnoreImporter.cs" />
     <Compile Include="Services\WorkspaceIgnoreService.cs" />
     <Compile Include="Services\WorkspaceSearchService.cs" />

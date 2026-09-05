@@ -5,6 +5,7 @@
  */
 import { getState, subscribe, setLoading, setInputLoading, setProvider, setCurrentModel, setChatList, setCurrentChat, setGroupList, setCurrentGroup, setComposerController, setActiveDocument, setSettings, setChatBlocked, setAwaitingClarification, setSolutionDirectory, setSolutionName, upsertComposerReference, removeComposerReference } from '../js/state/appState.js';
 import { $, togglePanelHidden } from './utils/dom.js';
+import { enhanceNumberInputs } from './utils/numberStepper.js';
 import { applyComposerDirection } from './utils/languageDirection.js';
 import { webViewTransport } from '../../Shared/bridge/webViewTransport.js';
 import { createMessageDispatcher } from '../../Shared/bridge/messageDispatcher.js';
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initContextMenu();
     initSelectionToolbar();
+    enhanceNumberInputs();
 
     /**
      * Initialize Controllers

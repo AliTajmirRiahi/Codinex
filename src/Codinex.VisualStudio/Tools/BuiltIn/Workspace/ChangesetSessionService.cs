@@ -28,7 +28,8 @@ public sealed class ChangesetSessionService(
     IWorkspaceContext workspaceContext,
     IUiThreadDispatcher uiThreadDispatcher,
     IWebViewClient webViewClient,
-    IUserNotificationService userNotificationService)
+    IUserNotificationService userNotificationService,
+    IToastNotificationService toastNotificationService)
     : IChangesetSessionService
 {
     private Guid? _pendingId;
@@ -58,6 +59,10 @@ public sealed class ChangesetSessionService(
         HasPending = true;
 
         await NotifyChatBlockedAsync();
+
+        await toastNotificationService.ShowAsync(
+            "Codinex AI — review ready",
+            $"{changeSet.Changes.Count} change(s) waiting for your review.");
 
         var decision = await approvalService.WaitForApprovalAsync(id, cancellationToken);
 

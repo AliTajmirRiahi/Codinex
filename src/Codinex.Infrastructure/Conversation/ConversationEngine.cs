@@ -24,9 +24,12 @@ namespace Codinex.Infrastructure.Conversation
         IAiProviderRouter aiProviderRouter,
         IAiToolRegistry toolRegistry,
         IJsonSerializer jsonSerializer,
-        IToolHistoryCompactor toolHistoryCompactor)
+        IToolHistoryCompactor toolHistoryCompactor,
+        IToastNotificationService toastNotificationService)
         : IConversationEngine
     {
+        private const string AskUserQuestionToolName = "ask_user_question";
+
         private const int MaxAttempts = 5;
 
         /// <summary>
@@ -206,6 +209,15 @@ namespace Codinex.Infrastructure.Conversation
                                 if (!string.IsNullOrWhiteSpace(statusMessage))
                                 {
                                     yield return ConversationEvent.Status(statusMessage);
+                                }
+
+                                if (string.Equals(toolRequest.Name, AskUserQuestionToolName, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // This tool blocks until the user answers - tell them their
+                                    // input is needed in case Visual Studio isn't in the foreground.
+                                    await toastNotificationService.ShowAsync(
+                                        "Codinex AI — response needed",
+                                        "The assistant asked a question and is waiting for your answer.");
                                 }
 
                                 ToolResult result;

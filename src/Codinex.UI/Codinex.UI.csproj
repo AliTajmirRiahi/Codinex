@@ -261,6 +261,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\views\chatListView.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\dom.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\debounce.js" />
+    <EmbeddedResource Include="ToolWindows\Resources\Chat\js\utils\numberStepper.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\state\appState.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\services\validationService.js" />
     <EmbeddedResource Include="ToolWindows\Resources\Chat\js\services\paginationService.js" />

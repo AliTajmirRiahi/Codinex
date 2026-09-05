@@ -20,6 +20,13 @@ namespace Codinex.Storage.Models
         // Serialized request payload size, in KB, at or above which the large-prompt warning is shown.
         public int PromptSizeWarningKb { get; set; } = 200;
 
+        // Shows a popup near the system tray clock when a change review opens or a task finishes
+        // while Visual Studio is not focused (or is minimized).
+        public bool EnableBackgroundToast { get; set; } = true;
+
+        // How long a background-task toast stays visible before auto-dismissing, in seconds.
+        public int ToastAutoDismissSeconds { get; set; } = 8;
+
         // Local provider id used by the prompt preprocessor.
         public string PreprocessorAiProviderId { get; set; } = string.Empty;
 

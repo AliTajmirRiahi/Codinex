@@ -89,6 +89,73 @@
         cursor: text;
     }
 
+/* Number inputs: replace the native OS-drawn spin buttons (enhanceNumberInputs() wraps
+   every <input type="number"> in a .number-stepper with these themed buttons) so they
+   match the rest of the UI instead of looking like a stock Windows control. */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+.number-stepper {
+    position: relative;
+    display: inline-flex;
+}
+
+    .number-stepper input[type="number"] {
+        padding-right: 22px;
+    }
+
+.number-stepper-controls {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    width: 18px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--vs-border);
+    border-radius: 0 3px 3px 0;
+    overflow: hidden;
+}
+
+    .number-stepper-controls button {
+        flex: 1 1 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        background: transparent;
+        color: var(--vs-access-tool-tip-color);
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        font-size: 8px;
+    }
+
+        .number-stepper-controls button:first-child {
+            border-bottom: 1px solid var(--vs-border);
+        }
+
+        .number-stepper-controls button:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--vs-foreground);
+        }
+
+        .number-stepper-controls button:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .number-stepper-controls button:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+
 .context-input.content-editable {
     overflow-y: auto;
     outline: none;

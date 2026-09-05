@@ -371,6 +371,15 @@
                             data-settings-tab="prompt-guard">
                         Prompt Guard
                     </button>
+                    <button id="settings-tab-notifications"
+                            class="settings-tab"
+                            type="button"
+                            role="tab"
+                            aria-selected="false"
+                            aria-controls="settings-panel-notifications"
+                            data-settings-tab="notifications">
+                        Notifications
+                    </button>
                 </div>
 
                 <div class="settings-tab-panels">
@@ -432,6 +441,33 @@
                                     <small>Serialized request payload size, in kilobytes, at which the warning appears.</small>
                                 </span>
                                 <input id="setting-prompt-size-kb" type="number" min="1" step="1" class="setting-number-input">
+                            </label>
+                        </div>
+                    </section>
+
+                    <section id="settings-panel-notifications"
+                             class="settings-tab-panel"
+                             role="tabpanel"
+                             aria-labelledby="settings-tab-notifications"
+                             data-settings-panel="notifications">
+                        <div class="settings-section">
+                            <h3>Notifications</h3>
+                            <p class="settings-section-description">Popup near the system tray clock while Visual Studio is in the background.</p>
+
+                            <label class="setting-checkbox-option" for="setting-enable-background-toast">
+                                <input id="setting-enable-background-toast" type="checkbox">
+                                <span>
+                                    <strong>Notify when Visual Studio is in the background</strong>
+                                    <small>Show a popup when a change review opens or a task finishes while Visual Studio is not focused or is minimized.</small>
+                                </span>
+                            </label>
+
+                            <label class="setting-field" for="setting-toast-auto-dismiss-seconds">
+                                <span>
+                                    <strong>Auto-dismiss after (seconds)</strong>
+                                    <small>How long the popup stays visible before closing on its own.</small>
+                                </span>
+                                <input id="setting-toast-auto-dismiss-seconds" type="number" min="1" step="1" class="setting-number-input">
                             </label>
                         </div>
                     </section>

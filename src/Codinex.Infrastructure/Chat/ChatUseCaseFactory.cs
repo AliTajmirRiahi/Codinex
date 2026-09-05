@@ -25,7 +25,8 @@ namespace Codinex.Infrastructure.Chat
         IChatMessageBuilder chatMessageBuilder,
         IConversationEngine conversationEngine,
         IWorkspaceContextBuilder workspaceContextBuilder,
-        IIntentToolPlanner intentToolPlanner)
+        IIntentToolPlanner intentToolPlanner,
+        IToastNotificationService toastNotificationService)
         : IChatUseCaseFactory
     {
         public ISendChatMessageUseCase Create()
@@ -48,7 +49,8 @@ namespace Codinex.Infrastructure.Chat
                 conversationEngine,
                 workspaceContextBuilder,
                 aiProviderRouter,
-                intentToolPlanner);
+                intentToolPlanner,
+                toastNotificationService);
         }
     }
 

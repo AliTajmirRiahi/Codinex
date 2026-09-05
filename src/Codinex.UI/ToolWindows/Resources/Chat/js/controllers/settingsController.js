@@ -28,6 +28,8 @@ export function initSettingsController(transport) {
     const bypassPreviewChangeInput = $('#setting-bypass-preview-change');
     const enablePromptSizeWarningInput = $('#setting-enable-prompt-size-warning');
     const promptSizeKbInput = $('#setting-prompt-size-kb');
+    const enableBackgroundToastInput = $('#setting-enable-background-toast');
+    const toastAutoDismissSecondsInput = $('#setting-toast-auto-dismiss-seconds');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const solutionInstructionInput = $('#setting-solution-instruction');
     const excludeDirectoriesInput = $('#setting-exclude-directories');
@@ -347,6 +349,24 @@ export function initSettingsController(transport) {
             promptSizeKbInput.value = Number(kb) > 0 ? kb : 200;
         }
 
+        if (enableBackgroundToastInput) {
+            enableBackgroundToastInput.checked = !!getValue(
+                currentSettings,
+                'enableBackgroundToast',
+                'EnableBackgroundToast',
+                true);
+        }
+
+        if (toastAutoDismissSecondsInput) {
+            const seconds = getValue(
+                currentSettings,
+                'toastAutoDismissSeconds',
+                'ToastAutoDismissSeconds',
+                8);
+
+            toastAutoDismissSecondsInput.value = Number(seconds) > 0 ? seconds : 8;
+        }
+
         renderLocalProviders();
 
         if (solutionInstructionInput) {
@@ -492,6 +512,7 @@ export function initSettingsController(transport) {
     // modal are preserved as-is.
     saveCodinexSettingsButton?.addEventListener('click', () => {
         const parsedKb = parseInt(promptSizeKbInput?.value, 10);
+        const parsedToastSeconds = parseInt(toastAutoDismissSecondsInput?.value, 10);
 
         currentSettings = {
             ...currentSettings,
@@ -500,6 +521,8 @@ export function initSettingsController(transport) {
             byPassPreviewChangeAndApplyChangeDirectly: !!bypassPreviewChangeInput?.checked && canBypassPreviewChange,
             enablePromptSizeWarning: enablePromptSizeWarningInput ? !!enablePromptSizeWarningInput.checked : true,
             promptSizeWarningKb: Number.isFinite(parsedKb) && parsedKb > 0 ? parsedKb : 200,
+            enableBackgroundToast: enableBackgroundToastInput ? !!enableBackgroundToastInput.checked : true,
+            toastAutoDismissSeconds: Number.isFinite(parsedToastSeconds) && parsedToastSeconds > 0 ? parsedToastSeconds : 8,
         };
 
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);
