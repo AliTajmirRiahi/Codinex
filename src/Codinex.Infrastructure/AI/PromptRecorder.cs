@@ -42,7 +42,7 @@ namespace Codinex.Infrastructure.AI
             // unwinds through the normal user-cancellation path.
             var payloadByteCount = Encoding.UTF8.GetByteCount(payloadContent ?? string.Empty);
 
-            if (!await promptSizeGuard.ConfirmAsync(payloadByteCount, cancellationToken))
+            if (!await promptSizeGuard.ConfirmAsync(payloadByteCount, chatId, cancellationToken))
             {
                 throw new OperationCanceledException(
                     "The user stopped the request because the prompt exceeded the configured size limit.");

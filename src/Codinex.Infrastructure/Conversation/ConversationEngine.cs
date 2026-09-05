@@ -30,6 +30,15 @@ namespace Codinex.Infrastructure.Conversation
         private const int MaxAttempts = 5;
 
         /// <summary>
+        /// Hard cap on tool-call rounds within a single turn. Each round is one provider
+        /// request plus the tools it asks for. A weaker model can otherwise loop for dozens
+        /// of rounds - re-reading the same files, never producing a change - and every round
+        /// re-sends the whole prompt. When the cap is hit the turn ends with a message telling
+        /// the model to wrap up.
+        /// </summary>
+        private const int MaxToolRounds = 40;
+
+        /// <summary>
         /// Hard cap on a single tool result before it enters the conversation history.
         /// A pathological result (e.g. a search that matched a minified bundle or source map)
         /// would otherwise be replayed on every subsequent request for the rest of the turn.
@@ -92,6 +101,7 @@ namespace Codinex.Infrastructure.Conversation
                                    request.ChatMessageId,
                                    cancellationToken),
                                executedToolResults,
+                               1,
                                cancellationToken))
             {
                 yield return evt;
@@ -108,8 +118,18 @@ namespace Codinex.Infrastructure.Conversation
             string chatMessageId,
             Func<IAsyncEnumerable<ConversationEvent>> createEvents,
             Dictionary<string, string> executedToolResults,
+            int round,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
+            if (round > MaxToolRounds)
+            {
+                yield return ConversationEvent.Failed(
+                    $"Stopped after {MaxToolRounds} tool-call rounds without finishing. No change was applied. " +
+                    "Reply now with a short summary of what you found and what is still blocking the task - " +
+                    "do not request more tools.");
+                yield break;
+            }
+
             ConversationEvent originalFailureEvent = null;
 
             for (var attempt = 1; attempt <= MaxAttempts; attempt++)
@@ -254,6 +274,7 @@ namespace Codinex.Infrastructure.Conversation
                                                    chatMessageId,
                                                    cancellationToken),
                                                executedToolResults,
+                                               round + 1,
                                                cancellationToken))
                             {
                                 yield return continuationEvent;
@@ -444,6 +465,16 @@ namespace Codinex.Infrastructure.Conversation
             "the result has not changed. Do not repeat it: reuse the result below (or from the earlier " +
             "call), or change the arguments if you need different information.";
 
+        /// <summary>
+        /// startLine/endLine are snapped to this bucket size when building a read_file dedup
+        /// key, so near-identical windows (1-140 vs 1-142 vs 1-141) collapse to one key while
+        /// genuinely different regions still get a real read.
+        /// </summary>
+        private const int DedupLineBucket = 32;
+
+        private static int BucketLine(int value) =>
+            value <= 0 ? 0 : (((value - 1) / DedupLineBucket) * DedupLineBucket) + 1;
+
         private static string TryBuildDedupKey(ToolRequest request)
         {
             if (request?.Name == null || !DedupableTools.Contains(request.Name))
@@ -451,15 +482,34 @@ namespace Codinex.Infrastructure.Conversation
                 return null;
             }
 
+            var name = request.Name.ToLowerInvariant();
             var arguments = request.Arguments;
 
-            var normalizedArgs = arguments == null
-                ? string.Empty
-                : new JObject(arguments.Properties()
-                        .OrderBy(p => p.Name, StringComparer.Ordinal))
-                    .ToString(Formatting.None);
+            if (arguments == null)
+            {
+                return name + "|";
+            }
 
-            return request.Name.ToLowerInvariant() + "|" + normalizedArgs;
+            var normalized = new JObject();
+
+            foreach (var property in arguments.Properties().OrderBy(p => p.Name, StringComparer.Ordinal))
+            {
+                var lowerName = property.Name.ToLowerInvariant();
+
+                if (name == "read_file" && lowerName is "startline" or "endline")
+                {
+                    var raw = property.Value.Type == JTokenType.Integer ? property.Value.Value<int>() : 0;
+                    normalized[property.Name] = BucketLine(raw);
+                    continue;
+                }
+
+                // Normalize path separators so "src\Foo.cs" and "src/Foo.cs" share a key.
+                normalized[property.Name] = property.Value.Type == JTokenType.String
+                    ? (property.Value.Value<string>() ?? string.Empty).Replace('\\', '/')
+                    : property.Value;
+            }
+
+            return name + "|" + normalized.ToString(Formatting.None);
         }
 
         private object BuildDuplicateResultData(string toolName, string priorContent)

@@ -166,8 +166,9 @@ public sealed class ReadFileTool(
             toLine = head.Count;
             outContent = string.Join("\n", head);
 
-            note = $"File is large ({totalLines} lines, {content.Length:N0} chars). Showing lines 1-{toLine}. " +
-                   "Call read_file again with startLine/endLine for the rest, or use get_file_elements/read_element for a source file.";
+            note = $"This file is {totalLines} lines and was NOT fully returned (showing 1-{toLine}). " +
+                   "For a source file, use get_file_elements then read_element for the members you need. " +
+                   "Only pass startLine/endLine to read one specific region you can name - do NOT page through the whole file with successive reads.";
         }
         else
         {

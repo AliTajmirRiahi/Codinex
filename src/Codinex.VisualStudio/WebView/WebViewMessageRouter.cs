@@ -349,6 +349,10 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
 
                     await _settingsManager.SaveSettingsAsync(payload);
 
+                    // A changed base threshold should take effect now, not be masked by past
+                    // "Continue" escalations.
+                    _promptSizeGuard.ResetEscalation();
+
                     await SendSettingsSavedAsync();
 
                     return;

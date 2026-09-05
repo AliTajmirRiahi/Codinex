@@ -16,6 +16,10 @@ namespace Codinex.VisualStudio.Services;
 /// calling send until the user answers Continue / Stop (or cancellation unblocks it), and
 /// resolves the pending wait when the decision arrives back from the webview. Modeled on
 /// <see cref="Tools.BuiltIn.Clarification.ClarificationSessionService"/>.
+///
+/// Each Continue raises that chat's effective threshold by one base step
+/// (<c>PromptSizeWarningKb</c>): 200 KB -> 400 -> 600 -> ..., so the user is not re-prompted
+/// on every subsequent request, only when the payload grows past the new limit.
 /// </summary>
 [AutoDiRegister(Modules.VisualStudio, RegistrationOrder.Platform)]
 public sealed class PromptSizeGuardService(
@@ -24,7 +28,10 @@ public sealed class PromptSizeGuardService(
 {
     private readonly ConcurrentDictionary<string, TaskCompletionSource<bool>> _pending = new();
 
-    public async Task<bool> ConfirmAsync(int payloadByteCount, CancellationToken cancellationToken)
+    // chatId -> how many times the user has pressed Continue for this chat.
+    private readonly ConcurrentDictionary<string, int> _continuesByChat = new();
+
+    public async Task<bool> ConfirmAsync(int payloadByteCount, string chatId, CancellationToken cancellationToken)
     {
         var settings = settingsManager.Settings;
 
@@ -33,9 +40,12 @@ public sealed class PromptSizeGuardService(
             return true;
         }
 
-        var thresholdKb = Math.Max(1, settings.PromptSizeWarningKb);
+        var baseKb = Math.Max(1, settings.PromptSizeWarningKb);
 
-        if (payloadByteCount < thresholdKb * 1024)
+        var continues = !string.IsNullOrEmpty(chatId) && _continuesByChat.TryGetValue(chatId, out var c) ? c : 0;
+        var effectiveKb = baseKb * (continues + 1);
+
+        if (payloadByteCount < (long)effectiveKb * 1024)
         {
             return true;
         }
@@ -56,11 +66,18 @@ public sealed class PromptSizeGuardService(
                 {
                     RequestId = requestId,
                     SizeKb = (int)Math.Round(payloadByteCount / 1024d),
-                    ThresholdKb = thresholdKb
+                    ThresholdKb = effectiveKb
                 }
             });
 
-            return await tcs.Task;
+            var proceed = await tcs.Task;
+
+            if (proceed && !string.IsNullOrEmpty(chatId))
+            {
+                _continuesByChat.AddOrUpdate(chatId, 1, (_, value) => value + 1);
+            }
+
+            return proceed;
         }
         catch
         {
@@ -83,4 +100,6 @@ public sealed class PromptSizeGuardService(
 
         return tcs.TrySetResult(proceed);
     }
+
+    public void ResetEscalation() => _continuesByChat.Clear();
 }

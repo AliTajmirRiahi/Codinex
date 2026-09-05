@@ -195,7 +195,7 @@ public sealed class ReadFileToolTests
         payload["StartLine"]!.Value<int>().Should().Be(1);
         payload["EndLine"]!.Value<int>().Should().BeLessThan(600).And.BePositive();
         payload["IsTruncated"]!.Value<bool>().Should().BeTrue();
-        payload["Note"]!.Value<string>().Should().Contain("File is large");
+        payload["Note"]!.Value<string>().Should().Contain("was NOT fully returned");
 
         var returnedLines = payload["Content"]!.Value<string>().Split('\n').Length;
         returnedLines.Should().Be(payload["EndLine"]!.Value<int>());
@@ -235,7 +235,7 @@ public sealed class ReadFileToolTests
         payload["TotalLines"]!.Value<int>().Should().Be(1);
         payload["EndLine"]!.Value<int>().Should().Be(1);
         payload["Content"]!.Value<string>().Should().Be(hugeLine);
-        payload["Note"]!.Value<string>().Should().Contain("File is large");
+        payload["Note"]!.Value<string>().Should().Contain("was NOT fully returned");
     }
 
     // ---------------------------------------------------------- range mode
