@@ -230,6 +230,9 @@
     <Compile Include="Models\Workspace\WorkspaceEntryType.cs" />
     <Compile Include="Models\Workspace\WorkspaceFileChangedEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Tools\IAiTool.cs" />
     <Compile Include="Tools\IAiToolRegistry.cs" />
     <Compile Include="Tools\IIntentToolPlanner.cs" />

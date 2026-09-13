@@ -108,6 +108,9 @@
     <Compile Include="Models\Tools\SearchProject\SearchProjectType.cs" />
     <Compile Include="Models\WorkspaceFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Interfaces\IVsOutputWindowService.cs" />
     <Compile Include="Interfaces\IVsDiagnosticsCollector.cs" />
     <Compile Include="References\Providers\Base\RoslynReferenceProviderBase.cs" />
