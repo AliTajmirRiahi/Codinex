@@ -1,11 +1,12 @@
+using Codinex.Core.Interfaces.WorkspaceChanges;
+using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests.Base;
 using Codinex.VisualStudio.Services;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System.Threading;
 using System.Threading.Tasks;
-using Codinex.Core.Models.WorkspaceChanges;
-using Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests.Base;
 
 namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Handlers.CreateFileChangeHandlerTests;
 
@@ -28,6 +29,13 @@ public sealed class CreateFileChangeHandlerTests_EdgeCases
         WorkspaceFileService
             .Exists(filePath)
             .Returns(false);
+
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+                Arg.Any<CreateDirectoryChange>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expected);
 
         var sut = CreateSut();
 
@@ -53,21 +61,29 @@ public sealed class CreateFileChangeHandlerTests_EdgeCases
         // Arrange
         const string filePath = @"C:\Test\File.cs";
 
-        var change = new CreateFileChange
+        var changeFile = new CreateFileChange
         {
             FilePath = filePath,
             Content = string.Empty
         };
 
+
         WorkspaceFileService
             .Exists(filePath)
             .Returns(false);
+
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+            Arg.Any<CreateDirectoryChange>(),
+            Arg.Any<CancellationToken>())
+            .Returns(expected);
 
         var sut = CreateSut();
 
         // Act
         var result = await sut.HandleAsync(
-            change,
+            changeFile,
             CancellationToken.None);
 
         // Assert

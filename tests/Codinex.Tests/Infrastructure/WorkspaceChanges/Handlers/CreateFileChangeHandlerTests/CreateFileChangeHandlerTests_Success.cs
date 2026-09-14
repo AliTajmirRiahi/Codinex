@@ -31,6 +31,13 @@ public sealed class CreateFileChangeHandlerTests_Success
             .Exists(filePath)
             .Returns(false);
 
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+                Arg.Any<CreateDirectoryChange>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expected);
+
         var sut = CreateSut();
 
         // Act
@@ -70,6 +77,13 @@ public sealed class CreateFileChangeHandlerTests_Success
             .Exists(filePath)
             .Returns(false);
 
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+                Arg.Any<CreateDirectoryChange>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expected);
+
         var sut = CreateSut();
 
         // Act
@@ -100,6 +114,13 @@ public sealed class CreateFileChangeHandlerTests_Success
             .Exists(change.FilePath)
             .Returns(false);
 
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+                Arg.Any<CreateDirectoryChange>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expected);
+
         var sut = CreateSut();
 
         // Act
@@ -127,6 +148,13 @@ public sealed class CreateFileChangeHandlerTests_Success
         WorkspaceFileService
             .Exists(change.FilePath)
             .Returns(false);
+
+        var expected = WorkspaceChangeResult.Successful();
+
+        createDirectoryChangeHandler.HandleAsync(
+                Arg.Any<CreateDirectoryChange>(),
+                Arg.Any<CancellationToken>())
+            .Returns(expected);
 
         var sut = CreateSut();
 
