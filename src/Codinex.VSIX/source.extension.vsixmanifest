@@ -6,6 +6,7 @@
         <Description xml:space="preserve">Codinex AI
 A next‑generation AI coding assistant for Visual Studio — fully agent‑configurable, provider‑agnostic, and built with local‑first support in mind.</Description>
         <MoreInfo>https://github.com/AliTajmirRiahi/Codinex</MoreInfo>
+        <License>LICENSE.txt</License>
         <Icon>Resources\CodinexAI128x128.png</Icon>
     </Metadata>
     <Installation>
@@ -14,7 +15,7 @@ A next‑generation AI coding assistant for Visual Studio — fully agent‑conf
         </InstallationTarget>
     </Installation>
     <Dependencies>
-        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.7.2,)" />
     </Dependencies>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0, )" DisplayName="Visual Studio core editor" />

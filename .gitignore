@@ -374,3 +374,6 @@ FodyWeavers.xsd
 assets/media/*.mp4
 assets/media/*.mov
 assets/media/*.webm
+
+# Generated during build from the repository-root LICENSE (see Codinex.VSIX.csproj)
+src/Codinex.VSIX/LICENSE.txt

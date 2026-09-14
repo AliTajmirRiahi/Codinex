@@ -96,6 +96,10 @@
     <Content Include="Resources\CodinexAI128x128.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <!-- Generated from the repository-root LICENSE by the CopyLicenseForVsix target below. -->
+    <Content Include="LICENSE.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp">
@@ -203,4 +207,20 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <!-- The repository-root LICENSE is the single authored copy. The VSIX manifest
+       requires the packaged file to be named LICENSE.txt, and <Link> does not rename
+       a file inside the archive, so stage a copy here before packaging.
+       src\Codinex.VSIX\LICENSE.txt is generated and git-ignored. -->
+  <!-- Referenced projects emit .pdb files into their own bin folder, and the VSSDK picks
+       those up as VSIX source items. IncludeDebugSymbolsInVSIXContainer only governs this
+       project's own symbols, so filter the rest out here. The symbols still exist under
+       each project's bin\$(Configuration) for crash triage; they just do not ship. -->
+  <Target Name="RemoveDebugSymbolsFromVsix" AfterTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <VSIXSourceItem Remove="@(VSIXSourceItem)" Condition="'%(Extension)' == '.pdb'" />
+    </ItemGroup>
+  </Target>
+  <Target Name="CopyLicenseForVsix" BeforeTargets="BeforeBuild">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\..\LICENSE" DestinationFiles="$(MSBuildProjectDirectory)\LICENSE.txt" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

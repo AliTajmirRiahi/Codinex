@@ -300,7 +300,7 @@ Providers implement this contract, making Codinex fully extensible.
 
 ## 📜 License
 
-MIT. *(A `LICENSE` file still needs to be added to the repository.)*
+Released under the [MIT License](LICENSE).
 
 ---
 
