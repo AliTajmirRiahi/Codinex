@@ -31,6 +31,16 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
 
         var matches = FindMatches(content, change.Search);
 
+        // The search text is absent altogether, which is distinct from the case below where it
+        // was found but Before/After left no unique candidate. MatchText draws the same line.
+        if (matches.Count == 0)
+            return new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.SearchNotFound,
+                MatchCount = 0,
+                Error = "Search text was not found."
+            };
+
         if (matches.Count == 1)
             return BuildSuccessResult(content, matches[0]);
 
@@ -43,7 +53,7 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
             {
                 Status = TextChangeMatchStatus.NoUniqueMatch,
                 MatchCount = 0,
-                Error = "Search text was not found."
+                Error = "Unable to uniquely identify the requested text."
             },
 
             1 => BuildSuccessResult(content, matches[0]),

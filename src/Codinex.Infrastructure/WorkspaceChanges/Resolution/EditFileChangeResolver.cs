@@ -4,6 +4,7 @@ using Codinex.Core.Interfaces.Workspace;
 using Codinex.Core.Interfaces.Helper;
 using Codinex.Core.Interfaces.WorkspaceChanges;
 using Codinex.Core.Models.WorkspaceChanges;
+using Codinex.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,26 @@ public sealed class EditFileChangeResolver(
             if (change is not EditFileChange editFileChange)
                 continue;
 
-            var content = await workspaceFileService.ReadAsync(
-                editFileChange.FilePath,
-                cancellationToken);
+            string content;
+
+            try
+            {
+                content = await workspaceFileService.ReadAsync(
+                    editFileChange.FilePath,
+                    cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                return ChangeValidationResult.Failed(new ChangeValidationError(
+                    editFileChange.Id,
+                    WorkspaceChangeErrorCode.FileNotFound,
+                    WorkspaceValidationCategory.UserRecoverable,
+                    $"File '{editFileChange.FilePath}' could not be read: {exception.Message}"));
+            }
 
             content = stringHelper.Normalize(content);
 
@@ -51,7 +69,11 @@ public sealed class EditFileChangeResolver(
                     textChange);
 
                 if (match.Status != TextChangeMatchStatus.Success)
-                    return ChangeValidationResult.Failed(match.Error);
+                    return ChangeValidationResult.Failed(new ChangeValidationError(
+                        textChange.Id,
+                        match.Status.ToWorkspaceChangeErrorCode(),
+                        WorkspaceValidationCategory.AiRecoverable,
+                        match.Error));
 
                 var (range, originalText, resultText) = Plan(content, match, textChange.Replace);
 
