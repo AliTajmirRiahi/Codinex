@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Codinex.Core.Models.WorkspaceChanges;
 using Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests.Base;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.WorkspaceStateValidationTests;
@@ -10,6 +11,20 @@ namespace Codinex.Tests.Infrastructure.WorkspaceChanges.Validation.Rules.Workspa
 public class WorkspaceStateValidationRuleTests_AbsolutePath
     : WorkspaceStateValidationRuleBaseTests
 {
+    // Every path here is rooted, so the rule reaches its "absolute path outside the solution"
+    // check, which reads SolutionPath as well as SolutionDirectory. The base fixture only stubs
+    // SolutionDirectory; an unstubbed SolutionPath yields string.Empty, and path.Contains("") is
+    // always true, which silently disables the check. The sibling fixtures pass relative paths
+    // and short-circuit before this point, so the stub belongs here.
+    [SetUp]
+    public override void SetUp()
+    {
+        base.SetUp();
+
+        WorkspaceContext.SolutionPath
+            .Returns(@"C:\Workspace\TestSolution\TestSolution.sln");
+    }
+
     [Test]
     public async Task ValidateAsync_ShouldReturnAbsolutePathNotAllowed_WhenCreateFileUsesAbsolutePathAsync()
     {

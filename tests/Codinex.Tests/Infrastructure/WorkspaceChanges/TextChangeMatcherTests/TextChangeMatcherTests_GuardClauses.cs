@@ -44,8 +44,12 @@ public sealed class TextChangeMatcherTests_GuardClauses : TextChangeMatcherTestB
             .WithParameterName("change");
     }
 
+    // Search is model-supplied, so an empty value is reported as a result the agent can correct
+    // rather than thrown: no caller of Match catches exceptions, and throwing here would turn a
+    // recoverable model mistake into a crash.
+
     [Test]
-    public void Match_ShouldThrowArgumentException_WhenSearchIsNull()
+    public void Match_ShouldReturnNoUniqueMatch_WhenSearchIsNull()
     {
         // Arrange
         var sut = CreateSut();
@@ -56,16 +60,16 @@ public sealed class TextChangeMatcherTests_GuardClauses : TextChangeMatcherTestB
         };
 
         // Act
-        Action act = () => sut.Match("Content", change);
+        var result = sut.Match("Content", change);
 
         // Assert
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithParameterName("change");
+        result.Status.Should().Be(TextChangeMatchStatus.NoUniqueMatch);
+        result.MatchCount.Should().Be(0);
+        result.Error.Should().Be("Unable to search with empty text.");
     }
 
     [Test]
-    public void Match_ShouldThrowArgumentException_WhenSearchIsEmpty()
+    public void Match_ShouldReturnNoUniqueMatch_WhenSearchIsEmpty()
     {
         // Arrange
         var sut = CreateSut();
@@ -76,16 +80,16 @@ public sealed class TextChangeMatcherTests_GuardClauses : TextChangeMatcherTestB
         };
 
         // Act
-        Action act = () => sut.Match("Content", change);
+        var result = sut.Match("Content", change);
 
         // Assert
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithParameterName("change");
+        result.Status.Should().Be(TextChangeMatchStatus.NoUniqueMatch);
+        result.MatchCount.Should().Be(0);
+        result.Error.Should().Be("Unable to search with empty text.");
     }
 
     [Test]
-    public void Match_ShouldThrowArgumentException_WhenSearchIsWhiteSpace()
+    public void Match_ShouldReturnNoUniqueMatch_WhenSearchIsWhiteSpace()
     {
         // Arrange
         var sut = CreateSut();
@@ -96,11 +100,11 @@ public sealed class TextChangeMatcherTests_GuardClauses : TextChangeMatcherTestB
         };
 
         // Act
-        Action act = () => sut.Match("Content", change);
+        var result = sut.Match("Content", change);
 
         // Assert
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithParameterName("change");
+        result.Status.Should().Be(TextChangeMatchStatus.NoUniqueMatch);
+        result.MatchCount.Should().Be(0);
+        result.Error.Should().Be("Unable to search with empty text.");
     }
 }

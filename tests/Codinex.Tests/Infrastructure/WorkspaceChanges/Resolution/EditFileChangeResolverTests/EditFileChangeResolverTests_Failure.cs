@@ -33,6 +33,14 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             TextChanges = [textChange]
         };
 
+        var expected = new TextChangeMatchResult()
+        {
+            Status = TextChangeMatchStatus.SearchNotFound,
+            Error = "Search text was not found."
+        };
+
+        TextChangeMatcher.Match(Arg.Any<string>(), Arg.Any<TextFileChange>()).Returns(expected);
+
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())
             .Returns("Hello World");
@@ -73,6 +81,17 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             FilePath = filePath,
             TextChanges = [textChange]
         };
+
+        TextChangeMatcher
+            .Match(Arg.Any<string>(), Arg.Any<TextFileChange>())
+            .Returns(new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.Success,
+                MatchCount = 2,
+                StartIndex = 0,
+                Length = 3,
+                MatchedText = "abc"
+            });
 
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())
@@ -115,6 +134,15 @@ public sealed class EditFileChangeResolverTests_Failure : EditFileChangeResolver
             FilePath = filePath,
             TextChanges = [textChange]
         };
+
+        TextChangeMatcher
+            .Match(Arg.Any<string>(), Arg.Any<TextFileChange>())
+            .Returns(new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.SearchNotFound,
+                MatchCount = 0,
+                Error = "Search text was not found."
+            });
 
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())

@@ -21,6 +21,8 @@ public sealed class TextChangeMatcher : ITextChangeMatcher
         if (change == null)
             throw new ArgumentNullException(nameof(change));
 
+        // Search comes from model output, so an empty value is expected input rather than a
+        // programming error: report it as a result the agent can correct, never as an exception.
         if (string.IsNullOrWhiteSpace(change.Search))
             return new TextChangeMatchResult
             {
