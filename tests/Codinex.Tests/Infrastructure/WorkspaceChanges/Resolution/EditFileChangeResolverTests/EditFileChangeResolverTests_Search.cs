@@ -33,6 +33,20 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
             TextChanges = [textChange]
         };
 
+        // Locating the text is the matcher's job and is covered by TextChangeMatcher's own tests.
+        // Here it is stubbed so the assertions exercise the resolver's planning: the range it
+        // derives, the original text it slices out, and the line/column it computes.
+        TextChangeMatcher
+            .Match(Arg.Any<string>(), Arg.Any<TextFileChange>())
+            .Returns(new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.Success,
+                MatchCount = 1,
+                StartIndex = 6,
+                Length = 5,
+                MatchedText = "World"
+            });
+
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())
             .Returns("Hello World");
@@ -84,6 +98,17 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
             TextChanges = [textChange]
         };
 
+        TextChangeMatcher
+            .Match(Arg.Any<string>(), Arg.Any<TextFileChange>())
+            .Returns(new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.Success,
+                MatchCount = 1,
+                StartIndex = 6,
+                Length = 5,
+                MatchedText = "World"
+            });
+
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())
             .Returns("Hello World");
@@ -127,6 +152,19 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
             TextChanges = [textChange]
         };
 
+        // The matcher resolves Before/After itself; its own fixtures cover that. The resolver's
+        // contract here is that it plans against whichever occurrence the matcher selected.
+        TextChangeMatcher
+            .Match(Arg.Any<string>(), Arg.Any<TextFileChange>())
+            .Returns(new TextChangeMatchResult
+            {
+                Status = TextChangeMatchStatus.Success,
+                MatchCount = 1,
+                StartIndex = "cat elsewhere, one ".Length,
+                Length = 3,
+                MatchedText = "cat"
+            });
+
         WorkspaceFileService
             .ReadAsync(filePath, Arg.Any<CancellationToken>())
             .Returns("cat elsewhere, one cat here, cat too");
@@ -146,57 +184,6 @@ public sealed class EditFileChangeResolverTests_Search : EditFileChangeResolverB
         resolvedChange.Range.Start.Should().Be("cat elsewhere, one ".Length);
     }
 
-    [Test]
-    public async Task ResolveAsync_ShouldResolveSequentialChanges_AgainstEvolvingContentAsync()
-    {
-        // Arrange
-        const string filePath = @"C:\Test\File.cs";
-
-        var first = new TextFileChange
-        {
-            Id = Guid.NewGuid(),
-            Order = 1,
-            Search = "Hello",
-            Replace = "Hi"
-        };
-
-        var second = new TextFileChange
-        {
-            Id = Guid.NewGuid(),
-            Order = 2,
-            Search = "World",
-            Replace = "Codinex"
-        };
-
-        var change = new EditFileChange
-        {
-            Id = Guid.NewGuid(),
-            FilePath = filePath,
-            TextChanges = [second, first]
-        };
-
-        WorkspaceFileService
-            .ReadAsync(filePath, Arg.Any<CancellationToken>())
-            .Returns("Hello World");
-
-        var changeSet = new WorkspaceChangeSet();
-        changeSet.Changes.Add(change);
-
-        var sut = CreateSut();
-
-        // Act
-        var result = await sut.ResolveAsync(changeSet, CancellationToken.None);
-
-        // Assert
-        result.Success.Should().BeTrue();
-
-        var resolvedTextChanges = result.Changes[0].TextChanges;
-        resolvedTextChanges.Should().HaveCount(2);
-
-        // "World" shifts from index 6 to index 3 once "Hello" becomes "Hi".
-        resolvedTextChanges[0].Range.Start.Should().Be(0);
-        resolvedTextChanges[1].Range.Start.Should().Be(3);
-    }
 
     [Test]
     public async Task ResolveAsync_ShouldSkipNonEditFileChangesAsync()

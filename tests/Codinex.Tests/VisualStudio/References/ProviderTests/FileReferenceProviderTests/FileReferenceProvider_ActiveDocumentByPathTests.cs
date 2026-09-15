@@ -25,7 +25,6 @@ namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProvi
                 $"{Guid.NewGuid()}.cs");
 
             WorkspaceFileService.Exists(filePath).Returns(true);
-            WorkspaceFileService.Read(filePath).Returns("class Test {}");
 
             // Act
             var result = await provider.GetActiveDocumentAsync(filePath);
@@ -40,9 +39,11 @@ namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProvi
             result.Metadata.Should().NotBeNull();
             result.Metadata.FilePath.Should().Be(filePath);
             result.Metadata.ProjectName.Should().Be("Codinex");
-            result.Metadata.Content.Should().Be("class Test {}");
 
             result.Icon.Should().Be("fileTypes/file_type_csharp");
+
+            // References are built from the path and outline; file bodies are never read.
+            WorkspaceFileService.DidNotReceive().Read(Arg.Any<string>());
         }
 
         [Test]
@@ -84,52 +85,5 @@ namespace Codinex.Tests.VisualStudio.References.ProviderTests.FileReferenceProvi
             result.Should().BeNull();
         }
 
-        [Test]
-        public async Task GetActiveDocumentAsync_Should_ReturnEmptyContent_WhenReadAllTextThrowsAsync()
-        {
-            // Arrange
-            var provider = CreateSut();
-
-            const string filePath = @"C:\Temp\Test.cs";
-
-            WorkspaceFileService.Exists(filePath).Returns(true);
-
-            WorkspaceFileService
-                .When(x => x.Read(filePath))
-                .Do(_ => throw new IOException("Unable to read file."));
-
-            // Act
-            var result = await provider.GetActiveDocumentAsync(filePath);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Metadata.Content.Should().BeEmpty();
-
-            WorkspaceFileService.Received(1).Exists(filePath);
-            WorkspaceFileService.Received(1).Read(filePath);
-        }
-
-        [Test]
-        public async Task GetActiveDocumentAsync_Should_SetContentFromFileSystemAsync()
-        {
-            // Arrange
-            var provider = CreateSut();
-
-            const string filePath = @"C:\Temp\Test.cs";
-            const string expectedContent = "public class Test { }";
-
-            WorkspaceFileService.Exists(filePath).Returns(true);
-            WorkspaceFileService.Read(filePath).Returns(expectedContent);
-
-            // Act
-            var result = await provider.GetActiveDocumentAsync(filePath);
-
-            // Assert
-            result.Should().NotBeNull();
-            result.Metadata.Content.Should().Be(expectedContent);
-
-            WorkspaceFileService.Received(1).Exists(filePath);
-            WorkspaceFileService.Received(1).Read(filePath);
-        }
     }
 }

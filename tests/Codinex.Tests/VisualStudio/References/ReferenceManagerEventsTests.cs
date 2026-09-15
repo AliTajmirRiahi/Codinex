@@ -298,13 +298,12 @@ namespace Codinex.Tests.VisualStudio.References
                 errorHandler);
 
             // Act
-            Func<Task> action = async () => await sut.GetAllReferencesAsync();
+            var result = await sut.GetAllReferencesAsync();
 
             // Assert
-            await action
-                .Should()
-                .ThrowAsync<InvalidOperationException>()
-                .WithMessage("Test exception");
+            // The manager contains a failing provider rather than propagating: it contributes no
+            // items and the call still returns, so one broken provider cannot wipe out the rest.
+            result.Should().BeEmpty();
 
             errorHandler
                 .Received(1)

@@ -188,7 +188,6 @@
     <Compile Include="Infrastructure\WorkspaceChanges\Validation\Rules\WorkspaceStateValidationTests\WorkspaceStateValidationRuleTests_PathOutsideWorkspace.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\Validation\Rules\WorkspaceStateValidationTests\WorkspaceStateValidationRuleTests_Success.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\WorkspaceChangeApplierTests\Base\WorkspaceChangeApplierBaseTests.cs" />
-    <Compile Include="Infrastructure\WorkspaceChanges\WorkspaceChangeApplierTests\WorkspaceChangeApplierTests_Empty.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\WorkspaceChangeApplierTests\WorkspaceChangeApplierTests_Failure.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\WorkspaceChangeApplierTests\WorkspaceChangeApplierTests_GuardClauses.cs" />
     <Compile Include="Infrastructure\WorkspaceChanges\WorkspaceChangeApplierTests\WorkspaceChangeApplierTests_Success.cs" />

@@ -117,7 +117,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         solution.Projects.Returns(projects);
 
         WorkspaceFileService.Exists(filePath).Returns(true);
-        WorkspaceFileService.Read(filePath).Returns("class Test {}");
 
         var sut = CreateSut();
 
@@ -136,7 +135,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         reference.Value.Should().Be(filePath);
 
         reference.Metadata.ProjectName.Should().Be("Codinex");
-        reference.Metadata.Content.Should().Be("class Test {}");
     }
 
     [Test]
@@ -163,9 +161,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
                         projectFilePath,
                         "Codinex.Core"))));
 
-        WorkspaceFileService.Read(projectFilePath)
-            .Returns("UserService");
-
         var sut = CreateSut();
 
         // Act
@@ -183,8 +178,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         result.Should().Contain(x =>
             x.Name == "UserService.cs" &&
             x.Value == projectFilePath &&
-            x.Metadata.ProjectName == "Codinex.Core" &&
-            x.Metadata.Content == "UserService");
+            x.Metadata.ProjectName == "Codinex.Core");
     }
 
     [Test]
@@ -220,9 +214,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         reference.Name.Should().Be("Active Document");
         reference.Type.Should().Be(ReferenceKind.File);
         reference.Value.Should().Be(activeDocumentPath);
-
-        WorkspaceFileService.Received(1)
-            .Read(activeDocumentPath);
     }
 
     [Test]
@@ -236,9 +227,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         SetActiveDocument(
             activeDocumentPath,
             "Program");
-
-        WorkspaceFileService.Read(nestedFilePath)
-            .Returns("UserService");
 
         var childItem = FakeProjectItem.Create(
             nestedFilePath,
@@ -271,8 +259,7 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
         result.Should().Contain(x =>
             x.Name == "UserService.cs" &&
             x.Value == nestedFilePath &&
-            x.Metadata.ProjectName == "Codinex.Core" &&
-            x.Metadata.Content == "UserService");
+            x.Metadata.ProjectName == "Codinex.Core");
     }
 
     [Test]
@@ -318,49 +305,6 @@ public class FileReferenceProvider_ReferenceCollectionTests : FileReferenceProvi
             x.Name == "Logger.cs" &&
             x.Value == subProjectFilePath &&
             x.Metadata.ProjectName == "Codinex.Shared");
-    }
-
-    [Test]
-    public async Task GetReferencesAsync_Should_ReturnEmptyContent_WhenReadingFileThrowsAsync()
-    {
-        // Arrange
-
-        const string activeDocumentPath = @"C:\Solution\Program.cs";
-        const string projectFilePath = @"C:\Solution\Services\UserService.cs";
-
-        SetActiveDocument(
-            activeDocumentPath,
-            "Program");
-
-        WorkspaceFileService
-            .When(x => x.Read(projectFilePath))
-            .Do(_ => throw new InvalidOperationException());
-
-        SetSolution(
-            FakeProject.Create(
-                "Codinex.Core",
-                FakeProjectItems.Create(
-                    FakeProjectItem.Create(
-                        projectFilePath,
-                        "Codinex.Core"))));
-
-        var sut = CreateSut();
-
-        // Act
-
-        var result = await sut.GetReferencesAsync();
-
-        // Assert
-
-        result.Should().HaveCount(2);
-
-        var reference = result.Single(x => x.Name == "UserService.cs");
-
-        reference.Metadata.Should().NotBeNull();
-        reference.Metadata.Content.Should().BeEmpty();
-
-        WorkspaceFileService.Received(1)
-            .Read(projectFilePath);
     }
 
     [Test]
