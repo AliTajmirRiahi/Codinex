@@ -100,7 +100,7 @@ namespace Codinex.Infrastructure.AI.Errors
 
             return Create(
                 code,
-                BuildMessage(code, ExtractProviderMessage(responseBody)),
+                BuildMessage(code, ExplainKnownIncompatibility(responseBody, ExtractProviderMessage(responseBody))),
                 IsRetryable(code),
                 exception: exception);
         }
@@ -115,7 +115,7 @@ namespace Codinex.Infrastructure.AI.Errors
 
             return Create(
                 code,
-                BuildMessage(code, ExtractProviderMessage(responseBody)),
+                BuildMessage(code, ExplainKnownIncompatibility(responseBody, ExtractProviderMessage(responseBody))),
                 IsRetryable(code),
                 retryAfter,
                 exception);
@@ -297,6 +297,37 @@ namespace Codinex.Infrastructure.AI.Errors
             return message.Length <= 1000
                 ? message
                 : message.Substring(0, 1000) + "...";
+        }
+
+        /// <summary>
+        /// Some reasoning models (e.g. gpt-6.1-sol) reject function tools on /chat/completions
+        /// and do not accept reasoning_effort "none" either, so the provider's own advice cannot
+        /// be followed. Say plainly that the model needs an API Codinex does not support yet.
+        /// </summary>
+        private static string ExplainKnownIncompatibility(string responseBody, string providerMessage)
+        {
+            if (string.IsNullOrWhiteSpace(responseBody)
+                || responseBody.IndexOf("reasoning_effort", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                return providerMessage;
+            }
+
+            var rejectsTools = responseBody.IndexOf("function tools", StringComparison.OrdinalIgnoreCase) >= 0;
+            var rejectsNone = responseBody.IndexOf("does not support 'none'", StringComparison.OrdinalIgnoreCase) >= 0;
+
+            if (!rejectsTools && !rejectsNone)
+            {
+                return providerMessage;
+            }
+
+            return "This model can't be used with Codinex yet. It does not accept function tools "
+                   + "together with reasoning on the Chat Completions API, and it needs the "
+                   + "/v1/responses API, which Codinex does not support yet. "
+                   + "Please select a different model."
+                   + Environment.NewLine
+                   + Environment.NewLine
+                   + "Provider message: "
+                   + providerMessage;
         }
 
         private static string GetDefaultMessage(AiErrorCode code)

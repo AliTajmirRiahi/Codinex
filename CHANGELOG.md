@@ -10,6 +10,14 @@ considered stable and may change between minor releases.
 
 ## [Unreleased]
 
+### Changed
+- Models that reject function tools on the Chat Completions API (for example
+  `gpt-6.1-sol`) now fail with a clear message instead of the raw provider error.
+
+### Known limitations
+- Models that only accept tools through the OpenAI `/v1/responses` API are not
+  supported yet. Select a different model until Responses API support lands.
+
 ## [0.1.0] - 2026-09-13
 
 First public release. Requires Visual Studio 2022 (17.0+) and .NET Framework 4.7.2.

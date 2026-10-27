@@ -135,6 +135,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\AI\Errors\AiErrorMessageTests.cs" />
     <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeModelRetrieverTests.cs" />
     <Compile Include="Infrastructure\AI\Providers\OpenCodeFreeProviderTests.cs" />
     <Compile Include="Infrastructure\AI\Providers\OpenCodeProviderCapabilityCheckerTests.cs" />
