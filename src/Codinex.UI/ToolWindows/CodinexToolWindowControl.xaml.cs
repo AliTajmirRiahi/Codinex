@@ -99,6 +99,9 @@ namespace Codinex.UI.ToolWindows
 
 #if DEBUG
             WebView.CoreWebView2.OpenDevToolsWindow();
+
+            // Developer-only UI (e.g. the Open prompt folder button) is gated on this flag.
+            await WebView.CoreWebView2.AddScriptToExecuteOnDocumentCreatedAsync("window.CODINEX_DEBUG = true;");
 #endif
 
             // Get services from our DI Container

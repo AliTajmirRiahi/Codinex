@@ -169,7 +169,10 @@ function createAssistantMessageActions(chatMessageId) {
     const actionsEl = document.createElement('div');
     actionsEl.className = 'message-actions assistant-message-actions';
 
-    actionsEl.appendChild(createOpenPromptFolderButton(chatMessageId));
+    // Developer-only: the host sets window.CODINEX_DEBUG in Debug builds, never in Release.
+    if (window.CODINEX_DEBUG === true) {
+        actionsEl.appendChild(createOpenPromptFolderButton(chatMessageId));
+    }
 
     return actionsEl;
 }
