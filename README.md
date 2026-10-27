@@ -9,7 +9,7 @@
 **A next‑generation, provider‑agnostic AI coding assistant for Visual Studio.**
 Bring your own model — cloud or fully local — and keep control of your entire AI stack.
 
-[![Visual Studio](https://img.shields.io/badge/Visual%20Studio-2022%20(17.0%2B)-5C2D91?logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
+[![Visual Studio](https://img.shields.io/badge/Visual%20Studio-2022%20%7C%202026-5C2D91?logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
 [![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.7.2-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![UI](https://img.shields.io/badge/UI-WebView2-0078D4?logo=microsoftedge&logoColor=white)](https://learn.microsoft.com/microsoft-edge/webview2/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-license)
@@ -202,19 +202,33 @@ flowchart TD
 
 `C#` · `Visual Studio SDK 17.x` · `.NET Framework 4.7.2` · `WebView2` · `Roslyn` · `HTML/CSS/JavaScript` · Markdown rendering · streaming token handling · REST‑based AI communication.
 
-Test coverage: **100+ C# test files** (xUnit) and a **Jest** suite for the WebView UI.
+Test coverage: **500+ C# tests** (NUnit) and a **Jest** suite for the WebView UI.
 
 ---
 
 ## 📦 Getting Started
 
-> A Visual Studio Marketplace release is planned. For now, build from source.
+> A Visual Studio Marketplace release is planned. For now, install the `.vsix` from GitHub Releases or build from source.
+
+### Install from a release
+
+Requires Visual Studio 2022 (17.0+) or Visual Studio 2026, and .NET Framework 4.7.2.
+Tested on Visual Studio 2022 (17.14) and 2026 (18.3).
+
+1. Download the latest `.vsix` from the [Releases page](https://github.com/AliTajmirRiahi/Codinex/releases/latest).
+2. Close all running Visual Studio instances.
+3. Double-click the `.vsix` file, pick the Visual Studio version(s) to install into, and confirm.
+4. Start Visual Studio and open the **Codinex AI** tool window from `View → Other Windows`.
+
+To remove it later, use `Extensions → Manage Extensions → Installed → Codinex AI → Uninstall`.
+
+### Build from source
 
 ```bash
 git clone https://github.com/AliTajmirRiahi/Codinex.git
 ```
 
-1. Open **`Codinex AI.slnx`** in Visual Studio 2022 (17.0+).
+1. Open **`Codinex AI.slnx`** in Visual Studio 2022 (17.0+) or 2026.
 2. Restore NuGet packages and build the solution.
 3. Set **`Codinex.VSIX`** as the startup project.
 4. Press **F5** to launch the Visual Studio Experimental Instance with the extension loaded.
