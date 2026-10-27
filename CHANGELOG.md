@@ -10,15 +10,7 @@ considered stable and may change between minor releases.
 
 ## [Unreleased]
 
-### Changed
-- Models that reject function tools on the Chat Completions API (for example
-  `gpt-6.1-sol`) now fail with a clear message instead of the raw provider error.
-
-### Known limitations
-- Models that only accept tools through the OpenAI `/v1/responses` API are not
-  supported yet. Select a different model until Responses API support lands.
-
-## [0.1.0] - 2026-09-13
+## [0.1.0] - 2026-10-27
 
 First public release. Requires Visual Studio 2022 (17.0+) and .NET Framework 4.7.2.
 
@@ -67,6 +59,11 @@ First public release. Requires Visual Studio 2022 (17.0+) and .NET Framework 4.7
 - Theme-aware WebView2 UI that follows the Visual Studio light and dark themes.
 - Built-in About and Bug Report panels.
 - Toast notifications for background events.
+
+### Known limitations
+- Models that only accept function tools through the OpenAI `/v1/responses` API
+  (for example `gpt-6.1-sol`) are not supported yet. Codinex reports this with a
+  clear message; select a different model until Responses API support lands.
 
 [Unreleased]: https://github.com/AliTajmirRiahi/Codinex/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/AliTajmirRiahi/Codinex/releases/tag/v0.1.0
