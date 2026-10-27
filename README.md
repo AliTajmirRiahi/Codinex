@@ -111,6 +111,8 @@ Ambient context providers feed the agent automatically: **Git state**, **compile
 
 ---
 
+<!-- Feature gallery hidden until the real clips are recorded.
+
 ## 🖼 Feature gallery
 
 > All clips below are **placeholders**. Drop the named files into [`assets/media/`](assets/media/RECORDING.md) and they render automatically. Recording specs and the full shot list live in [`assets/media/RECORDING.md`](assets/media/RECORDING.md).
@@ -145,6 +147,7 @@ Ambient context providers feed the agent automatically: **Git state**, **compile
 </details>
 
 ---
+-->
 
 ## 🏗 Architecture
 
