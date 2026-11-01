@@ -58,6 +58,7 @@
       <DependentUpon>CodeChangesToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ToolWindows\WebViewChromeSettings.cs" />
+    <Compile Include="ToolWindows\WebViewZoomBinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ToolWindows\CodinexToolWindowControl.xaml">

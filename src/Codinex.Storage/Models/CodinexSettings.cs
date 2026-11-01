@@ -27,6 +27,10 @@ namespace Codinex.Storage.Models
         // How long a background-task toast stays visible before auto-dismissing, in seconds.
         public int ToastAutoDismissSeconds { get; set; } = 8;
 
+        // Zoom level of the Codinex web UI, in percent. Changed with Ctrl + mouse wheel over
+        // the panel or from the General tab in Codinex Settings.
+        public int UiZoomPercent { get; set; } = 100;
+
         // Local provider id used by the prompt preprocessor.
         public string PreprocessorAiProviderId { get; set; } = string.Empty;
 

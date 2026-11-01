@@ -124,6 +124,7 @@
     <Compile Include="Interfaces\References\IReferenceProvider.cs" />
     <Compile Include="Interfaces\Services\IStartupTask.cs" />
     <Compile Include="Interfaces\Services\IThemeService.cs" />
+    <Compile Include="Interfaces\Services\IUiZoomService.cs" />
     <Compile Include="Interfaces\Services\IUiThreadDispatcher.cs" />
     <Compile Include="Interfaces\Services\IUserNotificationService.cs" />
     <Compile Include="Interfaces\Workspace\IWorkspaceContext.cs" />

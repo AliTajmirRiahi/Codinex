@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Codinex.Core.Interfaces.Services;
+using Codinex.Core.Models.WebView;
 using Codinex.VisualStudio.CommitMessages;
 using Codinex.VisualStudio.Diagnostics.Errors;
 using Codinex.VisualStudio.Interfaces;
@@ -27,6 +28,9 @@ namespace Codinex.UI.ToolWindows
         private IThemeService _themeService;
         private IResourceServer _resourceServer;
         private IUserNotificationService _userNotificationService;
+        private IWebViewClient _webViewClient;
+        private IUiZoomService _uiZoomService;
+        private WebViewZoomBinder _zoomBinder;
         private static IErrorHandler _errorHandler;
         private bool _isDisposed;
 
@@ -105,9 +109,9 @@ namespace Codinex.UI.ToolWindows
 #endif
 
             // Get services from our DI Container
-            var webViewClient = _serviceProvider.GetRequiredService<IWebViewClient>();
+            _webViewClient = _serviceProvider.GetRequiredService<IWebViewClient>();
 
-            webViewClient.Initialize(WebView);
+            _webViewClient.Initialize(WebView);
 
             WebViewChromeSettings.DisableBrowserChrome(WebView.CoreWebView2);
 
@@ -116,42 +120,46 @@ namespace Codinex.UI.ToolWindows
 
             await RegisterWebViewHandlersAsync();
 
-            await InitializeWebViewZoomAsync();
+            InitializeWebViewZoom();
 
             WebView.CoreWebView2.Navigate(
                 "http://codinex.resources/Chat/view/chat-view.html"
             );
         }
-        // Initialize WebView settings
-        private async Task InitializeWebViewZoomAsync()
+        /// <summary>
+        /// Puts the panel at the zoom level the user last chose and keeps it there. The scale
+        /// used to be guessed from the primary screen width, which shrank the panel to 60% on
+        /// any monitor narrower than 1980px and left the text unreadably small.
+        /// </summary>
+        private void InitializeWebViewZoom()
         {
+            _uiZoomService = _serviceProvider.GetRequiredService<IUiZoomService>();
 
-            // Disable default browser zoom shortcuts (Ctrl + Plus/Minus/MouseWheel) if you want consistent scale
-            WebView.CoreWebView2.Settings.IsZoomControlEnabled = false;
+            _zoomBinder = new WebViewZoomBinder(
+                WebView,
+                _uiZoomService,
+                _serviceProvider.GetRequiredService<IExecutionPipeline>(),
+                _serviceProvider.GetRequiredService<IUiThreadDispatcher>());
 
-            // Detect screen width/height or DPI to apply scaling factor
-            double scalingFactor = CalculateZoomFactorBasedOnScreen();
-
-            // Set the WebView zoom factor (e.g., 0.9 for 90% size)
-            WebView.ZoomFactor = scalingFactor;
+            // Ctrl + mouse wheel changes the level behind the chat UI's back; tell it so the
+            // zoom field in Codinex Settings opens on the real value instead of a stale one.
+            _uiZoomService.ZoomPercentChanged += OnUiZoomPercentChanged;
         }
 
-        private double CalculateZoomFactorBasedOnScreen()
+        private void OnUiZoomPercentChanged(object sender, int percent)
         {
-            // Get primary screen working area width (or use SystemParameters in WPF / Screen in WinForms)
-            double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            if (_isDisposed || _webViewClient == null) return;
 
-            // If the monitor is smaller than full HD (1920px width), reduce the zoom factor
-            if (screenWidth < 1366)
-            {
-                return 0.55; // 85% scale for small screens
-            }
-            if (screenWidth < 1980)
-            {
-                return 0.60; // 90% scale for laptop screens
-            }
+            var pipeline = _serviceProvider.GetRequiredService<IExecutionPipeline>();
 
-            return 1.0; // 100% scale for standard desktop monitors
+            _ = pipeline.RunAsync(
+                () => _webViewClient.PostMessageAsync(new WebViewMessageResponse
+                {
+                    Type = WebViewMessageType.UiZoomChanged,
+                    Payload = new { UiZoomPercent = percent },
+                    Timestamp = DateTime.Now
+                }),
+                nameof(OnUiZoomPercentChanged));
         }
 
         private async Task RegisterWebViewHandlersAsync()
@@ -317,6 +325,13 @@ namespace Codinex.UI.ToolWindows
             {
                 _themeService.ThemeChanged -= OnThemeChanged;
             }
+
+            if (_uiZoomService != null)
+            {
+                _uiZoomService.ZoomPercentChanged -= OnUiZoomPercentChanged;
+            }
+
+            _zoomBinder?.Dispose();
 
             if (WebView == null) return;
 

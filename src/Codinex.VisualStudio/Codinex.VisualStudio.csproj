@@ -131,6 +131,7 @@
     <Compile Include="Services\SourceFileElementService.cs" />
     <Compile Include="Services\VsOutputWindowService.cs" />
     <Compile Include="Services\VsThreadDispatcher.cs" />
+    <Compile Include="Services\UiZoomService.cs" />
     <Compile Include="Services\PromptSizeGuardService.cs" />
     <Compile Include="Notifications\VsHostWindowStateProvider.cs" />
     <Compile Include="Notifications\ToastWindow.cs" />

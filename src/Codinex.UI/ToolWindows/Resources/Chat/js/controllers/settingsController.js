@@ -30,6 +30,7 @@ export function initSettingsController(transport) {
     const promptSizeKbInput = $('#setting-prompt-size-kb');
     const enableBackgroundToastInput = $('#setting-enable-background-toast');
     const toastAutoDismissSecondsInput = $('#setting-toast-auto-dismiss-seconds');
+    const uiZoomPercentInput = $('#setting-ui-zoom-percent');
     const enablePreprocessorAiInput = $('#setting-enable-preprocessor-ai');
     const solutionInstructionInput = $('#setting-solution-instruction');
     const excludeDirectoriesInput = $('#setting-exclude-directories');
@@ -55,6 +56,19 @@ export function initSettingsController(transport) {
         tabHosts.reduce((acc, host) => acc.concat(Array.from(host.querySelectorAll(selector))), []);
     const tabs = collectSettingsNodes('.settings-tab');
     const panels = collectSettingsNodes('.settings-tab-panel');
+    // Mirrors the range the host clamps to; Ctrl + mouse wheel is pinned to the same edges.
+    const ZOOM_MIN_PERCENT = 50;
+    const ZOOM_MAX_PERCENT = 200;
+    const ZOOM_DEFAULT_PERCENT = 100;
+
+    const normalizeZoomPercent = (value) => {
+        const percent = parseInt(value, 10);
+
+        if (!Number.isFinite(percent) || percent <= 0) return ZOOM_DEFAULT_PERCENT;
+
+        return Math.min(ZOOM_MAX_PERCENT, Math.max(ZOOM_MIN_PERCENT, percent));
+    };
+
     let currentSettings = {};
     let currentWorkspaceSettings = {};
     let canBypassPreviewChange = false;
@@ -367,6 +381,14 @@ export function initSettingsController(transport) {
             toastAutoDismissSecondsInput.value = Number(seconds) > 0 ? seconds : 8;
         }
 
+        if (uiZoomPercentInput) {
+            uiZoomPercentInput.value = normalizeZoomPercent(getValue(
+                currentSettings,
+                'uiZoomPercent',
+                'UiZoomPercent',
+                ZOOM_DEFAULT_PERCENT));
+        }
+
         renderLocalProviders();
 
         if (solutionInstructionInput) {
@@ -523,6 +545,7 @@ export function initSettingsController(transport) {
             promptSizeWarningKb: Number.isFinite(parsedKb) && parsedKb > 0 ? parsedKb : 200,
             enableBackgroundToast: enableBackgroundToastInput ? !!enableBackgroundToastInput.checked : true,
             toastAutoDismissSeconds: Number.isFinite(parsedToastSeconds) && parsedToastSeconds > 0 ? parsedToastSeconds : 8,
+            uiZoomPercent: normalizeZoomPercent(uiZoomPercentInput?.value),
         };
 
         transport?.send(EVENTS.SAVE_SETTINGS, currentSettings);
@@ -649,6 +672,17 @@ export function initSettingsController(transport) {
             }
 
             applySettingsToForm();
+        },
+        // The host applies Ctrl + mouse wheel itself and reports the level back here, so a
+        // later Save does not push the stale value the modal was opened with.
+        setZoomPercent(percent) {
+            const normalized = normalizeZoomPercent(percent);
+
+            currentSettings = { ...currentSettings, uiZoomPercent: normalized };
+
+            if (uiZoomPercentInput) {
+                uiZoomPercentInput.value = normalized;
+            }
         },
         closeSettingsModal() {
             closeCodinexSettingsModal();

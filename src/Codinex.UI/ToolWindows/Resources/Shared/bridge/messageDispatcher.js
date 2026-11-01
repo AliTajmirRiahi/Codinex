@@ -40,6 +40,10 @@ export function createMessageDispatcher(handlers) {
                 if (handlers.onSettingsSaved) handlers.onSettingsSaved(payload);
                 break;
 
+            case EVENTS.UI_ZOOM_CHANGED:
+                if (handlers.onUiZoomChanged) handlers.onUiZoomChanged(payload);
+                break;
+
             case EVENTS.SOLUTION_INSTRUCTION_SAVED:
                 if (handlers.onSolutionInstructionSaved) handlers.onSolutionInstructionSaved(payload);
                 break;

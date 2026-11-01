@@ -10,6 +10,20 @@ considered stable and may change between minor releases.
 
 ## [Unreleased]
 
+### Added
+
+- Interface zoom. Hold `Ctrl` and scroll the mouse wheel over the Codinex panel
+  to scale the whole UI between 50% and 200%, or type a percentage under
+  **Codinex Settings → General → Interface zoom**. The level is saved with the
+  rest of the global settings and is shared by the chat panel and the Code
+  Changes review panel.
+
+### Fixed
+
+- The panel no longer picks its own scale from the primary screen width, which
+  shrank the UI to 60% on any monitor narrower than 1980px and left the text
+  very small. It now opens at 100% unless a zoom level was chosen.
+
 ## [0.1.0] - 2026-10-27
 
 First public release. Requires Visual Studio 2022 (17.0+) and .NET Framework 4.7.2.

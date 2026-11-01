@@ -64,6 +64,7 @@ public static class WebViewMessageType
     public const string StatusChanged = "STATUS_CHANGED";
     public const string ProviderModelsRefreshed = "PROVIDER_MODELS_REFRESHED";
     public const string SettingsSaved = "SETTINGS_SAVED";
+    public const string UiZoomChanged = "UI_ZOOM_CHANGED";
     public const string SolutionInstructionSaved = "SOLUTION_INSTRUCTION_SAVED";
     public const string ChangesetShow = "CHANGESET_SHOW";
     public const string ChatBlocked = "CHAT_BLOCKED";

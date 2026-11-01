@@ -227,6 +227,16 @@ document.addEventListener('DOMContentLoaded', () => {
             chatController.handleSettingsChanged();
             settingsController.closeSettingsModal();
         },
+        // Ctrl + mouse wheel zooms the panel in the host, not here; this only keeps the
+        // zoom field in Codinex Settings showing the level that is actually applied.
+        onUiZoomChanged: (payload) => {
+            const uiZoomPercent = payload.uiZoomPercent ?? payload.UiZoomPercent;
+
+            const settings = { ...(getState().settings || {}), uiZoomPercent };
+
+            setSettings(settings);
+            settingsController.setZoomPercent(uiZoomPercent);
+        },
         onSolutionInstructionSaved: (payload) => {
             const workspaceSettings = payload.workspaceSettings || payload.WorkspaceSettings;
 

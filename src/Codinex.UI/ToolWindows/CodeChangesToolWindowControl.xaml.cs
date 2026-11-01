@@ -24,6 +24,7 @@ namespace Codinex.UI.ToolWindows
         private IResourceServer _resourceServer;
         private IUserNotificationService _userNotificationService;
         private static IErrorHandler _errorHandler;
+        private WebViewZoomBinder _zoomBinder;
         private bool _isDisposed;
 
         public CodeChangesToolWindowControl()
@@ -93,6 +94,13 @@ namespace Codinex.UI.ToolWindows
             WebViewChromeSettings.DisableBrowserChrome(WebView.CoreWebView2);
 
             _resourceServer.Attach(WebView.CoreWebView2);
+
+            // The review panel follows the same zoom level as the chat panel.
+            _zoomBinder = new WebViewZoomBinder(
+                WebView,
+                _serviceProvider.GetRequiredService<IUiZoomService>(),
+                _serviceProvider.GetRequiredService<IExecutionPipeline>(),
+                _serviceProvider.GetRequiredService<IUiThreadDispatcher>());
 
             await RegisterWebViewHandlersAsync();
 
@@ -245,6 +253,8 @@ namespace Codinex.UI.ToolWindows
             {
                 _themeService.ThemeChanged -= OnThemeChanged;
             }
+
+            _zoomBinder?.Dispose();
 
             if (WebView == null) return;
 

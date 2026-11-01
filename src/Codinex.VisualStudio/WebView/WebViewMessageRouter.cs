@@ -65,6 +65,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
     private readonly IUiThreadDispatcher _uiThreadDispatcher;
     private readonly IBugReportService _bugReportService;
     private readonly IVsDiagnosticsCollector _vsDiagnosticsCollector;
+    private readonly IUiZoomService _uiZoomService;
 
     private ISendChatMessageUseCase _sendChatMessageUseCase;
     private CancellationTokenSource _generationCancellation;
@@ -93,7 +94,8 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         ISourceControlStatusService sourceControlStatusService,
         IUiThreadDispatcher uiThreadDispatcher,
         IBugReportService bugReportService,
-        IVsDiagnosticsCollector vsDiagnosticsCollector)
+        IVsDiagnosticsCollector vsDiagnosticsCollector,
+        IUiZoomService uiZoomService)
     {
         _pipeline = pipeline;
         _providerManager = providerManager;
@@ -119,6 +121,7 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
         _uiThreadDispatcher = uiThreadDispatcher;
         _bugReportService = bugReportService;
         _vsDiagnosticsCollector = vsDiagnosticsCollector;
+        _uiZoomService = uiZoomService;
 
 
         RegisterEventHandlers();
@@ -351,6 +354,13 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                 {
                     var payload = _payloadBinder.Bind<CodinexSettings>(request.Payload);
 
+                    // An older UI build (or a modal that never saw the zoom field) sends no
+                    // zoom at all; keep the current level instead of resetting it to nothing.
+                    if (payload.UiZoomPercent <= 0)
+                    {
+                        payload.UiZoomPercent = _uiZoomService.ZoomPercent;
+                    }
+
                     if (payload.ByPassPreviewChangeAndApplyChangeDirectly &&
                         !await _sourceControlStatusService.IsSolutionUnderSourceControlAsync(CancellationToken.None))
                     {
@@ -358,6 +368,9 @@ public sealed class WebViewMessageRouter : IWebViewMessageRouter
                     }
 
                     await _settingsManager.SaveSettingsAsync(payload);
+
+                    // Clamps the typed percentage and pushes it to every open tool window.
+                    await _uiZoomService.SetZoomPercentAsync(payload.UiZoomPercent);
 
                     // A changed base threshold should take effect now, not be masked by past
                     // "Continue" escalations.
