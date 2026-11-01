@@ -102,6 +102,19 @@
     "IsLocal": false,
     "ModelEndPoint": "/models",
     "IsEnabled": false
+  },
+  {
+    "Id": "metis-anthropic",
+    "Protocol": "anthropic",
+    "Name": "Metis AI - Anthropic",
+    "Icon": "Providers/metis",
+    "IconColor": "#6C5CE7",
+    "ApiKey": "",
+    "BaseUrl": "https://api.metisai.ir/anthropic/v1",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
   }
 ]
 

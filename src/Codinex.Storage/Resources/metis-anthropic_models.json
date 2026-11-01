@@ -1,0 +1,26 @@
+[
+  {
+    "Id": "claude-sonnet-4-5-20250929",
+    "Name": "Claude Sonnet 4.5",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic"
+  },
+  {
+    "Id": "claude-opus-4-1-20250805",
+    "Name": "Claude Opus 4.1",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic"
+  },
+  {
+    "Id": "claude-3-5-haiku-20241022",
+    "Name": "Claude 3.5 Haiku",
+    "TokenLimit": 200000,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Anthropic"
+  }
+]
