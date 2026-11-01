@@ -1,18 +1,5 @@
 [
   {
-    "Id": "gapgpt",
-    "Protocol": "openai",
-    "Name": "GapGPT",
-    "Icon": "Providers/gapgpt",
-    "IconColor": "#91C79F",
-    "ApiKey": "",
-    "BaseUrl": "https://api.gapgpt.app/v1",
-    "NeedApiKey": true,
-    "IsLocal": false,
-    "ModelEndPoint": "/models",
-    "IsEnabled": false
-  },
-  {
     "Id": "openAI",
     "Protocol": "openai",
     "Name": "OpenAI",
@@ -85,6 +72,32 @@
     "IconColor": "#C1F700",
     "ApiKey": "",
     "BaseUrl": "https://openrouter.ai/api/v1",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
+  },
+  {
+    "Id": "gapgpt",
+    "Protocol": "openai",
+    "Name": "GapGPT",
+    "Icon": "Providers/gapgpt",
+    "IconColor": "#91C79F",
+    "ApiKey": "",
+    "BaseUrl": "https://api.gapgpt.app/v1",
+    "NeedApiKey": true,
+    "IsLocal": false,
+    "ModelEndPoint": "/models",
+    "IsEnabled": false
+  },
+  {
+    "Id": "metis",
+    "Protocol": "openai",
+    "Name": "Metis AI - OpenAI",
+    "Icon": "Providers/metis",
+    "IconColor": "#6C5CE7",
+    "ApiKey": "",
+    "BaseUrl": "https://api.metisai.ir/openai/v1",
     "NeedApiKey": true,
     "IsLocal": false,
     "ModelEndPoint": "/models",

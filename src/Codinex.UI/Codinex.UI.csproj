@@ -131,6 +131,7 @@
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gemini.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Status\ai-model.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\gapgpt.svg" />
+    <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\metis.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Providers\groq-icon-seeklogo.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\split.svg" />
     <EmbeddedResource Include="ToolWindows\Resources\Icons\Actions\prompt.svg" />

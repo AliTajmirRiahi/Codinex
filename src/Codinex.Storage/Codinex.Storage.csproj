@@ -90,6 +90,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\metis_models.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Resources\openAI_models.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

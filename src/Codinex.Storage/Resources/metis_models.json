@@ -1,0 +1,22 @@
+[
+  {
+    "Id": "gpt-4o",
+    "Name": "gpt-4o",
+    "TokenLimit": 1,
+    "SupportsImages": false,
+    "SupportsTools": false,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  },
+  {
+    "Id": "grok-4-fast",
+    "Name": "grok-4-fast",
+    "TokenLimit": 1,
+    "SupportsImages": false,
+    "SupportsTools": false,
+    "IsSelected": false,
+    "IsCurrent": false,
+    "Family": "Custom"
+  }
+]
