@@ -227,8 +227,10 @@ export const manageModelsView = {
             this.setCurrentProviderName();
         }
 
-        if (!currentProviderId || currentProviderId == -1) {
-            togglePanelHidden('#close-settings', false);
+        const hasProvider = !!currentProviderId && currentProviderId != -1;
+        togglePanelHidden('#close-settings', hasProvider);
+
+        if (!hasProvider) {
             this.show()
         }
 
